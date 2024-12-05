@@ -38,7 +38,7 @@ export default function Welcome() {
             eiusmod tempor{" "}
           </p>
           <div className="d-flex flex-column flex-lg-row gap-4 align-items-center avatar-selection">
-            <a href="#">
+            <Link to="/login">
             <div className="card border-0 shadow-lg rounded-4 px-4 pe-5 py-2">
               <div className="card-body">
                 <div className="d-flex flex-column flex-lg-row align-items-center gap-4">
@@ -53,7 +53,7 @@ export default function Welcome() {
                 </div>
               </div>
             </div>
-            </a>
+            </Link>
             <a href="#" className="">
             <div className="card border-0 shadow-lg rounded-4 px-4 pe-5 py-2 ">
               <div className="card-body">

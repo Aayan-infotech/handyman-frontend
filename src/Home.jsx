@@ -851,7 +851,7 @@ function Home() {
                   <Button
                     variant="contained"
                     color="success"
-                    className="custom-green px-5 py-2 rounded-0"
+                    className="custom-green px-5 py-2 rounded-0 bg-green-custom"
                   >
                     Subscribe
                   </Button>

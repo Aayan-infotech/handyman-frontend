@@ -2,16 +2,30 @@
   font-weight: 500 !important;
   font-size: 16px !important;
 }
+.w-fit-content {
+  width: fit-content !important;
+  min-width: auto !important;
+}
 .navbar a {
   text-decoration: none;
   color: #000 !important;
 }
+.bg-green-custom {
+  background-color: rgba(50, 222, 132, 1) !important;
+}
 .navbar .MuiButton-colorSuccess,
 .custom-green {
-  background-color: rgba(50, 222, 132, 1) !important;
+  background-color: rgba(50, 222, 132, 1);
   font-weight: 700 !important;
-  border: 0 !important;
+  border: 0;
   padding: 8px 14px !important;
+}
+.custom-green-outline {
+  border: 1px solid rgba(50, 222, 132, 1) !important;
+  background-color: transparent !important;
+  padding: 8px 14px !important;
+  color: rgba(50, 222, 132, 1) !important;
+  box-shadow: none !important;
 }
 .top-section {
   background-color: rgba(248, 248, 253, 1);
@@ -213,11 +227,20 @@
   background-image: url(./assets/bg-welcome.png);
   height: 100vh;
 }
-.avatar-selection h5 , .avatar-selection p , .avatar-selection a{
+.bg-signup {
+  background-image: url(./User/assets/bg-sign.png);
+ 
+  background-position: bottom;
+}
+
+.avatar-selection h5,
+.avatar-selection p,
+.avatar-selection a {
   text-decoration: none;
 }
 @media screen and (max-width: 768px) {
-  .bg-welcome {
+  .bg-welcome,
+  .bg-signup {
     height: 100%;
   }
 }
