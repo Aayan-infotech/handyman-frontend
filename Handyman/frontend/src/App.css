@@ -1,0 +1,300 @@
+.navbar {
+  font-weight: 500 !important;
+  font-size: 16px !important;
+}
+.navbar a {
+  text-decoration: none;
+  color: #000 !important;
+}
+.navbar .MuiButton-colorSuccess,
+.custom-green {
+  background-color: rgba(50, 222, 132, 1) !important;
+  font-weight: 700 !important;
+  border: 0 !important;
+  padding: 8px 14px !important;
+}
+.top-section {
+  background-color: rgba(248, 248, 253, 1);
+}
+.top-section h1 {
+  font-size: 70px !important;
+  font-weight: 400 !important;
+}
+.top-section .highlighted,
+.highlighted-text {
+  color: rgba(50, 222, 132, 1) !important;
+}
+.mw-75 {
+  max-width: 65% !important;
+}
+.top-section .card input {
+  min-width: 250px !important;
+}
+.top-section {
+  position: relative;
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+}
+.top-section::after {
+  position: absolute;
+  content: "";
+  background-image: url(./assets/Pattern.png);
+  width: calc(100% - 40%);
+  height: 100%;
+  right: 0;
+  top: 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.category h2 {
+  font-size: 48px !important;
+  font-weight: 400 !important;
+}
+.custom-text-success {
+  color: rgba(50, 222, 132, 1) !important;
+}
+.category .card {
+  border: 2px solid rgba(214, 221, 235, 1) !important;
+}
+.category .card svg {
+  color: rgba(50, 222, 132, 1) !important;
+}
+.category .card:hover {
+  background-color: rgba(50, 222, 132, 1) !important;
+  border-color: rgba(50, 222, 132, 1) !important;
+  cursor: pointer;
+}
+.category a {
+  text-decoration: none;
+  color: #000;
+}
+.category .card:hover svg,
+.category .card:hover h6,
+.category .card:hover a {
+  color: #fff !important;
+}
+.avatar-selection p {
+  color: rgba(50, 222, 132, 1);
+}
+.mobile {
+  background: linear-gradient(180deg, #32de84 0%, #32cdde 100%);
+  position: relative;
+  padding: 0 70px !important;
+  margin: 100px 0 80px 0 !important;
+}
+.mobile::after {
+  position: absolute;
+  content: "";
+  left: -52px;
+  top: -77px;
+  transform: rotate(-36deg);
+  border-left: 70px solid transparent;
+  border-right: 70px solid transparent;
+  border-bottom: 130px solid #fff;
+  z-index: 1020;
+}
+.mobile::before {
+  position: absolute;
+  content: "";
+  right: -40px;
+  bottom: -56px;
+  transform: rotate(30deg);
+  border-left: 70px solid transparent;
+  border-right: 70px solid transparent;
+  border-bottom: 150px solid #fff;
+  z-index: 1020;
+}
+.mobile h5 {
+  font-size: 48px !important;
+  color: #fff;
+  font-weight: 400 !important;
+}
+.btn-mobile {
+  color: #32de84 !important;
+  background-color: #fff !important;
+  border-radius: 0 !important;
+  font-weight: 500 !important;
+}
+.position-mobile-adjust {
+  transform: translate(-40px, -55px);
+  position: absolute;
+}
+.border-full-time {
+  border: 1px solid rgba(50, 222, 132, 1);
+  color: rgba(50, 222, 132, 1);
+  padding: 4px 12px;
+}
+.jobs .card span {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.light-pink {
+  background-color: rgba(235, 133, 51, 0.1) !important;
+  color: rgba(235, 133, 51, 1) !important;
+}
+.light-green {
+  color: rgba(86, 205, 173, 1) !important;
+  background-color: rgba(86, 205, 173, 0.1) !important;
+}
+.light-blue {
+  background-color: rgba(70, 64, 222, 0.1) !important;
+  color: rgba(70, 64, 222, 1) !important;
+}
+.green-line {
+  border: 1px solid rgba(50, 222, 132, 1) !important;
+  color: rgba(50, 222, 132, 1) !important;
+  background-color: transparent !important;
+}
+.light-pink-line {
+  border: 1px solid rgba(235, 133, 51, 1) !important;
+  color: rgba(235, 133, 51, 1) !important;
+  background-color: transparent !important;
+}
+.latest-job {
+  background-color: rgba(248, 248, 253, 1);
+  padding: 80px 0 50px 0;
+  position: relative;
+}
+.latest-job::after {
+  position: absolute;
+  background-image: url("./assets/Pattern-2.png");
+  content: "";
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: calc(100% - 50%);
+}
+.latest-job::before {
+  position: absolute;
+  /* background-image: url(./assets/Pattern-2.png); */
+  content: "";
+  left: -3%;
+  top: -3%;
+  transform: rotate(-157deg);
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 100px solid #fff;
+  z-index: 1020;
+  overflow: hidden;
+}
+
+/* File: Footer.css */
+.footer {
+  background-color: rgba(32, 36, 48, 1);
+  padding: 80px 0 30px 0;
+}
+
+.footer .logo {
+  font-weight: bold;
+  color: #28a745; /* Green */
+}
+.footer p,
+.footer li a {
+  color: rgba(214, 221, 235, 1) !important;
+}
+.footer a {
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+.footer .social-icons a {
+  background-color: #212529;
+  padding: 6px;
+  border-radius: 50%;
+}
+.social-icons a:hover {
+  color: #28a745; /* Match logo color */
+}
+.bg-welcome {
+  background-image: url(./assets/bg-welcome.png);
+  height: 100vh;
+}
+.avatar-selection h5 , .avatar-selection p , .avatar-selection a{
+  text-decoration: none;
+}
+@media screen and (max-width: 768px) {
+  .bg-welcome {
+    height: 100%;
+  }
+}
+@media screen and (max-width: 768px) {
+  img {
+    width: 100%;
+  }
+  .top-section h1 {
+    font-size: 40px !important;
+    font-weight: 400 !important;
+  }
+  .mw-75 {
+    max-width: 100% !important;
+  }
+  .category h2 {
+    font-size: 25px !important;
+    font-weight: 400 !important;
+  }
+  .mobile h5 {
+    font-size: 30px !important;
+  }
+  .mobile {
+    margin: 70px 0 50px 0 !important;
+    padding: 0 140px 0 10px !important;
+  }
+  .mobile::before {
+    display: none;
+  }
+  .position-mobile-adjust {
+    transform: translate(11px, 0px);
+    position: absolute;
+    top: 90px;
+    right: 0;
+    z-index: 1020;
+  }
+  .position-mobile-adjust img {
+    width: 160px !important;
+    height: 160px;
+  }
+  .jobs img,
+  .latest-job img {
+    width: 50px !important;
+  }
+  .latest-job hr {
+    height: 30px;
+  }
+  .latest-job .card-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .top-section::after {
+    width: calc(100% - 0%);
+  }
+  .latest-job::before {
+    left: -12%;
+    top: -1%;
+    transform: rotate(-164deg);
+  }
+  .navbar-toggler {
+    border: 0 !important;
+  }
+  .navbar-toggler:focus {
+    box-shadow: none !important;
+  }
+  .avatar-selection img {
+    width: fit-content !important;
+  }
+  .avatar-selection .card-body {
+    padding: 0 !important;
+  }
+  .avatar-selection .card {
+    width: 100% !important;
+  }
+  .top-avatar img {
+    width: fit-content !important;
+  }
+  .top-avatar {
+    padding-bottom: 80px !important;
+  }
+}
