@@ -9,6 +9,7 @@ import SignUp from "./User/Auth/signup";
 import ForgetPassword from "./User/Auth/forgetPassword";
 import Otp from "./User/Auth/otp";
 import ResetPassword from "./User/Auth/reset-password";
+import Main from "./User/Home";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/otp" element={<Otp />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/home" element={<Main />} />
         </Routes>
       </BrowserRouter>
     </>

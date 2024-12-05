@@ -147,7 +147,7 @@ function Home() {
                       <Button
                         variant="contained"
                         color="success"
-                        className="custom-green px-3 py-2 w-100 rounded-0"
+                        className="custom-green px-3 py-2 w-100 rounded-0 bg-green-custom"
                       >
                         Search my job
                       </Button>

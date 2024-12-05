@@ -7,6 +7,66 @@
 .login .icons-color img {
   width: fit-content;
 }
+.loggedheader input {
+  background-color: #f5f7fa;
+  color: #f5f7fa;
+  max-width: 200px;
+  border-radius: 30px;
+}
+.position-relative.icon svg {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.loggedheader {
+  background-color: #fff;
+}
+.bg-second {
+  background-color: #f5f7fa;
+}
+.notification {
+  background-color: #f5f7fa;
+  padding: 8px;
+  border-radius: 50%;
+}
+.notification svg {
+  color: #fe5c73;
+}
+.position-relative.icon input {
+  padding: 5px 5px 5px 30px;
+}
+.position-relative.icon-speaker {
+  background-color: #fff;
+  height: 60px;
+  width: 100%;
+  border-radius: 30px;
+}
+.position-relative.icon-speaker img {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+}
+.mySwiper span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  text-overflow: clip;
+}
+..mySwiper{
+  position: relative;
+}
+.mySwiper  .slick-prev{
+  position: absolute;
+  right: 0;
+}
+.top-section-main h5 {
+  white-space: nowrap;
+}
+.position-relative.icon-speaker input {
+  height: 55px !important;
+  padding-left: 50px;
+}
 .login input {
   border: 1px solid rgba(171, 171, 171, 1) !important;
 }
