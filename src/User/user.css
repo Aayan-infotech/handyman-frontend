@@ -45,6 +45,7 @@
   position: absolute;
   top: 10px;
   left: 15px;
+  width: fit-content !important;
 }
 .mySwiper span {
   display: -webkit-box;
@@ -53,19 +54,177 @@
   -webkit-line-clamp: 1;
   text-overflow: clip;
 }
-..mySwiper{
+.mySwiper {
   position: relative;
 }
-.mySwiper  .slick-prev{
+.mySwiper .slick-prev {
+  position: absolute;
+  top: 3px;
+  left: 96%;
+  background: #c8c8c8 !important;
+  transform: rotate(90deg);
+  padding: 0px 0 8px 0px;
+  height: 27px;
+  width: 23px;
+
+  border-radius: 6px;
+  z-index: 1;
+}
+.mySwiper .slick-next {
+  position: absolute;
+  top: 30px;
+  left: 96%;
+  background: #c8c8c8 !important;
+  transform: rotate(90deg);
+  padding: 0px 0 8px 0px;
+  height: 27px;
+  width: 23px;
+
+  border-radius: 6px;
+  z-index: 1;
+}
+.green-card {
+  background-color: #32de84;
+  color: #fff;
+}
+.h-200 {
+  height: 180px;
+}
+.mh-200 {
+  height: 220px;
+}
+.message {
+  position: fixed;
+  bottom: 30px;
+  right: 60px;
+  background-color: #32de84;
+  border-radius: 50%;
+  padding: 20px;
+  border: 2px solid #fff;
+  z-index: 999;
+}
+.swiper-services .swiper-button-disabled {
+  display: none;
+}
+.swiper-services .swiper-button-prev,
+.swiper-services .swiper-button-next {
+  background-color: #32cdde;
+  border-radius: 50%;
+  padding: 26px;
+}
+.swiper-services h3 {
+  font-weight: 700 !important;
+}
+.swiper-services .swiper-slide .green-card {
+  background-color: #32cdde !important;
+}
+.swiper-services .swiper-slide:nth-child(even) .green-card {
+  background-color: #32de84 !important;
+}
+.swiper-services .swiper-button-prev::after,
+.swiper-services .swiper-button-next::after {
+  color: #fff;
+  font-weight: bolder;
+  font-size: 22px !important;
+}
+
+.message svg {
+  color: #fff;
+  height: 38px;
+  width: 38px;
+}
+.blue-card {
+  background-color: #32cdde;
+  color: #fff;
+}
+.pos-design-icon {
   position: absolute;
   right: 0;
+  top: 95px;
 }
+.pos-design-pillai {
+  position: absolute;
+  right: -15px;
+  top: 50px;
+}
+.pos-design-bag {
+  position: absolute;
+  right: -45px;
+  top: 50px;
+}
+.dots {
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 3px;
+}
+.mySwiper .slick-list {
+  width: calc(100% - 10%);
+  transform: translate(61px, 15px) !important;
+}
+.mySwiper .slick-next:hover,
+.mySwiper .slick-prev:hover {
+  background-color: #00b556 !important;
+}
+.mySwiper .slick-next:hover::before,
+.mySwiper .slick-prev:hover::before {
+  border-bottom: 12px solid #fff;
+}
+.mySwiper .slick-prev::before {
+  content: "";
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 11px solid #000;
+  transform: rotate(-90deg);
+  position: absolute;
+  top: 8px;
+  left: 5px;
+}
+.mySwiper .slick-next::before {
+  content: "";
+  transform: rotate(90deg);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 11px solid #000;
+  transform: rotate(-30deg);
+  position: absolute;
+  top: 7px;
+  left: 4px;
+}
+
 .top-section-main h5 {
   white-space: nowrap;
+  font-size: 28px;
+  font-weight: 600;
 }
 .position-relative.icon-speaker input {
   height: 55px !important;
   padding-left: 50px;
+}
+.download {
+  background-color: #32de84;
+  border-radius: 50%;
+  padding: 20px;
+}
+.download svg {
+  font-size: 3rem;
+  color: #fff;
+  font-weight: 900;
+}
+.form-post-job input,
+.form-post-job select,
+.form-post-job textarea {
+  border: 1px solid #32de84;
+  border-radius: 40px;
+  padding: 22px 30px;
+  color: #979797;
+}
+.form-post-job select {
+  --bs-form-select-bg-img: url("./assets/cursor.png");
+}
+
+
+.form-post-job select option {
+  color: #979797;
 }
 .login input {
   border: 1px solid rgba(171, 171, 171, 1) !important;
@@ -77,5 +236,19 @@
 @media screen and (max-width: 768px) {
   .login .card {
     width: calc(100% - 8%);
+  }
+  .mySwiper .slick-list {
+    width: calc(100% - 21%);
+    transform: translate(61px, 15px) !important;
+  }
+  .mySwiper .slick-prev,
+  .mySwiper .slick-next {
+    left: 88%;
+  }
+  .message {
+    right: 15px;
+    background-color: #32de84;
+    border-radius: 50%;
+    padding: 10px;
   }
 }

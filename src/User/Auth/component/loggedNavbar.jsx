@@ -3,7 +3,7 @@ import logo from "../../../assets/logo.png";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -12,6 +12,9 @@ import "../../user.css";
 import { FaRegUserCircle } from "react-icons/fa";
 
 export default function LoggedHeader() {
+  const Location = useLocation();
+  console.log(Location);
+
   return (
     <>
       <Navbar
@@ -23,6 +26,12 @@ export default function LoggedHeader() {
           <Link to="/" className="py-1">
             <img src={logo} alt="logo" />
           </Link>
+          {Location.pathname === "/post-new-job" ? (
+            <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
+          ) : (
+            <></>
+          )}
+
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
@@ -36,7 +45,7 @@ export default function LoggedHeader() {
                   <IoMdNotificationsOutline className="fs-4" />
                 </Link>
                 <Link>
-                  <FaRegUserCircle className="fs-1"/>
+                  <FaRegUserCircle className="fs-1" />
                 </Link>
               </div>
             </div>
