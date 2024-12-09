@@ -11,6 +11,8 @@ import Otp from "./User/Auth/otp";
 import ResetPassword from "./User/Auth/reset-password";
 import Main from "./User/Home";
 import NewJob from "./User/newjob";
+import JobManagement from "./User/jobManagement";
+import JobDetail from "./User/job-detail";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Main />} />
           <Route path="/post-new-job" element={<NewJob />} />
+          <Route path="/job-management" element={<JobManagement />} />
+          <Route path="/job-detail/:id" element={<JobDetail />} />
         </Routes>
       </BrowserRouter>
     </>

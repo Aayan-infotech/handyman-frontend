@@ -23,6 +23,33 @@
 }
 .bg-second {
   background-color: #f5f7fa;
+  min-height: 89vh;
+  height: 100%;
+}
+.management .MuiChip-outlined {
+  font-size: 20px;
+  color: #32de84;
+  padding: 25px 6px;
+  border-radius: 50px;
+  border: 1px solid #e1d3ff !important;
+}
+.management li svg {
+  width: 18px;
+  height: 18px;
+}
+.management li span {
+  margin-right: 10px;
+}
+.management hr {
+  border: 2px solid #f1f1f1 !important;
+}
+.management .more-info svg {
+  background-color: #32de84;
+  padding: 15px;
+  border-radius: 50%;
+  color: #fff;
+  width: 70px;
+  height: 70px;
 }
 .notification {
   background-color: #f5f7fa;
@@ -102,6 +129,21 @@
   padding: 20px;
   border: 2px solid #fff;
   z-index: 999;
+  box-shadow: 0 0 25px gray;
+}
+.outline-card{
+  border: 1px solid #32DE84;
+  border-radius: 50px;
+  background-color: transparent !important;
+}
+.outline-card svg{
+  width: 26px !important;
+  height: 26px !important;
+}
+.management .green-card{
+  background-color: #32DE84;
+  border: 0;
+  border-radius: 50px;
 }
 .swiper-services .swiper-button-disabled {
   display: none;
@@ -222,7 +264,9 @@
   --bs-form-select-bg-img: url("./assets/cursor.png");
 }
 
-
+.bg-second a {
+  text-decoration: none;
+}
 .form-post-job select option {
   color: #979797;
 }
@@ -232,6 +276,31 @@
 .otp-input input {
   border: 0 !important;
   border-radius: 20px !important;
+}
+.search {
+  border-radius: 40px;
+  border: 0;
+  padding: 10px 10px 10px 28px !important;
+  min-width: 350px;
+  width: 100%;
+}
+.management svg {
+  width: 40px;
+  height: 40px;
+  color: #32de84;
+}
+.management h5 {
+  font-size: 20px !important;
+}
+.management h3 {
+  font-size: 28px !important;
+  font-weight: 600 !important;
+}
+.management .col-lg-4 {
+  padding: 0 !important;
+}
+.management .w-40 {
+  width: 33% !important;
 }
 @media screen and (max-width: 768px) {
   .login .card {
@@ -245,10 +314,27 @@
   .mySwiper .slick-next {
     left: 88%;
   }
+  .management h3 {
+    font-size: 20px !important;
+  }
+  .management svg {
+    width: 30px;
+    height: 30px;
+  }
+  .management img {
+    width: fit-content !important;
+  }
   .message {
     right: 15px;
     background-color: #32de84;
     border-radius: 50%;
     padding: 10px;
+  }
+  .management .MuiChip-outlined {
+    font-size: 15px;
+    color: #32de84;
+    padding: 20px 6px;
+    border-radius: 50px;
+    border: 1px solid #e1d3ff !important;
   }
 }

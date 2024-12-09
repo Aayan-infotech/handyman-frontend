@@ -22,8 +22,8 @@ export default function LoggedHeader() {
         expand="lg"
         className="position-relative z-1 loggedheader"
       >
-        <Container>
-          <Link to="/" className="py-1">
+        <Container fluid>
+          <Link to="/home" className="py-1">
             <img src={logo} alt="logo" />
           </Link>
           {Location.pathname === "/post-new-job" ? (
@@ -35,10 +35,17 @@ export default function LoggedHeader() {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
-              <div className="position-relative icon">
-                <IoIosSearch />
-                <Form.Control placeholder="search" className="" />
-              </div>
+              {Location.pathname === "/post-new-job" ||
+              Location.pathname === "/home" ? (
+                <>
+                  <div className="position-relative icon">
+                    <IoIosSearch />
+                    <Form.Control placeholder="search" className="" />
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
 
               <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
                 <Link className="notification">
