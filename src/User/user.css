@@ -1,3 +1,14 @@
+.h-200 {
+  height: 180px;
+}
+.mh-200 {
+  height: 220px;
+}
+.mw-40 {
+  max-width: 400px;
+  width: 100%;
+}
+
 .login .card {
   width: calc(100% - 50%);
 
@@ -114,12 +125,7 @@
   background-color: #32de84;
   color: #fff;
 }
-.h-200 {
-  height: 180px;
-}
-.mh-200 {
-  height: 220px;
-}
+
 .message {
   position: fixed;
   bottom: 30px;
@@ -131,17 +137,17 @@
   z-index: 999;
   box-shadow: 0 0 25px gray;
 }
-.outline-card{
-  border: 1px solid #32DE84;
+.outline-card {
+  border: 1px solid #32de84;
   border-radius: 50px;
   background-color: transparent !important;
 }
-.outline-card svg{
+.outline-card svg {
   width: 26px !important;
   height: 26px !important;
 }
-.management .green-card{
-  background-color: #32DE84;
+.management .green-card {
+  background-color: #32de84;
   border: 0;
   border-radius: 50px;
 }
@@ -302,6 +308,87 @@
 .management .w-40 {
   width: 33% !important;
 }
+.image-shadow {
+  position: relative;
+}
+.image-shadow::after {
+  position: absolute;
+  content: "";
+  background-color: #00000042;
+  height: 100%;
+  width: 100%;
+  left: 0;
+}
+.image-shadow .cost {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 25%;
+  /* width: 100%; */
+  /* margin: auto; */
+  text-align: center;
+  color: #fff;
+  z-index: 1;
+}
+.cost h5 {
+  font-size: 50px;
+  font-weight: bold;
+}
+.pos-profile {
+  position: absolute;
+  top: -80px;
+  left: -120px;
+}
+.circle-km {
+  background-color: black;
+  padding: 5px;
+  border-radius: 50%;
+  position: relative;
+}
+.circle-km::before {
+  border: 1px solid black;
+  border-radius: 50%;
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: -3px;
+  left: -3px;
+  padding: 7px;
+}
+.circle-km::after {
+  border: 1px solid black;
+  border-radius: 50%;
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: -6px;
+  left: -6px;
+  padding: 10px;
+}
+.contact svg {
+  border: 1px solid #32de84;
+  color: #32de84;
+  font-size: 48px;
+  padding: 10px;
+  border-radius: 50%;
+}
+.swiper-review-people .card {
+  background-color: #32de85d2;
+}
+.swiper-review-people p{
+  margin-top: 25px;
+}
+.swiper-review-people .swiper-slide:nth-child(odd) img {
+  border: 8px solid #F28724;
+  border-radius: 50%;
+}
+.swiper-review-people .swiper-slide:nth-child(even) img {
+  border: 8px solid #FF6F7F;
+  border-radius: 50%;
+}
+
 @media screen and (max-width: 768px) {
   .login .card {
     width: calc(100% - 8%);
@@ -309,6 +396,14 @@
   .mySwiper .slick-list {
     width: calc(100% - 21%);
     transform: translate(61px, 15px) !important;
+  }
+  .image-shadow img {
+    height: 130px;
+    object-fit: cover;
+  }
+  .cost h5 {
+    font-size: 20px;
+    font-weight: bold;
   }
   .mySwiper .slick-prev,
   .mySwiper .slick-next {
@@ -321,7 +416,7 @@
     width: 30px;
     height: 30px;
   }
-  .management img {
+  .management img , .swiper-review-people img {
     width: fit-content !important;
   }
   .message {
@@ -336,5 +431,14 @@
     padding: 20px 6px;
     border-radius: 50px;
     border: 1px solid #e1d3ff !important;
+  }
+  .pos-profile {
+    position: absolute;
+    top: -80px;
+    left: 94px;
+    right: 0;
+    width: 145px;
+    /* height: 100%; */
+    z-index: 999;
   }
 }

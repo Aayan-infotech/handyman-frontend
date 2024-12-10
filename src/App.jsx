@@ -13,6 +13,8 @@ import Main from "./User/Home";
 import NewJob from "./User/newjob";
 import JobManagement from "./User/jobManagement";
 import JobDetail from "./User/job-detail";
+import ServiceProvider from "./User/Auth/Service-provider";
+import ServiceProviderProfile from "./User/service-provider-profle";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
           <Route path="/post-new-job" element={<NewJob />} />
           <Route path="/job-management" element={<JobManagement />} />
           <Route path="/job-detail/:id" element={<JobDetail />} />
+          <Route path="/service-provider" element={<ServiceProvider />} />
+          <Route path="/service-profile/:id" element={<ServiceProviderProfile />} />
         </Routes>
       </BrowserRouter>
     </>

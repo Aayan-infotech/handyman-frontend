@@ -108,6 +108,7 @@ export default function Main() {
                 </Link>
               </div>
               <div className="col-lg-3">
+              <Link to="/service-provider">
                 <div className="card blue-card border-0 rounded-4 position-relative overflow-hidden h-200">
                   <div className="card-body">
                     <div className="d-flex flex-column align-items-start gap-2">
@@ -131,6 +132,7 @@ export default function Main() {
                     </div>
                   </div>
                 </div>
+                </Link>
               </div>
               <div className="col-lg-6">
               <Link to="/job-management">
