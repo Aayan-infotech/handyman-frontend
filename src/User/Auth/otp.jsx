@@ -76,7 +76,7 @@ export default function Otp({ length = 4 }) {
                       className="rounded-0"
                       inputProps={{
                         maxLength: 1,
-                      
+
                         style: {
                           textAlign: "center",
                           fontSize: "1rem",
@@ -95,23 +95,25 @@ export default function Otp({ length = 4 }) {
                 ))}
               </Row>
               <div className="d-flex justify-content-center align-items-center pt-4">
-                <Button
-                  variant="contained"
-                  color="success"
-                  className="rounded-0 custom-green bg-green-custom"
-                  onClick={getOtpValue}
+                <Link
+                  to="/reset-password"
+                  className="highlighted-text text-decoration-none"
                 >
-                  Reset
-                </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="rounded-0 custom-green bg-green-custom"
+                    onClick={getOtpValue}
+                  >
+                    Reset
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
           <span className="my-3">
             Go back to login page?{" "}
-            <Link
-              to="/login"
-              className="highlighted-text text-decoration-none"
-            >
+            <Link to="/login" className="highlighted-text text-decoration-none">
               Sign in
             </Link>
           </span>

@@ -13,7 +13,7 @@ import Main from "./User/Home";
 import NewJob from "./User/newjob";
 import JobManagement from "./User/jobManagement";
 import JobDetail from "./User/job-detail";
-import ServiceProvider from "./User/Auth/Service-provider";
+import ServiceProvider from "./User/Service-provider";
 import ServiceProviderProfile from "./User/service-provider-profle";
 
 function App() {

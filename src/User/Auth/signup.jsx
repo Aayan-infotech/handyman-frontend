@@ -19,7 +19,7 @@ export default function SignUp() {
           <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
             <div className="card shadow mb-4">
               <div className="card-body">
-               <h2 className="text-center fw-bold fs-1">Sign Up</h2>
+                <h2 className="text-center fw-bold fs-1">Sign Up</h2>
                 <p className="text-center mt-5 mb-4">Let’s Get Started</p>
                 <Form className="py-3">
                   <Form.Group
@@ -94,13 +94,15 @@ export default function SignUp() {
                 </span>
 
                 <div className="d-flex justify-content-center align-items-center py-3">
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="rounded-0 custom-green bg-green-custom"
-                  >
-                    Signup
-                  </Button>
+                  <Link to="/home" className=" text-decoration-none  ">
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="rounded-0 custom-green bg-green-custom"
+                    >
+                      Signup
+                    </Button>
+                  </Link>
                 </div>
                 <span className="w-100 d-flex justify-content-center">
                   Go back to login page?{" "}
@@ -108,7 +110,7 @@ export default function SignUp() {
                     to="/signin"
                     className="highlighted-text text-decoration-none"
                   >
-                     Signin
+                    Signin
                   </Link>
                 </span>
               </div>

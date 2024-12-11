@@ -14,12 +14,12 @@ export default function Login() {
   return (
     <>
       <div className="bg-welcome">
-      <Header/>
+        <Header />
         <div className="container top-avatar login">
           <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
             <div className="card shadow">
               <div className="card-body">
-               <h2 className="text-center fw-bold fs-1">LOGIN</h2>
+                <h2 className="text-center fw-bold fs-1">LOGIN</h2>
                 <p className="text-center mt-5 mb-4">Great You are Back</p>
                 <Form className="py-3">
                   <Form.Group
@@ -55,13 +55,18 @@ export default function Login() {
                   Forgot Password
                 </Link>
                 <div className="d-flex justify-content-center align-items-center py-3">
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="rounded-0 custom-green bg-green-custom"
+                  <Link
+                    to="/home"
+                    className=" text-decoration-none  "
                   >
-                    Login
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="rounded-0 custom-green bg-green-custom"
+                    >
+                      Login
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

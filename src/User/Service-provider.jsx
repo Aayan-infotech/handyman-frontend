@@ -1,11 +1,11 @@
 import react from "react";
-import LoggedHeader from "../Auth/component/loggedNavbar";
+import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
 import { MdMessage } from "react-icons/md";
-import company1 from "../assets/logo/companyLogo.png";
-import company2 from "../assets/logo/companyLogo1.png";
-import company3 from "../assets/logo/companyLogo2.png";
+import company1 from "./assets/logo/companyLogo.png";
+import company2 from "./assets/logo/companyLogo1.png";
+import company3 from "./assets/logo/companyLogo2.png";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { Link } from "react-router-dom";

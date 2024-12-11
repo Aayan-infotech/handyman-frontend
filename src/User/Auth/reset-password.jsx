@@ -57,13 +57,18 @@ export default function ResetPassword() {
                 </Form>
 
                 <div className="d-flex justify-content-center align-items-center py-1">
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="rounded-0 custom-green bg-green-custom"
+                  <Link
+                    to="/login"
+                    className="highlighted-text text-decoration-none"
                   >
-                    Reset
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="rounded-0 custom-green bg-green-custom"
+                    >
+                      Reset
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
