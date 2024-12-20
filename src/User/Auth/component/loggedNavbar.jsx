@@ -38,9 +38,9 @@ export default function LoggedHeader() {
               {Location.pathname === "/post-new-job" ||
               Location.pathname === "/home" ? (
                 <>
-                  <div className="position-relative icon">
+                  <div className="position-relative icon ">
                     <IoIosSearch />
-                    <Form.Control placeholder="search" className="" />
+                    <Form.Control placeholder="search" className="w-100" />
                   </div>
                 </>
               ) : (

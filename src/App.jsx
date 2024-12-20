@@ -15,11 +15,14 @@ import JobManagement from "./User/jobManagement";
 import JobDetail from "./User/job-detail";
 import ServiceProvider from "./User/Service-provider";
 import ServiceProviderProfile from "./User/service-provider-profle";
+import ScrollToTop from "./ScrollToTop";
+import Message from "./User/message";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/welcome" element={<Welcome />} />
@@ -33,7 +36,11 @@ function App() {
           <Route path="/job-management" element={<JobManagement />} />
           <Route path="/job-detail/:id" element={<JobDetail />} />
           <Route path="/service-provider" element={<ServiceProvider />} />
-          <Route path="/service-profile/:id" element={<ServiceProviderProfile />} />
+          <Route
+            path="/service-profile/:id"
+            element={<ServiceProviderProfile />}
+          />
+          <Route path="/message" element={<Message />} />
         </Routes>
       </BrowserRouter>
     </>

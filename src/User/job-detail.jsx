@@ -7,13 +7,16 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { IoIosStar } from "react-icons/io";
+import {Link} from "react-router-dom";
+
 
 export default function JobDetail() {
   return (
     <>
       <LoggedHeader />
-      <div className="message">
+      <div className="message"><Link to="/message">
         <MdMessage />
+</Link>
       </div>
       <div className="bg-second py-5">
         <div className="container">

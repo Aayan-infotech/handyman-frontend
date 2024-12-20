@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 
 export default function Main() {
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -30,8 +30,9 @@ export default function Main() {
   return (
     <>
       <LoggedHeader />
-      <div className="message">
+      <div className="message"><Link to="/message">
         <MdMessage />
+</Link>
       </div>
       <div className="bg-second">
         <div className="container">

@@ -14,8 +14,9 @@ export default function ServiceProvider() {
   return (
     <>
       <LoggedHeader />
-      <div className="message">
+      <div className="message"><Link to="/message">
         <MdMessage />
+</Link>
       </div>
       <div className="bg-second py-3">
         <div className="container">

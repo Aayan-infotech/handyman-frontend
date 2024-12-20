@@ -15,13 +15,16 @@ import reviewImg from "./assets/reviewimg.png";
 import reviewImg1 from "./assets/reviewimg1.png";
 import reviewImg2 from "./assets/reviewimg2.png";
 import reviewImg3 from "./assets/reviewimg3.png";
+import {Link} from "react-router-dom";
+
 
 export default function ServiceProviderProfile() {
   return (
     <>
       <LoggedHeader />
-      <div className="message">
+      <div className="message"><Link to="/message">
         <MdMessage />
+</Link>
       </div>
       <div className="bg-second pb-3">
         <div className="container">
