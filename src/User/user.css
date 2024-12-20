@@ -517,6 +517,39 @@
   height: 40px;
   width: 40px;
 }
+.notification-card {
+  background-color: #32de85;
+  color: #fff;
+}
+.notification-read-card {
+  background-color: #32de8559;
+  color: #000;
+}
+.notification-read-card p {
+  color: #484848;
+}
+.image-shadow .exper {
+  position: absolute;
+  /* left: 0; */
+  right: 5px;
+  bottom: 0%;
+  /* width: 100%; */
+  /* margin: auto; */
+  text-align: center;
+  color: #fff;
+  z-index: 1;
+}
+.profile .color-profile{
+  background-color: #32DE84;
+  border-radius: 50%;
+  padding: 15px 25px;
+  font-size: 50px;
+  color: #fff;
+  text-align: center;
+}
+.profile svg{
+
+}
 @media screen and (max-width: 768px) {
   .login .card {
     width: calc(100% - 8%);

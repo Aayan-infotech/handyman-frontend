@@ -48,10 +48,10 @@ export default function LoggedHeader() {
               )}
 
               <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
-                <Link className="notification">
+                <Link className="notification" to="/notification">
                   <IoMdNotificationsOutline className="fs-4" />
                 </Link>
-                <Link>
+                <Link to="/myprofile">
                   <FaRegUserCircle className="fs-1" />
                 </Link>
               </div>

@@ -17,6 +17,10 @@ import ServiceProvider from "./User/Service-provider";
 import ServiceProviderProfile from "./User/service-provider-profle";
 import ScrollToTop from "./ScrollToTop";
 import Message from "./User/message";
+import Notification from "./User/notification";
+import MyProfile from "./User/myprofile";
+import ChangePassword from "./User/Auth/changePassword";
+import EditProfile from "./User/Auth/editProfile";
 
 function App() {
   return (
@@ -41,6 +45,10 @@ function App() {
             element={<ServiceProviderProfile />}
           />
           <Route path="/message" element={<Message />} />
+          <Route path="/notification" element={<Notification />} />
+          <Route path="/myprofile" element={<MyProfile />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
+          <Route path="/editProfile" element={<EditProfile />} />
         </Routes>
       </BrowserRouter>
     </>

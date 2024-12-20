@@ -30,9 +30,10 @@ export default function Main() {
   return (
     <>
       <LoggedHeader />
-      <div className="message"><Link to="/message">
-        <MdMessage />
-</Link>
+      <div className="message">
+        <Link to="/message">
+          <MdMessage />
+        </Link>
       </div>
       <div className="bg-second">
         <div className="container">
@@ -109,57 +110,57 @@ export default function Main() {
                 </Link>
               </div>
               <div className="col-lg-3">
-              <Link to="/service-provider">
-                <div className="card blue-card border-0 rounded-4 position-relative overflow-hidden h-200">
-                  <div className="card-body">
-                    <div className="d-flex flex-column align-items-start gap-2">
-                      <div className="d-flex flex-row gap-1 align-items-center">
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
+                <Link to="/service-provider">
+                  <div className="card blue-card border-0 rounded-4 position-relative overflow-hidden h-200">
+                    <div className="card-body">
+                      <div className="d-flex flex-column align-items-start gap-2">
+                        <div className="d-flex flex-row gap-1 align-items-center">
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                        </div>
+                        <div className="d-flex flex-row gap-1 align-items-center">
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                        </div>
                       </div>
-                      <div className="d-flex flex-row gap-1 align-items-center">
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
+                      <h3 className="mt-3">Services</h3>
+                      <h6>Service Provider</h6>
+                      <div className=" pos-design-pillai">
+                        <img src={pillai} alt="arrow" />
                       </div>
-                    </div>
-                    <h3 className="mt-3">Services</h3>
-                    <h6>Service Provider</h6>
-                    <div className=" pos-design-pillai">
-                      <img src={pillai} alt="arrow" />
                     </div>
                   </div>
-                </div>
                 </Link>
               </div>
               <div className="col-lg-6">
-              <Link to="/job-management">
-                <div className="card green-card border-0 rounded-4 position-relative overflow-hidden h-200">
-                  <div className="card-body">
-                    <div className="d-flex flex-column align-items-start gap-2">
-                      <div className="d-flex flex-row gap-1 align-items-center">
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
+                <Link to="/job-management">
+                  <div className="card green-card border-0 rounded-4 position-relative overflow-hidden h-200">
+                    <div className="card-body">
+                      <div className="d-flex flex-column align-items-start gap-2">
+                        <div className="d-flex flex-row gap-1 align-items-center">
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                        </div>
+                        <div className="d-flex flex-row gap-1 align-items-center">
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                          <div className="dots"></div>
+                        </div>
                       </div>
-                      <div className="d-flex flex-row gap-1 align-items-center">
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
-                        <div className="dots"></div>
+                      <h2 className="mt-3 fs-1">Job Management</h2>
+                      <h6>Manage Jobs</h6>
+                      <div className=" pos-design-bag ">
+                        <img src={bag} alt="arrow" />
                       </div>
-                    </div>
-                    <h2 className="mt-3 fs-1">Job Management</h2>
-                    <h6>Manage Jobs</h6>
-                    <div className=" pos-design-bag ">
-                      <img src={bag} alt="arrow" />
                     </div>
                   </div>
-                </div>
                 </Link>
               </div>
             </div>
