@@ -238,6 +238,22 @@
 .avatar-selection a {
   text-decoration: none;
 }
+.line-white{
+  border: 1px solid #fff;
+  height: 1px;
+  width: 100%;
+  display: flex;
+  margin-bottom: 10px;
+}
+.price-card h2{
+  font-size: 70px !important;
+  font-weight: medium !important;
+}
+.price-card{
+  background: rgb(50,222,132);
+  background: linear-gradient(90deg, rgba(50,222,132,1) 0%, rgba(50,205,222,1) 100%);
+  color: #fff !important;
+}
 @media screen and (max-width: 768px) {
   .bg-welcome,
   .bg-signup {
@@ -245,6 +261,11 @@
   }
 }
 @media screen and (max-width: 768px) {
+  .avatar-selection p {
+    color: rgba(50, 222, 132, 1);
+    /* width: 100%; */
+    text-align: center;
+}
   img {
     width: 100%;
   }

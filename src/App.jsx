@@ -21,6 +21,14 @@ import Notification from "./User/notification";
 import MyProfile from "./User/myprofile";
 import ChangePassword from "./User/Auth/changePassword";
 import EditProfile from "./User/Auth/editProfile";
+import LoginProvider from "./Provider/auth/login";
+import SignUpProvider from "./Provider/auth/signup";
+import ResetPasswordProvider from "./Provider/auth/reset-password";
+import OtpProvider from "./Provider/auth/otp";
+import ForgetPasswordProvider from "./Provider/auth/forgetPassword";
+import ChangePasswordProvider from "./Provider/auth/changePassword";
+import EditProfileProvider from "./Provider/auth/editProfile";
+import MainProvider from "./Provider/pricing";
 
 function App() {
   return (
@@ -49,6 +57,25 @@ function App() {
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="/editProfile" element={<EditProfile />} />
+
+          {/* provider */}
+          <Route path="/provider/login" element={<LoginProvider />} />
+          <Route path="/provider/signup" element={<SignUpProvider />} />
+          <Route path="/provider/reset" element={<ResetPasswordProvider />} />
+          <Route path="/provider/otp" element={<OtpProvider />} />
+          <Route
+            path="/provider/changePassword"
+            element={<ChangePasswordProvider />}
+          />
+          <Route
+            path="/provider/editProfile"
+            element={<EditProfileProvider />}
+          />
+          <Route
+            path="/provider/forgetpassword"
+            element={<ForgetPasswordProvider />}
+          />
+          <Route path="/provider/pricing" element={<MainProvider />} />
         </Routes>
       </BrowserRouter>
     </>
