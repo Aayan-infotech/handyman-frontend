@@ -19,7 +19,7 @@ export default function PricingProvider() {
           <div className="top-section-main py-4 px-lg-5">
             <h3 className="pb-3">Hello Anshuman</h3>
             <h2 className="fw-bold fs-1 mt-4">Monthly</h2>
-            <div className="row mt-5">
+            <div className="row mt-5 px-3 px-lg-0">
               <div className="col-lg-4 mx-auto pt-4">
                 <div className="d-flex flex-column gap-4">
                   <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">

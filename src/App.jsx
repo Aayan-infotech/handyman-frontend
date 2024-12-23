@@ -30,6 +30,7 @@ import ChangePasswordProvider from "./Provider/auth/changePassword";
 import EditProfileProvider from "./Provider/auth/editProfile";
 import MainProvider from "./Provider/pricing";
 import PricingProvider from "./Provider/pricing-detail";
+import MessageProvider from "./Provider/message";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
           />
           <Route path="/provider/pricing" element={<MainProvider />} />
           <Route path="/provider/pricing-detail/:id" element={<PricingProvider />} />
+          <Route path="/provider/message" element={<MessageProvider />} />
         </Routes>
       </BrowserRouter>
     </>
