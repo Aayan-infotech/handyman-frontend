@@ -229,7 +229,7 @@
 }
 .bg-signup {
   background-image: url(./User/assets/bg-sign.png);
- 
+
   background-position: bottom;
 }
 
@@ -238,23 +238,66 @@
 .avatar-selection a {
   text-decoration: none;
 }
-.line-white{
+.line-white {
   border: 1px solid #fff;
   height: 1px;
   width: 100%;
   display: flex;
   margin-bottom: 10px;
 }
-.price-card h2{
+.price-card h2 {
   font-size: 70px !important;
   font-weight: medium !important;
 }
-.price-card{
-  background: rgb(50,222,132);
-  background: linear-gradient(90deg, rgba(50,222,132,1) 0%, rgba(50,205,222,1) 100%);
+.fixed-curl {
+  position: relative;
+}
+.fixed-curl::after {
+  position: absolute;
+  content: "";
+  background: rgb(50, 222, 132);
+  background: linear-gradient(
+    90deg,
+    rgba(50, 222, 132, 1) 0%,
+    rgba(50, 205, 222, 1) 100%
+  );
+  height: 100%;
+  width: 100%;
+  border-radius: 35%;
+  top: -70%;
+  left: 0;
+  right: 0;
+}
+.fixed-curl .top-section-main {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+  left: 0;
+  right: 0;
+}
+.price-card {
+  background: rgb(50, 222, 132);
+  background: linear-gradient(
+    90deg,
+    rgba(50, 222, 132, 1) 0%,
+    rgba(50, 205, 222, 1) 100%
+  );
   color: #fff !important;
 }
+ .price-detail h2{
+  color: #000;
+}
+ .price-detail svg{
+  color: rgba(50, 222, 132, 1) !important;
+  font-size: 30px;
+}
 @media screen and (max-width: 768px) {
+  .fixed-curl::after {
+    border-radius: 25%;
+    top: -75%;
+  }
   .bg-welcome,
   .bg-signup {
     height: 100%;
@@ -265,7 +308,7 @@
     color: rgba(50, 222, 132, 1);
     /* width: 100%; */
     text-align: center;
-}
+  }
   img {
     width: 100%;
   }

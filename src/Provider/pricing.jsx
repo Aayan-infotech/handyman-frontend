@@ -74,7 +74,7 @@ export default function MainProvider() {
             </div>
             <div className="row py-3 gy-4 mt-4 gx-5">
               <div className="col-lg-4">
-                <Link to="/post-new-job">
+                <Link to="/provider/pricing-detail/789">
                   <div className="card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
                     <div className="card-body d-flex flex-column gap-3 align-items-center">
                       <h2 className="mt-3">$0</h2>
@@ -85,7 +85,7 @@ export default function MainProvider() {
                 </Link>
               </div>
               <div className="col-lg-4">
-                <Link to="/post-new-job">
+                <Link to="/provider/pricing-detail/456">
                   <div className="card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
                     <div className="card-body d-flex flex-column gap-3 align-items-center">
                       <h2 className="mt-3">$29</h2>
@@ -96,7 +96,7 @@ export default function MainProvider() {
                 </Link>
               </div>
               <div className="col-lg-4">
-                <Link to="/post-new-job">
+                <Link to="/provider/pricing-detail/123">
                   <div className="card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
                     <div className="card-body d-flex flex-column gap-3 align-items-center">
                       <h2 className="mt-3">$99</h2>

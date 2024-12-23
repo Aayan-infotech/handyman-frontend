@@ -29,6 +29,7 @@ import ForgetPasswordProvider from "./Provider/auth/forgetPassword";
 import ChangePasswordProvider from "./Provider/auth/changePassword";
 import EditProfileProvider from "./Provider/auth/editProfile";
 import MainProvider from "./Provider/pricing";
+import PricingProvider from "./Provider/pricing-detail";
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function App() {
             element={<ForgetPasswordProvider />}
           />
           <Route path="/provider/pricing" element={<MainProvider />} />
+          <Route path="/provider/pricing-detail/:id" element={<PricingProvider />} />
         </Routes>
       </BrowserRouter>
     </>

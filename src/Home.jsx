@@ -16,7 +16,6 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { SlLocationPin } from "react-icons/sl";
 import sidepic from "./assets/sidepic.png";
-
 import { Link } from "react-router-dom";
 import { LuPencilRuler } from "react-icons/lu";
 import { GiNetworkBars } from "react-icons/gi";
