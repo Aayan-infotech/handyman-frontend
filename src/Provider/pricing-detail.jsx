@@ -10,7 +10,7 @@ export default function PricingProvider() {
     <>
       <LoggedHeader />
       <div className="message">
-        <Link to="/provider/message">
+        <Link to="/message">
           <MdMessage />
         </Link>
       </div>
@@ -40,9 +40,14 @@ export default function PricingProvider() {
                     </h2>
                     <FaRegCircleCheck />
                   </div>
-                  <Button variant="contained" className="custom-green bg-green-custom rounded-5 py-3" >
-                  Purchase
-                  </Button>
+                  <Link to="/provider/payment" className="text-decoration-none ">
+                    <Button
+                      variant="contained"
+                      className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                    >
+                      Purchase
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

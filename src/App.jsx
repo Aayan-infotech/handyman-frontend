@@ -30,7 +30,9 @@ import ChangePasswordProvider from "./Provider/auth/changePassword";
 import EditProfileProvider from "./Provider/auth/editProfile";
 import MainProvider from "./Provider/pricing";
 import PricingProvider from "./Provider/pricing-detail";
-import MessageProvider from "./Provider/message";
+import Payment from "./Provider/payment";
+import PaymentDetail from "./Provider/payment-detail";
+import HomeProvider from "./Provider/Home";
 
 function App() {
   return (
@@ -78,8 +80,16 @@ function App() {
             element={<ForgetPasswordProvider />}
           />
           <Route path="/provider/pricing" element={<MainProvider />} />
-          <Route path="/provider/pricing-detail/:id" element={<PricingProvider />} />
-          <Route path="/provider/message" element={<MessageProvider />} />
+          <Route
+            path="/provider/pricing-detail/:id"
+            element={<PricingProvider />}
+          />
+          <Route path="/provider/payment" element={<Payment />} />
+          <Route
+            path="/provider/paymentdetail/:id"
+            element={<PaymentDetail />}
+          />
+          <Route path="/provider/home" element={<HomeProvider />} />
         </Routes>
       </BrowserRouter>
     </>

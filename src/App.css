@@ -286,12 +286,72 @@
   );
   color: #fff !important;
 }
- .price-detail h2{
+.price-detail h2 {
   color: #000;
 }
- .price-detail svg{
+.price-detail svg {
   color: rgba(50, 222, 132, 1) !important;
   font-size: 30px;
+}
+.card-wallet {
+  background-color: #3583f621 !important;
+}
+.fs-70 {
+  font-size: 5.5rem !important;
+}
+.price-line .col-lg-3,
+.price-line .price-line-line,
+.valid-thru {
+  position: relative;
+}
+.valid-thru::before {
+  position: absolute;
+  content: "VALID THRU";
+  top: 5px;
+  left: -35px;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 500;
+  max-width: 80%;
+}
+.valid-thru {
+  font-size: 20px;
+}
+.price-line .col-lg-3::after , .price-line .price-line-line::after {
+  position: absolute;
+  content: "";
+  height: 100%;
+  right: -10px;
+  top: 0;
+  z-index: 1;
+  border: 1px solid #32de84;
+}
+.debit-card {
+  background: rgb(253, 14, 14);
+  background: linear-gradient(
+    90deg,
+    rgba(253, 14, 14, 1) 0%,
+    rgba(70, 209, 218, 1) 88%
+  );
+  color: #fff !important;
+}
+.credit-card {
+  background: rgb(253, 14, 14);
+  background: linear-gradient(
+    90deg,
+    rgba(253, 14, 14, 1) 0%,
+    rgba(112, 60, 109, 1) 88%
+  );
+  color: #fff !important;
+}
+.selected-card {
+  background: rgb(10, 57, 126);
+  background: linear-gradient(
+    90deg,
+    rgba(10, 57, 126, 1) 0%,
+    rgba(112, 60, 109, 1) 88%
+  );
+  color: #fff !important;
 }
 @media screen and (max-width: 768px) {
   .fixed-curl::after {
