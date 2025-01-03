@@ -53,7 +53,7 @@ export default function Welcome() {
                   </div>
                 </div>
               </Link>
-              <a href="/provider/login" className="w-100">
+              <Link to="/provider/login" className="w-100">
                 <div className="card border-0 shadow-lg rounded-4 px-4 pe-5 py-2 ">
                   <div className="card-body">
                     <div className="d-flex flex-column flex-lg-row align-items-center gap-4">
@@ -67,7 +67,7 @@ export default function Welcome() {
                     </div>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -33,6 +33,8 @@ import PricingProvider from "./Provider/pricing-detail";
 import Payment from "./Provider/payment";
 import PaymentDetail from "./Provider/payment-detail";
 import HomeProvider from "./Provider/Home";
+import JobSpecification from "./Provider/jobSpecification";
+import Chat from "./User/chat";
 
 function App() {
   return (
@@ -90,6 +92,15 @@ function App() {
             element={<PaymentDetail />}
           />
           <Route path="/provider/home" element={<HomeProvider />} />
+          <Route
+            path="/provider/jobspecification/:id"
+            element={<JobSpecification />}
+          />
+           <Route
+            path="/provider/chat/:id"
+            element={<Chat />}
+          />
+           <Route path="/provider/myprofile" element={<MyProfile />} />
         </Routes>
       </BrowserRouter>
     </>

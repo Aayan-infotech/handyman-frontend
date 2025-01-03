@@ -15,9 +15,19 @@ import reviewImg from "./assets/reviewimg.png";
 import reviewImg1 from "./assets/reviewimg1.png";
 import reviewImg2 from "./assets/reviewimg2.png";
 import reviewImg3 from "./assets/reviewimg3.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { FaLock } from "react-icons/fa";
+import { PiCircleHalfFill } from "react-icons/pi";
+import Button from "react-bootstrap/Button";
+import { FiEdit } from "react-icons/fi";
+import { CiLogout } from "react-icons/ci";
+import { IoCallSharp, IoLocationSharp } from "react-icons/io5";
+import { IoMdMail } from "react-icons/io";
+import { CiBadgeDollar } from "react-icons/ci";
 
 export default function MyProfile() {
+  const Location = useLocation();
+  console.log(Location);
   return (
     <>
       <LoggedHeader />
@@ -31,155 +41,252 @@ export default function MyProfile() {
           <div className="image-shadow">
             <img src={serviceProviderImage} alt="image" />
             <div className="exper">
-              <h5 className="fs-3 fw-medium">2 YEARS</h5>
+              <h5 className="fs-5 fw-medium">2 YEARS</h5>
+            </div>
+          </div>
+          <div className="row gy-4 gx-lg-3">
+            <div className="col-lg-3">
+              <div className="position-relative ">
+                <div className="pos-profile start-0 mx-auto">
+                  <img src={profilePicture} alt="profile" />
+                </div>
+              </div>
+            </div>
+
+            <div className="col-lg-6">
+              <div className="  mt-5 mt-lg-0 text-center text-lg-start">
+                <h3 className="fw-bold fs-1">John Doe</h3>
+                <h5 className="text-muted">Freelance Janitor</h5>
+                <p className="mb-0">
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu
+                </p>
+              </div>
+            </div>
+
+            <div className="col-lg-3">
+              <div className="w-100 ">
+                <div className="d-flex flex-column justify-content-between gap-3 align-items-center align-items-lg-end mt-lg-1">
+                  <Button
+                    variant="dark"
+                    className="d-flex gap-2 align-items-center mw-20 justify-content-center"
+                  >
+                    <FiEdit />
+                    Edit Profile
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="d-flex gap-2 align-items-center  mw-20 justify-content-center"
+                  >
+                    <CiLogout />
+                    Logout
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    className="d-flex gap-2 align-items-center  mw-20 justify-content-center"
+                  >
+                    Delete Account
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="">
-            <h4 className="text-muted mt-4">Previous Rating</h4>
-            <Swiper
-              navigation={true}
-              spaceBetween={50}
-              modules={[Autoplay, Pagination, Navigation]}
-              autoplay={{
-                delay: 4500,
-                disableOnInteraction: false,
-              }}
-              pagination={true}
-              F
-              className="swiper-review-people swiper-services mb-5"
-              breakpoints={{
-                640: {
-                  slidesPerView: 1,
-                  spaceBetween: 10,
-                },
-                768: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                1024: {
-                  slidesPerView: 3,
-                  spaceBetween: 30,
-                },
-                1200: {
-                  slidesPerView: 4,
-                  spaceBetween: 40,
-                },
-              }}
+          <div className="d-flex align-items-center gap-4 gap-lg-5 flex-column flex-lg-row mt-3">
+            <div className="contact">
+              <a href="tel:+0173761786" className="text-dark">
+                <IoCallSharp />
+                +01 73761786
+              </a>
+            </div>
+            <div className="contact">
+              <a className="text-dark">
+                <IoLocationSharp />
+                xyz city, USA 200187
+              </a>
+            </div>
+            <div className="contact">
+              <a href="mailto:henry@gmail.com" className="text-dark">
+                <IoMdMail />
+                henry@gmail.com
+              </a>
+            </div>
+          </div>
+
+          {Location.pathname.includes("provider") ? (
+            <div className="d-flex flex-row flex-wrap justify-content-lg-start justify-content-center gap-1 gap-lg-2 align-items-center profile my-4">
+              <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
+                <span className="fs-6">Electrical</span>
+              </div>
+              <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
+                <span className="fs-6">Electronics</span>
+              </div>
+              <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
+                <span className="fs-6">Mechanics</span>
+              </div>
+              <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
+                <span className="fs-6">Plumbing</span>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          <div className="row gy-4 my-4">
+            <div
+              className={` ${
+                Location.pathname.includes("provider") ? "col-lg-2" : "col-lg-3"
+              }`}
             >
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
+              <div className="card border-0 rounded-5 h-100">
+                <div className="card-body">
+                  <div
+                    className={`d-flex gap-3 align-items-center justify-content-center ${
+                      Location.pathname.includes("provider")
+                        ? "flex-column"
+                        : "flex-row"
+                    }`}
+                  >
+                    <div className="circle-container">
+                      <div className="progress-circle">
+                        <div className="lock-icon">
+                          <FaLock />
+                        </div>
                       </div>
                     </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
+
+                    <div className="d-flex flex-row gap-3 align-items-center">
+                      <span className="text-success text-center">
+                        Change Password
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg1} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
+              </div>
+            </div>
+            <div
+              className={` ${
+                Location.pathname.includes("provider") ? "col-lg-2" : "col-lg-3"
+              }`}
+            >
+              <div className="card border-0 rounded-5 h-100">
+                <div className="card-body">
+                  <div
+                    className={`d-flex gap-3 align-items-center justify-content-center ${
+                      Location.pathname.includes("provider")
+                        ? "flex-column"
+                        : "flex-row"
+                    }`}
+                  >
+                    <div className="circle-container">
+                      <div className="progress-circle">
+                        <div className="lock-icon">
+                          <PiCircleHalfFill />
+                        </div>
                       </div>
                     </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
+
+                    <div className="d-flex flex-row gap-3 align-items-center">
+                      <span className="text-success text-center">
+                        Radius Setting
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg2} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
+              </div>
+            </div>
+            <div
+              className={` ${
+                Location.pathname.includes("provider") ? "col-lg-2" : "col-lg-3"
+              }`}
+            >
+              <div className="card border-0 rounded-5 h-100">
+                <div className="card-body">
+                  <div
+                    className={`d-flex gap-3 align-items-center justify-content-center ${
+                      Location.pathname.includes("provider")
+                        ? "flex-column"
+                        : "flex-row"
+                    }`}
+                  >
+                    <div className="circle-container">
+                      <div className="progress-circle">
+                        <div className="lock-icon">
+                          <FaLock />
+                        </div>
                       </div>
                     </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
+
+                    <div className="d-flex flex-row gap-3 align-items-center">
+                      <span className="text-success text-center">
+                        Notification setting
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg3} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
+              </div>
+            </div>
+            <div
+              className={` ${
+                Location.pathname.includes("provider") ? "col-lg-2" : "col-lg-3"
+              }`}
+            >
+              <div className="card border-0 rounded-5 h-100">
+                <div className="card-body">
+                  <div
+                    className={`d-flex gap-3 align-items-center justify-content-center ${
+                      Location.pathname.includes("provider")
+                        ? "flex-column"
+                        : "flex-row"
+                    }`}
+                  >
+                    <div className="circle-container">
+                      <div className="progress-circle">
+                        <div className="lock-icon">
+                          <FaLock />
+                        </div>
                       </div>
                     </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
+
+                    <div className="d-flex flex-row gap-3 align-items-center">
+                      <span className="text-success text-center">
+                        Privacy Setting
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
+              </div>
+            </div>
+            <div
+              className={` ${
+                Location.pathname.includes("provider") ? "col-lg-2" : "col-lg-3"
+              }`}
+            >
+              <div className="card border-0 rounded-5 h-100">
+                <div className="card-body">
+                  <div
+                    className={`d-flex gap-3 align-items-center justify-content-center ${
+                      Location.pathname.includes("provider")
+                        ? "flex-column"
+                        : "flex-row"
+                    }`}
+                  >
+                    <div className="circle-container">
+                      <div className="progress-circle">
+                        <div className="lock-icon">
+                          <CiBadgeDollar />
+                        </div>
                       </div>
                     </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
+
+                    <div className="d-flex flex-row gap-3 align-items-center">
+                      <span className="text-success text-center">
+                        Manange Subscription
+                      </span>
                     </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
                   </div>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
-                    </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-            </Swiper>
+              </div>
+            </div>
           </div>
         </div>
       </div>

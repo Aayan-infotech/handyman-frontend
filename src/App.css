@@ -6,6 +6,11 @@
   width: fit-content !important;
   min-width: auto !important;
 }
+.bg-red-outline {
+  border: 1px solid #fd0e0e !important;
+  background-color: #fff !important;
+  color: #fd0e0e !important;
+}
 .navbar a {
   text-decoration: none;
   color: #000 !important;
@@ -317,7 +322,8 @@
 .valid-thru {
   font-size: 20px;
 }
-.price-line .col-lg-3::after , .price-line .price-line-line::after {
+.price-line .col-lg-3::after,
+.price-line .price-line-line::after {
   position: absolute;
   content: "";
   height: 100%;
@@ -352,6 +358,47 @@
     rgba(112, 60, 109, 1) 88%
   );
   color: #fff !important;
+}
+
+.circle-container {
+  position: relative;
+  width: 55px; /* Adjust size */
+  height: 55px;
+}
+
+.progress-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    #00c853 0deg,
+    /* Green Progress */ #00c853 270deg,
+    /* Full progress at 50% */ #e0e0e0 90deg /* Remaining is light gray */
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lock-icon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.mw-20 {
+  max-width: 200px;
+  width: 100%;
+}
+.lock-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #00c853; /* Same green as progress */
 }
 @media screen and (max-width: 768px) {
   .fixed-curl::after {

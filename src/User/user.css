@@ -506,6 +506,16 @@
 .input-send {
   position: relative;
 }
+.input-send-provider{
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  max-width: calc(100% - 20%);
+  min-width: 350px;
+}
 .input-send svg {
   position: absolute;
   background-color: #32de84;
@@ -513,9 +523,9 @@
   padding: 8px;
   border-radius: 50%;
   right: 5px;
-  top: 8px;
-  height: 40px;
-  width: 40px;
+  bottom: 8px;
+  height: 20px;
+  width: 20px;
 }
 .notification-card {
   background-color: #32de85;
