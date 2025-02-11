@@ -1,89 +1,134 @@
 import react from "react";
-import Container from "react-bootstrap/Container";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
-import logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../user.css";
-import facebook from "../assets/logo/facebook.png";
-import google from "../assets/logo/iconGoogle.png";
+import axios from "axios";
+import Toaster from "../../Toaster";
+import Loader from "../../Loader";
 export default function ResetPassword() {
+  const [password, setPassword] = react.useState("");
+  const [newPassword, setNewPassword] = react.useState("");
+  const [toastProps, setToastProps] = react.useState({ message: "", type: "" });
+  const [loading, setLoading] = react.useState(false);
+  const email = localStorage.getItem("verifyEmailOtp");
+  const navigate = useNavigate();
+
+  const handleReset = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    if (newPassword !== password) {
+      setToastProps({ message: "Passwords do not match", type: "error" });
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://44.196.64.110:7777/api/auth/reset-password-with-otp",
+        {
+          email,
+          newPassword,
+        }
+      );
+
+      if (response.status === 200) {
+        setToastProps({ message: response?.data?.message, type: "success" });
+        localStorage.removeItem("verifyEmailOtp");
+        setPassword("");
+        setLoading(false);
+        setNewPassword("");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+      setLoading(false)
+      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      if (error?.response?.data?.message && !error?.response?.data?.error) {
+        setToastProps({
+          message: error?.response?.data?.message,
+          type: "error",
+        });
+      }
+    }
+  };
+
   return (
     <>
-      <div className="bg-welcome">
-        <Header />
-        <div className="container top-avatar login">
-          <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
-            <div className="card shadow">
-              <div className="card-body">
-                <h2 className="text-center fw-bold fs-1">Reset Password</h2>
-                <p className="text-center mt-5 mb-4">
-                  Please enter new password to reset password
-                </p>
-                <Form className="py-3">
-                  <Form.Group
-                    as={Row}
-                    className="mb-3 "
-                    controlId="formPlaintextEmail"
-                  >
-                    <Form.Label column sm="5" className="px-lg-0">
-                      Enter new Password
-                    </Form.Label>
-                    <Col sm="7">
-                      <Form.Control
-                        type="password"
-                        placeholder="Enter new Password"
-                      />
-                    </Col>
-                  </Form.Group>
-                  <Form.Group
-                    as={Row}
-                    className="mb-3 "
-                    controlId="formPlaintextEmail"
-                  >
-                    <Form.Label column sm="5" className="px-lg-0">
-                      Confirm new password
-                    </Form.Label>
-                    <Col sm="7">
-                      <Form.Control
-                        type="password"
-                        placeholder="Confirm new password"
-                      />
-                    </Col>
-                  </Form.Group>
-                </Form>
+      {loading === true ? (
+        <Loader />
+      ) : (
+        <div className="bg-welcome">
+          <Header />
+          <div className="container top-avatar login">
+            <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
+              <div className="card shadow">
+                <div className="card-body">
+                  <h2 className="text-center fw-bold fs-1">Reset Password</h2>
+                  <p className="text-center mt-5 mb-4">
+                    Please enter new password to reset password
+                  </p>
+                  <Form className="py-3">
+                    <Form.Group as={Row} className="mb-3 ">
+                      <Form.Label column sm="5" className="px-lg-0">
+                        Enter new Password
+                      </Form.Label>
+                      <Col sm="7">
+                        <Form.Control
+                          type="password"
+                          placeholder="Enter new Password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3 ">
+                      <Form.Label column sm="5" className="px-lg-0">
+                        Confirm new password
+                      </Form.Label>
+                      <Col sm="7">
+                        <Form.Control
+                          type="password"
+                          placeholder="Confirm new password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                      </Col>
+                    </Form.Group>
+                  </Form>
 
-                <div className="d-flex justify-content-center align-items-center py-1">
-                  <Link
-                    to="/login"
-                    className="highlighted-text text-decoration-none"
-                  >
+                  <div className="d-flex justify-content-center align-items-center py-1">
                     <Button
                       variant="contained"
                       color="success"
                       className="rounded-0 custom-green bg-green-custom"
+                      onClick={handleReset}
                     >
                       Reset
                     </Button>
-                  </Link>
+                  </div>
                 </div>
               </div>
+              <span className="my-3">
+                Go back to login page?{" "}
+                <Link
+                  to="/login"
+                  className="highlighted-text text-decoration-none"
+                >
+                  Sign in
+                </Link>
+              </span>
             </div>
-            <span className="my-3">
-              Go back to login page?{" "}
-              <Link
-                to="/login"
-                className="highlighted-text text-decoration-none"
-              >
-                Sign in
-              </Link>
-            </span>
           </div>
         </div>
-      </div>
+      )}
+
+      <Toaster message={toastProps.message} type={toastProps.type} />
     </>
   );
 }

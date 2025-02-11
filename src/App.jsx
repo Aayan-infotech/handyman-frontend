@@ -35,6 +35,7 @@ import PaymentDetail from "./Provider/payment-detail";
 import HomeProvider from "./Provider/Home";
 import JobSpecification from "./Provider/jobSpecification";
 import Chat from "./User/chat";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/otp" element={<Otp />} />
+          <Route path="/forgot-password/otp" element={<Otp />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Main />} />
           <Route path="/post-new-job" element={<NewJob />} />
@@ -96,11 +98,8 @@ function App() {
             path="/provider/jobspecification/:id"
             element={<JobSpecification />}
           />
-           <Route
-            path="/provider/chat/:id"
-            element={<Chat />}
-          />
-           <Route path="/provider/myprofile" element={<MyProfile />} />
+          <Route path="/provider/chat/:id" element={<Chat />} />
+          <Route path="/provider/myprofile" element={<MyProfile />} />
         </Routes>
       </BrowserRouter>
     </>

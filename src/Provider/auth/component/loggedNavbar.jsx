@@ -1,4 +1,4 @@
-import react from "react";
+import react, { useEffect } from "react";
 import logo from "../../../assets/logo.png";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -10,10 +10,12 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
 import "../../../User/user.css";
 import { FaRegUserCircle } from "react-icons/fa";
+import axios from "axios";
 
 export default function LoggedHeader() {
   const Location = useLocation();
   console.log(Location);
+ 
 
   return (
     <>

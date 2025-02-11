@@ -1,24 +1,37 @@
-import React, { useState, useRef } from "react";
-import Container from "react-bootstrap/Container";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
-import Form from "react-bootstrap/Form";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
 import TextField from "@mui/material/TextField";
 import "../user.css";
+import Loader from "../../Loader";
+import Toaster from "../../Toaster";
+import axios from "axios";
 
-export default function Otp({ length = 4 }) {
+export default function Otp({ length = 6 }) {
   const [otp, setOtp] = useState(Array(length).fill(""));
   const inputRefs = useRef([]);
+  const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
+  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [otpValue, setOtpValue] = useState("");
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const email = searchParams.get("email");
+  const Provider = searchParams.get("type");
+
+  const forgetValidation = location.pathname.includes("forgot-password");
+  console.log(forgetValidation);
 
   const handleChange = (value, index) => {
-    if (!/^[0-9]?$/.test(value)) return; // Only allow digits
+    if (!/^[0-9]?$/.test(value)) return;
+
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Move focus to the next input if available
     if (value && index < length - 1) {
       inputRefs.current[index + 1].focus();
     }
@@ -51,74 +64,162 @@ export default function Otp({ length = 4 }) {
       inputRefs.current[lastIndex].focus();
     }
   };
+  useEffect(() => {
+    setOtpValue(otp.join(""));
+    console.log("Updated OTP:", otp.join(""));
+  }, [otp]);
 
-  const getOtpValue = () => {
-    alert(`Entered OTP: ${otp.join("")}`);
+  const handleOtp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://44.196.64.110:7777/api/auth/verify-email",
+        {
+          email,
+          verificationOTP: otpValue,
+          userType: Provider || "hunter",
+        }
+      );
+      if (response.status === 200 || response.status === 201) {
+        setToastProps({ message: response?.data?.message, type: "success" });
+
+        setOtp(Array(length).fill(""));
+        if (Provider === "provider") {
+          localStorage.setItem("verifyEmailOtp", email);
+          setLoading(false);
+          setTimeout(() => {
+            navigate(`/provider/login`);
+          }, 2000);
+        } else {
+          localStorage.setItem("verifyEmailOtp", email);
+          setLoading(false);
+          setTimeout(() => {
+            navigate(`/login`);
+          }, 2000);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      if (error?.response?.data?.message && !error?.response?.data?.error) {
+        setToastProps({
+          message: error?.response?.data?.message,
+          type: "error",
+        });
+      }
+    }
+  };
+
+  const handleForgetOtp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://44.196.64.110:7777/api/auth/verify-otp",
+        {
+          email,
+          verificationOTP: otpValue,
+        }
+      );
+      if (response.status === 200 || response.status === 201) {
+        setToastProps({ message: response?.data?.message, type: "success" });
+        setLoading(false);
+        setOtp(Array(length).fill(""));
+        localStorage.setItem("verifyEmailOtp", email);
+        setTimeout(() => {
+          navigate(`/reset-password`);
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false)
+      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      if (error?.response?.data?.message && !error?.response?.data?.error) {
+        setToastProps({
+          message: error?.response?.data?.message,
+          type: "error",
+        });
+      }
+    }
   };
 
   return (
-    <div className="bg-welcome">
-      <Header />
-      <div className="container top-avatar login">
-        <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
-          <div className="card shadow">
-            <div className="card-body">
-              <h2 className="text-center fw-bold fs-1">Reset Password</h2>
-              <p className="text-center mt-5 mb-4">
-                Please enter OTP to reset password
-              </p>
+    <>
+      {loading === true ? (
+        <Loader />
+      ) : (
+        <div className="bg-welcome">
+          <Header />
+          <div className="container top-avatar login">
+            <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
+              <div className="card shadow">
+                <div className="card-body">
+                  <h2 className="text-center fw-bold fs-1">
+                    {forgetValidation ? "Forgot Password" : "Verify OTP"}
+                  </h2>
+                  <p className="text-center mt-5 mb-4">
+                    Please enter OTP to{" "}
+                    {forgetValidation
+                      ? "Forgot password"
+                      : "verify your account"}
+                  </p>
 
-              <Row className="justify-content-center">
-                {otp.map((digit, index) => (
-                  <Col key={index} xs="auto" className="otp-input">
-                    <TextField
-                      variant="outlined"
-                      className="rounded-0"
-                      inputProps={{
-                        maxLength: 1,
-
-                        style: {
-                          textAlign: "center",
-                          fontSize: "1rem",
-                          width: "2rem",
-                          borderRadius: "10px",
-                          border: "0",
-                        },
-                      }}
-                      value={digit}
-                      onChange={(e) => handleChange(e.target.value, index)}
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                      onPaste={(e) => handlePaste(e)}
-                      inputRef={(el) => (inputRefs.current[index] = el)}
-                    />
-                  </Col>
-                ))}
-              </Row>
-              <div className="d-flex justify-content-center align-items-center pt-4">
+                  <Row className="justify-content-center">
+                    {Array.isArray(otp) &&
+                      otp.map((digit, index) => (
+                        <Col key={index} xs="2" className="otp-input">
+                          <TextField
+                            variant="outlined"
+                            className="rounded-0"
+                            inputProps={{
+                              maxLength: 1,
+                              style: {
+                                textAlign: "center",
+                                fontSize: "1rem",
+                                width: "2rem",
+                                borderRadius: "10px",
+                                border: "0",
+                              },
+                            }}
+                            value={digit}
+                            onChange={(e) =>
+                              handleChange(e.target.value, index)
+                            }
+                            onKeyDown={(e) => handleKeyDown(e, index)}
+                            onPaste={(e) => handlePaste(e)}
+                            inputRef={(el) => (inputRefs.current[index] = el)}
+                          />
+                        </Col>
+                      ))}
+                  </Row>
+                  <div className="d-flex justify-content-center align-items-center pt-4">
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="rounded-0 custom-green bg-green-custom"
+                      onClick={forgetValidation ? handleForgetOtp : handleOtp}
+                    >
+                      {forgetValidation ? "Reset" : "Verify"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <span className="my-3">
+                Go back to login page?{" "}
                 <Link
-                  to="/reset-password"
+                  to="/login"
                   className="highlighted-text text-decoration-none"
                 >
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="rounded-0 custom-green bg-green-custom"
-                    onClick={getOtpValue}
-                  >
-                    Reset
-                  </Button>
+                  Sign in
                 </Link>
-              </div>
+              </span>
             </div>
           </div>
-          <span className="my-3">
-            Go back to login page?{" "}
-            <Link to="/login" className="highlighted-text text-decoration-none">
-              Sign in
-            </Link>
-          </span>
         </div>
-      </div>
-    </div>
+      )}
+
+      <Toaster message={toastProps.message} type={toastProps.type} />
+    </>
   );
 }
