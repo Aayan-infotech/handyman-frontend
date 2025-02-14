@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage } from "react-icons/md";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { getProviderUser } from "../Slices/userSlice";
+import { handlePayment } from "../Slices/paymentSlice";
 import Loader from "../Loader";
 import axios from "axios"; // Import axios
+import Toaster from "../Toaster";
 
 export default function PricingProvider() {
   const { id } = useParams();
-  const [name, setName] = useState("");
+  const navigate = useNavigate();
+  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const name = localStorage.getItem("ProviderName");
   const [title, setTitle] = useState("");
+  const [transactionId, setTransactionId] = useState(45435435435);
+  const [transactionDate, setTransactionDate] = useState(new Date());
+  const [transactionStatus, setTransactionStatus] = useState("done");
+  const [subscriptionAmount, setSubscriptionAmount] = useState("");
+  const [transactionAmount, setTransactionAmount] = useState("");
+  const [transactionMode, setTransactionMode] = useState("Pending");
+  const [subscriptionId, setSubscriptionId] = useState(
+    "67aef862ccb4059e6e9f4bd4"
+  );
+
   const [description, setDescription] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false); // Define loading state
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user?.data);
-
-  useEffect(() => {
-    dispatch(getProviderUser()).then(() => {
-      setName(user.contactName);
-    });
-  }, []);
-  console.log(id);
-
+  console.log(transactionDate);
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -36,6 +43,8 @@ export default function PricingProvider() {
         setData(res?.data?.data);
         setTitle(res?.data?.data?.title);
         setDescription(res?.data?.data?.description);
+        setSubscriptionAmount(res?.data?.data?.amount);
+        setTransactionAmount(res?.data?.data?.amount);
         console.log(data);
 
         setLoading(false);
@@ -46,7 +55,49 @@ export default function PricingProvider() {
     getData();
   }, []);
 
-  console.log(data);
+  const homeNavigation = () => {
+    navigate("/provider/home");
+  };
+  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const result = await dispatch(
+        handlePayment({
+          transactionId,
+          transactionDate,
+          transactionStatus,
+          transactionAmount,
+          transactionMode,
+          SubscriptionId: subscriptionId,
+          SubscriptionAmount: subscriptionAmount,
+        })
+      );
+      if (handlePayment.fulfilled.match(result)) {
+        setToastProps({
+          message: "Password changed Successfully",
+          type: "success",
+        });
+        setLoading(false);
+        setTimeout(() => {
+          navigate("/provider/myprofile");
+        }, 2000);
+      } else {
+        const errorMessage =
+          result.payload.message ||
+          "Failed to change password. Please check your credentials.";
+        setToastProps({ message: errorMessage, type: "error" });
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setToastProps({ message: error, type: "error" });
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -90,17 +141,16 @@ export default function PricingProvider() {
                           <FaRegCircleCheck />
                         </div>
                         <span className="text-dark">{title}</span>
-                        <Link
-                          to="/provider/payment"
-                          className="text-decoration-none "
-                        >
+                      
                           <Button
                             variant="contained"
                             className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            // onClick={handleSubmit}
+                            onClick={homeNavigation}
                           >
                             Purchase
                           </Button>
-                        </Link>
+                       
                       </div>
                     </div>
                   </div>
@@ -110,6 +160,8 @@ export default function PricingProvider() {
           </div>
         </div>
       )}
+
+      <Toaster message={toastProps.message} type={toastProps.type} />
     </>
   );
 }

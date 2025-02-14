@@ -1,4 +1,4 @@
-import react from "react";
+import react, { useEffect, useState } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
@@ -14,6 +14,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Button from "@mui/material/Button";
 import speaker from "./assets/announcement.png";
+import { getProviderNearbyJobs } from "../Slices/providerSlice";
+import Loader from "../Loader";
+import axios from "axios"; // Import axios
+import Toaster from "../Toaster";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function HomeProvider() {
   const settings = {
@@ -24,6 +29,50 @@ export default function HomeProvider() {
     vertical: true,
     verticalSwiping: true,
   };
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(false);
+  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const name = localStorage.getItem("ProviderName");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleAllData = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+
+      try {
+        const result = await dispatch(
+          getProviderNearbyJobs({
+            businessType,
+            services,
+            latitude,
+            longitude,
+            radius,
+            page,
+            limit,
+          })
+        );
+        if (getProviderNearbyJobs.fulfilled.match(result)) {
+          setToastProps({
+            message: "Nearby Jobs Fetched Successfully",
+            type: "success",
+          });
+          setLoading(false);
+        } else {
+          const errorMessage = result.payload.message;
+          setToastProps({ message: errorMessage, type: "error" });
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error Getting NearbyJobs:", error);
+        setToastProps({ message: error, type: "error" });
+        setLoading(false);
+      }
+    };
+    handleAllData();
+  }, []);
+
+  console.log(data);
   return (
     <>
       <LoggedHeader />
@@ -35,7 +84,7 @@ export default function HomeProvider() {
       <div className="bg-second py-3">
         <div className="container top-section-main">
           <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
-            <h5 className="user">Hello User</h5>
+            <h5 className="user">Hello {name}</h5>
             <div className="position-relative icon-speaker">
               <img src={speaker} alt="speaker" />
               <Slider {...settings} className="mySwiper">
@@ -213,6 +262,8 @@ export default function HomeProvider() {
           </div>
         </div>
       </div>
+
+      <Toaster message={toastProps.message} type={toastProps.type} />
     </>
   );
 }

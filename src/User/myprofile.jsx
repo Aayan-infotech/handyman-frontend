@@ -15,9 +15,9 @@ import { IoCallSharp, IoLocationSharp } from "react-icons/io5";
 import { IoMdMail } from "react-icons/io";
 import { CiBadgeDollar } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
-import { getHunterUser } from "../Slices/userSlice";
+import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import Loader from "../Loader";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
 export default function MyProfile() {
   const [name, setName] = useState("");
@@ -31,17 +31,34 @@ export default function MyProfile() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user?.data);
   useEffect(() => {
-    setLoading(true);
-    dispatch(getHunterUser())
-      .then(() => {
-        setName(user?.name);
-        setNumber(user?.phoneNo);
-        setEmail(user?.email);
-      })
-      .finally(() => {
+    const fetchUserData = async () => {
+      setLoading(true);
+
+      try {
+        let fetchedUser = null;
+
+        if (hunterToken) {
+          const hunterResponse = await dispatch(getHunterUser());
+          fetchedUser = hunterResponse?.payload?.data;
+        }
+
+        if (!fetchedUser && providerToken) {
+          const providerResponse = await dispatch(getProviderUser());
+          fetchedUser = providerResponse?.payload?.data;
+        }
+
+        if (fetchedUser) {
+          setName(fetchedUser.contactName);
+          setNumber(fetchedUser.phoneNo);
+          setEmail(fetchedUser.email);
+        }
+      } finally {
         setLoading(false);
-      });
-  }, [dispatch, user]);
+      }
+    };
+
+    fetchUserData();
+  }, [dispatch, hunterToken, providerToken]);
   const Location = useLocation();
   console.log(Location);
   return (

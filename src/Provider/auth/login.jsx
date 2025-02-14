@@ -50,7 +50,7 @@ export default function LoginProvider() {
         }, 4000);
         localStorage.setItem("ProviderToken", response?.data?.data?.token);
         localStorage.setItem("ProviderEmail", response?.data?.data?.user?.email);
-        localStorage.setItem("ProviderName", response?.data?.data?.user?.name);
+        localStorage.setItem("ProviderName", response?.data?.data?.user?.contactName);
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
         console.log(response);
       }

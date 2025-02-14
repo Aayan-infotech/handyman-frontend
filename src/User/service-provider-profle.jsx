@@ -52,7 +52,7 @@ export default function ServiceProviderProfile() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:7777/api/hunter/getNearbyServiceProviders",
+        "http://44.196.64.110:7777/api/hunter/getNearbyServiceProviders",
         { latitude, longitude }
       );
       console.log(response);

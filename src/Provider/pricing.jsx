@@ -25,16 +25,10 @@ export default function MainProvider() {
   };
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState("");
+  const name = localStorage.getItem("ProviderName")
   const dispatch = useDispatch();
   const token = localStorage.getItem("ProviderToken");
   const user = useSelector((state) => state?.user?.user?.data);
-  
-  useEffect(() => {
-    dispatch(getProviderUser()).then(() => {
-      setName(user.contactName);
-    });
-  }, []);
   
   useEffect(() => {
     const getData = async () => {
@@ -119,7 +113,8 @@ export default function MainProvider() {
                             <h2 className="mt-3">${item.amount}</h2>
                             <span className="line-white"></span>
                             <h6 className="fw-bold">{item.title}</h6>
-                            <p>{item.description}</p>
+                            <div dangerouslySetInnerHTML={{ __html: item.description}}></div>
+                          
                           </div>
                         </div>
                       </Link>
