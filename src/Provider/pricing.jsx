@@ -10,6 +10,9 @@ import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../Loader";
+import Toaster from "../Toaster";
+import { useDispatch, useSelector } from "react-redux";
+import { getProviderUser } from "../Slices/userSlice";
 
 export default function MainProvider() {
   const settings = {
@@ -23,24 +26,16 @@ export default function MainProvider() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
+  const dispatch = useDispatch();
   const token = localStorage.getItem("ProviderToken");
-  console.log(token);
+  const user = useSelector((state) => state?.user?.user?.data);
+  
   useEffect(() => {
-    const handleUser = async () => {
-      try {
-        const res = await axios.get(
-          "http://44.196.64.110:7777/api/auth/getProviderProfile",
-          { headers: { Authorization: `Bearer ${token} ` } }
-        );
-        console.log(res);
-        setName(res?.data?.data?.contactName);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    handleUser();
+    dispatch(getProviderUser()).then(() => {
+      setName(user.contactName);
+    });
   }, []);
-
+  
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -56,8 +51,6 @@ export default function MainProvider() {
     };
     getData();
   }, []);
-
-  console.log(name);
 
   return (
     <>
@@ -119,7 +112,7 @@ export default function MainProvider() {
                 </div>
                 <div className="row py-3 gy-4 mt-4 gx-5">
                   {data?.map((item) => (
-                    <div className="col-lg-4">
+                    <div className="col-lg-4" key={item._id}>
                       <Link to={`/provider/pricing-detail/${item._id}`}>
                         <div className="card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
                           <div className="card-body d-flex flex-column gap-3 align-items-center">

@@ -1,4 +1,4 @@
-import react from "react";
+import react, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { TbSpeakerphone } from "react-icons/tb";
 import Form from "react-bootstrap/Form";
@@ -17,8 +17,13 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import { getProviderUser, getHunterUser } from "../Slices/userSlice";
+import Loader from "../Loader";
+import Toaster from "../Toaster";
 
 export default function Main() {
+  const name = localStorage.getItem("hunterName");
+  const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const settings = {
     dots: false,
     infinite: true,
@@ -27,6 +32,8 @@ export default function Main() {
     vertical: true,
     verticalSwiping: true,
   };
+  useEffect(() => {}, []);
+  console.log(name);
   return (
     <>
       <LoggedHeader />
@@ -39,7 +46,7 @@ export default function Main() {
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
             <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
-              <h5 className="user">Hello User</h5>
+              <h5 className="user">Hello {name}</h5>
               <div className="position-relative icon-speaker">
                 <img src={speaker} alt="speaker" />
                 <Slider {...settings} className="mySwiper">
@@ -367,6 +374,8 @@ export default function Main() {
           </div>
         </div>
       </div>
+
+      <Toaster message={toastProps.message} type={toastProps.type} />
     </>
   );
 }

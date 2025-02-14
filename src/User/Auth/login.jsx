@@ -47,6 +47,9 @@ export default function Login() {
           navigate("/home");
         }, 2000);
         localStorage.setItem("hunterToken", response?.data?.data?.token);
+        localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
+        localStorage.setItem("hunterName", response?.data?.data?.user?.name);
+        localStorage.setItem("hunterId", response?.data?.data?.user?._id);
         console.log(response);
       }
     } catch (error) {

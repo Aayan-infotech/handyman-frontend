@@ -9,11 +9,12 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../user.css";
 import { IoImageOutline } from "react-icons/io5";
+import LoggedHeader from "./component/loggedNavbar";
 export default function EditProfile() {
   return (
     <>
       <div className="bg-signup">
-        <Header />
+        <LoggedHeader />
         <div className="container top-avatar login">
           <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
             <div className="card shadow mb-4">
@@ -99,7 +100,7 @@ export default function EditProfile() {
                       <Form.Control type="password" placeholder="Password" />
                     </Col>
                   </Form.Group>
-                  <div className="d-flex flex-row flex-wrap justify-content-between gap-3 gap-lg-1 align-items-center profile">
+                  {/* <div className="d-flex flex-row flex-wrap justify-content-between gap-3 gap-lg-1 align-items-center profile">
                     <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
                       <span className="fs-6">Electrical</span>
                     </div>
@@ -112,7 +113,7 @@ export default function EditProfile() {
                     <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
                       <span className="fs-6">Plumbing</span>
                     </div>
-                  </div>
+                  </div> */}
                 </Form>
 
                 <div className="d-flex justify-content-center align-items-center py-3">

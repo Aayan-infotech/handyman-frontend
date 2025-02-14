@@ -1,4 +1,4 @@
-import react from "react";
+import react, { useEffect, useState } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage, MdEmail } from "react-icons/md";
 import serviceProviderImage from "./assets/service-provider-image.png";
@@ -15,9 +15,67 @@ import reviewImg from "./assets/reviewimg.png";
 import reviewImg1 from "./assets/reviewimg1.png";
 import reviewImg2 from "./assets/reviewimg2.png";
 import reviewImg3 from "./assets/reviewimg3.png";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getAddress } from "../Slices/addressSlice";
 
 export default function ServiceProviderProfile() {
+  const { id } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [latitude, setLatitude] = useState(26.86223751316575);
+  const [longitude, setLongitude] = useState(80.99808160498773);
+  // const [latitude, setLatitude] = useState(null);
+  // const [longitude, setLongitude] = useState(null);
+  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAddress());
+  }, [dispatch]);
+
+  // Update latitude & longitude when address changes
+  // useEffect(() => {
+  //   if (address?.location?.coordinates) {
+  //     setLatitude(address.location.coordinates[0]);
+  //     setLongitude(address.location.coordinates[1]);
+  //   }
+  // }, [address]);
+
+  // Fetch service providers only after latitude & longitude are set
+  useEffect(() => {
+    if (latitude !== null && longitude !== null) {
+      handleAllData();
+    }
+  }, [latitude, longitude]);
+
+  const handleAllData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:7777/api/hunter/getNearbyServiceProviders",
+        { latitude, longitude }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        setLoading(false);
+        const providers = response?.data?.data || [];
+        const filteredProvider = providers.find(
+          (provider) => provider._id === id
+        );
+        setData(filteredProvider ? [filteredProvider] : []);
+      }
+      if (response.data.data.length === 0) {
+        setLoading(false);
+        setData([]);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log(data)
   return (
     <>
       <LoggedHeader />

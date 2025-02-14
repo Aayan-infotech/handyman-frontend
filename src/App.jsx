@@ -19,14 +19,13 @@ import ScrollToTop from "./ScrollToTop";
 import Message from "./User/message";
 import Notification from "./User/notification";
 import MyProfile from "./User/myprofile";
-import ChangePassword from "./User/Auth/changePassword";
+import ChangePassword from "./components/changePassword";
 import EditProfile from "./User/Auth/editProfile";
 import LoginProvider from "./Provider/auth/login";
 import SignUpProvider from "./Provider/auth/signup";
 import ResetPasswordProvider from "./Provider/auth/reset-password";
 import OtpProvider from "./Provider/auth/otp";
 import ForgetPasswordProvider from "./Provider/auth/forgetPassword";
-import ChangePasswordProvider from "./Provider/auth/changePassword";
 import EditProfileProvider from "./Provider/auth/editProfile";
 import MainProvider from "./Provider/pricing";
 import PricingProvider from "./Provider/pricing-detail";
@@ -63,7 +62,7 @@ function App() {
           <Route path="/message" element={<Message />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/myprofile" element={<MyProfile />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
+          <Route path="/changePassword/:id" element={<ChangePassword />} />
           <Route path="/editProfile" element={<EditProfile />} />
 
           {/* provider */}
@@ -72,12 +71,12 @@ function App() {
           <Route path="/provider/reset" element={<ResetPasswordProvider />} />
           <Route path="/provider/otp" element={<OtpProvider />} />
           <Route
-            path="/provider/changePassword"
-            element={<ChangePasswordProvider />}
+            path="/provider/changePassword/:id"
+            element={<ChangePassword />}
           />
           <Route
             path="/provider/editProfile"
-            element={<EditProfileProvider />}
+            element={<EditProfile />}
           />
           <Route
             path="/provider/forgetpassword"

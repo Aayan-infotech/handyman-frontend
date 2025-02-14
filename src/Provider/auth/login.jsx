@@ -49,10 +49,14 @@ export default function LoginProvider() {
           navigate("/provider/pricing");
         }, 4000);
         localStorage.setItem("ProviderToken", response?.data?.data?.token);
+        localStorage.setItem("ProviderEmail", response?.data?.data?.user?.email);
+        localStorage.setItem("ProviderName", response?.data?.data?.user?.name);
+        localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
         console.log(response);
       }
     } catch (error) {
       console.log(error);
+      setLoading(false)
       setToastProps({ message: error?.response?.data?.error, type: "error" });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({

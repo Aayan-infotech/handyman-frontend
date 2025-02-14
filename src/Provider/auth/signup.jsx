@@ -14,6 +14,7 @@ import { IoImageOutline } from "react-icons/io5";
 import axios from "axios";
 import Toaster from "../../Toaster";
 import Autocomplete from "react-google-autocomplete";
+import Loader from "../../Loader";
 
 export default function SignUpProvider() {
   const [name, setName] = useState("");
@@ -311,9 +312,8 @@ export default function SignUpProvider() {
                         variant="contained"
                         color="success"
                         className="rounded-0 custom-green bg-green-custom"
-                        disabled={isSubmitting}
                       >
-                        {isSubmitting ? "Submitting..." : "Signup"}
+                        Signup
                       </Button>
                     </div>
                     <span className="w-100 d-flex justify-content-center">

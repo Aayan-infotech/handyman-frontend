@@ -142,6 +142,10 @@
   border-radius: 50px;
   background-color: transparent !important;
 }
+.outline-card-none {
+  border: 1px solid #32de84;
+  border-radius: 50px;
+}
 .outline-card svg {
   width: 26px !important;
   height: 26px !important;
@@ -258,9 +262,15 @@
   color: #fff;
   font-weight: 900;
 }
-.form-post-job input,
+.form-post-job .input1,
 .form-post-job select,
 .form-post-job textarea {
+  border: 1px solid #32de84;
+  border-radius: 40px;
+  padding: 22px 30px;
+  color: #979797;
+}
+.standard-input fieldset{
   border: 1px solid #32de84;
   border-radius: 40px;
   padding: 22px 30px;
@@ -298,8 +308,14 @@
 .management h5 {
   font-size: 20px !important;
 }
+.text-trun{
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .management h3 {
-  font-size: 28px !important;
+  font-size: 22px !important;
   font-weight: 600 !important;
 }
 .management .col-lg-4 {
