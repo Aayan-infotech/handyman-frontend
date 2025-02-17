@@ -1,11 +1,11 @@
 import react, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
-import { MdMessage } from "react-icons/md";
+import { MdMessage, MdOutlineWork } from "react-icons/md";
 import serviceProviderImage from "./assets/service-provider-image.png";
 import profilePicture from "./assets/profilePicture.png";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaLock } from "react-icons/fa";
 import { PiCircleHalfFill } from "react-icons/pi";
 import Button from "react-bootstrap/Button";
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import Loader from "../Loader";
 import axios from "axios";
+import Toaster from "../Toaster";
 
 export default function MyProfile() {
   const [name, setName] = useState("");
@@ -29,6 +30,8 @@ export default function MyProfile() {
   const hunterToken = localStorage.getItem("hunterToken");
   const providerToken = localStorage.getItem("ProviderToken");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const user = useSelector((state) => state?.user?.user?.data);
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,18 +43,18 @@ export default function MyProfile() {
         if (hunterToken) {
           const hunterResponse = await dispatch(getHunterUser());
           fetchedUser = hunterResponse?.payload?.data;
-        }
-
-        if (!fetchedUser && providerToken) {
+        } else if (providerToken) {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
         }
 
         if (fetchedUser) {
-          setName(fetchedUser.contactName);
-          setNumber(fetchedUser.phoneNo);
-          setEmail(fetchedUser.email);
+          setName(fetchedUser.contactName || fetchedUser.name || "");
+          setNumber(fetchedUser.phoneNo || "");
+          setEmail(fetchedUser.email || "");
         }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
@@ -59,6 +62,24 @@ export default function MyProfile() {
 
     fetchUserData();
   }, [dispatch, hunterToken, providerToken]);
+
+  const signOut = () => {
+    localStorage.removeItem("hunterToken");
+    localStorage.removeItem("ProviderToken");
+    localStorage.removeItem("hunterEmail");
+    localStorage.removeItem("ProviderEmail");
+    localStorage.removeItem("hunterName");
+    localStorage.removeItem("ProviderName");
+    localStorage.removeItem("hunterId");
+    localStorage.removeItem("ProviderId");
+    setToastProps({
+      message: "You have been Logged Out",
+      type: "error",
+    });
+    setTimeout(() => {
+      navigate("/welcome");
+    }, 2000);
+  };
   const Location = useLocation();
   console.log(Location);
   return (
@@ -129,6 +150,7 @@ export default function MyProfile() {
                       <Button
                         variant="danger"
                         className="d-flex gap-2 align-items-center  mw-20 justify-content-center"
+                        onClick={signOut}
                       >
                         <CiLogout />
                         Logout
@@ -334,14 +356,16 @@ export default function MyProfile() {
                         <div className="circle-container">
                           <div className="progress-circle">
                             <div className="lock-icon">
-                              <FaLock />
+                              <MdOutlineWork />
                             </div>
                           </div>
                         </div>
 
                         <div className="d-flex flex-row gap-3 align-items-center">
                           <span className="text-success text-center">
-                            Privacy Setting
+                            {Location.pathname.includes("provider")
+                              ? " Job History"
+                              : "Privacy Policy"}
                           </span>
                         </div>
                       </div>
@@ -352,7 +376,7 @@ export default function MyProfile() {
                   className={` ${
                     Location.pathname.includes("provider")
                       ? "col-lg-2"
-                      : "col-lg-3"
+                      : "d-none"
                   }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
@@ -386,6 +410,8 @@ export default function MyProfile() {
           </div>
         </>
       )}
+
+      <Toaster message={toastProps.message} type={toastProps.type} />
     </>
   );
 }

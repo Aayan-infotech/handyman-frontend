@@ -13,11 +13,6 @@ import { FaRegUserCircle } from "react-icons/fa";
 import axios from "axios";
 
 export default function LoggedHeader() {
-  const Location = useLocation();
-  console.log(Location);
-
- 
-
   return (
     <>
       <Navbar

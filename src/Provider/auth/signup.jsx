@@ -1,5 +1,4 @@
-// SignUpProvider Component
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
@@ -23,6 +22,8 @@ export default function SignUpProvider() {
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [businessData, setBusinessData] = useState([]);
+  const [serviceData, setServiceData] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [serviceType, setServiceType] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("");
@@ -33,6 +34,23 @@ export default function SignUpProvider() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const handleAllData = async () => {
+      try {
+        const response = await axios.get(
+          "http://44.196.64.110:7777/api/service/getAllServices"
+        );
+        if (response.status === 201) {
+          setBusinessData(response?.data?.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleAllData();
+  }, []);
+
+  console.log("businessData", businessData);
   const handleSignUp = async (e) => {
     e.preventDefault();
 
@@ -173,13 +191,27 @@ export default function SignUpProvider() {
                       <Col sm="7">
                         <Form.Select
                           value={businessType}
-                          onChange={(e) => setBusinessType(e.target.value)}
-                          aria-label="Default select example"
+                          onChange={(e) => {
+                            const selectedBusiness = e.target.value;
+                            setBusinessType(selectedBusiness);
+
+                            // Find the selected business object
+                            const businessObj = businessData.find(
+                              (b) => b.name === selectedBusiness
+                            );
+
+                            // If found, update serviceData with its services
+                            setServiceData(
+                              businessObj ? businessObj.services : []
+                            );
+                          }}
                         >
-                          <option>Industry</option>
-                          <option value="One">One</option>
-                          <option value="Two">Two</option>
-                          <option value="Three">Three</option>
+                          <option value="">Select Industry</option>
+                          {businessData.map((data) => (
+                            <option key={data._id} value={data.name}>
+                              {data.name}
+                            </option>
+                          ))}
                         </Form.Select>
                       </Col>
                     </Form.Group>
@@ -191,12 +223,17 @@ export default function SignUpProvider() {
                         <Form.Select
                           value={serviceType}
                           onChange={(e) => setServiceType(e.target.value)}
-                          aria-label="Default select example"
                         >
-                          <option>Industry</option>
-                          <option value="Four">Four</option>
-                          <option value="Five">Five</option>
-                          <option value="Six">Six</option>
+                          <option value="">Select Service</option>
+                          {serviceData.length > 0 ? (
+                            serviceData.map((service, index) => (
+                              <option key={index} value={service}>
+                                {service}
+                              </option>
+                            ))
+                          ) : (
+                            <option disabled>No services available</option>
+                          )}
                         </Form.Select>
                       </Col>
                     </Form.Group>

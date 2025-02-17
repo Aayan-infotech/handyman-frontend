@@ -33,6 +33,29 @@ export const getProviderNearbyJobs = createAsyncThunk(
   }
 );
 
+export const getProviderJobs = createAsyncThunk(
+  "/Provider/getProviderJobs",
+  async (
+    { businessType, latitude, longitude },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.post(
+        `http://44.196.64.110:7777/api/provider/getJobs`,
+        {
+          businessType,
+          latitude,
+          longitude,
+        },
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Handle errors and send them to the reducer
+    }
+  }
+);
+
 const initialState = {
   provider: [],
   status: "idle",
@@ -53,6 +76,17 @@ const ProviderSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(getProviderNearbyJobs.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(getProviderJobs.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getProviderJobs.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+      .addCase(getProviderJobs.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

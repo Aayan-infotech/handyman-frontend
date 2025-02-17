@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import react, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage } from "react-icons/md";
 import { GoDownload } from "react-icons/go";
@@ -29,7 +29,26 @@ export default function NewJob() {
   const [serviceType, setServiceType] = useState("");
   const [requirements, setRequirements] = useState("");
   const [documents, setDocuments] = useState([]);
+  const [businessData, setBusinessData] = useState([]);
+  const [serviceData, setServiceData] = useState("");
   console.log(localStorage.getItem("hunterToken"));
+
+  useEffect(() => {
+    const handleAllData = async () => {
+      try {
+        const response = await axios.get(
+          "http://44.196.64.110:7777/api/service/getAllServices"
+        );
+        if (response.status === 201) {
+          setBusinessData(response?.data?.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleAllData();
+  }, []);
+
   const handleAdd = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -153,26 +172,43 @@ export default function NewJob() {
                   </div>
                   <div className="col-lg-4">
                     <Form.Select
-                      aria-label="Default select example"
                       value={businessType}
-                      onChange={(e) => setBusinessType(e.target.value)}
+                      onChange={(e) => {
+                        const selectedBusiness = e.target.value;
+                        setBusinessType(selectedBusiness);
+
+                        // Find the selected business object
+                        const businessObj = businessData.find(
+                          (b) => b.name === selectedBusiness
+                        );
+
+                        // If found, update serviceData with its services
+                        setServiceData(businessObj ? businessObj.services : []);
+                      }}
                     >
-                      <option>Select Business Type</option>
-                      <option value="One">One</option>
-                      <option value="Two">Two</option>
-                      <option value="Three">Three</option>
+                      <option value="">Select Industry</option>
+                      {businessData.map((data) => (
+                        <option key={data._id} value={data.name}>
+                          {data.name}
+                        </option>
+                      ))}
                     </Form.Select>
                   </div>
                   <div className="col-lg-4">
                     <Form.Select
-                      aria-label="Default select example"
                       value={serviceType}
                       onChange={(e) => setServiceType(e.target.value)}
                     >
-                      <option>Select Service Type</option>
-                      <option value="Four">Four</option>
-                      <option value="Five">Five</option>
-                      <option value="Six">Six</option>
+                      <option value="">Select Service</option>
+                      {serviceData.length > 0 ? (
+                        serviceData.map((service, index) => (
+                          <option key={index} value={service}>
+                            {service}
+                          </option>
+                        ))
+                      ) : (
+                        <option disabled>No services available</option>
+                      )}
                     </Form.Select>
                   </div>
                   <div className="col-lg-4">
