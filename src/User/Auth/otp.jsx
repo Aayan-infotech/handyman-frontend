@@ -23,9 +23,7 @@ export default function Otp({ length = 6 }) {
   const Provider = searchParams.get("type");
   const ProviderParams = location.pathname.includes("provider");
   console.log("ProviderParams", ProviderParams);
-  const forgetEmail = localStorage.getItem("forgetEmail");
-
-  const forgetValidation = localStorage.getItem("forgetEmail");;
+  const forgetValidation = localStorage.getItem("forgetEmail");
   console.log(forgetValidation);
 
   const handleChange = (value, index) => {
@@ -129,6 +127,7 @@ export default function Otp({ length = 6 }) {
         setToastProps({ message: response?.data?.message, type: "success" });
         setLoading(false);
         setOtp(Array(length).fill(""));
+        localStorage.removeItem("forgetValidation");
         localStorage.setItem("verifyEmailOtp", email);
         if (ProviderParams) {
           setTimeout(() => {
