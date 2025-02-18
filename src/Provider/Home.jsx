@@ -3,9 +3,6 @@ import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
 import { MdMessage } from "react-icons/md";
-import company1 from "./assets/logo/companyLogo.png";
-import company2 from "./assets/logo/companyLogo1.png";
-import company3 from "./assets/logo/companyLogo2.png";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { Link } from "react-router-dom";
@@ -17,7 +14,7 @@ import speaker from "./assets/announcement.png";
 import { getProviderJobs } from "../Slices/providerSlice";
 import { getProviderUser } from "../Slices/userSlice";
 import Loader from "../Loader";
-import axios from "axios"; // Import axios
+import axios from "axios";
 import Toaster from "../Toaster";
 import { useDispatch, useSelector } from "react-redux";
 import Skeleton from "@mui/material/Skeleton";

@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
 import logo from "../../assets/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -16,10 +16,11 @@ import google from "../assets/logo/iconGoogle.png";
 export default function ForgetPassword() {
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [newpassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
+  const ProviderParams = location.pathname.includes("provider");
+  console.log("ProviderParams", ProviderParams);
   const handleForgot = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -37,18 +38,26 @@ export default function ForgetPassword() {
       );
 
       if (response.status === 200) {
+        localStorage.setItem("forgetEmail", email);
         setToastProps({ message: response?.data?.message, type: "success" });
         setEmail("");
         setLoading(false);
-        setTimeout(() => {
-          navigate(`/forgot-password/otp?email=${email}`);
-        }, 2000);
+        if (ProviderParams) {
+          setTimeout(() => {
+            navigate(`/provider/otp?email=${email}&type=provider`);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            navigate(`/otp?email=${email}`);
+          }, 2000);
+        }
+
         // localStorage.setItem("hunterToken", response?.data?.data?.token);
         console.log(response);
       }
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
       setToastProps({ message: error?.response?.data?.error, type: "error" });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
@@ -67,6 +76,9 @@ export default function ForgetPassword() {
           <Header />
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
+              {ProviderParams ? (
+                <h1 className="highlighted-text">Service Provider</h1>
+              ) : null}
               <div className="card shadow">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">Forget Password</h2>

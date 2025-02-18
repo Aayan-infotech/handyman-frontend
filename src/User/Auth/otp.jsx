@@ -21,8 +21,11 @@ export default function Otp({ length = 6 }) {
   const searchParams = new URLSearchParams(location.search);
   const email = searchParams.get("email");
   const Provider = searchParams.get("type");
+  const ProviderParams = location.pathname.includes("provider");
+  console.log("ProviderParams", ProviderParams);
+  const forgetEmail = localStorage.getItem("forgetEmail");
 
-  const forgetValidation = location.pathname.includes("forgot-password");
+  const forgetValidation = localStorage.getItem("forgetEmail");;
   console.log(forgetValidation);
 
   const handleChange = (value, index) => {
@@ -85,7 +88,7 @@ export default function Otp({ length = 6 }) {
         setToastProps({ message: response?.data?.message, type: "success" });
 
         setOtp(Array(length).fill(""));
-        if (Provider === "provider") {
+        if (ProviderParams) {
           localStorage.setItem("verifyEmailOtp", email);
           setLoading(false);
           setTimeout(() => {
@@ -127,13 +130,19 @@ export default function Otp({ length = 6 }) {
         setLoading(false);
         setOtp(Array(length).fill(""));
         localStorage.setItem("verifyEmailOtp", email);
-        setTimeout(() => {
-          navigate(`/reset-password`);
-        }, 2000);
+        if (ProviderParams) {
+          setTimeout(() => {
+            navigate(`/provider/reset-password`);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            navigate(`/reset-password`);
+          }, 2000);
+        }
       }
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
       setToastProps({ message: error?.response?.data?.error, type: "error" });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
@@ -153,6 +162,9 @@ export default function Otp({ length = 6 }) {
           <Header />
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
+              {ProviderParams ? (
+                <h1 className="highlighted-text">Service Provider</h1>
+              ) : null}
               <div className="card shadow">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">

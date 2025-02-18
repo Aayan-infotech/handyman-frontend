@@ -13,6 +13,12 @@ import google from "../assets/logo/iconGoogle.png";
 import Toaster from "../../Toaster";
 import axios from "axios";
 import Loader from "../../Loader";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, db } from "../../Chat/lib/firestore";
+import { doc, setDoc } from "firebase/firestore";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +29,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
       const response = await axios.post(
         "http://44.196.64.110:7777/api/auth/login",

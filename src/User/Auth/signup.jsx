@@ -12,6 +12,15 @@ import axios from "axios";
 import Autocomplete from "react-google-autocomplete";
 import Toaster from "../../Toaster";
 import Loader from "../../Loader";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { ref, set } from "firebase/database"; // Import from the *Realtime Database* library
+
+import { auth, db } from "../../Chat/lib/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
+// import upload from "../../Chat/lib/upload";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -51,6 +60,16 @@ export default function SignUp() {
       console.log(`${key}:`, value);
     }
 
+    // const usersRef = collection(db, "users");
+    // const q = query(usersRef, where("name", "==", name));
+    // const querySnapshot = await getDocs(q);
+    // if (!querySnapshot.empty) {
+    //   return setToastProps({
+    //     message: "Select Another UserName",
+    //     type: "error",
+    //   });
+    // }
+
     try {
       const response = await axios.post(
         "http://44.196.64.110:7777/api/auth/signup",
@@ -58,6 +77,29 @@ export default function SignUp() {
       );
       if (response.status === 200 || response.status === 201) {
         setToastProps({ message: response?.data?.message, type: "success" });
+        // try {
+        //   const firebaseUser = await createUserWithEmailAndPassword(auth, email, password);
+        //   const userId = firebaseUser.user.uid;
+
+        //   const usersRef = ref(db, "users");  // Reference to the "users" node
+        //   const userRef = ref(usersRef, userId); // Reference to the specific user
+
+        //   await set(userRef, { // Use set() for Realtime Database
+        //       name,
+        //       email,
+        //       id: userId,
+        //       phoneNo,
+        //       address,
+        //       latitude,
+        //       longitude,
+        //       blocked: [],
+        //   });
+
+        //   const userChatsRef = ref(db, "userchats/" + userId); // Realtime Database ref
+        //   await set(userChatsRef, { chats: [] });
+        // } catch (error) {
+        //   console.log(error);
+        // }
         setName("");
         setEmail("");
         setPhoneNo("");

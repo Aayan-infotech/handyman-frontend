@@ -23,9 +23,6 @@ import ChangePassword from "./components/changePassword";
 import EditProfile from "./User/Auth/editProfile";
 import LoginProvider from "./Provider/auth/login";
 import SignUpProvider from "./Provider/auth/signup";
-import ResetPasswordProvider from "./Provider/auth/reset-password";
-import OtpProvider from "./Provider/auth/otp";
-import ForgetPasswordProvider from "./Provider/auth/forgetPassword";
 import EditProfileProvider from "./Provider/auth/editProfile";
 import MainProvider from "./Provider/pricing";
 import PricingProvider from "./Provider/pricing-detail";
@@ -48,7 +45,6 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/otp" element={<Otp />} />
-          <Route path="/forgot-password/otp" element={<Otp />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Main />} />
           <Route path="/post-new-job" element={<NewJob />} />
@@ -68,8 +64,11 @@ function App() {
           {/* provider */}
           <Route path="/provider/login" element={<LoginProvider />} />
           <Route path="/provider/signup" element={<SignUpProvider />} />
-          <Route path="/provider/reset" element={<ResetPasswordProvider />} />
-          <Route path="/provider/otp" element={<OtpProvider />} />
+          <Route path="/provider/reset" element={<ResetPassword />} />
+          <Route path="/provider/otp" element={<Otp />} />
+          <Route path="/provider/job-history" element={<JobManagement />} />
+          <Route path="/provider/job-history/:id" element={<JobDetail />} />
+          <Route path="/provider/reset-password" element={<ResetPassword />} />
           <Route
             path="/provider/changePassword/:id"
             element={<ChangePassword />}
@@ -80,7 +79,7 @@ function App() {
           />
           <Route
             path="/provider/forgetpassword"
-            element={<ForgetPasswordProvider />}
+            element={<ForgetPassword />}
           />
           <Route path="/provider/pricing" element={<MainProvider />} />
           <Route

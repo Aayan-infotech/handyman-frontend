@@ -1,7 +1,7 @@
 import react from "react";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate , useLocation } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -15,6 +15,9 @@ export default function ResetPassword() {
   const [toastProps, setToastProps] = react.useState({ message: "", type: "" });
   const [loading, setLoading] = react.useState(false);
   const email = localStorage.getItem("verifyEmailOtp");
+  const location = useLocation();
+  const ProviderParams = location.pathname.includes("provider");
+  console.log("ProviderParams", ProviderParams);
   const navigate = useNavigate();
 
   const handleReset = async (e) => {
@@ -40,9 +43,15 @@ export default function ResetPassword() {
         setPassword("");
         setLoading(false);
         setNewPassword("");
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
+        if (ProviderParams) {
+          setTimeout(() => {
+            navigate(`/provider/login`);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
+        }
       }
       console.log(response.data);
     } catch (error) {
@@ -67,6 +76,9 @@ export default function ResetPassword() {
           <Header />
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
+            {ProviderParams ? (
+                <h1 className="highlighted-text">Service Provider</h1>
+              ) : null}
               <div className="card shadow">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">Reset Password</h2>
