@@ -87,6 +87,22 @@ pipeline {
             }
         }
 
+        stage('Security Scan with Trivy') {
+            steps {
+                script {
+                    sh '''
+                    echo "Running Trivy security scan..."
+                    if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image \
+                        --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${NEW_STAGE_TAG}; then
+                        echo "✅ Trivy scan completed!"
+                    else
+                        echo "⚠️ Trivy scan found vulnerabilities, but continuing pipeline..."
+                    fi
+                    '''
+                }
+            }
+        }
+
         stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
@@ -94,6 +110,23 @@ pipeline {
                     echo "Pushing Docker images to Docker Hub..."
                     docker push ${IMAGE_NAME}:${NEW_STAGE_TAG}
                     docker push ${IMAGE_NAME}:prodv1
+                    '''
+                }
+            }
+        }
+
+        stage('Stop Existing Container') {
+            steps {
+                script {
+                    sh '''
+                    echo "Stopping existing container..."
+                    CONTAINER_ID=$(docker ps -q --filter "publish=${HOST_PORT}")
+                    if [ -n "$CONTAINER_ID" ]; then
+                        docker stop "$CONTAINER_ID" || true
+                        docker rm "$CONTAINER_ID" || true
+                    else
+                        echo "No container running on port ${HOST_PORT}"
+                    fi
                     '''
                 }
             }
