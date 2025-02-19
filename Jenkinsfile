@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "Aayanindia/handy-frontend"
+        IMAGE_NAME = "docker.io/aayanindia/handy-frontend"
         CONTAINER_PORT = "2365"
         HOST_PORT = "2365"
         DOCKER_HUB_USERNAME = credentials('docker-hub-username') // Store in Jenkins Credentials
@@ -47,13 +47,36 @@ pipeline {
             }
         }
 
+        stage('Check If Image Exists') {
+            steps {
+                script {
+                    def imageExists = sh(
+                        script: '''
+                        #!/bin/bash
+                        curl -s -o /dev/null -w "%{http_code}" \
+                        https://hub.docker.com/v2/repositories/aayanindia/handy-frontend/tags/latest
+                        ''',
+                        returnStdout: true
+                    ).trim()
+
+                    if (imageExists == "200") {
+                        echo "✅ Image exists on Docker Hub, will update it."
+                        env.IMAGE_EXISTS = "true"
+                    } else {
+                        echo "🚀 First-time push: Image does not exist on Docker Hub."
+                        env.IMAGE_EXISTS = "false"
+                    }
+                }
+            }
+        }
+
         stage('Generate Next Image Tag') {
             steps {
                 script {
                     def latestTag = sh(
                         script: '''
                         #!/bin/bash
-                        curl -s https://hub.docker.com/v2/repositories/Aayanindia/handy-frontend/tags/ | \
+                        curl -s https://hub.docker.com/v2/repositories/aayanindia/handy-frontend/tags/ | \
                         jq -r '.results[].name' | grep -E '^stage-v[0-9]+$' | sort -V | tail -n1 | awk -F'v' '{print $2}'
                         ''',
                         returnStdout: true
@@ -72,7 +95,7 @@ pipeline {
                     sh '''
                     #!/bin/bash
                     echo "Building Docker image..."
-                    docker build -t ${IMAGE_NAME} . 2>&1 | tee failure.log
+                    docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
                     '''
                 }
             }
@@ -84,20 +107,24 @@ pipeline {
                     sh '''
                     #!/bin/bash
                     echo "Tagging Docker image..."
-                    docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${NEW_STAGE_TAG}
-                    docker tag ${IMAGE_NAME} ${IMAGE_NAME}:prodv1
+                    docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${NEW_STAGE_TAG}
+                    docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:prodv1
                     '''
                 }
             }
         }
 
         stage('Security Scan with Trivy') {
+            when {
+                expression { return env.IMAGE_EXISTS == "true" } // Only run Trivy if image exists
+            }
             steps {
                 script {
                     sh '''
                     #!/bin/bash
                     echo "Running Trivy security scan..."
-                    if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/${IMAGE_NAME}:${NEW_STAGE_TAG}; then
+                    if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image \
+                        --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${NEW_STAGE_TAG}; then
                         echo "✅ Trivy scan completed!"
                     else
                         echo "⚠️ Trivy scan found vulnerabilities, but continuing pipeline..."
