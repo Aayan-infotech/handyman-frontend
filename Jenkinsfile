@@ -5,8 +5,8 @@ pipeline {
         IMAGE_NAME = "docker.io/aayanindia/handy-frontend"
         CONTAINER_PORT = "2365"
         HOST_PORT = "2365"
-        DOCKER_HUB_USERNAME = credentials('docker-hub-username') // Store in Jenkins Credentials
-        DOCKER_HUB_PASSWORD = credentials('docker-hub-password') // Store in Jenkins Credentials
+        DOCKER_HUB_USERNAME = credentials('docker-hub-username')
+        DOCKER_HUB_PASSWORD = credentials('docker-hub-password')
         EMAIL_RECIPIENTS = "atulrajput.work@gmail.com"
     }
 
@@ -48,146 +48,15 @@ pipeline {
             }
         }
 
-        stage('Check If Image Exists') {
-            steps {
-                script {
-                    def imageExists = sh(
-                        script: '''
-                        #!/bin/bash
-                        curl -s -o /dev/null -w "%{http_code}" \
-                        https://hub.docker.com/v2/repositories/aayanindia/handy-frontend/tags/latest
-                        ''',
-                        returnStdout: true
-                    ).trim()
-
-                    if (imageExists == "200") {
-                        echo "✅ Image exists on Docker Hub, will update it."
-                        env.IMAGE_EXISTS = "true"
-                    } else {
-                        echo "🚀 First-time push: Image does not exist on Docker Hub."
-                        env.IMAGE_EXISTS = "false"
-                    }
-                }
-            }
-        }
-
-        stage('Generate Next Image Tag') {
-            steps {
-                script {
-                    def latestTag = sh(
-                        script: '''
-                        #!/bin/bash
-                        curl -s https://hub.docker.com/v2/repositories/aayanindia/handy-frontend/tags/ | \
-                        jq -r '.results[].name' | grep -E '^stage-v[0-9]+$' | sort -V | tail -n1 | awk -F'v' '{print $2}'
-                        ''',
-                        returnStdout: true
-                    ).trim()
-
-                    def newTag = latestTag ? "stage-v${latestTag.toInteger() + 1}" : "stage-v1"
-                    env.NEW_STAGE_TAG = newTag
-                    echo "🆕 New Docker Image Tag: ${newTag}"
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
                 script {
                     sh '''
                     #!/bin/bash
                     echo "Building Docker image..."
-                    docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
-                    '''
-                }
-            }
-        }
-
-        stage('Tag Docker Image') {
-            steps {
-                script {
-                    sh '''
-                    #!/bin/bash
-                    echo "Tagging Docker image..."
-                    docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${NEW_STAGE_TAG}
-                    docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:prodv1
-                    '''
-                }
-            }
-        }
-
-        stage('Security Scan with Trivy') {
-            when {
-                expression { return env.IMAGE_EXISTS == "true" } // Run Trivy only if image exists
-            }
-            steps {
-                script {
-                    sh '''
-                    #!/bin/bash
-                    echo "Running Trivy security scan..."
-                    if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image \
-                        --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${NEW_STAGE_TAG}; then
-                        echo "✅ Trivy scan completed!"
-                    else
-                        echo "⚠️ Trivy scan found vulnerabilities, but continuing pipeline..."
-                    fi
-                    '''
-                }
-            }
-        }
-
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                script {
-                    sh '''
-                    #!/bin/bash
+                    docker build -t ${IMAGE_NAME}:latest .
                     echo "Pushing Docker images to Docker Hub..."
-                    docker push ${IMAGE_NAME}:${NEW_STAGE_TAG}
-                    docker push ${IMAGE_NAME}:prodv1
-                    '''
-                }
-            }
-        }
-
-        stage('Cleanup Old Docker Images') {
-            steps {
-                script {
-                    sh '''
-                    #!/bin/bash
-                    echo "Cleaning up old Docker images..."
-                    OLD_IMAGES=$(docker images ${IMAGE_NAME} --format "{{.Tag}}" | grep 'stage-v' | sort -V | head -n -4)
-                    for tag in $OLD_IMAGES; do
-                        docker rmi ${IMAGE_NAME}:$tag || true
-                    done
-                    '''
-                }
-            }
-        }
-
-        stage('Stop Existing Container') {
-            steps {
-                script {
-                    sh '''
-                    #!/bin/bash
-                    echo "Stopping existing container..."
-                    CONTAINER_ID=$(docker ps -q --filter "publish=${HOST_PORT}")
-                    if [ -n "$CONTAINER_ID" ]; then
-                        docker stop "$CONTAINER_ID" || true
-                        docker rm "$CONTAINER_ID" || true
-                    else
-                        echo "No container running on port ${HOST_PORT}"
-                    fi
-                    '''
-                }
-            }
-        }
-
-        stage('Run New Docker Container') {
-            steps {
-                script {
-                    sh '''
-                    #!/bin/bash
-                    echo "Starting new container..."
-                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${NEW_STAGE_TAG}
+                    docker push ${IMAGE_NAME}:latest
                     '''
                 }
             }
@@ -197,40 +66,21 @@ pipeline {
     post {
         always {
             script {
-                echo "📩 Sending deployment email..."
-                emailext subject: "🚀 Deployment Status: ${currentBuild.currentResult}",
-                         body: """
-                         Hello Team,
-
-                         Deployment status: ${currentBuild.currentResult}
-
-                         🔗 View Jenkins Build Logs:
-                         ${env.BUILD_URL}
-
-                         Regards,
-                         Jenkins
-                         """,
-                         to: "atulrajput.work@gmail.com"
-            }
-        }
-
-        failure {
-            script {
-                echo "❌ Sending failure email with logs..."
-                emailext subject: "🚨 Deployment Failed",
-                         body: """
-                         ❌ Oops, the latest deployment has failed.
-
-                         🔍 Logs: Attached below.
-
-                         🔗 View Jenkins Build Logs:
-                         ${env.BUILD_URL}
-
-                         Regards,
-                         Jenkins
-                         """,
-                         attachLog: true,
-                         to: "atulrajput.work@gmail.com"
+                emailext (
+                    subject: "Pipeline Status: $(BUILD_NUMBER)",
+                    body: '''<html>
+                        <body>
+                            <p>Build Status: $(BUILD_STATUS)</p>
+                            <p>Build Number: $(BUILD_NUMBER)</p>
+                            <p>Check the <a href="$(BUILD_URL)">console output</a>.</p>
+                        </body>
+                    </html>
+                    ''',
+                    to: 'atulrajput.work@gmail.com',
+                    from: 'development.aayanindia@gmail.com',
+                    replyTo: 'development.aayanindia@gmail.com',
+                    mimeType: 'text/html'
+                )
             }
         }
     }
