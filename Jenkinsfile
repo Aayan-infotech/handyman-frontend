@@ -18,55 +18,13 @@ pipeline {
             }
         }
 
-        stage('Fix ESLint Issues') {
-            steps {
-                script {
-                    sh '''
-                    # Ensure ESLint is installed
-                    if ! command -v eslint &> /dev/null; then
-                        echo "ESLint not found! Installing..."
-                        npm install --save-dev eslint
-                    fi
-                    
-                    # Create a default ESLint config if missing
-                    if [ ! -f .eslintrc.json ]; then
-                        echo "No ESLint config found. Creating default .eslintrc.json..."
-                        echo '{
-                          "env": {
-                            "browser": true,
-                            "es2021": true
-                          },
-                          "extends": [
-                            "eslint:recommended",
-                            "plugin:react/recommended"
-                          ],
-                          "parserOptions": {
-                            "ecmaFeatures": {
-                              "jsx": true
-                            },
-                            "ecmaVersion": "latest",
-                            "sourceType": "module"
-                          },
-                          "plugins": ["react"],
-                          "rules": {
-                            "no-unused-vars": "warn",
-                            "react/prop-types": "off"
-                          }
-                        }' > .eslintrc.json
-                    fi
-
-                    # Run ESLint auto-fix
-                    echo "Running ESLint auto-fix..."
-                    npm run lint --fix || echo "Linting completed with warnings, continuing..."
-                    '''
-                }
-            }
-        }
-
         stage('Run ESLint') {
             steps {
                 script {
-                    sh 'npm run lint || echo "Linting errors found, but continuing pipeline..."'
+                    sh '''
+                    echo "Running ESLint..."
+                    npm run lint || echo "ESLint completed with errors, but continuing pipeline..."
+                    '''
                 }
             }
         }
