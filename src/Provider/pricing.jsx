@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import LoggedHeader from "./Auth/component/loggedNavbar";
+import LoggedHeader from "./auth/component/loggedNavbar";
 import { TbSpeakerphone } from "react-icons/tb";
 import { MdMessage } from "react-icons/md";
 import speaker from "./assets/announcement.png";

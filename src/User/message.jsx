@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LoggedHeader from "./Auth/component/loggedNavbar";
+import LoggedHeader from "./auth/component/loggedNavbar";
 import Form from "react-bootstrap/Form";
 import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
 import "./user.css";

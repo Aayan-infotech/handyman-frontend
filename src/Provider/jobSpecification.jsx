@@ -1,5 +1,5 @@
 import react, { useState, useEffect } from "react";
-import LoggedHeader from "./Auth/component/loggedNavbar";
+import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdEmail, MdCall } from "react-icons/md";
 import company1 from "./assets/logo/companyLogo.png";
 import Chip from "@mui/material/Chip";
