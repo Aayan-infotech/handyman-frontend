@@ -22,6 +22,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Running ESLint..."
                     npm run lint || echo "⚠️ ESLint completed with errors, but continuing pipeline..."
                     '''
@@ -33,6 +34,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Logging in to Docker Hub..."
                     if echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin; then
                         echo "✅ Docker Hub login successful!"
@@ -50,6 +52,7 @@ pipeline {
                 script {
                     def latestTag = sh(
                         script: '''
+                        #!/bin/bash
                         curl -s https://hub.docker.com/v2/repositories/Aayanindia/handy-frontend/tags/ | \
                         jq -r '.results[].name' | grep -E '^stage-v[0-9]+$' | sort -V | tail -n1 | awk -F'v' '{print $2}'
                         ''',
@@ -67,6 +70,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Building Docker image..."
                     docker build -t ${IMAGE_NAME} . 2>&1 | tee failure.log
                     '''
@@ -78,6 +82,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Tagging Docker image..."
                     docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${env.NEW_STAGE_TAG}
                     docker tag ${IMAGE_NAME} ${IMAGE_NAME}:prodv1
@@ -90,6 +95,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Running Trivy security scan..."
                     if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/${IMAGE_NAME}:${env.NEW_STAGE_TAG}; then
                         echo "✅ Trivy scan completed!"
@@ -105,6 +111,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Pushing Docker images to Docker Hub..."
                     docker push ${IMAGE_NAME}:${env.NEW_STAGE_TAG}
                     docker push ${IMAGE_NAME}:prodv1
@@ -117,6 +124,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Cleaning up old Docker images..."
                     OLD_IMAGES=$(docker images ${IMAGE_NAME} --format "{{.Tag}}" | grep 'stage-v' | sort -V | head -n -4)
                     for tag in $OLD_IMAGES; do
@@ -131,6 +139,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Stopping existing container..."
                     CONTAINER_ID=$(docker ps -q --filter "publish=${HOST_PORT}")
                     if [ -n "$CONTAINER_ID" ]; then
@@ -148,6 +157,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    #!/bin/bash
                     echo "Starting new container..."
                     docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${env.NEW_STAGE_TAG}
                     '''
