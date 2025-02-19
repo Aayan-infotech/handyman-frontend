@@ -127,9 +127,10 @@ export default function Otp({ length = 6 }) {
         setToastProps({ message: response?.data?.message, type: "success" });
         setLoading(false);
         setOtp(Array(length).fill(""));
-        localStorage.removeItem("forgetValidation");
+       
         localStorage.setItem("verifyEmailOtp", email);
         if (ProviderParams) {
+          localStorage.removeItem("forgetEmail");
           setTimeout(() => {
             navigate(`/provider/reset-password`);
           }, 2000);

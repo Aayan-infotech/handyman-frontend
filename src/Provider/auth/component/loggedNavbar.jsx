@@ -1,4 +1,4 @@
-import react, { useEffect } from "react";
+import react, { useState, useEffect } from "react";
 import logo from "../../../assets/logo.png";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -11,11 +11,18 @@ import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
 import "../../../User/user.css";
 import { FaRegUserCircle } from "react-icons/fa";
 import axios from "axios";
+import Toaster from "../../../Toaster";
 
 export default function LoggedHeader() {
-  const Location = useLocation();
-  console.log(Location);
- 
+  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const location = useLocation();
+  const guestCondition = JSON.parse(localStorage.getItem("Guest")) || false;
+
+  console.log("guestCondition", guestCondition);
+
+  const handleGuest = () => {
+    setToastProps({ message: "Please login first", type: "error" });
+  };
 
   return (
     <>
@@ -28,35 +35,38 @@ export default function LoggedHeader() {
           <Link to="/provider/pricing" className="py-1">
             <img src={logo} alt="logo" />
           </Link>
-          {Location.pathname === "/post-new-job" ? (
+
+          {location.pathname === "/post-new-job" && (
             <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
-          ) : (
-            <></>
           )}
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
-              {Location.pathname === "/post-new-job" ||
-              Location.pathname === "/home" ? (
-                <>
-                  <div className="position-relative icon ">
-                    <IoIosSearch />
-                    <Form.Control placeholder="search" className="w-100" />
-                  </div>
-                </>
-              ) : (
-                <></>
+              {(location.pathname === "/post-new-job" ||
+                location.pathname === "/home") && (
+                <div className="position-relative icon">
+                  <IoIosSearch />
+                  <Form.Control placeholder="search" className="w-100" />
+                </div>
               )}
 
               <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
                 <Link className="notification" to="/notification">
                   <IoMdNotificationsOutline className="fs-4" />
                 </Link>
+
                 {location.pathname.includes("provider") ? (
-                  <Link to="/provider/myprofile">
-                    <FaRegUserCircle className="fs-1" />
-                  </Link>
+                  guestCondition ? (
+                    <button onClick={handleGuest} className="btn">
+                      {" "}
+                      <FaRegUserCircle className="fs-1" />
+                    </button>
+                  ) : (
+                    <Link to="/provider/myprofile">
+                      <FaRegUserCircle className="fs-1" />
+                    </Link>
+                  )
                 ) : (
                   <Link to="/myprofile">
                     <FaRegUserCircle className="fs-1" />
@@ -67,6 +77,8 @@ export default function LoggedHeader() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      <Toaster message={toastProps.message} type={toastProps.type} />
     </>
   );
 }

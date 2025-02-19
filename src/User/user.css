@@ -15,6 +15,9 @@
   padding: 20px 30px;
   border-radius: 30px;
 }
+.login .hr {
+  width: calc(100% - 50%);
+}
 .login .icons-color img {
   width: fit-content;
 }
@@ -578,6 +581,9 @@
 }
 @media screen and (max-width: 768px) {
   .login .card {
+    width: calc(100% - 8%);
+  }
+  .login .hr {
     width: calc(100% - 8%);
   }
   .mySwiper .slick-list {

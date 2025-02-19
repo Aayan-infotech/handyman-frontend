@@ -35,10 +35,7 @@ export const getProviderNearbyJobs = createAsyncThunk(
 
 export const getProviderJobs = createAsyncThunk(
   "/Provider/getProviderJobs",
-  async (
-    { businessType, latitude, longitude },
-    { rejectWithValue }
-  ) => {
+  async ({ businessType, latitude, longitude }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `http://44.196.64.110:7777/api/provider/getJobs`,
@@ -46,7 +43,41 @@ export const getProviderJobs = createAsyncThunk(
           businessType,
           latitude,
           longitude,
-        },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Handle errors and send them to the reducer
+    }
+  }
+);
+
+export const getGuestProviderJobs = createAsyncThunk(
+  "/Provider/getProviderJobs",
+  async ({ latitude, longitude }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `http://44.196.64.110:7777/api/provider/getNearbyJobsForGuest`,
+        {
+          latitude,
+          longitude,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Handle errors and send them to the reducer
+    }
+  }
+);
+
+export const getGuestProviderJobId = createAsyncThunk(
+  "/Provider/getProviderJobs",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://44.196.64.110:7777/api/provider/getJobByIdForGuest/${id}`
       );
 
       return response.data;
@@ -63,7 +94,7 @@ const initialState = {
 };
 
 const ProviderSlice = createSlice({
-  name: "payment",
+  name: "provider",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -87,6 +118,28 @@ const ProviderSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(getProviderJobs.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(getGuestProviderJobs.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getGuestProviderJobs.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+      .addCase(getGuestProviderJobs.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(getGuestProviderJobId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getGuestProviderJobId.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+      .addCase(getGuestProviderJobId.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

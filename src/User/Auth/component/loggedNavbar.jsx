@@ -12,8 +12,10 @@ import "../../user.css";
 import { FaRegUserCircle } from "react-icons/fa";
 
 export default function LoggedHeader() {
-  const Location = useLocation();
-  console.log(Location);
+  const location = useLocation(); // ✅ Correct way to get pathname
+  const guestCondition = JSON.parse(localStorage.getItem("Guest")) || false; // ✅ Ensure Boolean value
+
+  console.log("guestCondition", guestCondition); // ✅ Should now log correctly
 
   return (
     <>
@@ -23,37 +25,43 @@ export default function LoggedHeader() {
         className="position-relative z-1 loggedheader"
       >
         <Container fluid>
-          <Link to="/home" className="py-1">
+          <Link to="/provider/pricing" className="py-1">
             <img src={logo} alt="logo" />
           </Link>
-          {Location.pathname === "/post-new-job" ? (
+
+          {location.pathname === "/post-new-job" && (
             <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
-          ) : (
-            <></>
           )}
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
-              {Location.pathname === "/post-new-job" ||
-              Location.pathname === "/home" ? (
-                <>
-                  <div className="position-relative icon ">
-                    <IoIosSearch />
-                    <Form.Control placeholder="search" className="w-100" />
-                  </div>
-                </>
-              ) : (
-                <></>
+              {(location.pathname === "/post-new-job" ||
+                location.pathname === "/home") && (
+                <div className="position-relative icon">
+                  <IoIosSearch />
+                  <Form.Control placeholder="search" className="w-100" />
+                </div>
               )}
 
               <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
                 <Link className="notification" to="/notification">
                   <IoMdNotificationsOutline className="fs-4" />
                 </Link>
-                <Link to="/myprofile">
-                  <FaRegUserCircle className="fs-1" />
-                </Link>
+
+                {location.pathname.includes("provider") ? (
+                  guestCondition ? (
+                    <FaRegUserCircle className="fs-1" />
+                  ) : (
+                    <Link to="/provider/myprofile">
+                      <FaRegUserCircle className="fs-1" />
+                    </Link>
+                  )
+                ) : (
+                  <Link to="/myprofile">
+                    <FaRegUserCircle className="fs-1" />
+                  </Link>
+                )}
               </div>
             </div>
           </Navbar.Collapse>

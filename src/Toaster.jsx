@@ -29,7 +29,7 @@ const Toaster = ({ message, type }) => {
     }
   }, [message, type]);
 
-  return <ToastContainer />;
+  return <ToastContainer stacked />;
 };
 
 export default Toaster;

@@ -29,7 +29,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const response = await axios.post(
         "http://44.196.64.110:7777/api/auth/login",
@@ -61,7 +61,7 @@ export default function Login() {
       }
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
       setToastProps({ message: error?.response?.data?.error, type: "error" });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
@@ -152,6 +152,19 @@ export default function Login() {
                     <img src={facebook} alt="facebook" />
                   </Link>
                 </div>
+              </div>
+              <hr className="hr h-100" />
+              <div className="hr mb-4">
+              <Link to="/signup" className="w-100">
+                <Button
+                  variant="contained"
+                  color="success"
+                  className="fw-semibold custom-green-outline w-100 rounded-5 fs-5"
+                  size="small"
+                >
+                  Create Account
+                </Button>
+              </Link>
               </div>
             </div>
           </div>

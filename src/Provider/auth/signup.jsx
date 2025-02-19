@@ -116,7 +116,7 @@ export default function SignUpProvider() {
         setImages(null);
         setLoading(false);
         setTimeout(() => {
-          navigate(`/otp?email=${email}&type=provider`);
+          navigate(`/provider/otp?email=${email}&type=provider`);
         }, 2000);
       }
     } catch (error) {

@@ -11,7 +11,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Button from "@mui/material/Button";
 import speaker from "./assets/announcement.png";
-import { getProviderJobs } from "../Slices/providerSlice";
+import { getProviderJobs, getGuestProviderJobs } from "../Slices/providerSlice";
 import { getProviderUser } from "../Slices/userSlice";
 import Loader from "../Loader";
 import axios from "axios";
@@ -33,10 +33,25 @@ export default function HomeProvider() {
   const [businessType, setBusinessType] = useState("");
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
+  const [guestLatitude, setGuestLatitude] = useState();
+  const [guestLongitude, setGuestLongitude] = useState();
   const [data, setData] = useState([]);
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const name = localStorage.getItem("ProviderName");
   const dispatch = useDispatch();
+  const guestCondition = localStorage.getItem("Guest") === "true";
+  const guestLocation = JSON.parse(localStorage.getItem("guestLocation"));
+
+  useEffect(() => {
+    if (guestLocation) {
+      const response = guestLocation.latitude;
+      const response1 = guestLocation.longitude;
+      setGuestLatitude(response);
+      setGuestLongitude(response1);
+    } else {
+      console.log("No location found in localStorage");
+    }
+  }, []);
 
   const getUser = async () => {
     try {
@@ -80,18 +95,40 @@ export default function HomeProvider() {
     }
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      await getUser();
-    };
-    fetchUserData();
-  }, [dispatch]); // Runs only once when the component mounts
-  
-  useEffect(() => {
-    if (businessType && latitude && longitude) {
-      handleAllData(); // Runs only after state values are updated
+  const handleGuestJob = async () => {
+    try {
+      const response = await dispatch(
+        getGuestProviderJobs({
+          latitude: guestLatitude,
+          longitude: guestLongitude,
+        })
+      );
+      if (getGuestProviderJobs.fulfilled.match(response)) {
+        setToastProps({
+          message: "Nearby Jobs Fetched Successfully",
+          type: "success",
+        });
+        setData(response.payload?.data);
+      }
+    } catch (error) {
+      console.error("Error Getting Nearby Jobs:", error);
+      setToastProps({ message: error.message, type: "error" });
     }
-  }, [businessType, latitude, longitude , dispatch]); // Runs when these values change
+  };
+
+  useEffect(() => {
+    if (guestCondition) {
+      handleGuestJob();
+    } else {
+      getUser();
+    }
+  }, [guestCondition, guestLatitude, guestLongitude]);
+
+  useEffect(() => {
+    if (!guestCondition && businessType && latitude && longitude) {
+      handleAllData();
+    }
+  }, [businessType, latitude, longitude]);
 
   console.log(data);
 
@@ -106,7 +143,7 @@ export default function HomeProvider() {
       <div className="bg-second py-3">
         <div className="container top-section-main">
           <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
-            <h5 className="user">Hello {name}</h5>
+            <h5 className="user">Hello {name || "Guest"}</h5>
             <div className="position-relative icon-speaker">
               <img src={speaker} alt="speaker" />
               <Slider {...settings} className="mySwiper">
@@ -214,26 +251,43 @@ export default function HomeProvider() {
                 ) : (
                   data.map((job) => (
                     <>
-                      <div className="col-lg-12">
-                        <Link
-                          key={job._id}
-                          to={`/provider/jobspecification/${job._id}`}
-                        >
+                      <div className="col-lg-12" key={job._id}>
+                        <Link to={`/provider/jobspecification/${job._id}`}>
                           <div className="card border-0 rounded-3 px-4">
                             <div className="card-body">
                               <div className="row gy-4 gx-1 align-items-center">
-                                <div className="col-lg-3">
-                                  <div className="d-flex flex-row gap-3 align-items-center">
-                                    <div className="d-flex flex-column align-items-start gap-1">
-                                      <h3 className="mb-0">
-                                        {job.businessType}
-                                      </h3>
-                                      <h6>
-                                        {new Date(job.createdAt).toDateString()}
-                                      </h6>
+                                {guestCondition ? (
+                                  <div className="col-lg-4">
+                                    <div className="d-flex flex-row gap-3 align-items-center">
+                                      <div className="d-flex flex-column align-items-start gap-1">
+                                        <h3 className="mb-0">
+                                          {job.businessType}
+                                        </h3>
+                                        <h6>
+                                          {new Date(
+                                            job.createdAt
+                                          ).toDateString()}
+                                        </h6>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
+                                ) : (
+                                  <div className="col-lg-3">
+                                    <div className="d-flex flex-row gap-3 align-items-center">
+                                      <div className="d-flex flex-column align-items-start gap-1">
+                                        <h3 className="mb-0">
+                                          {job.businessType}
+                                        </h3>
+                                        <h6>
+                                          {new Date(
+                                            job.createdAt
+                                          ).toDateString()}
+                                        </h6>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+
                                 <div className="col-lg-7">
                                   <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-center">
                                     <div className="d-flex flex-row gap-2 align-items-center">
@@ -244,18 +298,22 @@ export default function HomeProvider() {
                                     </div>
                                     <div className="d-flex flex-row gap-2 align-items-center">
                                       <PiBag />
-                                      <h5 className="mb-0 text-trun">{job.jobLocation.jobAddressLine}</h5>
+                                      <h5 className="mb-0 text-trun">
+                                        {job.jobLocation.jobAddressLine}
+                                      </h5>
                                     </div>
                                   </div>
                                 </div>
-                                <div className="col-lg-2">
-                                  <Button
-                                    variant="contained"
-                                    className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                                  >
-                                    Accept
-                                  </Button>
-                                </div>
+                                {!guestCondition ? (
+                                  <div className="col-lg-2">
+                                    <Button
+                                      variant="contained"
+                                      className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                                    >
+                                      Accept
+                                    </Button>
+                                  </div>
+                                ) : null}
                               </div>
                             </div>
                           </div>

@@ -13,13 +13,17 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
+import { useDispatch, useSelector } from "react-redux";
+import { getGuestProviderJobId } from "../Slices/providerSlice";
 
 export default function JobSpecification() {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const handleClose = () => setShow(false);
+  const guestCondition = localStorage.getItem("Guest") === "true";
   const { id } = useParams();
   const handleJobStatus = async () => {
     setLoading(true);
@@ -67,8 +71,28 @@ export default function JobSpecification() {
     }
   };
 
+  const handleGuestJob = async () => {
+    setLoading(true);
+    try {
+      const response = await dispatch(
+        getGuestProviderJobId({
+          id: id,
+        })
+      );
+      if (getGuestProviderJobId.fulfilled.match(response)) {
+        setData(response.payload?.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error Getting Nearby Jobs:", error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    handleJob();
+    if (guestCondition) {
+      handleGuestJob();
+    } else handleJob();
   }, [id]);
 
   console.log(data);
@@ -175,21 +199,23 @@ export default function JobSpecification() {
                       </div>
                     </div>
                     <hr />
-                    <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-75">
-                      <Button
-                        variant="contained"
-                        className="custom-green bg-red-outline rounded-5 py-3 w-50"
-                      >
-                        Reject
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={handleJobStatus}
-                        className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                      >
-                        Accept
-                      </Button>
-                    </div>
+                    {!guestCondition ? (
+                      <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-75">
+                        <Button
+                          variant="contained"
+                          className="custom-green bg-red-outline rounded-5 py-3 w-50"
+                        >
+                          Reject
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={handleJobStatus}
+                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                        >
+                          Accept
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
                 </>
               ) : (
