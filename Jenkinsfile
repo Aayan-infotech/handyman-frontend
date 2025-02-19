@@ -49,7 +49,10 @@ pipeline {
             steps {
                 script {
                     def latestTag = sh(
-                        script: "curl -s https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/ | jq -r '.results[].name' | grep -E '^stage-v[0-9]+$' | sort -V | tail -n1 | awk -F'v' '{print \$2}'",
+                        script: '''
+                        curl -s https://hub.docker.com/v2/repositories/amazingatul/ecom-web/tags/ | \
+                        jq -r '.results[].name' | grep -E '^stage-v[0-9]+$' | sort -V | tail -n1 | awk -F'v' '{print $2}'
+                        ''',
                         returnStdout: true
                     ).trim()
 
