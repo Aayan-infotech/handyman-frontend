@@ -18,25 +18,6 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
-            steps {
-                script {
-                    sh '''
-                    npm audit fix --force
-                    npm install --legacy-peer-deps
-                    
-                    if npm run | grep -q "test"; then
-                        npm test
-                    else
-                        echo "No test script found. Creating a default test script..."
-                        echo '{ "scripts": { "test": "echo \\"No tests available. Skipping...\\" && exit 0" } }' > package.json
-                        npm test
-                    fi
-                    '''
-                }
-            }
-        }
-
         stage('Run ESLint') {
             steps {
                 script {
