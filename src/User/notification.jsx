@@ -1,5 +1,5 @@
 import React from "react";
-import LoggedHeader from "./auth/component/loggedNavbar";
+import LoggedHeader from "./Auth/component/loggedNavbar";
 import { Link } from "react-router-dom";
 import { MdMessage } from "react-icons/md";
 import "./user.css";
