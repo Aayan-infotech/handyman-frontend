@@ -7,6 +7,7 @@ pipeline {
         HOST_PORT = "2365"
         DOCKER_HUB_USERNAME = credentials('docker-hub-username') // Store in Jenkins Credentials
         DOCKER_HUB_PASSWORD = credentials('docker-hub-password') // Store in Jenkins Credentials
+        EMAIL_RECIPIENTS = "atulrajput.work@gmail.com"
     }
 
     stages {
@@ -116,7 +117,7 @@ pipeline {
 
         stage('Security Scan with Trivy') {
             when {
-                expression { return env.IMAGE_EXISTS == "true" } // Only run Trivy if image exists
+                expression { return env.IMAGE_EXISTS == "true" } // Run Trivy only if image exists
             }
             steps {
                 script {
@@ -194,11 +195,43 @@ pipeline {
     }
 
     post {
-        success {
-            echo "🎉 Pipeline execution successful!"
+        always {
+            script {
+                echo "📩 Sending deployment email..."
+                emailext subject: "🚀 Deployment Status: ${currentBuild.currentResult}",
+                         body: """
+                         Hello Team,
+
+                         Deployment status: ${currentBuild.currentResult}
+
+                         🔗 View Jenkins Build Logs:
+                         ${env.BUILD_URL}
+
+                         Regards,
+                         Jenkins
+                         """,
+                         to: "atulrajput.work@gmail.com"
+            }
         }
+
         failure {
-            echo "❌ Pipeline failed!"
+            script {
+                echo "❌ Sending failure email with logs..."
+                emailext subject: "🚨 Deployment Failed",
+                         body: """
+                         ❌ Oops, the latest deployment has failed.
+
+                         🔍 Logs: Attached below.
+
+                         🔗 View Jenkins Build Logs:
+                         ${env.BUILD_URL}
+
+                         Regards,
+                         Jenkins
+                         """,
+                         attachLog: true,
+                         to: "atulrajput.work@gmail.com"
+            }
         }
     }
 }
