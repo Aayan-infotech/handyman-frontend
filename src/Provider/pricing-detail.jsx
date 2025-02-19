@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import LoggedHeader from "./auth/component/loggedNavbar";
+import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage } from "react-icons/md";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FaRegCircleCheck } from "react-icons/fa6";
