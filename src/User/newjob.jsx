@@ -1,5 +1,5 @@
 import react, { useState, useEffect } from "react";
-import LoggedHeader from "./Auth/component/loggedNavbar";
+import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage } from "react-icons/md";
 import { GoDownload } from "react-icons/go";
 import Form from "react-bootstrap/Form";
