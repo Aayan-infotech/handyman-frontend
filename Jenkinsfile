@@ -84,7 +84,7 @@ pipeline {
                     sh '''
                     #!/bin/bash
                     echo "Tagging Docker image..."
-                    docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${env.NEW_STAGE_TAG}
+                    docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${NEW_STAGE_TAG}
                     docker tag ${IMAGE_NAME} ${IMAGE_NAME}:prodv1
                     '''
                 }
@@ -97,7 +97,7 @@ pipeline {
                     sh '''
                     #!/bin/bash
                     echo "Running Trivy security scan..."
-                    if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/${IMAGE_NAME}:${env.NEW_STAGE_TAG}; then
+                    if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/${IMAGE_NAME}:${NEW_STAGE_TAG}; then
                         echo "✅ Trivy scan completed!"
                     else
                         echo "⚠️ Trivy scan found vulnerabilities, but continuing pipeline..."
@@ -113,7 +113,7 @@ pipeline {
                     sh '''
                     #!/bin/bash
                     echo "Pushing Docker images to Docker Hub..."
-                    docker push ${IMAGE_NAME}:${env.NEW_STAGE_TAG}
+                    docker push ${IMAGE_NAME}:${NEW_STAGE_TAG}
                     docker push ${IMAGE_NAME}:prodv1
                     '''
                 }
@@ -159,7 +159,7 @@ pipeline {
                     sh '''
                     #!/bin/bash
                     echo "Starting new container..."
-                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${env.NEW_STAGE_TAG}
+                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${NEW_STAGE_TAG}
                     '''
                 }
             }
