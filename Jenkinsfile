@@ -8,6 +8,8 @@ pipeline {
         DOCKER_HUB_USERNAME = credentials('docker-hub-username')
         DOCKER_HUB_PASSWORD = credentials('docker-hub-password')
         EMAIL_RECIPIENTS = "atulrajput.work@gmail.com"
+        SONARQUBE_SERVER = "sonarscanner"  // Name configured in Jenkins
+        SONARTOKEN = credentials('sonartoken') // Securely use stored token
     }
 
     stages {
@@ -26,6 +28,23 @@ pipeline {
                     echo "Running ESLint..."
                     npm run lint || echo "⚠️ ESLint completed with errors, but continuing pipeline..."
                     '''
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                    script {
+                        sh '''
+                        echo "Running SonarQube analysis..."
+                        sonar-scanner \
+                            -Dsonar.projectKey=handy-frontend \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://44.196.64.110:9000 \
+                            -Dsonar.login=${SONARTOKEN}
+                        '''
+                    }
                 }
             }
         }
