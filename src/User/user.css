@@ -8,7 +8,21 @@
   max-width: 400px;
   width: 100%;
 }
-
+.h-100vh{
+  height: 100%;
+  min-height: 100vh;
+}
+.bg-center{
+  min-height: 85vh;
+  height: 100%;
+}
+.select-ion .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: .375rem .75rem !important;
+  border-radius: 41px !important;
+}
+.select-ion .css-sc8y68-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root{
+  border-radius: .375rem !important;
+}
 .login .card {
   width: calc(100% - 50%);
 

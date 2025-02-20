@@ -144,7 +144,7 @@ export default function HomeProvider() {
         <div className="container top-section-main">
           <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
             <h5 className="user">Hello {name || "Guest"}</h5>
-            <div className="position-relative icon-speaker">
+            {/* <div className="position-relative icon-speaker">
               <img src={speaker} alt="speaker" />
               <Slider {...settings} className="mySwiper">
                 <div>
@@ -183,7 +183,7 @@ export default function HomeProvider() {
                   </span>
                 </div>
               </Slider>
-            </div>
+            </div> */}
           </div>
           <div className="d-flex justify-content-between align-items-center gap-3 mb-4 mt-3">
             <h2 className="fw-normal">Job Requests</h2>

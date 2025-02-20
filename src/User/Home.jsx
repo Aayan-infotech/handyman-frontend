@@ -47,7 +47,7 @@ export default function Main() {
           <div className="top-section-main py-4 px-lg-5">
             <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
               <h5 className="user">Hello {name}</h5>
-              <div className="position-relative icon-speaker">
+              {/* <div className="position-relative icon-speaker">
                 <img src={speaker} alt="speaker" />
                 <Slider {...settings} className="mySwiper">
                   <div>
@@ -86,7 +86,7 @@ export default function Main() {
                     </span>
                   </div>
                 </Slider>
-              </div>
+              </div> */}
             </div>
             <div className="row py-3 gy-4">
               <div className="col-lg-3">

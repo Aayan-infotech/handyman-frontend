@@ -47,7 +47,7 @@ export default function LoginProvider() {
         setPassword("");
         setLoading(false);
         setTimeout(() => {
-          navigate("/provider/pricing");
+          navigate("/provider/upload");
         }, 4000);
         localStorage.setItem("ProviderToken", response?.data?.data?.token);
         localStorage.setItem(

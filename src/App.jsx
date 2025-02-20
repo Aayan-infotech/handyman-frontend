@@ -23,7 +23,6 @@ import ChangePassword from "./components/changePassword";
 import EditProfile from "./User/Auth/editProfile";
 import LoginProvider from "./Provider/auth/login";
 import SignUpProvider from "./Provider/auth/signup";
-import EditProfileProvider from "./Provider/auth/editProfile";
 import MainProvider from "./Provider/pricing";
 import PricingProvider from "./Provider/pricing-detail";
 import Payment from "./Provider/payment";
@@ -32,10 +31,11 @@ import HomeProvider from "./Provider/Home";
 import JobSpecification from "./Provider/jobSpecification";
 import Chat from "./User/chat";
 import "react-toastify/dist/ReactToastify.css";
+import Upload from "./Provider/auth/uploadDoc";
 
 function App() {
   return (
-    <>
+  
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
@@ -64,6 +64,7 @@ function App() {
           {/* provider */}
           <Route path="/provider/login" element={<LoginProvider />} />
           <Route path="/provider/signup" element={<SignUpProvider />} />
+          <Route path="/provider/upload" element={<Upload />} />
           <Route path="/provider/reset" element={<ResetPassword />} />
           <Route path="/provider/otp" element={<Otp />} />
           <Route path="/provider/job-history" element={<JobManagement />} />
@@ -73,14 +74,8 @@ function App() {
             path="/provider/changePassword/:id"
             element={<ChangePassword />}
           />
-          <Route
-            path="/provider/editProfile"
-            element={<EditProfile />}
-          />
-          <Route
-            path="/provider/forgetpassword"
-            element={<ForgetPassword />}
-          />
+          <Route path="/provider/editProfile" element={<EditProfile />} />
+          <Route path="/provider/forgetpassword" element={<ForgetPassword />} />
           <Route path="/provider/pricing" element={<MainProvider />} />
           <Route
             path="/provider/pricing-detail/:id"
@@ -100,7 +95,7 @@ function App() {
           <Route path="/provider/myprofile" element={<MyProfile />} />
         </Routes>
       </BrowserRouter>
-    </>
+   
   );
 }
 

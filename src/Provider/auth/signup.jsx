@@ -14,6 +14,18 @@ import axios from "axios";
 import Toaster from "../../Toaster";
 import Autocomplete from "react-google-autocomplete";
 import Loader from "../../Loader";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import { useTheme } from "@mui/material/styles";
+import MenuItem from "@mui/material/MenuItem";
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight: personName.includes(name)
+      ? theme.typography.fontWeightMedium
+      : theme.typography.fontWeightRegular,
+  };
+}
 
 export default function SignUpProvider() {
   const [name, setName] = useState("");
@@ -24,7 +36,7 @@ export default function SignUpProvider() {
   const [password, setPassword] = useState("");
   const [businessData, setBusinessData] = useState([]);
   const [serviceData, setServiceData] = useState("");
-  const [businessType, setBusinessType] = useState("");
+  const [businessType, setBusinessType] = useState([]);
   const [serviceType, setServiceType] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [images, setImages] = useState(null);
@@ -33,6 +45,12 @@ export default function SignUpProvider() {
   const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const theme = useTheme();
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
+  };
 
   useEffect(() => {
     const handleAllData = async () => {
@@ -40,9 +58,10 @@ export default function SignUpProvider() {
         const response = await axios.get(
           "http://44.196.64.110:7777/api/service/getAllServices"
         );
-        if (response.status === 201) {
+        if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
+        console.log(response?.data);
       } catch (error) {
         console.log(error);
       }
@@ -62,8 +81,7 @@ export default function SignUpProvider() {
       !address ||
       !password ||
       !businessType ||
-      !registrationNumber ||
-      !serviceType
+      !registrationNumber
     ) {
       setToastProps({
         message: "Please fill all required fields",
@@ -189,33 +207,33 @@ export default function SignUpProvider() {
                         Business Industry
                       </Form.Label>
                       <Col sm="7">
-                        <Form.Select
-                          value={businessType}
-                          onChange={(e) => {
-                            const selectedBusiness = e.target.value;
-                            setBusinessType(selectedBusiness);
-
-                            // Find the selected business object
-                            const businessObj = businessData.find(
-                              (b) => b.name === selectedBusiness
-                            );
-
-                            // If found, update serviceData with its services
-                            setServiceData(
-                              businessObj ? businessObj.services : []
-                            );
-                          }}
-                        >
-                          <option value="">Select Industry</option>
-                          {businessData.map((data) => (
-                            <option key={data._id} value={data.name}>
-                              {data.name}
-                            </option>
-                          ))}
-                        </Form.Select>
+                        <FormControl className="w-100 select-ion">
+                          <Select
+                            labelId="demo-multiple-name-label"
+                            id="demo-multiple-name"
+                            multiple
+                            value={businessType} // Should be an array of IDs
+                            onChange={handleChange}
+                            renderValue={(selected) =>
+                              selected
+                                .map(
+                                  (id) =>
+                                    businessData.find((data) => data._id === id)
+                                      ?.name
+                                )
+                                .join(", ")
+                            }
+                          >
+                            {businessData.map((data) => (
+                              <MenuItem key={data._id} value={data._id}>
+                                {data.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                       </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
+                    {/* <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Service Industry
                       </Form.Label>
@@ -236,7 +254,7 @@ export default function SignUpProvider() {
                           )}
                         </Form.Select>
                       </Col>
-                    </Form.Group>
+                    </Form.Group> */}
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Business name
