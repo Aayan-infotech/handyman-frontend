@@ -1,13 +1,14 @@
-///FROM node:20 AS build
+FROM node:20 AS build
 
-# Set the working directory
-///WORKDIR /usr/src/app
+# Set the working directo
+
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
-///RUN npm install
+RUN npm install
 
 # Copy the rest of the project files
 COPY . .
