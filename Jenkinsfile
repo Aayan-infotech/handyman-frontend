@@ -169,7 +169,7 @@ pipeline {
                     """,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "atulrajput.work@gmail.com",
+                    replyTo: "daksh.kumar@aayaninfotech.com",
                     mimeType: 'text/html'
                 )
             }
@@ -192,7 +192,7 @@ pipeline {
                     attachLog: true,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "atulrajput.work@gmail.com",
+                    replyTo: "daksh.kumar@aayaninfotech.com",
                     mimeType: 'text/html'
                 )
             }
