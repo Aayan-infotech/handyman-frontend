@@ -68,8 +68,7 @@ pipeline {
             steps {
                 script {
                     def buildResult = sh(
-                        script: '''
-                        #!/bin/bash
+                        script: '''#!/bin/bash
                         set -eo pipefail
                         echo "Building Docker image..."
                         docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
@@ -85,9 +84,6 @@ pipeline {
         }
 
         stage('Tag Docker Image') {
-            when {
-                expression { currentBuild.result == null }
-            }
             steps {
                 script {
                     sh '''
@@ -100,9 +96,6 @@ pipeline {
         }
 
         stage('Security Scan with Trivy') {
-            when {
-                expression { currentBuild.result == null }
-            }
             steps {
                 script {
                     sh '''
@@ -119,9 +112,6 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
-            when {
-                expression { currentBuild.result == null }
-            }
             steps {
                 script {
                     sh '''
@@ -134,9 +124,6 @@ pipeline {
         }
 
         stage('Stop Existing Container') {
-            when {
-                expression { currentBuild.result == null }
-            }
             steps {
                 script {
                     sh '''
@@ -154,13 +141,10 @@ pipeline {
         }
 
         stage('Run New Docker Container') {
-            when {
-                expression { currentBuild.result == null }
-            }
             steps {
                 script {
                     sh '''
-                    echo "Starting new container..."
+                    echo "Starting new container with latest image..."
                     docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:prodv1
                     '''
                 }
@@ -169,15 +153,15 @@ pipeline {
     }
 
     post {
-        success {
+        always {
             script {
-                echo "📩 Sending success email..."
+                echo "📩 Sending deployment email..."
                 emailext (
-                    subject: "🚀 Pipeline Success: Build #${BUILD_NUMBER}",
+                    subject: "🚀 Pipeline Status: ${currentBuild.currentResult} (Build #${BUILD_NUMBER})",
                     body: """
                     <html>
                     <body>
-                    <p><strong>Pipeline Status:</strong> SUCCESS ✅</p>
+                    <p><strong>Pipeline Status:</strong> ${currentBuild.currentResult}</p>
                     <p><strong>Build Number:</strong> ${BUILD_NUMBER}</p>
                     <p><strong>Check the <a href="${BUILD_URL}">console output</a>.</strong></p>
                     </body>
@@ -185,7 +169,7 @@ pipeline {
                     """,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }
@@ -200,7 +184,7 @@ pipeline {
                     <html>
                     <body>
                     <p><strong>❌ Deployment Failed</strong></p>
-                    <p><strong>Check logs below:</strong></p>
+                    <p><strong>Logs:</strong> Attached below.</p>
                     <p><strong>Check the <a href="${BUILD_URL}">console output</a>.</strong></p>
                     </body>
                     </html>
@@ -208,7 +192,7 @@ pipeline {
                     attachLog: true,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }
