@@ -67,10 +67,18 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh '''
-                    echo "Building Docker image..."
-                    docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
-                    '''
+                    def buildResult = sh(
+                        script: '''#!/bin/bash
+                        set -eo pipefail
+                        echo "Building Docker image..."
+                        docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
+                        ''',
+                        returnStatus: true
+                    )
+
+                    if (buildResult != 0) {
+                        error "❌ Docker build failed! Check failure.log"
+                    }
                 }
             }
         }
@@ -136,8 +144,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    echo "Starting new container..."
-                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${NEW_STAGE_TAG}
+                    echo "Starting new container with latest image..."
+                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:prodv1
                     '''
                 }
             }
@@ -161,7 +169,7 @@ pipeline {
                     """,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }
@@ -184,7 +192,7 @@ pipeline {
                     attachLog: true,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }

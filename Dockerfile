@@ -1,6 +1,7 @@
 FROM node:20 AS build
 
-# Set the working directory
+# Set the working directo
+
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
@@ -29,3 +30,5 @@ EXPOSE 2365
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
+
