@@ -52,8 +52,8 @@ pipeline {
                     def buildResult = sh(
                         script: '''
                         echo "Building Docker image..."
-                        docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
-                        exit ${PIPESTATUS[0]}  # Ensures pipeline fails if docker build fails
+                        set -o pipefail
+                        docker build -t "$IMAGE_NAME:latest" . 2>&1 | tee failure.log
                         ''',
                         returnStatus: true
                     )
@@ -70,7 +70,7 @@ pipeline {
                 script {
                     sh '''
                     echo "Tagging Docker image..."
-                    docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:prodv1
+                    docker tag "$IMAGE_NAME:latest" "$IMAGE_NAME:prodv1"
                     '''
                 }
             }
@@ -81,7 +81,7 @@ pipeline {
                 script {
                     sh '''
                     echo "Pushing Docker images to Docker Hub..."
-                    docker push ${IMAGE_NAME}:prodv1
+                    docker push "$IMAGE_NAME:prodv1"
                     '''
                 }
             }
@@ -109,7 +109,7 @@ pipeline {
                 script {
                     sh '''
                     echo "Starting new container with latest image..."
-                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:prodv1
+                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} "$IMAGE_NAME:prodv1"
                     '''
                 }
             }
