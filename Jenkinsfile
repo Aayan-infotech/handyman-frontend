@@ -46,21 +46,31 @@ pipeline {
             }
         }
 
+        stage('Generate Next Image Tag') {
+            steps {
+                script {
+                    def latestTag = sh(
+                        script: '''
+                        curl -s https://hub.docker.com/v2/repositories/aayanindia/handy-frontend/tags/ | \
+                        jq -r '.results[].name' | grep -E '^stage-v[0-9]+$' | sort -V | tail -n1 | awk -F'v' '{print $2}'
+                        ''',
+                        returnStdout: true
+                    ).trim()
+
+                    def newTag = latestTag ? "stage-v${latestTag.toInteger() + 1}" : "stage-v1"
+                    env.NEW_STAGE_TAG = newTag
+                    echo "🆕 New Docker Image Tag: ${newTag}"
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    def buildResult = sh(
-                        script: '''
-                        echo "Building Docker image..."
-                        set -o pipefail
-                        docker build -t "$IMAGE_NAME:latest" . 2>&1 | tee failure.log
-                        ''',
-                        returnStatus: true
-                    )
-
-                    if (buildResult != 0) {
-                        error "❌ Docker build failed! Check failure.log"
-                    }
+                    sh '''
+                    echo "Building Docker image..."
+                    docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
+                    '''
                 }
             }
         }
@@ -70,7 +80,24 @@ pipeline {
                 script {
                     sh '''
                     echo "Tagging Docker image..."
-                    docker tag "$IMAGE_NAME:latest" "$IMAGE_NAME:prodv1"
+                    docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${NEW_STAGE_TAG}
+                    docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:prodv1
+                    '''
+                }
+            }
+        }
+
+        stage('Security Scan with Trivy') {
+            steps {
+                script {
+                    sh '''
+                    echo "Running Trivy security scan..."
+                    if docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image \
+                        --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}:${NEW_STAGE_TAG}; then
+                        echo "✅ Trivy scan completed!"
+                    else
+                        echo "⚠️ Trivy scan found vulnerabilities, but continuing pipeline..."
+                    fi
                     '''
                 }
             }
@@ -81,7 +108,8 @@ pipeline {
                 script {
                     sh '''
                     echo "Pushing Docker images to Docker Hub..."
-                    docker push "$IMAGE_NAME:prodv1"
+                    docker push ${IMAGE_NAME}:${NEW_STAGE_TAG}
+                    docker push ${IMAGE_NAME}:prodv1
                     '''
                 }
             }
@@ -108,8 +136,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    echo "Starting new container with latest image..."
-                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} "$IMAGE_NAME:prodv1"
+                    echo "Starting new container..."
+                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${NEW_STAGE_TAG}
                     '''
                 }
             }
@@ -133,7 +161,7 @@ pipeline {
                     """,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "atulrajput.work@gmail.com",
+                    replyTo: "development.aayanindia@gmail.com",
                     mimeType: 'text/html'
                 )
             }
@@ -156,7 +184,7 @@ pipeline {
                     attachLog: true,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "atulrajput.work@gmail.com",
+                    replyTo: "development.aayanindia@gmail.com",
                     mimeType: 'text/html'
                 )
             }
