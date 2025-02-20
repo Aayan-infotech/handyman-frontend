@@ -29,3 +29,5 @@ EXPOSE 2365
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
+>> here is the error 
