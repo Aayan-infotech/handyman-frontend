@@ -161,7 +161,7 @@ pipeline {
                     """,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }
@@ -184,7 +184,7 @@ pipeline {
                     attachLog: true,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }
