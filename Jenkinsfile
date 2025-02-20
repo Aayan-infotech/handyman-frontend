@@ -69,8 +69,9 @@ pipeline {
                 script {
                     def buildResult = sh(
                         script: '''
+                        #!/bin/bash
+                        set -eo pipefail
                         echo "Building Docker image..."
-                        set -o pipefail
                         docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
                         ''',
                         returnStatus: true
@@ -85,7 +86,7 @@ pipeline {
 
         stage('Tag Docker Image') {
             when {
-                expression { currentBuild.result == null } // Run only if previous steps succeeded
+                expression { currentBuild.result == null }
             }
             steps {
                 script {
@@ -100,7 +101,7 @@ pipeline {
 
         stage('Security Scan with Trivy') {
             when {
-                expression { currentBuild.result == null } // Skip if previous stages failed
+                expression { currentBuild.result == null }
             }
             steps {
                 script {
@@ -184,7 +185,7 @@ pipeline {
                     """,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "atulrajput.work@gmail.com",
+                    replyTo: "development.aayanindia@gmail.com",
                     mimeType: 'text/html'
                 )
             }
@@ -207,7 +208,7 @@ pipeline {
                     attachLog: true,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "atulrajput.work@gmail.com",
+                    replyTo: "development.aayanindia@gmail.com",
                     mimeType: 'text/html'
                 )
             }
