@@ -67,15 +67,26 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh '''
-                    echo "Building Docker image..."
-                    docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
-                    '''
+                    def buildResult = sh(
+                        script: '''
+                        echo "Building Docker image..."
+                        set -o pipefail
+                        docker build -t ${IMAGE_NAME}:latest . 2>&1 | tee failure.log
+                        ''',
+                        returnStatus: true
+                    )
+
+                    if (buildResult != 0) {
+                        error "❌ Docker build failed! Check failure.log"
+                    }
                 }
             }
         }
 
         stage('Tag Docker Image') {
+            when {
+                expression { currentBuild.result == null } // Run only if previous steps succeeded
+            }
             steps {
                 script {
                     sh '''
@@ -88,6 +99,9 @@ pipeline {
         }
 
         stage('Security Scan with Trivy') {
+            when {
+                expression { currentBuild.result == null } // Skip if previous stages failed
+            }
             steps {
                 script {
                     sh '''
@@ -104,6 +118,9 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
+            when {
+                expression { currentBuild.result == null }
+            }
             steps {
                 script {
                     sh '''
@@ -116,6 +133,9 @@ pipeline {
         }
 
         stage('Stop Existing Container') {
+            when {
+                expression { currentBuild.result == null }
+            }
             steps {
                 script {
                     sh '''
@@ -133,11 +153,14 @@ pipeline {
         }
 
         stage('Run New Docker Container') {
+            when {
+                expression { currentBuild.result == null }
+            }
             steps {
                 script {
                     sh '''
                     echo "Starting new container..."
-                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${NEW_STAGE_TAG}
+                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:prodv1
                     '''
                 }
             }
@@ -145,15 +168,15 @@ pipeline {
     }
 
     post {
-        always {
+        success {
             script {
-                echo "📩 Sending deployment email..."
+                echo "📩 Sending success email..."
                 emailext (
-                    subject: "🚀 Pipeline Status: ${currentBuild.currentResult} (Build #${BUILD_NUMBER})",
+                    subject: "🚀 Pipeline Success: Build #${BUILD_NUMBER}",
                     body: """
                     <html>
                     <body>
-                    <p><strong>Pipeline Status:</strong> ${currentBuild.currentResult}</p>
+                    <p><strong>Pipeline Status:</strong> SUCCESS ✅</p>
                     <p><strong>Build Number:</strong> ${BUILD_NUMBER}</p>
                     <p><strong>Check the <a href="${BUILD_URL}">console output</a>.</strong></p>
                     </body>
@@ -161,7 +184,7 @@ pipeline {
                     """,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }
@@ -176,7 +199,7 @@ pipeline {
                     <html>
                     <body>
                     <p><strong>❌ Deployment Failed</strong></p>
-                    <p><strong>Logs:</strong> Attached below.</p>
+                    <p><strong>Check logs below:</strong></p>
                     <p><strong>Check the <a href="${BUILD_URL}">console output</a>.</strong></p>
                     </body>
                     </html>
@@ -184,7 +207,7 @@ pipeline {
                     attachLog: true,
                     to: "${EMAIL_RECIPIENTS}",
                     from: "development.aayanindia@gmail.com",
-                    replyTo: "development.aayanindia@gmail.com",
+                    replyTo: "atulrajput.work@gmail.com",
                     mimeType: 'text/html'
                 )
             }
