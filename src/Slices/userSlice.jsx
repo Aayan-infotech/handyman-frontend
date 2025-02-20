@@ -6,7 +6,7 @@ export const getProviderUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "http://44.196.64.110:7777/api/auth/getProviderProfile",
+        "http://54.236.98.193:7777/api/auth/getProviderProfile",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
@@ -26,7 +26,7 @@ export const getHunterUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "http://44.196.64.110:7777/api/auth/getHunterProfile",
+        "http://54.236.98.193:7777/api/auth/getHunterProfile",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
@@ -48,7 +48,7 @@ export const handleChangePassword = createAsyncThunk(
     try {
       const response = await axios.post(
         // Use POST request to send data in the body
-        `http://44.196.64.110:7777/api/auth/changePassword/${id}`,
+        `http://54.236.98.193:7777/api/auth/changePassword/${id}`,
         { oldPassword, newPassword }, // Send the password data in the request body
         {
           headers: {
@@ -74,7 +74,7 @@ export const handleEditProfile = createAsyncThunk(
     try {
       const response = await axios.post(
         // Use POST request to send data in the body
-        `http://44.196.64.110:7777/api/auth/changePassword/${id}`,
+        `http://54.236.98.193:7777/api/auth/changePassword/${id}`,
         { oldPassword, newPassword }, // Send the password data in the request body
         {
           headers: {

@@ -56,7 +56,7 @@ export default function SignUpProvider() {
     const handleAllData = async () => {
       try {
         const response = await axios.get(
-          "http://44.196.64.110:7777/api/service/getAllServices"
+          "http://54.236.98.193:7777/api/service/getAllServices"
         );
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
@@ -112,7 +112,7 @@ export default function SignUpProvider() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://44.196.64.110:7777/api/auth/signup",
+        "http://54.236.98.193:7777/api/auth/signup",
         formData,
         {
           headers: {

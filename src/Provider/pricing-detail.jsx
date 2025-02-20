@@ -38,7 +38,7 @@ export default function PricingProvider() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://44.196.64.110:7777/api/subscription/getSubscriptionById/${id}`
+          `http://54.236.98.193:7777/api/subscription/getSubscriptionById/${id}`
         );
         setData(res?.data?.data);
         setTitle(res?.data?.data?.title);

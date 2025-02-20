@@ -17,7 +17,7 @@ export const handlePayment = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `http://44.196.64.110:7777/api/payment/createPayment`,
+        `http://54.236.98.193:7777/api/payment/createPayment`,
         {
           transactionId,
           transactionDate,

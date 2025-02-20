@@ -72,7 +72,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "http://44.196.64.110:7777/api/auth/signup",
+        "http://54.236.98.193:7777/api/auth/signup",
         formData
       );
       if (response.status === 200 || response.status === 201) {

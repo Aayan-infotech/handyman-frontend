@@ -29,7 +29,7 @@ export default function JobSpecification() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://44.196.64.110:7777/api/jobpost/changeJobStatus/${id}`,
+        `http://54.236.98.193:7777/api/jobpost/changeJobStatus/${id}`,
         {
           jobStatus: "Accepted",
         },
@@ -53,7 +53,7 @@ export default function JobSpecification() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://44.196.64.110:7777/api/jobpost/jobpost-details/${id}`,
+        `http://54.236.98.193:7777/api/jobpost/jobpost-details/${id}`,
 
         {
           headers: {

@@ -26,7 +26,7 @@ export default function ForgetPassword() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://44.196.64.110:7777/api/auth/forgot-password",
+        "http://54.236.98.193:7777/api/auth/forgot-password",
         {
           email,
         },

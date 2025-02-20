@@ -30,7 +30,7 @@ export default function ResetPassword() {
 
     try {
       const response = await axios.post(
-        "http://44.196.64.110:7777/api/auth/reset-password-with-otp",
+        "http://54.236.98.193:7777/api/auth/reset-password-with-otp",
         {
           email,
           newPassword,

@@ -6,7 +6,7 @@ export const getAddress = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "http://44.196.64.110:7777/api/address/addresses-by-id",
+        "http://54.236.98.193:7777/api/address/addresses-by-id",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,

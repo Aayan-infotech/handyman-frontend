@@ -35,7 +35,7 @@ export default function MainProvider() {
       setLoading(true);
       try {
         const res = await axios.get(
-          "http://44.196.64.110:7777/api/subscription/getAllSubscription"
+          "http://54.236.98.193:7777/api/subscription/getAllSubscription"
         );
         setData(res?.data?.data);
         setLoading(false);
