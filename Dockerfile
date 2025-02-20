@@ -1,8 +1,8 @@
-///FROM node:20 AS build
+FROM node:20 AS build
 
 # Set the working directo
 
-///WORKDIR /usr/src/app
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
