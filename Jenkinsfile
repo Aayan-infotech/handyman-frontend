@@ -137,7 +137,7 @@ pipeline {
                 script {
                     sh '''
                     echo "Starting new container..."
-                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:${NEW_STAGE_TAG}
+                    docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:prodv1
                     '''
                 }
             }
