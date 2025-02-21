@@ -70,34 +70,46 @@ export default function MyProfile() {
 
   const signOut = async () => {
     try {
+      const token = hunterToken || providerToken;
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
       const response = await axios.post(
-        "http://54.236.98.193:7777/api/auth/logout",
+        "http://localhost:7777/api/auth/logout",
+        {
+          userType: hunterToken ? "hunter" : "provider",
+        },
         {
           headers: {
-            Authorization: `Bearer ${
-              localStorage.getItem("hunterToken") ??
-              localStorage.getItem("providerToken")
-            }`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
+
       if (response.status === 200) {
-        setToastProps({
-          message: "You have been Logged Out",
-          type: "error",
-        });
-        setTimeout(() => {
-          navigate("/welcome");
-        }, 2000);
+        setToastProps({ message: "You have been Logged Out", type: "success" });
+        localStorage.removeItem("hunterToken");
+        localStorage.removeItem("hunterEmail");
+        localStorage.removeItem("hunterName");
+        localStorage.removeItem("hunterId");
+        localStorage.removeItem("ProviderToken");
+        localStorage.removeItem("ProviderEmail");
+        localStorage.removeItem("ProviderName");
+        localStorage.removeItem("ProviderId");
+
+        setTimeout(() => navigate("/welcome"), 2000);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setToastProps({
-        message: error,
+        message: error?.response?.data?.message || "Logout failed",
         type: "error",
       });
     }
   };
+
   const Location = useLocation();
   console.log(Location);
   return (

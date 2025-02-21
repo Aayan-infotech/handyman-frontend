@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
@@ -53,7 +53,7 @@ export default function Login() {
         setTimeout(() => {
           navigate("/home");
         }, 2000);
-        localStorage.setItem("hunterToken", response?.data?.data?.token);
+        localStorage.setItem("hunterToken", response?.data?.data?.user.token);
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
