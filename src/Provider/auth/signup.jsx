@@ -225,7 +225,7 @@ export default function SignUpProvider() {
                             }
                           >
                             {businessData.map((data) => (
-                              <MenuItem key={data._id} value={data._id}>
+                              <MenuItem key={data._id} value={data?._id}>
                                 {data.name}
                               </MenuItem>
                             ))}

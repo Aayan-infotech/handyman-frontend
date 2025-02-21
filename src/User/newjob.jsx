@@ -1,18 +1,34 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage } from "react-icons/md";
-import { GoDownload } from "react-icons/go";
 import Form from "react-bootstrap/Form";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { LocalizationProvider, MobileTimePicker } from "@mui/x-date-pickers";
+import {
+  LocalizationProvider,
+  MobileTimePicker,
+  MobileDatePicker,
+  DatePicker,
+} from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TextField, Stack } from "@mui/material";
 import axios from "axios";
 import Autocomplete from "react-google-autocomplete";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
+import FormControl from "@mui/material/FormControl";
+import { useTheme } from "@mui/material/styles";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight: personName.includes(name)
+      ? theme.typography.fontWeightMedium
+      : theme.typography.fontWeightRegular,
+  };
+}
 
 export default function NewJob() {
   const [startTime, setStartTime] = useState(dayjs().hour(9).minute(0));
@@ -25,13 +41,16 @@ export default function NewJob() {
   const [radius, setRadius] = useState("");
   const [address, setAddress] = useState("");
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
-  const [businessType, setBusinessType] = useState("");
-  const [serviceType, setServiceType] = useState("");
+  const [businessType, setBusinessType] = useState([]);
   const [requirements, setRequirements] = useState("");
   const [documents, setDocuments] = useState([]);
   const [businessData, setBusinessData] = useState([]);
-  const [serviceData, setServiceData] = useState("");
   console.log(localStorage.getItem("hunterToken"));
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
+  };
 
   useEffect(() => {
     const handleAllData = async () => {
@@ -39,7 +58,7 @@ export default function NewJob() {
         const response = await axios.get(
           "http://54.236.98.193:7777/api/service/getAllServices"
         );
-        if (response.status === 201) {
+        if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
       } catch (error) {
@@ -61,7 +80,6 @@ export default function NewJob() {
     formData.append("jobAddressLine", address);
     formData.append("estimatedBudget", budget);
     formData.append("businessType", businessType);
-    formData.append("services", serviceType);
     formData.append("requirements", requirements);
     formData.append("timeframe[from]", startTime.toISOString());
     formData.append("timeframe[to]", endTime.toISOString());
@@ -171,45 +189,57 @@ export default function NewJob() {
                     />
                   </div>
                   <div className="col-lg-4">
-                    <Form.Select
-                      value={businessType}
-                      onChange={(e) => {
-                        const selectedBusiness = e.target.value;
-                        setBusinessType(selectedBusiness);
-
-                        // Find the selected business object
-                        const businessObj = businessData.find(
-                          (b) => b.name === selectedBusiness
-                        );
-
-                        // If found, update serviceData with its services
-                        setServiceData(businessObj ? businessObj.services : []);
-                      }}
-                    >
-                      <option value="">Select Industry</option>
-                      {businessData.map((data) => (
-                        <option key={data._id} value={data.name}>
-                          {data.name}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    <FormControl className="w-100 ">
+                      <Select
+                        labelId="demo-multiple-name-label"
+                        className="input1 bg-white p-1"
+                        id="demo-multiple-name"
+                        multiple
+                        value={businessType}
+                        onChange={handleChange}
+                        renderValue={(selected) =>
+                          selected
+                            .map(
+                              (id) =>
+                                businessData.find((data) => data._id === id)
+                                  ?.name
+                            )
+                            .join(", ")
+                        }
+                      >
+                        {businessData.map((data) => (
+                          <MenuItem key={data._id} value={data?._id}>
+                            {data?.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </div>
                   <div className="col-lg-4">
-                    <Form.Select
-                      value={serviceType}
-                      onChange={(e) => setServiceType(e.target.value)}
-                    >
-                      <option value="">Select Service</option>
-                      {serviceData.length > 0 ? (
-                        serviceData.map((service, index) => (
-                          <option key={index} value={service}>
-                            {service}
-                          </option>
-                        ))
-                      ) : (
-                        <option disabled>No services available</option>
-                      )}
-                    </Form.Select>
+                    <Form.Control
+                      type="file"
+                      className="input1"
+                      onChange={(e) => setDocuments(Array.from(e.target.files))}
+                      multiple
+                    />
+                  </div>
+                  <div className="col-lg-4">
+                    <div className="card outline-card-none">
+                      <div className="card-body d-flex flex-column align-items-center">
+                        <label className="text-secondary mb-2 fs-6 text-center w-100">
+                          Choose Date
+                        </label>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <MobileDatePicker
+                            defaultValue={dayjs()}
+                            className="standard-input"
+                            shouldDisableDate={(date) =>
+                              date.isBefore(dayjs(), "day")
+                            }
+                          />
+                        </LocalizationProvider>
+                      </div>
+                    </div>
                   </div>
                   <div className="col-lg-4">
                     <div className="card outline-card-none">
@@ -251,14 +281,7 @@ export default function NewJob() {
                       placeholder="requirements ......."
                     />
                   </div>
-                  <div className="col-lg-4">
-                    <Form.Control
-                      type="file"
-                      className="input1"
-                      onChange={(e) => setDocuments(Array.from(e.target.files))}
-                      multiple
-                    />
-                  </div>
+
                   <div className="col-lg-4 mx-auto pt-4">
                     <Button
                       variant="contained"

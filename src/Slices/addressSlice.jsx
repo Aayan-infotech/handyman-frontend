@@ -9,7 +9,10 @@ export const getAddress = createAsyncThunk(
         "http://54.236.98.193:7777/api/address/addresses-by-id",
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ??
+              localStorage.getItem("providerToken")
+            }`,
           },
         }
       );

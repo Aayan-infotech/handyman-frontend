@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage, MdOutlineWork } from "react-icons/md";
 import serviceProviderImage from "./assets/service-provider-image.png";
@@ -16,6 +16,7 @@ import { IoMdMail } from "react-icons/io";
 import { CiBadgeDollar } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";
+import { getAddress } from "../Slices/addressSlice";
 import Loader from "../Loader";
 import axios from "axios";
 import Toaster from "../Toaster";
@@ -24,6 +25,7 @@ export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
+  const [address, setAdress] = useState("");
   const [loading, setLoading] = useState(false);
   const id =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");
@@ -33,6 +35,7 @@ export default function MyProfile() {
   const navigate = useNavigate();
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const user = useSelector((state) => state?.user?.user?.data);
+
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -43,6 +46,7 @@ export default function MyProfile() {
         if (hunterToken) {
           const hunterResponse = await dispatch(getHunterUser());
           fetchedUser = hunterResponse?.payload?.data;
+          console.log(fetchedUser);
         } else if (providerToken) {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
@@ -52,6 +56,7 @@ export default function MyProfile() {
           setName(fetchedUser.contactName || fetchedUser.name || "");
           setNumber(fetchedUser.phoneNo || "");
           setEmail(fetchedUser.email || "");
+          setAdress(fetchedUser.address?.addressLine || "");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -166,17 +171,18 @@ export default function MyProfile() {
                 </div>
               </div>
 
-              <div className="d-flex align-items-center gap-4 gap-lg-5 flex-column flex-lg-row mt-3">
+              <div className="d-flex align-items-lg-center gap-4 gap-lg-5 flex-column flex-lg-row mt-3 flex-wrap">
                 <div className="contact">
-                  <a href="tel:+0173761786" className="text-dark">
+                  <a href={`tel::${number}`} className="text-dark">
                     <IoCallSharp className="me-2" />
                     {number}
                   </a>
                 </div>
                 <div className="contact">
-                  <a className="text-dark">
-                    <IoLocationSharp className="me-2" />
-                    xyz city, USA 200187
+                  <a className="text-dark d-flex flex-row flex-wrap gap-2 address-wrap align-items-lg-center">
+                    <IoLocationSharp className="" />
+                    <span>{address}</span>
+                    
                   </a>
                 </div>
                 <div className="contact">
@@ -337,21 +343,21 @@ export default function MyProfile() {
                     </div>
                   </div>
                 </div>
-               
-                  <div
-                    className={`${
-                      Location.pathname.includes("provider")
-                        ? "col-lg-2"
-                        : "col-lg-3"
-                    }`}
-                  >
-                     <Link
-                  to={`${
+
+                <div
+                  className={`${
                     Location.pathname.includes("provider")
-                      ?"/provider/job-history"
-                      :"/home"
+                      ? "col-lg-2"
+                      : "col-lg-3"
                   }`}
                 >
+                  <Link
+                    to={`${
+                      Location.pathname.includes("provider")
+                        ? "/provider/job-history"
+                        : "/home"
+                    }`}
+                  >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
@@ -379,9 +385,8 @@ export default function MyProfile() {
                         </div>
                       </div>
                     </div>
-                    </Link>
-                  </div>
-              
+                  </Link>
+                </div>
 
                 <div
                   className={`${
