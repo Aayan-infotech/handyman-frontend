@@ -212,7 +212,7 @@ export default function SignUp() {
                       <Col sm="8">
                         <Autocomplete
                           className="form-control"
-                          apiKey="AIzaSyDg2wdDb3SFR1V_3DO2mNVvc01Dh6vR5Mc"
+                          apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
                           style={{ width: "100%" }}
                           onPlaceSelected={(place) => {
                             const formattedAddress =

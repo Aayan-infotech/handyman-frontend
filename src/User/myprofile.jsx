@@ -68,22 +68,35 @@ export default function MyProfile() {
     fetchUserData();
   }, [dispatch, hunterToken, providerToken]);
 
-  const signOut = () => {
-    localStorage.removeItem("hunterToken");
-    localStorage.removeItem("ProviderToken");
-    localStorage.removeItem("hunterEmail");
-    localStorage.removeItem("ProviderEmail");
-    localStorage.removeItem("hunterName");
-    localStorage.removeItem("ProviderName");
-    localStorage.removeItem("hunterId");
-    localStorage.removeItem("ProviderId");
-    setToastProps({
-      message: "You have been Logged Out",
-      type: "error",
-    });
-    setTimeout(() => {
-      navigate("/welcome");
-    }, 2000);
+  const signOut = async () => {
+    try {
+      const response = await axios.post(
+        "http://54.236.98.193:7777/api/auth/logout",
+        {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ??
+              localStorage.getItem("providerToken")
+            }`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setToastProps({
+          message: "You have been Logged Out",
+          type: "error",
+        });
+        setTimeout(() => {
+          navigate("/welcome");
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error)
+      setToastProps({
+        message: error,
+        type: "error",
+      });
+    }
   };
   const Location = useLocation();
   console.log(Location);
@@ -182,7 +195,6 @@ export default function MyProfile() {
                   <a className="text-dark d-flex flex-row flex-wrap gap-2 address-wrap align-items-lg-center">
                     <IoLocationSharp className="" />
                     <span>{address}</span>
-                    
                   </a>
                 </div>
                 <div className="contact">

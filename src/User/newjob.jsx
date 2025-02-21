@@ -135,14 +135,7 @@ export default function NewJob() {
                   Fill the form to post the job!
                 </h1>
                 <div className="row gy-5 align-items-center align-items-lg-start form-post-job mt-2">
-                  {/* <div className="col-lg-4">
-                <div className="d-flex align-items-center justify-content-center flex-row gap-3">
-                  <div className="download">
-                    <GoDownload />
-                  </div>
-                  <span className="fw-medium fs-4">Upload Picture</span>
-                </div>
-              </div> */}
+               
                   <div className="col-lg-4">
                     <Form.Control
                       type="text"
@@ -155,7 +148,7 @@ export default function NewJob() {
                   <div className="col-lg-4">
                     <Autocomplete
                       className="form-control input1"
-                      apiKey="AIzaSyDg2wdDb3SFR1V_3DO2mNVvc01Dh6vR5Mc"
+                      apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
                       style={{ width: "100%" }}
                       onPlaceSelected={(place) => {
                         const formattedAddress =
