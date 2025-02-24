@@ -108,7 +108,7 @@ export default function PricingProvider() {
           <LoggedHeader />
           <div className="">
             <div className="message">
-              <Link to="/message">
+              <Link to="/provider/message">
                 <MdMessage />
               </Link>
             </div>

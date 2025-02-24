@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import logo from "../../../assets/logo.png";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -14,9 +14,6 @@ import { FaRegUserCircle } from "react-icons/fa";
 export default function LoggedHeader() {
   const location = useLocation(); // ✅ Correct way to get pathname
   const guestCondition = JSON.parse(localStorage.getItem("Guest")) || false; // ✅ Ensure Boolean value
-
-  console.log("guestCondition", guestCondition); // ✅ Should now log correctly
-
   return (
     <>
       <Navbar

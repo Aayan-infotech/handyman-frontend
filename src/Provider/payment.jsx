@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { Link } from "react-router-dom";
 import { MdMessage } from "react-icons/md";
@@ -15,7 +15,7 @@ export default function Payment() {
       <LoggedHeader />
 
       <div className="message">
-        <Link to="/message">
+        <Link to="/provider/message">
           <MdMessage />
         </Link>
       </div>

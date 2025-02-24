@@ -26,6 +26,24 @@
 .h-100vh {
   height: 100vh;
 }
+.mh-100vh {
+  min-height: calc(100vh - 20vh);
+  max-height: calc(100vh - 20vh);
+  height: 100%;
+  overflow: auto;
+}
+.mh-100vh::-webkit-scrollbar {
+  display: none;
+}
+.send-box {
+  /* position: absolute; */
+  /* bottom: 10px; */
+  width: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
 .navbar {
   font-weight: 500 !important;
   font-size: 16px !important;
@@ -476,7 +494,7 @@
     color: #979797;
     width: 100%;
   }
-  .standard-input{
+  .standard-input {
     align-items: center;
   }
   .address-wrap span {

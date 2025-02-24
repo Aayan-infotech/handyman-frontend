@@ -1,4 +1,4 @@
-import react, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
@@ -6,15 +6,11 @@ import { MdMessage } from "react-icons/md";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { Link } from "react-router-dom";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Button from "@mui/material/Button";
-import speaker from "./assets/announcement.png";
 import { getProviderJobs, getGuestProviderJobs } from "../Slices/providerSlice";
 import { getProviderUser } from "../Slices/userSlice";
-import Loader from "../Loader";
-import axios from "axios";
 import Toaster from "../Toaster";
 import { useDispatch, useSelector } from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
@@ -136,7 +132,7 @@ export default function HomeProvider() {
     <>
       <LoggedHeader />
       <div className="message">
-        <Link to="/message">
+        <Link to="/provider/message">
           <MdMessage />
         </Link>
       </div>

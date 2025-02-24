@@ -54,7 +54,7 @@ export default function MainProvider() {
         <div>
           <LoggedHeader />
           <div className="message">
-            <Link to="/message">
+            <Link to="/provider/message">
               <MdMessage />
             </Link>
           </div>

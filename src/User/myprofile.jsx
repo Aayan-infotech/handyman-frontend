@@ -77,7 +77,7 @@ export default function MyProfile() {
       }
 
       const response = await axios.post(
-        "http://localhost:7777/api/auth/logout",
+        "http://54.236.98.193:7777/api/auth/logout",
         {
           userType: hunterToken ? "hunter" : "provider",
         },

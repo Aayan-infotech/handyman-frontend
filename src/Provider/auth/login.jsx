@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
@@ -13,6 +13,11 @@ import google from "../assets/logo/iconGoogle.png";
 import Loader from "../../Loader";
 import Toaster from "../../Toaster";
 import axios from "axios";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../../Chat/lib/firestore";
 
 export default function LoginProvider() {
   const [email, setEmail] = useState("");
@@ -42,13 +47,15 @@ export default function LoginProvider() {
       );
 
       if (response.status === 200) {
-        setToastProps({ message: response?.data?.message, type: "success" });
+         await signInWithEmailAndPassword(auth, email, password);
+        
         setEmail("");
         setPassword("");
         setLoading(false);
+        setToastProps({ message: response?.data?.message, type: "success" });
         setTimeout(() => {
           navigate("/provider/upload");
-        }, 4000);
+        }, 2000);
         localStorage.setItem("ProviderToken", response?.data?.data?.token);
         localStorage.setItem(
           "ProviderEmail",
@@ -59,8 +66,7 @@ export default function LoginProvider() {
           response?.data?.data?.user?.contactName
         );
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
-        localStorage.setItem("Guest", "false");
-        localStorage.removeItem("guestLocation");
+        localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
         console.log(response);
       }
     } catch (error) {
@@ -107,11 +113,10 @@ export default function LoginProvider() {
   console.log(savedLocation);
 
   const handleGuest = () => {
-    localStorage.setItem("Guest", "true");
-    getLocation();
     setTimeout(() => {
-      navigate("/provider/home?type=Guest");
-    }, 2000);
+      // navigate("/provider/home?type=Guest");
+      navigate("/provider/signup?type=Guest");
+    }, 1000);
   };
 
   return (

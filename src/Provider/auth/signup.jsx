@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Container from "react-bootstrap/Container";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
-import logo from "../../assets/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../../User/user.css";
-import { axiosInstance } from "../../axiosInstance";
 import { IoImageOutline } from "react-icons/io5";
 import axios from "axios";
 import Toaster from "../../Toaster";
@@ -18,6 +15,23 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { ref, set } from "firebase/database";
+
+import { auth, db } from "../../Chat/lib/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+} from "firebase/firestore";
+import upload from "../../Chat/lib/upload";
+import { realtimeDb } from "../../Chat/lib/firestore";
 
 function getStyles(name, personName, theme) {
   return {
@@ -35,9 +49,7 @@ export default function SignUpProvider() {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [businessData, setBusinessData] = useState([]);
-  const [serviceData, setServiceData] = useState("");
   const [businessType, setBusinessType] = useState([]);
-  const [serviceType, setServiceType] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [images, setImages] = useState(null);
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
@@ -46,6 +58,9 @@ export default function SignUpProvider() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const guestVerify = searchParams.get("type=Guest");
 
   const handleChange = (event) => {
     const { value } = event.target;
@@ -68,8 +83,6 @@ export default function SignUpProvider() {
     };
     handleAllData();
   }, []);
-
-  console.log("businessData", businessData);
   const handleSignUp = async (e) => {
     e.preventDefault();
 
@@ -89,6 +102,7 @@ export default function SignUpProvider() {
       });
       return;
     }
+    console.log("guestVerify", guestVerify);
 
     const formData = new FormData();
     formData.append("name", name);
@@ -98,15 +112,26 @@ export default function SignUpProvider() {
     formData.append("addressLine", address);
     formData.append("password", password);
     formData.append("businessType", businessType);
-    formData.append("serviceType", serviceType);
     formData.append("ABN_Number", registrationNumber);
     formData.append("userType", "provider");
     formData.append("radius", "50");
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
+    if (!guestVerify) {
+      formData.append("isGuestMode", true);
+    }
 
     if (images && images.length > 0) {
       formData.append("images", images[0]);
+    }
+    const usersRef = collection(db, "providers");
+    const q = query(usersRef, where("name", "==", name));
+    const p = query(usersRef, where("email", "==", email));
+    const querySnapshot = await getDocs(q) && await getDocs(p);
+    if (!querySnapshot.empty) {
+      setToastProps({ message: "Select another name and email", type: "error" });
+      setLoading(false);
+      return;
     }
 
     setLoading(true);
@@ -122,7 +147,6 @@ export default function SignUpProvider() {
       );
 
       if (response.status === 200 || response.status === 201) {
-        setToastProps({ message: response?.data?.message, type: "success" });
         setName("");
         setBusinessName("");
         setEmail("");
@@ -133,13 +157,34 @@ export default function SignUpProvider() {
         setLongitude(null);
         setImages(null);
         setLoading(false);
+        const firebaseUser = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const userId = firebaseUser.user.uid;
+        console.log(userId);
+
+        await setDoc(doc(db, "providers", userId), {
+          name,
+          email,
+          phoneNo,
+          address,
+          latitude,
+          longitude,
+          id: userId,
+          blocked: [],
+        });
+
+        await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
         setTimeout(() => {
           navigate(`/provider/otp?email=${email}&type=provider`);
         }, 2000);
+        setToastProps({ message: response?.data?.message, type: "success" });
       }
     } catch (error) {
       setToastProps({
-        message: "Sign up failed. Try again later.",
+        message: error,
         type: "error",
       });
       console.log(error);

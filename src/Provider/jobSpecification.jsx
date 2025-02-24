@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdEmail, MdCall } from "react-icons/md";
 import company1 from "./assets/logo/companyLogo.png";

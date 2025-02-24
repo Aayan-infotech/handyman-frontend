@@ -1,10 +1,7 @@
-import react from "react";
+import React from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { Link } from "react-router-dom";
 import { MdMessage } from "react-icons/md";
-import { AiFillWallet } from "react-icons/ai";
-import { SlPaypal } from "react-icons/sl";
-import { FaApplePay } from "react-icons/fa";
 import { CiBank } from "react-icons/ci";
 import { FaWifi } from "react-icons/fa";
 import Button from "@mui/material/Button";
@@ -20,7 +17,7 @@ export default function PaymentDetail() {
       <LoggedHeader />
 
       <div className="message">
-        <Link to="/message">
+        <Link to="/provider/message">
           <MdMessage />
         </Link>
       </div>

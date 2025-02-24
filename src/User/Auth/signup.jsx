@@ -16,11 +16,19 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { ref, set } from "firebase/database"; // Import from the *Realtime Database* library
+import { ref, set  } from "firebase/database";
 
 import { auth, db } from "../../Chat/lib/firestore";
-import { collection, query, where, getDocs } from "firebase/firestore";
-// import upload from "../../Chat/lib/upload";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+} from "firebase/firestore";
+import upload from "../../Chat/lib/upload";
+import { realtimeDb } from "../../Chat/lib/firestore";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -56,73 +64,69 @@ export default function SignUp() {
     formData.append("userType", userType);
     formData.append("radius", radius);
 
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
+    if (!name || !email || !password || !phoneNo || !address) {
+      setToastProps({ message: "Please fill all fields!", type: "error" });
+      setLoading(false);
+      return;
+    }
+    console.log(images[0]);
+
+    if (!images.length || !images[0]) {
+      setToastProps({ message: "Please upload an avatar!", type: "error" });
+      setLoading(false);
+      return;
     }
 
-    // const usersRef = collection(db, "users");
-    // const q = query(usersRef, where("name", "==", name));
-    // const querySnapshot = await getDocs(q);
-    // if (!querySnapshot.empty) {
-    //   return setToastProps({
-    //     message: "Select Another UserName",
-    //     type: "error",
-    //   });
-    // }
+    const usersRef = collection(db, "hunters");
+    const q = query(usersRef, where("name", "==", name));
+    const p = query(usersRef, where("email", "==", email));
+     const querySnapshot = await getDocs(q) && await getDocs(p);
+    if (!querySnapshot.empty) {
+      setToastProps({ message: "Select another username or email", type: "error" });
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(
         "http://54.236.98.193:7777/api/auth/signup",
+
         formData
       );
+
       if (response.status === 200 || response.status === 201) {
+        const firebaseUser = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const userId = firebaseUser.user.uid;
+        console.log(userId);
+
+        await setDoc(doc(db, "hunters", userId), {
+          name,
+          email,
+          phoneNo,
+          address,
+          latitude,
+          longitude,
+          id: userId,
+          blocked: [],
+        });
+
+        await set(ref(realtimeDb, "userchats/" + userId), { chats: [] }); 
         setToastProps({ message: response?.data?.message, type: "success" });
-        // try {
-        //   const firebaseUser = await createUserWithEmailAndPassword(auth, email, password);
-        //   const userId = firebaseUser.user.uid;
-
-        //   const usersRef = ref(db, "users");  // Reference to the "users" node
-        //   const userRef = ref(usersRef, userId); // Reference to the specific user
-
-        //   await set(userRef, { // Use set() for Realtime Database
-        //       name,
-        //       email,
-        //       id: userId,
-        //       phoneNo,
-        //       address,
-        //       latitude,
-        //       longitude,
-        //       blocked: [],
-        //   });
-
-        //   const userChatsRef = ref(db, "userchats/" + userId); // Realtime Database ref
-        //   await set(userChatsRef, { chats: [] });
-        // } catch (error) {
-        //   console.log(error);
-        // }
-        setName("");
-        setEmail("");
-        setPhoneNo("");
-        setAddress("");
-        setPassword("");
-        setLatitude(null);
-        setLongitude(null);
-        setLoading(false);
-        setImages(null);
         setTimeout(() => {
           navigate(`/otp?email=${email}`);
         }, 2000);
       }
     } catch (error) {
-      console.log(error);
+      setToastProps({
+        message: error.response?.data?.error,
+        type: "error",
+      });
+    } finally {
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
-      if (error?.response?.data?.message && !error?.response?.data?.error) {
-        setToastProps({
-          message: error?.response?.data?.message,
-          type: "error",
-        });
-      }
     }
   };
 
@@ -150,7 +154,6 @@ export default function SignUp() {
                         <Form.Control
                           className="pos-image-selector"
                           type="file"
-                          multiple
                           onChange={(e) => setImages(e.target.files)}
                         />
                       </>

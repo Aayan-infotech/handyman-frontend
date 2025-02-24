@@ -102,6 +102,7 @@ export default function Otp({ length = 6 }) {
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
       setToastProps({ message: error?.response?.data?.error, type: "error" });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({

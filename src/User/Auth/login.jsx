@@ -17,8 +17,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, db } from "../../Chat/lib/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "../../Chat/lib/firestore";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,10 +46,11 @@ export default function Login() {
       );
 
       if (response.status === 200) {
-        setToastProps({ message: response?.data?.message, type: "success" });
+        await signInWithEmailAndPassword(auth, email, password);
         setEmail("");
         setPassword("");
         setLoading(false);
+        setToastProps({ message: response?.data?.message, type: "success" });
         setTimeout(() => {
           navigate("/home");
         }, 2000);

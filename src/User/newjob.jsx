@@ -45,8 +45,6 @@ export default function NewJob() {
   const [requirements, setRequirements] = useState("");
   const [documents, setDocuments] = useState([]);
   const [businessData, setBusinessData] = useState([]);
-  console.log(localStorage.getItem("hunterToken"));
-
   const handleChange = (event) => {
     const { value } = event.target;
     setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array

@@ -69,6 +69,7 @@ function App() {
           <Route path="/provider/otp" element={<Otp />} />
           <Route path="/provider/job-history" element={<JobManagement />} />
           <Route path="/provider/job-history/:id" element={<JobDetail />} />
+          <Route path="/provider/message" element={<Message />} />
           <Route path="/provider/reset-password" element={<ResetPassword />} />
           <Route
             path="/provider/changePassword/:id"

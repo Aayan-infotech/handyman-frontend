@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import logo from "../assets/logo.png";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
