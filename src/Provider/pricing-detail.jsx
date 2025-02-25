@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
-import { MdMessage } from "react-icons/md";
+import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import Button from "@mui/material/Button";
@@ -107,11 +107,19 @@ export default function PricingProvider() {
         <div>
           <LoggedHeader />
           <div className="">
-            <div className="message">
-              <Link to="/provider/message">
-                <MdMessage />
-              </Link>
-            </div>
+             
+                                           <Link to="/support/chat/1">
+                                           <div className="admin-message">
+                                            
+                                               <MdOutlineSupportAgent />
+                                             
+                                           </div>
+                                           </Link>
+                                           <div className="message">
+                                             <Link to="/message">
+                                               <MdMessage />
+                                             </Link>
+                                           </div>
             <div className="bg-second fixed-curl">
               <div className="container">
                 <div className="top-section-main py-4 px-lg-5">

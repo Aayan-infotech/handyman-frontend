@@ -3,7 +3,7 @@ import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage } from "react-icons/md";
 import Form from "react-bootstrap/Form";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import {
   LocalizationProvider,
@@ -21,6 +21,7 @@ import FormControl from "@mui/material/FormControl";
 import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { MdOutlineSupportAgent } from "react-icons/md";
 
 function getStyles(name, personName, theme) {
   return {
@@ -47,6 +48,7 @@ export default function NewJob() {
   const [businessData, setBusinessData] = useState([]);
   const [time, setTime] = useState(dayjs());
   const token = localStorage.getItem("hunterToken");
+  const navigate = useNavigate();
   const handleChange = (event) => {
     const { value } = event.target;
     setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
@@ -108,7 +110,7 @@ export default function NewJob() {
         setToastProps({ message: response?.data?.message, type: "success" });
         setLoading(false);
         setTimeout(() => {
-          setToastProps({ message: "", type: "" });
+          navigate("/home");
         }, 2000);
       }
     } catch (error) {
@@ -124,6 +126,13 @@ export default function NewJob() {
       ) : (
         <>
           <LoggedHeader />
+          <Link to="/support/chat/1">
+          <div className="admin-message">
+           
+              <MdOutlineSupportAgent />
+            
+          </div>
+          </Link>
           <div className="message">
             <Link to="/message">
               <MdMessage />
@@ -188,13 +197,9 @@ export default function NewJob() {
                         className="input1 bg-white p-1"
                         id="demo-multiple-name"
                         multiple
-                        displayEmpty
                         value={businessType}
                         onChange={handleChange}
-                        renderValue={(selected) =>{
-                          if (selected.length === 0) {
-                            return  <span className="text-dark">select business type</span>;
-                          }
+                        renderValue={(selected) =>
                           selected
                             .map(
                               (id) =>
@@ -202,13 +207,10 @@ export default function NewJob() {
                                   ?.name
                             )
                             .join(", ")
-                        }}
+                        }
                       >
-                        <MenuItem disabled value="">
-                         select business type
-                        </MenuItem>
                         {businessData.map((data) => (
-                          <MenuItem key={data._id} value={data?._id}>
+                          <MenuItem key={data._id} value={data?.name}>
                             {data?.name}
                           </MenuItem>
                         ))}

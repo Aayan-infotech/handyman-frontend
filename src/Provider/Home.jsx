@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
-import { MdMessage } from "react-icons/md";
+import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { Link } from "react-router-dom";
@@ -130,12 +130,19 @@ export default function HomeProvider() {
 
   return (
     <>
-      <LoggedHeader />
-      <div className="message">
-        <Link to="/provider/message">
-          <MdMessage />
-        </Link>
-      </div>
+         <LoggedHeader />
+                <Link to="/support/chat/1">
+                <div className="admin-message">
+                 
+                    <MdOutlineSupportAgent />
+                  
+                </div>
+                </Link>
+                <div className="message">
+                  <Link to="/message">
+                    <MdMessage />
+                  </Link>
+                </div>
       <div className="bg-second py-3">
         <div className="container top-section-main">
           <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">

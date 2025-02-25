@@ -35,6 +35,26 @@
 .mh-100vh::-webkit-scrollbar {
   display: none;
 }
+.profile-image{
+  width: 100%;
+  max-height: 100px;
+  max-width: 100px;
+}
+.admin-message{
+  position: fixed;
+  bottom: 140px;
+  right: 60px;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 12px 14px;
+  border: 2px solid #32de84;
+  z-index: 999;
+}
+.admin-message svg{
+  color: #000;
+  height: 20px;
+  width: 20px;
+}
 .send-box {
   /* position: absolute; */
   /* bottom: 10px; */

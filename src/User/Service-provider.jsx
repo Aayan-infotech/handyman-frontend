@@ -5,7 +5,7 @@ import { getAddress } from "../Slices/addressSlice";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
-import { MdMessage } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 // import company1 from "./assets/logo/companyLogo.png";
 // import company2 from "./assets/logo/companyLogo1.png";
 // import company3 from "./assets/logo/companyLogo2.png";
@@ -90,6 +90,11 @@ export default function ServiceProvider() {
       ) : (
         <>
           <LoggedHeader />
+          <Link to="/support/chat/1">
+            <div className="admin-message">
+              <MdOutlineSupportAgent />
+            </div>
+          </Link>
           <div className="message">
             <Link to="/message">
               <MdMessage />

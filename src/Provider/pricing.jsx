@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { TbSpeakerphone } from "react-icons/tb";
-import { MdMessage } from "react-icons/md";
+import { MdMessage  ,MdOutlineSupportAgent } from "react-icons/md";
 import speaker from "./assets/announcement.png";
 import arrow from "./assets/arrow.png";
 import Slider from "react-slick";
@@ -52,12 +52,19 @@ export default function MainProvider() {
         <Loader />
       ) : (
         <div>
-          <LoggedHeader />
-          <div className="message">
-            <Link to="/provider/message">
-              <MdMessage />
-            </Link>
-          </div>
+         <LoggedHeader />
+                                        <Link to="/support/chat/1">
+                                        <div className="admin-message">
+                                         
+                                            <MdOutlineSupportAgent />
+                                          
+                                        </div>
+                                        </Link>
+                                        <div className="message">
+                                          <Link to="/message">
+                                            <MdMessage />
+                                          </Link>
+                                        </div>
           <div className="bg-second">
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">

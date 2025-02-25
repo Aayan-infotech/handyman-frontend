@@ -1,9 +1,6 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
-import { TbSpeakerphone } from "react-icons/tb";
-import Form from "react-bootstrap/Form";
-import { MdMessage } from "react-icons/md";
-import speaker from "./assets/announcement.png";
+import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,12 +10,9 @@ import pillai from "./assets/pillai.png";
 import bag from "./assets/bag.png";
 import grassCutting from "./assets/grassCutting.png";
 import acRepair from "./assets/acRepair.png";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
-import { getProviderUser, getHunterUser } from "../Slices/userSlice";
-import Loader from "../Loader";
 import Toaster from "../Toaster";
 
 export default function Main() {
@@ -37,11 +31,18 @@ export default function Main() {
   return (
     <>
       <LoggedHeader />
-      <div className="message">
-        <Link to="/message">
-          <MdMessage />
-        </Link>
-      </div>
+                                             <Link to="/support/chat/1">
+                                             <div className="admin-message">
+                                              
+                                                 <MdOutlineSupportAgent />
+                                               
+                                             </div>
+                                             </Link>
+                                             <div className="message">
+                                               <Link to="/message">
+                                                 <MdMessage />
+                                               </Link>
+                                             </div>
       <div className="bg-second">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">

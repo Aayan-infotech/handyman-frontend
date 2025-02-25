@@ -1,6 +1,6 @@
-import react, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
-import { MdMessage, MdEmail } from "react-icons/md";
+import { MdMessage, MdEmail , MdOutlineSupportAgent } from "react-icons/md";
 import serviceProviderImage from "./assets/service-provider-image.png";
 import profilePicture from "./assets/profilePicture.png";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -79,11 +79,18 @@ export default function ServiceProviderProfile() {
   return (
     <>
       <LoggedHeader />
-      <div className="message">
-        <Link to="/message">
-          <MdMessage />
-        </Link>
-      </div>
+                                                                     <Link to="/support/chat/1">
+                                                                     <div className="admin-message">
+                                                                      
+                                                                         <MdOutlineSupportAgent />
+                                                                       
+                                                                     </div>
+                                                                     </Link>
+                                                                     <div className="message">
+                                                                       <Link to="/message">
+                                                                         <MdMessage />
+                                                                       </Link>
+                                                                     </div>
       <div className="bg-second pb-3">
         <div className="container">
           <div className="image-shadow">

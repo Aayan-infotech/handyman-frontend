@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
-import { MdMessage } from "react-icons/md";
-import company1 from "./assets/logo/companyLogo.png";
-import company2 from "./assets/logo/companyLogo1.png";
-import company3 from "./assets/logo/companyLogo2.png";
+import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
+
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { Link, useLocation } from "react-router-dom";
@@ -19,27 +17,45 @@ export default function JobManagement() {
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const provider = searchParams.get("provider");
-  const providerId = localStorage.getItem("ProviderId");
+  const provider = location.pathname.includes("provider");
+  console.log(provider)
   const hunterToken = localStorage.getItem("hunterToken");
+  const ProviderToken = localStorage.getItem("ProviderToken");
 
   const handleProviderJobs = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://54.236.98.193:7777/api/jobpost/getJobPostByUserId`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
-          },
+      if (provider === true) {
+        const res = await axios.get(
+          `http://54.236.98.193:7777/api/jobpost/getJobPostByUserId`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(ProviderToken)}`,
+            },
+          }
+        );
+        if (res.status === 200) {
+          setToastProps({ message: res.data.message, type: "success" });
+          setData(res.data.data);
+          setLoading(false);
         }
-      );
-      if (res.status === 200) {
-        setToastProps({ message: res.data.message, type: "success" });
-        setData(res.data.data);
-        setLoading(false);
+      } else {
+        const res = await axios.get(
+          `http://54.236.98.193:7777/api/jobpost/getJobPostByUserId`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(hunterToken)}`,
+            },
+          }
+        );
+        if (res.status === 200) {
+          setToastProps({ message: res.data.message, type: "success" });
+          setData(res.data.data);
+          setLoading(false);
+        }
       }
+
+    
     } catch (error) {
       setToastProps({ message: error.message, type: "error" });
       setLoading(false);
@@ -53,11 +69,18 @@ export default function JobManagement() {
     <>
       {loading && <Loader />}
       <LoggedHeader />
-      <div className="message">
-        <Link to="/message">
-          <MdMessage />
-        </Link>
-      </div>
+                                                     <Link to="/support/chat/1">
+                                                     <div className="admin-message">
+                                                      
+                                                         <MdOutlineSupportAgent />
+                                                       
+                                                     </div>
+                                                     </Link>
+                                                     <div className="message">
+                                                       <Link to="/message">
+                                                         <MdMessage />
+                                                       </Link>
+                                                     </div>
       <div className="bg-second py-3">
         <div className="container">
           <div className="d-flex justify-content-start align-items-center">

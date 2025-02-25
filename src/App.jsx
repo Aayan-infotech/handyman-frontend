@@ -51,6 +51,7 @@ function App() {
           <Route path="/job-management" element={<JobManagement />} />
           <Route path="/job-detail/:id" element={<JobDetail />} />
           <Route path="/service-provider" element={<ServiceProvider />} />
+          <Route path="/support/chat/:id" element={<Chat />} />
           <Route
             path="/service-profile/:id"
             element={<ServiceProviderProfile />}

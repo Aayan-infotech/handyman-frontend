@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
-import { MdMessage, MdEmail, MdCall } from "react-icons/md";
+import { MdMessage, MdEmail, MdCall , MdOutlineSupportAgent } from "react-icons/md";
 import company1 from "./assets/logo/companyLogo.png";
 import Chip from "@mui/material/Chip";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -101,12 +101,19 @@ export default function JobSpecification() {
     <>
       {loading && <Loader />}
       <div className="">
-        <LoggedHeader />
-        <div className="message">
-          <Link to="/message">
-            <MdMessage />
-          </Link>
-        </div>
+          <LoggedHeader />
+                       <Link to="/support/chat/1">
+                       <div className="admin-message">
+                        
+                           <MdOutlineSupportAgent />
+                         
+                       </div>
+                       </Link>
+                       <div className="message">
+                         <Link to="/message">
+                           <MdMessage />
+                         </Link>
+                       </div>
         <div className="bg-second py-5">
           <div className="container">
             <div className="row gy-4 gx-lg-2 management">
