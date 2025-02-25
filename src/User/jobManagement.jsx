@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
@@ -22,6 +22,7 @@ export default function JobManagement() {
   const searchParams = new URLSearchParams(location.search);
   const provider = searchParams.get("provider");
   const providerId = localStorage.getItem("ProviderId");
+  const hunterToken = localStorage.getItem("hunterToken");
 
   const handleProviderJobs = async () => {
     setLoading(true);
@@ -30,7 +31,7 @@ export default function JobManagement() {
         `http://54.236.98.193:7777/api/jobpost/getJobPostByUserId`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
           },
         }
       );
@@ -44,12 +45,10 @@ export default function JobManagement() {
       setLoading(false);
     }
   };
-
+  console.log(data);
   useEffect(() => {
-    if (provider) {
-      handleProviderJobs();
-    }
-  }, []);
+    handleProviderJobs();
+  }, [location]);
   return (
     <>
       {loading && <Loader />}
@@ -77,44 +76,47 @@ export default function JobManagement() {
                   <img src={noData} alt="image" />
                 </div>
               )}
-              {data.map((item) => {
-                <Link to="/job-detail/1234">
+              {data?.map((item) => (
+                <Link key={item._id} to={`/job-detail/${item._id}`}>
                   <div className="card border-0 rounded-3 px-4">
                     <div className="card-body">
-                      <div className="row gy-4 gx-1 align-items-center">
-                        <div className="col-lg-4">
+                      <div className="row gy-4 align-items-center">
+                        <div className="col-lg-2">
                           <div className="d-flex flex-row gap-3 align-items-center">
-                            <img src={company1} alt="company1" />
                             <div className="d-flex flex-column align-items-start gap-1">
-                              <h3 className="mb-0">Electrical service</h3>
-                              <h6>24/01/24</h6>
+                              <h3 className="mb-0">{item?.title}</h3>
+                              <h6>
+                                {new Date(item?.date).toLocaleDateString()}
+                              </h6>
                             </div>
                           </div>
                         </div>
-                        <div className="col-lg-6">
+                        <div className="col-lg-8">
                           <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-center">
                             <div className="d-flex flex-row gap-2 align-items-center">
                               <BiCoinStack />
-                              <h5 className="mb-0">$500 - $1,000</h5>
+                              <h5 className="mb-0">${item.estimatedBudget}</h5>
                             </div>
                             <div className="d-flex flex-row gap-2 align-items-center">
                               <PiBag />
-                              <h5 className="mb-0 ">Medan, Indonesia</h5>
+                              <h5 className="mb-0">
+                                {item?.jobLocation?.jobAddressLine}
+                              </h5>
                             </div>
                           </div>
                         </div>
                         <div className="col-lg-2">
                           <div className="">
                             <h5 className="mb-0 text-success text-center text-lg-start">
-                              Completed
+                              {item.jobStatus}
                             </h5>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </Link>;
-              })}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

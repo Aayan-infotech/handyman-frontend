@@ -45,6 +45,8 @@ export default function NewJob() {
   const [requirements, setRequirements] = useState("");
   const [documents, setDocuments] = useState([]);
   const [businessData, setBusinessData] = useState([]);
+  const [time, setTime] = useState(dayjs());
+  const token = localStorage.getItem("hunterToken");
   const handleChange = (event) => {
     const { value } = event.target;
     setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
@@ -79,29 +81,30 @@ export default function NewJob() {
     formData.append("estimatedBudget", budget);
     formData.append("businessType", businessType);
     formData.append("requirements", requirements);
-    formData.append("timeframe[from]", startTime.toISOString());
-    formData.append("timeframe[to]", endTime.toISOString());
+    formData.append("timeframe[from]", startTime.unix());
+    formData.append("timeframe[to]", endTime.unix());
+    formData.append("date", time.toISOString());
 
     // Append each selected file correctly
-    documents.forEach((file) => {
-      formData.append("documents", file);
-    });
+    // documents.forEach((file) => {
+    //   formData.append("documents", file);
+    // });
 
     console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
 
     try {
       const response = await axios.post(
-        "http://54.236.98.193:7777/api/jobpost/jobpost",
+        "http://localhost:7777/api/jobpost/jobpost",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         setToastProps({ message: response?.data?.message, type: "success" });
         setLoading(false);
         setTimeout(() => {
@@ -133,7 +136,6 @@ export default function NewJob() {
                   Fill the form to post the job!
                 </h1>
                 <div className="row gy-5 align-items-center align-items-lg-start form-post-job mt-2">
-               
                   <div className="col-lg-4">
                     <Form.Control
                       type="text"
@@ -150,7 +152,7 @@ export default function NewJob() {
                       style={{ width: "100%" }}
                       onPlaceSelected={(place) => {
                         const formattedAddress =
-                          place.formatted_address || place.name;
+                          place?.formatted_address || place?.name;
                         setAddress(formattedAddress);
                         setLatitude(place.geometry.location.lat());
                         setLongitude(place.geometry.location.lng());
@@ -186,9 +188,13 @@ export default function NewJob() {
                         className="input1 bg-white p-1"
                         id="demo-multiple-name"
                         multiple
+                        displayEmpty
                         value={businessType}
                         onChange={handleChange}
-                        renderValue={(selected) =>
+                        renderValue={(selected) =>{
+                          if (selected.length === 0) {
+                            return  <span className="text-dark">select business type</span>;
+                          }
                           selected
                             .map(
                               (id) =>
@@ -196,8 +202,11 @@ export default function NewJob() {
                                   ?.name
                             )
                             .join(", ")
-                        }
+                        }}
                       >
+                        <MenuItem disabled value="">
+                         select business type
+                        </MenuItem>
                         {businessData.map((data) => (
                           <MenuItem key={data._id} value={data?._id}>
                             {data?.name}
@@ -227,6 +236,8 @@ export default function NewJob() {
                             shouldDisableDate={(date) =>
                               date.isBefore(dayjs(), "day")
                             }
+                            onChange={(newValue) => setTime(newValue)}
+                            renderInput={(params) => <TextField {...params} />}
                           />
                         </LocalizationProvider>
                       </div>

@@ -1,8 +1,5 @@
-import react from "react";
-import Container from "react-bootstrap/Container";
-import Header from "./component/Navbar";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -10,9 +7,79 @@ import Row from "react-bootstrap/Row";
 import "../user.css";
 import { IoImageOutline } from "react-icons/io5";
 import LoggedHeader from "./component/loggedNavbar";
+import { useDispatch } from "react-redux";
+import { getHunterUser, getProviderUser } from "../../Slices/userSlice";
+import axios from "axios";
+import Loader from "../../Loader";
+
 export default function EditProfile() {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [rate, setRate] = useState("");
+  const [password, setPassword] = useState("");
+  const hunterToken = localStorage.getItem("hunterToken");
+  const providerToken = localStorage.getItem("providerToken");
+  const hunterId = localStorage.getItem("hunterId");
+  const providerId = localStorage.getItem("providerToken");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setLoading(true);
+      try {
+        let fetchedUser = null;
+        if (hunterToken) {
+          const hunterResponse = await dispatch(getHunterUser());
+          fetchedUser = hunterResponse?.payload?.data;
+        } else if (providerToken) {
+          const providerResponse = await dispatch(getProviderUser());
+          fetchedUser = providerResponse?.payload?.data;
+        }
+
+        if (fetchedUser) {
+          setName(fetchedUser.contactName || fetchedUser.name || "");
+          setNumber(fetchedUser.phoneNo || "");
+          setEmail(fetchedUser.email || "");
+          setAddress(fetchedUser.address?.addressLine || "");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserData();
+  }, [dispatch, hunterToken, providerToken]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("phoneNo", number);
+    formData.append("email", email);
+    formData.append("address", address);
+    // formData.append("rate", rate);
+console.log(name)
+    try {
+      const response = await axios.put(
+        `http://localhost:7777/api/hunter/updateById/${hunterId}`,
+        formData
+      );
+      console.log(response.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error updating user data:", error);
+    }
+  };
+
   return (
     <>
+      {loading && <Loader />}
       <div className="bg-signup">
         <LoggedHeader />
         <div className="container top-avatar login">
@@ -26,30 +93,37 @@ export default function EditProfile() {
                     <span className="fs-6">Upload</span>
                   </div>
                 </div>
-
-                <Form className="py-3">
+                <Form className="py-3" onSubmit={handleSubmit}>
                   <Form.Group
                     as={Row}
                     className="mb-3"
-                    controlId="formPlaintextEmail"
+                    controlId="formPlaintextName"
                   >
                     <Form.Label column sm="4">
                       Name
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control type="text" placeholder="Henry" />
+                      <Form.Control
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group
                     as={Row}
                     className="mb-3"
-                    controlId="formPlaintextEmail"
+                    controlId="formPlaintextPhone"
                   >
                     <Form.Label column sm="4">
                       Phone Number
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control type="text" placeholder="Phone number" />
+                      <Form.Control
+                        type="text"
+                        value={number}
+                        onChange={(e) => setNumber(e.target.value)}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group
@@ -61,72 +135,56 @@ export default function EditProfile() {
                       Email Address
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control type="email" placeholder="Email Address" />
+                      <Form.Control
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group
                     as={Row}
                     className="mb-3"
-                    controlId="formPlaintextEmail"
+                    controlId="formPlaintextAddress"
                   >
                     <Form.Label column sm="4">
                       Address
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control type="email" placeholder=" Address" />
+                      <Form.Control
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group
                     as={Row}
                     className="mb-3"
-                    controlId="formPlaintextEmail"
+                    controlId="formPlaintextRate"
                   >
                     <Form.Label column sm="4">
                       Rate/Month
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control type="email" placeholder=" Rate/Month" />
+                      <Form.Control
+                        type="number"
+                        value={rate}
+                        onChange={(e) => setRate(e.target.value)}
+                      />
                     </Col>
                   </Form.Group>
-                  <Form.Group
-                    as={Row}
-                    className="mb-3"
-                    controlId="formPlaintextPassword"
-                  >
-                    <Form.Label column sm="4">
-                      Password
-                    </Form.Label>
-                    <Col sm="8">
-                      <Form.Control type="password" placeholder="Password" />
-                    </Col>
-                  </Form.Group>
-                  {/* <div className="d-flex flex-row flex-wrap justify-content-between gap-3 gap-lg-1 align-items-center profile">
-                    <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                      <span className="fs-6">Electrical</span>
-                    </div>
-                    <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                      <span className="fs-6">Electronics</span>
-                    </div>
-                    <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                      <span className="fs-6">Mechanics</span>
-                    </div>
-                    <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                      <span className="fs-6">Plumbing</span>
-                    </div>
-                  </div> */}
-                </Form>
-
-                <div className="d-flex justify-content-center align-items-center py-3">
-                  <Link to="/home" className=" text-decoration-none  ">
+                  <div className="d-flex justify-content-center align-items-center py-3">
                     <Button
+                      type="submit"
                       variant="contained"
                       color="success"
                       className="rounded-0 custom-green bg-green-custom"
                     >
                       Save
                     </Button>
-                  </Link>
-                </div>
+                  </div>
+                </Form>
               </div>
             </div>
           </div>

@@ -353,7 +353,7 @@ export default function SignUpProvider() {
                           style={{ width: "100%" }}
                           onPlaceSelected={(place) => {
                             const formattedAddress =
-                              place.formatted_address || place.name;
+                              place?.formatted_address || place?.name;
                             setAddress(formattedAddress);
                             setLatitude(place.geometry.location.lat());
                             setLongitude(place.geometry.location.lng());
