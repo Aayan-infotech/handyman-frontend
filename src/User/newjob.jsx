@@ -96,7 +96,7 @@ export default function NewJob() {
 
     try {
       const response = await axios.post(
-        "http://localhost:7777/api/jobpost/jobpost",
+        "http://54.236.98.193:7777/api/jobpost/jobpost",
         formData,
         {
           headers: {
@@ -118,6 +118,8 @@ export default function NewJob() {
       setLoading(false);
     }
   };
+
+  console.log(businessData)
 
   return (
     <>
@@ -210,7 +212,7 @@ export default function NewJob() {
                         }
                       >
                         {businessData.map((data) => (
-                          <MenuItem key={data._id} value={data?.name}>
+                          <MenuItem key={data._id} value={data?._id}>
                             {data?.name}
                           </MenuItem>
                         ))}

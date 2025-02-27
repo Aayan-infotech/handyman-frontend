@@ -39,6 +39,8 @@ export default function MyProfile() {
   const navigate = useNavigate();
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const user = useSelector((state) => state?.user?.user?.data);
+  const providerId = localStorage.getItem("ProviderId");
+  const hunterId = localStorage.getItem("hunterId");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -94,6 +96,41 @@ export default function MyProfile() {
 
       if (response.status === 200) {
         setToastProps({ message: "You have been Logged Out", type: "success" });
+        localStorage.removeItem("hunterToken");
+        localStorage.removeItem("hunterEmail");
+        localStorage.removeItem("hunterName");
+        localStorage.removeItem("hunterId");
+        localStorage.removeItem("ProviderToken");
+        localStorage.removeItem("ProviderEmail");
+        localStorage.removeItem("ProviderName");
+        localStorage.removeItem("ProviderId");
+
+        setTimeout(() => navigate("/welcome"), 2000);
+      }
+    } catch (error) {
+      console.log(error);
+      setToastProps({
+        message: error?.response?.data?.message || "Logout failed",
+        type: "error",
+      });
+    }
+  };
+
+  
+  const deleteAccount = async () => {
+    try {
+      const token = hunterToken || providerToken;
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await axios.delete(
+        `http://54.236.98.193:7777/api/DeleteAccount/${providerId ? "provider" : "hunter"}/${providerId || hunterId}`,
+      );
+
+      if (response.status === 200) {
+        setToastProps({ message: "You have been Deleted your Account", type: "success" });
         localStorage.removeItem("hunterToken");
         localStorage.removeItem("hunterEmail");
         localStorage.removeItem("hunterName");
@@ -197,6 +234,7 @@ export default function MyProfile() {
                       <Button
                         variant="outline-danger"
                         className="d-flex gap-2 align-items-center  mw-20 justify-content-center"
+                        onClick={deleteAccount}
                       >
                         Delete Account
                       </Button>

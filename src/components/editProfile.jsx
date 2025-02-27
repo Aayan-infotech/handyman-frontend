@@ -11,7 +11,9 @@ import { useDispatch } from "react-redux";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import axios from "axios";
 import Loader from "../Loader";
-
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 export default function EditProfile() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -19,12 +21,37 @@ export default function EditProfile() {
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
-  const [rate, setRate] = useState("");
-  const [password, setPassword] = useState("");
   const hunterToken = localStorage.getItem("hunterToken");
   const providerToken = localStorage.getItem("ProviderToken");
   const hunterId = localStorage.getItem("hunterId");
+  const [businessData, setBusinessData] = useState([]);
+  const [businessType, setBusinessType] = useState([]);
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setBusinessType((prev) => {
+      const selectedValues = Array.isArray(value) ? value : [value];
 
+      // Merge old and new selections, ensuring uniqueness
+      return Array.from(new Set([...prev, ...selectedValues]));
+    });
+  };
+
+  useEffect(() => {
+    const handleAllData = async () => {
+      try {
+        const response = await axios.get(
+          "http://54.236.98.193:7777/api/service/getAllServices"
+        );
+        if (response.status === 200) {
+          setBusinessData(response?.data?.data);
+        }
+        console.log(response?.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleAllData();
+  }, []);
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -43,6 +70,11 @@ export default function EditProfile() {
           setNumber(fetchedUser.phoneNo || "");
           setEmail(fetchedUser.email || "");
           setAddress(fetchedUser.address?.addressLine || "");
+          setBusinessType(
+            Array.isArray(fetchedUser.businessType)
+              ? fetchedUser.businessType
+              : []
+          );
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -53,6 +85,17 @@ export default function EditProfile() {
     fetchUserData();
   }, [dispatch, hunterToken, providerToken]);
 
+  useEffect(() => {
+    if (businessData.length > 0 && businessType.length > 0) {
+      // Check if businessType IDs exist in businessData
+      const validBusinessTypes = businessType.filter((id) =>
+        businessData.some((service) => service._id === id)
+      );
+      setBusinessType(validBusinessTypes);
+    }
+  }, [businessData]);
+  console.log(businessType);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -62,7 +105,7 @@ export default function EditProfile() {
     formData.append("email", email);
     formData.append("address", address);
     // formData.append("rate", rate);
-console.log(name)
+    console.log(name);
     try {
       const response = await axios.put(
         `http://localhost:7777/api/hunter/updateById/${hunterId}`,
@@ -157,22 +200,40 @@ console.log(name)
                       />
                     </Col>
                   </Form.Group>
-                  <Form.Group
-                    as={Row}
-                    className="mb-3"
-                    controlId="formPlaintextRate"
-                  >
-                    <Form.Label column sm="4">
-                      Rate/Month
-                    </Form.Label>
-                    <Col sm="8">
-                      <Form.Control
-                        type="number"
-                        value={rate}
-                        onChange={(e) => setRate(e.target.value)}
-                      />
-                    </Col>
-                  </Form.Group>
+                  {providerToken && (
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm="4">
+                        Business Industry
+                      </Form.Label>
+                      <Col sm="8">
+                        <FormControl className="w-100 select-ion">
+                          <Select
+                            labelId="demo-multiple-name-label"
+                            id="demo-multiple-name"
+                            multiple
+                            value={businessType} // Should be an array of IDs
+                            onChange={handleChange}
+                            renderValue={(selected) =>
+                              selected
+                                .map(
+                                  (id) =>
+                                    businessData.find((data) => data._id === id)
+                                      ?.name
+                                )
+                                .join(", ")
+                            }
+                          >
+                            {businessData.map((data) => (
+                              <MenuItem key={data._id} value={data?._id}>
+                                {data.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Col>
+                    </Form.Group>
+                  )}
+
                   <div className="d-flex justify-content-center align-items-center py-3">
                     <Button
                       type="submit"

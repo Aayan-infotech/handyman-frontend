@@ -1,18 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
 import "../../User/user.css";
-import { IoImageOutline } from "react-icons/io5";
+import { FaCloudUploadAlt } from "react-icons/fa";
 import axios from "axios";
-import Autocomplete from "react-google-autocomplete";
 import Toaster from "../../Toaster";
 import Loader from "../../Loader";
-import { FaCloudUploadAlt } from "react-icons/fa";
 import { styled } from "@mui/material/styles";
 
 const VisuallyHiddenInput = styled("input")({
@@ -31,17 +25,52 @@ export default function Upload() {
   const [loading, setLoading] = useState(false);
   const [document, setDocument] = useState(null);
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
-
+  const providerId = localStorage.getItem("ProviderId");
   const navigate = useNavigate();
 
-  const userType = "hunter";
-  const radius = "50";
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    setDocument(files.length > 0 ? files : null);
+  };
 
-  console.log(document);
+  const handleUpload = async () => {
+    if (!document) return;
+
+    const formData = new FormData();
+    Array.from(document).forEach((file) => {
+      formData.append("document", file);
+    });
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `http://54.236.98.193:7771/api/provider/upload/${providerId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setLoading(false);
+
+      if (response.data.status === 200) {
+        setToastProps({ message: response.data.message, type: "success" });
+        setTimeout(() => navigate("/provider/pricing"), 2000);
+      } else {
+        setToastProps({ message: response.data.message, type: "error" });
+      }
+    } catch (error) {
+      setLoading(false);
+      setToastProps({ message: "Something went wrong", type: "error" });
+    }
+  };
+
+  console.log(document)
 
   return (
     <>
-      {loading === true ? (
+      {loading ? (
         <Loader />
       ) : (
         <div className="bg-signup h-100vh">
@@ -51,47 +80,41 @@ export default function Upload() {
               <div className="card shadow mb-4">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">Upload Documents</h2>
-
                   <p className="text-center mt-3 mb-4">Let’s Get Started</p>
+
                   <Button
                     variant="contained"
                     color="success"
-                    className="fw-semibold custom-green-outline w-100 rounded-5 mb-2 fs-6  px-1 px-lg-5"
+                    className="fw-semibold custom-green-outline w-100 rounded-5 mb-2 fs-6 px-1 px-lg-5"
                     size="small"
                     component="label"
-                    role={undefined}
-                    tabIndex={-1}
                     startIcon={<FaCloudUploadAlt />}
                   >
                     Upload Documents
-                    <VisuallyHiddenInput
-                      type="file"
-                      onChange={(event) => setDocument(event.target.files)}
-                      multiple
-                    />
+                    <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
                   </Button>
-                  <div className="d-flex justify-content-center gap-2 mt-5 justify-content-lg-between flex-column flex-lg-row align-items-center">
+
+                  {document && document.length > 0 && (
+                    <div className="d-flex justify-content-center">
+                      <Button
+                        onClick={handleUpload}
+                        size="large"
+                        className="custom-green-outline fs-6"
+                        color="success"
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="d-flex justify-content-center gap-2 mt-5 align-items-center">
                     <Button
                       variant="outlined"
                       size="large"
-                      className=""
                       color="error"
-                      onClick={() => {
-                        setTimeout(() => {
-                          navigate("/provider/pricing");
-                        }, 4000);
-                      }}
+                      onClick={() => navigate("/provider/pricing")}
                     >
                       Skip For Now
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      className=""
-                      color="success"
-                      disabled
-                    >
-                      Go to Subscription
                     </Button>
                   </div>
                 </div>
