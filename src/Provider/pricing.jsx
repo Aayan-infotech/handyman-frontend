@@ -53,7 +53,7 @@ export default function MainProvider() {
       ) : (
         <div>
          <LoggedHeader />
-                                        <Link to="/support/chat/1">
+                                        <Link to="/provider/chat/1">
                                         <div className="admin-message">
                                          
                                             <MdOutlineSupportAgent />

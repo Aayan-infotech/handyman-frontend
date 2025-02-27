@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import "./user.css";
+import "../User/user.css";
 import user1 from "../assets/user1.png";
 import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { ref, push, set, onValue } from "firebase/database";
-import { realtimeDb } from "../Chat/lib/firestore";
+import { realtimeDb } from "./lib/firestore";
 
 export default function Chat() {
   const location = useLocation();
@@ -72,7 +72,7 @@ useEffect(() => {
       await set(newMessageRef, {
         senderId: currentUser,
         receiverId: receiverId,
-        name:localStorage.getItem("hunterName"),
+        name:localStorage.getItem("hunterName") || localStorage.getItem("ProviderName"),
         text,
         createdAt: Date.now(),
       });
@@ -97,10 +97,11 @@ useEffect(() => {
   }, [location]);
 
   console.log("messages" , messages);
+  console.log(currentUser)
   
 
   return (
-    <div className={`d-flex flex-column gap-3 ${show ? "container-fluid" : ""}`}>
+    <div className={`d-flex flex-column gap-3`}>
       <div className="card border-0 rounded-3">
         <div className="card-body p-2">
           <div className="d-flex flex-row gap-2 align-items-center justify-content-between">

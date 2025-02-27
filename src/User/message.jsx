@@ -7,7 +7,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import user1 from "../assets/user1.png";
 import user2 from "../assets/user2.png";
 import { Link } from "react-router-dom";
-import Chat from "./chat";
+import Chat from "../Chat/chat";
 export default function Message() {
   const [open, setOpen] = useState(false);
   const handleChange = () => {

@@ -20,7 +20,7 @@ import Message from "./User/message";
 import Notification from "./User/notification";
 import MyProfile from "./User/myprofile";
 import ChangePassword from "./components/changePassword";
-import EditProfile from "./User/Auth/editProfile";
+import EditProfile from "./components/editProfile";
 import LoginProvider from "./Provider/auth/login";
 import SignUpProvider from "./Provider/auth/signup";
 import MainProvider from "./Provider/pricing";
@@ -29,7 +29,7 @@ import Payment from "./Provider/payment";
 import PaymentDetail from "./Provider/payment-detail";
 import HomeProvider from "./Provider/Home";
 import JobSpecification from "./Provider/jobSpecification";
-import Chat from "./User/chat";
+import Chat from "./Chat/chat";
 import "react-toastify/dist/ReactToastify.css";
 import Upload from "./Provider/auth/uploadDoc";
 
@@ -76,6 +76,7 @@ function App() {
             path="/provider/changePassword/:id"
             element={<ChangePassword />}
           />
+           <Route path="/provider/chat/:id" element={<Chat />} />
           <Route path="/provider/editProfile" element={<EditProfile />} />
           <Route path="/provider/forgetpassword" element={<ForgetPassword />} />
           <Route path="/provider/pricing" element={<MainProvider />} />

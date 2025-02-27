@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import "../user.css";
+import "../User/user.css";
 import { IoImageOutline } from "react-icons/io5";
-import LoggedHeader from "./component/loggedNavbar";
+import LoggedHeader from "../User/Auth/component/loggedNavbar";
 import { useDispatch } from "react-redux";
-import { getHunterUser, getProviderUser } from "../../Slices/userSlice";
+import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import axios from "axios";
-import Loader from "../../Loader";
+import Loader from "../Loader";
 
 export default function EditProfile() {
   const dispatch = useDispatch();
@@ -22,9 +22,8 @@ export default function EditProfile() {
   const [rate, setRate] = useState("");
   const [password, setPassword] = useState("");
   const hunterToken = localStorage.getItem("hunterToken");
-  const providerToken = localStorage.getItem("providerToken");
+  const providerToken = localStorage.getItem("ProviderToken");
   const hunterId = localStorage.getItem("hunterId");
-  const providerId = localStorage.getItem("providerToken");
 
   useEffect(() => {
     const fetchUserData = async () => {

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
-import { MdMessage, MdOutlineWork , MdOutlineSupportAgent } from "react-icons/md";
+import {
+  MdMessage,
+  MdOutlineWork,
+  MdOutlineSupportAgent,
+} from "react-icons/md";
 import serviceProviderImage from "./assets/service-provider-image.png";
 import profilePicture from "./assets/profilePicture.png";
 import "swiper/css";
@@ -118,19 +122,17 @@ export default function MyProfile() {
         <Loader />
       ) : (
         <>
-        <LoggedHeader />
-                                                             <Link to="/support/chat/1">
-                                                             <div className="admin-message">
-                                                              
-                                                                 <MdOutlineSupportAgent />
-                                                               
-                                                             </div>
-                                                             </Link>
-                                                             <div className="message">
-                                                               <Link to="/message">
-                                                                 <MdMessage />
-                                                               </Link>
-                                                             </div>
+          <LoggedHeader />
+          <Link to={`/${hunterToken ? "support" : "provider"}/chat/1`}>
+            <div className="admin-message">
+              <MdOutlineSupportAgent />
+            </div>
+          </Link>
+          <div className="message">
+            <Link to="/message">
+              <MdMessage />
+            </Link>
+          </div>
           <div className="bg-second pb-3">
             <div className="container">
               <div className="image-shadow">

@@ -13,7 +13,7 @@ export default function Payment() {
   return (
     <>
        <LoggedHeader />
-                                <Link to="/support/chat/1">
+                                <Link to="/provider/chat/1">
                                 <div className="admin-message">
                                  
                                     <MdOutlineSupportAgent />

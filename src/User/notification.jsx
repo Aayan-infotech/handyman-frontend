@@ -1,25 +1,25 @@
 import React from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { Link } from "react-router-dom";
-import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import "./user.css";
 import { FaRegClock } from "react-icons/fa";
 export default function Notification() {
+  const hunterToken = localStorage.getItem("hunterToken");
+  const providerToken = localStorage.getItem("ProviderToken");
   return (
     <>
-     <LoggedHeader />
-                                                                 <Link to="/support/chat/1">
-                                                                 <div className="admin-message">
-                                                                  
-                                                                     <MdOutlineSupportAgent />
-                                                                   
-                                                                 </div>
-                                                                 </Link>
-                                                                 <div className="message">
-                                                                   <Link to="/message">
-                                                                     <MdMessage />
-                                                                   </Link>
-                                                                 </div>
+      <LoggedHeader />
+      <Link to={`/${hunterToken ? "support" : "provider"}/chat/1`}>
+        <div className="admin-message">
+          <MdOutlineSupportAgent />
+        </div>
+      </Link>
+      <div className="message">
+        <Link to="/message">
+          <MdMessage />
+        </Link>
+      </div>
       <div className="bg-second">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
