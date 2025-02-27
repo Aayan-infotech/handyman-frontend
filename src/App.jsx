@@ -1,4 +1,4 @@
-import React , { useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -32,73 +32,74 @@ import JobSpecification from "./Provider/jobSpecification";
 import Chat from "./Chat/chat";
 import "react-toastify/dist/ReactToastify.css";
 import Upload from "./Provider/auth/uploadDoc";
+import JobListing from "./job-listing";
+import FeaturedJobs from "./featured-jobs";
+import LatestJobs from "./latest-jobs";
 
 function App() {
   return (
-  
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/forgot-password" element={<ForgetPassword />} />
-          <Route path="/otp" element={<Otp />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/home" element={<Main />} />
-          <Route path="/post-new-job" element={<NewJob />} />
-          <Route path="/job-management" element={<JobManagement />} />
-          <Route path="/job-detail/:id" element={<JobDetail />} />
-          <Route path="/service-provider" element={<ServiceProvider />} />
-          <Route path="/support/chat/:id" element={<Chat />} />
-          <Route
-            path="/service-profile/:id"
-            element={<ServiceProviderProfile />}
-          />
-          <Route path="/message" element={<Message />} />
-          <Route path="/notification" element={<Notification />} />
-          <Route path="/myprofile" element={<MyProfile />} />
-          <Route path="/changePassword/:id" element={<ChangePassword />} />
-          <Route path="/editProfile" element={<EditProfile />} />
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgetPassword />} />
+        <Route path="/otp" element={<Otp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/home" element={<Main />} />
+        <Route path="/job-listing" element={<JobListing />} />
+        <Route path="/featured-jobs" element={<FeaturedJobs />} />
+        <Route path="/latest-jobs" element={<LatestJobs />} />
+        <Route path="/post-new-job" element={<NewJob />} />
+        <Route path="/job-management" element={<JobManagement />} />
+        <Route path="/job-detail/:id" element={<JobDetail />} />
+        <Route path="/service-provider" element={<ServiceProvider />} />
+        <Route path="/support/chat/:id" element={<Chat />} />
+        <Route
+          path="/service-profile/:id"
+          element={<ServiceProviderProfile />}
+        />
+        <Route path="/message" element={<Message />} />
+        <Route path="/notification" element={<Notification />} />
+        <Route path="/myprofile" element={<MyProfile />} />
+        <Route path="/changePassword/:id" element={<ChangePassword />} />
+        <Route path="/editProfile" element={<EditProfile />} />
 
-          {/* provider */}
-          <Route path="/provider/login" element={<LoginProvider />} />
-          <Route path="/provider/signup" element={<SignUpProvider />} />
-          <Route path="/provider/upload" element={<Upload />} />
-          <Route path="/provider/reset" element={<ResetPassword />} />
-          <Route path="/provider/otp" element={<Otp />} />
-          <Route path="/provider/job-history" element={<JobManagement />} />
-          <Route path="/provider/job-history/:id" element={<JobDetail />} />
-          <Route path="/provider/message" element={<Message />} />
-          <Route path="/provider/reset-password" element={<ResetPassword />} />
-          <Route
-            path="/provider/changePassword/:id"
-            element={<ChangePassword />}
-          />
-           <Route path="/provider/chat/:id" element={<Chat />} />
-          <Route path="/provider/editProfile" element={<EditProfile />} />
-          <Route path="/provider/forgetpassword" element={<ForgetPassword />} />
-          <Route path="/provider/pricing" element={<MainProvider />} />
-          <Route
-            path="/provider/pricing-detail/:id"
-            element={<PricingProvider />}
-          />
-          <Route path="/provider/payment" element={<Payment />} />
-          <Route
-            path="/provider/paymentdetail/:id"
-            element={<PaymentDetail />}
-          />
-          <Route path="/provider/home" element={<HomeProvider />} />
-          <Route
-            path="/provider/jobspecification/:id"
-            element={<JobSpecification />}
-          />
-          <Route path="/provider/chat/:id" element={<Chat />} />
-          <Route path="/provider/myprofile" element={<MyProfile />} />
-        </Routes>
-      </BrowserRouter>
-   
+        {/* provider */}
+        <Route path="/provider/login" element={<LoginProvider />} />
+        <Route path="/provider/signup" element={<SignUpProvider />} />
+        <Route path="/provider/upload" element={<Upload />} />
+        <Route path="/provider/reset" element={<ResetPassword />} />
+        <Route path="/provider/otp" element={<Otp />} />
+        <Route path="/provider/job-history" element={<JobManagement />} />
+        <Route path="/provider/job-history/:id" element={<JobDetail />} />
+        <Route path="/provider/message" element={<Message />} />
+        <Route path="/provider/reset-password" element={<ResetPassword />} />
+        <Route
+          path="/provider/changePassword/:id"
+          element={<ChangePassword />}
+        />
+        <Route path="/provider/chat/:id" element={<Chat />} />
+        <Route path="/provider/editProfile" element={<EditProfile />} />
+        <Route path="/provider/forgetpassword" element={<ForgetPassword />} />
+        <Route path="/provider/pricing" element={<MainProvider />} />
+        <Route
+          path="/provider/pricing-detail/:id"
+          element={<PricingProvider />}
+        />
+        <Route path="/provider/payment" element={<Payment />} />
+        <Route path="/provider/paymentdetail/:id" element={<PaymentDetail />} />
+        <Route path="/provider/home" element={<HomeProvider />} />
+        <Route
+          path="/provider/jobspecification/:id"
+          element={<JobSpecification />}
+        />
+        <Route path="/provider/chat/:id" element={<Chat />} />
+        <Route path="/provider/myprofile" element={<MyProfile />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

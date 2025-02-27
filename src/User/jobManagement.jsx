@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
-import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
@@ -18,44 +18,27 @@ export default function JobManagement() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const provider = location.pathname.includes("provider");
-  console.log(provider)
+  console.log(provider);
   const hunterToken = localStorage.getItem("hunterToken");
   const ProviderToken = localStorage.getItem("ProviderToken");
 
   const handleProviderJobs = async () => {
     setLoading(true);
+    console.log(provider);
     try {
-      if (provider === true) {
-        const res = await axios.get(
-          `http://54.236.98.193:7777/api/jobpost/getJobPostByUserId`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem(ProviderToken)}`,
-            },
-          }
-        );
-        if (res.status === 200) {
-          setToastProps({ message: res.data.message, type: "success" });
-          setData(res.data.data);
-          setLoading(false);
+      const res = await axios.get(
+        `http://54.236.98.193:7777/api/jobpost/getJobPostByUserId`,
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken || hunterToken}`,
+          },
         }
-      } else {
-        const res = await axios.get(
-          `http://54.236.98.193:7777/api/jobpost/getJobPostByUserId`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem(hunterToken)}`,
-            },
-          }
-        );
-        if (res.status === 200) {
-          setToastProps({ message: res.data.message, type: "success" });
-          setData(res.data.data);
-          setLoading(false);
-        }
+      );
+      if (res.status === 200) {
+        setToastProps({ message: res.data.message, type: "success" });
+        setData(res.data.data);
+        setLoading(false);
       }
-
-    
     } catch (error) {
       setToastProps({ message: error.message, type: "error" });
       setLoading(false);
@@ -69,18 +52,16 @@ export default function JobManagement() {
     <>
       {loading && <Loader />}
       <LoggedHeader />
-                                                     <Link to="/support/chat/1">
-                                                     <div className="admin-message">
-                                                      
-                                                         <MdOutlineSupportAgent />
-                                                       
-                                                     </div>
-                                                     </Link>
-                                                     <div className="message">
-                                                       <Link to="/message">
-                                                         <MdMessage />
-                                                       </Link>
-                                                     </div>
+      <Link to="/support/chat/1">
+        <div className="admin-message">
+          <MdOutlineSupportAgent />
+        </div>
+      </Link>
+      <div className="message">
+        <Link to="/message">
+          <MdMessage />
+        </Link>
+      </div>
       <div className="bg-second py-3">
         <div className="container">
           <div className="d-flex justify-content-start align-items-center">
@@ -93,14 +74,14 @@ export default function JobManagement() {
             </div>
           </div>
           <div className="row mt-4 gy-4 management">
-            <div className="col-lg-12">
-              {data.length === 0 && (
-                <div className="d-flex justify-content-center align-items-center flex-column gap-3">
-                  <img src={noData} alt="image" />
-                </div>
-              )}
-              {data?.map((item) => (
-                <Link key={item._id} to={`/job-detail/${item._id}`}>
+            {data.length === 0 && (
+              <div className="d-flex justify-content-center align-items-center flex-column gap-3">
+                <img src={noData} alt="image" />
+              </div>
+            )}
+            {data?.map((item) => (
+              <div className="col-lg-12" key={item._id}>
+                <Link to={`/job-detail/${item._id}`}>
                   <div className="card border-0 rounded-3 px-4">
                     <div className="card-body">
                       <div className="row gy-4 align-items-center">
@@ -139,8 +120,8 @@ export default function JobManagement() {
                     </div>
                   </div>
                 </Link>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
