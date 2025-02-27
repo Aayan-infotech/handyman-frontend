@@ -40,9 +40,9 @@ export default function Upload() {
     Array.from(document).forEach((file) => {
       formData.append("document", file);
     });
+    console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
 
     try {
-      setLoading(true);
       const response = await axios.post(
         `http://54.236.98.193:7771/api/provider/upload/${providerId}`,
         formData,
@@ -52,7 +52,6 @@ export default function Upload() {
           },
         }
       );
-      setLoading(false);
 
       if (response.data.status === 200) {
         setToastProps({ message: response.data.message, type: "success" });
@@ -62,7 +61,7 @@ export default function Upload() {
       }
     } catch (error) {
       setLoading(false);
-      setToastProps({ message: "Something went wrong", type: "error" });
+      setToastProps({ message: error || "Something went wrong", type: "error" });
     }
   };
 

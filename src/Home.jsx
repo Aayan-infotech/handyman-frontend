@@ -187,7 +187,7 @@ function Home() {
             </div>
             <div className="row gy-4 mt-3">
               {businessData.map((item) => (
-                <div className="col-lg-3" key={item.id}>
+                <div className="col-lg-3" key={item._id}>
                   <Link to="/welcome">
                     <div className="card rounded-0 ">
                       <div className="card-body">

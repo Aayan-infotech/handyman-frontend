@@ -49,9 +49,14 @@ export default function NewJob() {
   const [time, setTime] = useState(dayjs());
   const token = localStorage.getItem("hunterToken");
   const navigate = useNavigate();
+  // const handleChange = (event) => {
+  //   const { value } = event.target;
+  //   setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
+  // };
+
   const handleChange = (event) => {
     const { value } = event.target;
-    setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
+    setBusinessType(typeof value === "string" ? value.split(",") : value);
   };
 
   useEffect(() => {
@@ -119,7 +124,7 @@ export default function NewJob() {
     }
   };
 
-  console.log(businessData)
+  console.log(businessType)
 
   return (
     <>
@@ -201,18 +206,19 @@ export default function NewJob() {
                         multiple
                         value={businessType}
                         onChange={handleChange}
-                        renderValue={(selected) =>
-                          selected
-                            .map(
-                              (id) =>
-                                businessData.find((data) => data._id === id)
-                                  ?.name
-                            )
-                            .join(", ")
-                        }
+                        // renderValue={(selected) =>
+                        //   selected
+                        //     .map(
+                        //       (id) =>
+                        //         businessData.find((data) => data._id === id)
+                        //           ?.name
+                        //     )
+                        //     .join(", ")
+                        // }
+                        renderValue={(selected) => selected.join(", ")}
                       >
                         {businessData.map((data) => (
-                          <MenuItem key={data._id} value={data?._id}>
+                          <MenuItem key={data._id} value={data?.name}>
                             {data?.name}
                           </MenuItem>
                         ))}
