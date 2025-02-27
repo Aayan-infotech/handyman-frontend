@@ -30,6 +30,10 @@ export default function LoginProvider() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if(!email || !password){
+      setToastProps({ message: "Please fill all fields", type: "error" });
+      return;
+    }
     setLoading(true);
     try {
       const response = await axios.post(

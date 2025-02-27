@@ -28,6 +28,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if(!email || !password){
+      setToastProps({ message: "Please fill all fields", type: "error" });
+      return;
+    }
     setLoading(true);
 
     try {

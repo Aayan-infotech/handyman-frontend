@@ -49,6 +49,7 @@ export default function SignUp() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     const formData = new FormData();
     formData.append("name", name);

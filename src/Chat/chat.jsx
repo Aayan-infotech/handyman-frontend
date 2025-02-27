@@ -73,6 +73,7 @@ useEffect(() => {
         senderId: currentUser,
         receiverId: receiverId,
         name:localStorage.getItem("hunterName") || localStorage.getItem("ProviderName"),
+        type:localStorage.getItem("hunterName") ? "hunter" : "provider",
         text,
         createdAt: Date.now(),
       });
