@@ -18,7 +18,7 @@ import ServiceProviderProfile from "./User/service-provider-profle";
 import ScrollToTop from "./ScrollToTop";
 import Message from "./User/message";
 import Notification from "./User/notification";
-import MyProfile from "./User/myprofile";
+import MyProfile from "./components/myprofile";
 import ChangePassword from "./components/changePassword";
 import EditProfile from "./components/editProfile";
 import LoginProvider from "./Provider/auth/login";

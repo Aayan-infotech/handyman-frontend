@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import LoggedHeader from "./Auth/component/loggedNavbar";
+import LoggedHeader from "../User/Auth/component/loggedNavbar";
 import {
   MdMessage,
   MdOutlineWork,
   MdOutlineSupportAgent,
 } from "react-icons/md";
-import serviceProviderImage from "./assets/service-provider-image.png";
-import profilePicture from "./assets/profilePicture.png";
+import serviceProviderImage from "../assets/service-provider-image.png";
+import profilePicture from "../assets/profilePicture.png";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -31,6 +31,7 @@ export default function MyProfile() {
   const [email, setEmail] = useState("");
   const [address, setAdress] = useState("");
   const [loading, setLoading] = useState(false);
+  const [businessType, setBusinessType] = useState([]);
   const id =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");
   const hunterToken = localStorage.getItem("hunterToken");
@@ -63,6 +64,7 @@ export default function MyProfile() {
           setNumber(fetchedUser.phoneNo || "");
           setEmail(fetchedUser.email || "");
           setAdress(fetchedUser.address?.addressLine || "");
+          setBusinessType(fetchedUser.businessType || []);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -116,7 +118,6 @@ export default function MyProfile() {
     }
   };
 
-  
   const deleteAccount = async () => {
     try {
       const token = hunterToken || providerToken;
@@ -126,11 +127,16 @@ export default function MyProfile() {
       }
 
       const response = await axios.delete(
-        `http://54.236.98.193:7777/api/DeleteAccount/${providerId ? "provider" : "hunter"}/${providerId || hunterId}`,
+        `http://54.236.98.193:7777/api/DeleteAccount/${
+          providerId ? "provider" : "hunter"
+        }/${providerId || hunterId}`
       );
 
       if (response.status === 200) {
-        setToastProps({ message: "You have been Deleted your Account", type: "success" });
+        setToastProps({
+          message: "You have been Deleted your Account",
+          type: "success",
+        });
         localStorage.removeItem("hunterToken");
         localStorage.removeItem("hunterEmail");
         localStorage.removeItem("hunterName");
@@ -152,7 +158,6 @@ export default function MyProfile() {
   };
 
   const Location = useLocation();
-  console.log(Location);
   return (
     <>
       {loading ? (
@@ -266,18 +271,14 @@ export default function MyProfile() {
 
               {Location.pathname.includes("provider") ? (
                 <div className="d-flex flex-row flex-wrap justify-content-lg-start justify-content-center gap-1 gap-lg-2 align-items-center profile my-4">
-                  <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                    <span className="fs-6">Electrical</span>
-                  </div>
-                  <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                    <span className="fs-6">Electronics</span>
-                  </div>
-                  <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                    <span className="fs-6">Mechanics</span>
-                  </div>
-                  <div className="color-profile px-3 py-2 pt-1 rounded-5 fs-5">
-                    <span className="fs-6">Plumbing</span>
-                  </div>
+                  {businessType.map((type, index) => (
+                    <div
+                      className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
+                      key={index}
+                    >
+                      <span className="fs-6">{type}</span>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 ""
