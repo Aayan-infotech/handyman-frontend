@@ -51,8 +51,8 @@ export default function LoginProvider() {
       );
 
       if (response.status === 200) {
-         await signInWithEmailAndPassword(auth, email, password);
-        
+        const firebaseUser = await signInWithEmailAndPassword(auth, email, password);
+         const userId = firebaseUser.user.uid;
         setEmail("");
         setPassword("");
         setLoading(false);
@@ -70,6 +70,7 @@ export default function LoginProvider() {
           response?.data?.data?.user?.contactName
         );
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
+        localStorage.setItem("ProviderUId", userId);
         localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
         console.log(response);
       }

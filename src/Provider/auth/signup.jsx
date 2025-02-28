@@ -62,9 +62,14 @@ export default function SignUpProvider() {
   const searchParams = new URLSearchParams(location.search);
   const guestVerify = searchParams.get("type=Guest");
 
+  // const handleChange = (event) => {
+  //   const { value } = event.target;
+  //   setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
+  // };
+
   const handleChange = (event) => {
     const { value } = event.target;
-    setBusinessType(Array.isArray(value) ? value : [value]); // Ensure value is always an array
+    setBusinessType(typeof value === "string" ? value.split(",") : value);
   };
 
   useEffect(() => {
@@ -111,7 +116,9 @@ export default function SignUpProvider() {
     formData.append("phoneNo", phoneNo);
     formData.append("addressLine", address);
     formData.append("password", password);
-    formData.append("businessType", businessType);
+    businessType.forEach((type) => {
+      formData.append("businessType[]", type);
+    });
     formData.append("ABN_Number", registrationNumber);
     formData.append("userType", "provider");
     formData.append("radius", "50");
@@ -259,18 +266,19 @@ export default function SignUpProvider() {
                             multiple
                             value={businessType} // Should be an array of IDs
                             onChange={handleChange}
-                            renderValue={(selected) =>
-                              selected
-                                .map(
-                                  (id) =>
-                                    businessData.find((data) => data._id === id)
-                                      ?.name
-                                )
-                                .join(", ")
-                            }
+                            renderValue={(selected) => selected.join(", ")}
+                            // renderValue={(selected) =>
+                            //   selected
+                            //     .map(
+                            //       (id) =>
+                            //         businessData.find((data) => data._id === id)
+                            //           ?.name
+                            //     )
+                            //     .join(", ")
+                            // }
                           >
                             {businessData.map((data) => (
-                              <MenuItem key={data._id} value={data?._id}>
+                              <MenuItem key={data._id} value={data?.name}>
                                 {data.name}
                               </MenuItem>
                             ))}
@@ -355,6 +363,7 @@ export default function SignUpProvider() {
                             const formattedAddress =
                               place?.formatted_address || place?.name;
                             setAddress(formattedAddress);
+                            console.log(place)
                             setLatitude(place.geometry.location.lat());
                             setLongitude(place.geometry.location.lng());
                           }}

@@ -70,46 +70,7 @@ export default function MainProvider() {
               <div className="top-section-main py-4 px-lg-5">
                 <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
                   <h5 className="user">Hello {name}</h5>
-                  <div className="position-relative icon-speaker">
-                    <img src={speaker} alt="speaker" />
-                    <Slider {...settings} className="mySwiper">
-                      <div>
-                        <span>
-                          10% Discount on Plumbing Services before Christmas,
-                          grab this opportunity by clicking on the lorem ipsum
-                          dolar ajab kar lorem inpsume
-                        </span>
-                      </div>
-                      <div>
-                        <span>
-                          10% Discount on Plumbing Services before Christmas,
-                          grab this opportunity by clicking on the lorem ipsum
-                          dolar ajab kar lorem inpsume
-                        </span>
-                      </div>
-                      <div>
-                        <span>
-                          10% Discount on Plumbing Services before Christmas,
-                          grab this opportunity by clicking on the lorem ipsum
-                          dolar ajab kar lorem inpsume
-                        </span>
-                      </div>
-                      <div>
-                        <span>
-                          10% Discount on Plumbing Services before Christmas,
-                          grab this opportunity by clicking on the lorem ipsum
-                          dolar ajab kar lorem inpsume
-                        </span>
-                      </div>
-                      <div>
-                        <span>
-                          10% Discount on Plumbing Services before Christmas,
-                          grab this opportunity by clicking on the lorem ipsum
-                          dolar ajab kar lorem inpsume
-                        </span>
-                      </div>
-                    </Slider>
-                  </div>
+                 
                 </div>
                 <div className="row py-3 gy-4 mt-4 gx-5">
                   {data?.map((item) => (

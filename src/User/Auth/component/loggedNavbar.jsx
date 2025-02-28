@@ -22,9 +22,15 @@ export default function LoggedHeader() {
         className="position-relative z-1 loggedheader"
       >
         <Container fluid>
-          <Link to="/home" className="py-1">
-            <img src={logo} alt="logo" />
-          </Link>
+          {location.pathname.includes("provider") ? (
+            <Link to="/provider/home" className="py-1">
+              <img src={logo} alt="logo" />
+            </Link>
+          ) : (
+            <Link to="/home" className="py-1">
+              <img src={logo} alt="logo" />
+            </Link>
+          )}
 
           {location.pathname === "/post-new-job" && (
             <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
@@ -47,9 +53,7 @@ export default function LoggedHeader() {
                 </Link>
 
                 {location.pathname.includes("provider") ? (
-                  guestCondition ? (
-                    <FaRegUserCircle className="fs-1" />
-                  ) : (
+                 (
                     <Link to="/provider/myprofile">
                       <FaRegUserCircle className="fs-1" />
                     </Link>

@@ -86,7 +86,10 @@ export default function NewJob() {
     formData.append("jobRadius", radius);
     formData.append("jobAddressLine", address);
     formData.append("estimatedBudget", budget);
-    formData.append("businessType", businessType);
+    businessType.forEach((type) => {
+      formData.append("businessType[]", type);
+    });
+    
     formData.append("requirements", requirements);
     formData.append("timeframe[from]", startTime.unix());
     formData.append("timeframe[to]", endTime.unix());
