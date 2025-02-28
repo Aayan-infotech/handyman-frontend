@@ -137,7 +137,7 @@ export default function ServiceProvider() {
                                 </div>
                               </div>
                               <div className="col-lg-8">
-                                <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-center">
+                                <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
                                   <div className="d-flex flex-row gap-2 align-items-center">
                                     <GrMapLocation />
                                     <h5 className="mb-0 d-flex flex-row gap-2 align-items-center">

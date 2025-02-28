@@ -96,7 +96,7 @@ export default function JobManagement() {
                           </div>
                         </div>
                         <div className="col-lg-8">
-                          <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-center">
+                          <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
                             <div className="d-flex flex-row gap-2 align-items-center">
                               <BiCoinStack />
                               <h5 className="mb-0">${item.estimatedBudget}</h5>
