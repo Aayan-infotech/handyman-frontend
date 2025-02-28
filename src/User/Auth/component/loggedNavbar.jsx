@@ -12,7 +12,8 @@ import "../../user.css";
 import { FaRegUserCircle } from "react-icons/fa";
 
 export default function LoggedHeader() {
-  const location = useLocation(); // ✅ Correct way to get pathname
+  const location = useLocation(); 
+  const hunterId = localStorage.getItem("hunterId");
   const guestCondition = JSON.parse(localStorage.getItem("Guest")) || false; // ✅ Ensure Boolean value
   return (
     <>
@@ -22,7 +23,7 @@ export default function LoggedHeader() {
         className="position-relative z-1 loggedheader"
       >
         <Container fluid>
-          {location.pathname.includes("provider") ? (
+          {!hunterId ? (
             <Link to="/provider/home" className="py-1">
               <img src={logo} alt="logo" />
             </Link>
@@ -49,10 +50,10 @@ export default function LoggedHeader() {
 
               <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
                 <Link className="notification" to="/notification">
-                  <IoMdNotificationsOutline className="fs-4" />
+                  <IoMdNotificationsOutline className="fs-4 2323" />
                 </Link>
 
-                {location.pathname.includes("provider") ? (
+                {!hunterId ? (
                  (
                     <Link to="/provider/myprofile">
                       <FaRegUserCircle className="fs-1" />
