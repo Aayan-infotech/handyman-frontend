@@ -72,7 +72,7 @@ export default function MainProvider() {
                   <h5 className="user">Hello {name}</h5>
                  
                 </div>
-                <div className="row py-3 gy-4 mt-4 gx-5">
+                <div className="row py-3 gy-4 mt-lg-4 gx-5">
                   {data?.map((item) => (
                     <div className="col-lg-4" key={item._id}>
                       <Link to={`/provider/pricing-detail/${item._id}`}>

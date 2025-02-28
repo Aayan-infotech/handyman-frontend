@@ -76,7 +76,7 @@ export default function JobManagement() {
           <div className="row mt-4 gy-4 management">
             {data.length === 0 && (
               <div className="d-flex justify-content-center align-items-center flex-column gap-3">
-                <img src={noData} alt="image" />
+                <img src={noData} alt="image" className="w-nodata"/>
               </div>
             )}
             {data?.map((item) => (

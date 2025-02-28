@@ -1,6 +1,11 @@
 .h-200 {
   height: 180px;
 }
+
+.error-100vh{
+  height: 100%;
+  min-height:103.5vh !important;
+} 
 .mh-200 {
   height: 220px;
 }
@@ -10,7 +15,7 @@
 }
 .h-100vh{
   height: 100%;
-  min-height: 100vh;
+  min-height:100vh !important;
 }
 .bg-center{
   min-height: 85vh;

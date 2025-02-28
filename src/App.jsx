@@ -35,6 +35,7 @@ import Upload from "./Provider/auth/uploadDoc";
 import JobListing from "./job-listing";
 import FeaturedJobs from "./featured-jobs";
 import LatestJobs from "./latest-jobs";
+import Error from "./components/error";
 
 function App() {
   return (
@@ -98,6 +99,8 @@ function App() {
         />
         <Route path="/provider/chat/:id" element={<Chat />} />
         <Route path="/provider/myprofile" element={<MyProfile />} />
+
+        <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>
   );

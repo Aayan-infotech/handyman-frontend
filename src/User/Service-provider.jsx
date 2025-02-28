@@ -113,7 +113,7 @@ export default function ServiceProvider() {
               </div>
               {data.length === 0 ? (
                 <div className="d-flex justify-content-center flex-column gap-1 align-items-center">
-                  <img src={NoData} alt="noData" />
+                  <img src={NoData} alt="noData" className="w-nodata"/>
                 </div>
               ) : (
                 <div className="row mt-4 gy-4 management">

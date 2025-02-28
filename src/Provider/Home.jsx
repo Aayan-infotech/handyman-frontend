@@ -249,7 +249,7 @@ export default function HomeProvider() {
               <>
                 {data.length === 0 ? (
                   <div className="d-flex justify-content-center">
-                    <img src={noData} alt="No Data Found" />
+                    <img src={noData} alt="No Data Found" className="w-nodata" />
                   </div>
                 ) : (
                   data.map((job) => (
