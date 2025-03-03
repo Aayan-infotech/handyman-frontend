@@ -179,9 +179,9 @@ export default function MyProfile() {
             <div className="container">
               <div className="image-shadow">
                 <img src={serviceProviderImage} alt="image" />
-                <div className="exper">
+                {/* <div className="exper">
                   <h5 className="fs-5 fw-medium">2 YEARS</h5>
-                </div>
+                </div> */}
               </div>
               <div className="row gy-4 gx-lg-3">
                 <div className="col-lg-3">
@@ -227,7 +227,17 @@ export default function MyProfile() {
                           </Button>
                         </Link>
                       )}
-
+                      {!hunterToken ? (
+                        <Link to="/provider/edit/upload" className="mw-20">
+                          <Button
+                            variant="dark"
+                            className="d-flex gap-2 align-items-center w-100 justify-content-center"
+                          >
+                            <FiEdit />
+                            Edit Document
+                          </Button>
+                        </Link>
+                      ) : null}
                       <Button
                         variant="danger"
                         className="d-flex gap-2 align-items-center  mw-20 justify-content-center"

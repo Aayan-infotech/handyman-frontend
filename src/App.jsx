@@ -36,6 +36,7 @@ import JobListing from "./job-listing";
 import FeaturedJobs from "./featured-jobs";
 import LatestJobs from "./latest-jobs";
 import Error from "./components/error";
+import About from "./about";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
         <Route path="/job-listing" element={<JobListing />} />
         <Route path="/featured-jobs" element={<FeaturedJobs />} />
         <Route path="/latest-jobs" element={<LatestJobs />} />
+        <Route path="/:section" element={<About />} />
         <Route path="/post-new-job" element={<NewJob />} />
         <Route path="/job-management" element={<JobManagement />} />
         <Route path="/job-detail/:id" element={<JobDetail />} />
