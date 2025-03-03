@@ -75,8 +75,8 @@ function Home() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#">Find Jobs</Link>
-                <Link href="#">Browse Companies</Link>
+                <Link href="#">About Us</Link>
+                <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
               </Nav>
               <Nav>
                 <Link to="/welcome">
@@ -93,18 +93,17 @@ function Home() {
             <div className="col-lg-9 position-relative z-1">
               <div className="mw-75">
                 <h1>
-                  Discover more
-                  <br /> than{" "}
-                  <span className="highlighted">
-                    5000+ <br />
-                    Jobs
-                  </span>
+                  Need Repairs or
+                  <br />
+                  <span className="highlighted">Expert Help?</span>
                 </h1>
                 <img src={underline} alt="underline" className="" />
                 <br />
                 <span className="text-muted">
-                  Great platform for the job seeker that searching for new
-                  career heights and passionate about startups.
+                  Trade Hunters connects you with top service providers in
+                  Austrlia
+                  <br />{" "}
+                  <span className="highlighted fs-4">fast and easy?</span>
                 </span>
               </div>
               <div className="card my-3 border-0">
@@ -211,15 +210,17 @@ function Home() {
           <div className="row">
             <div className="col-lg-5 pt-4">
               <div className="py-5">
-                <h5 className="mb-4">
-                  Start finding jobs or posting them today!
+                <h5 className="">
+                  Do you want to <br />
+                  secure more work
                 </h5>
-                <b className="text-light ">
-                  Start posting/finding jobs for only $10.
-                </b>
                 <button className="btn btn-mobile py-2 px-4 my-4">
-                  Sign Up For Free
+                  Sign Up Today
                 </button>
+                <br />
+                <b className="text-light ">
+                  To trade and check our plans and choose what suits you best
+                </b>
               </div>
             </div>
             <div className="col-lg-7  ">
@@ -232,7 +233,7 @@ function Home() {
         <div className="jobs">
           <div className="d-flex justify-content-start justify-content-lg-between align-items-start flex-column flex-md-row gap-3">
             <h2 className="mb-0">
-              Featured <span className="text-primary">Jobs</span>
+              Featured <span className="text-primary">Business</span>
             </h2>
             <Link
               to="/featured-jobs"
@@ -483,7 +484,7 @@ function Home() {
         <div className="container position-relative z-1">
           <div className="d-flex justify-content-start justify-content-lg-between align-items-start flex-column flex-md-row mb-4 gap-3">
             <h2 className="mb-0">
-              Latest <span className="text-primary"> jobs open</span>
+              Latest <span className="text-primary"> jobs posted</span>
             </h2>
             <Link
               to="/latest-jobs"
@@ -540,8 +541,8 @@ function Home() {
             <Col md={4} className="mb-4">
               <img src={logoWhite} alt="logo" />
               <p className="fw-normal mt-3">
-                Great platform for the job seeker passionate about startups.
-                Find your dream job easier.
+                Great platfrom for connecting service Hunters to Service
+                providers in Australia
               </p>
             </Col>
 
