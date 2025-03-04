@@ -199,7 +199,11 @@ export default function EditProfile() {
         await set(ref(realtimeDb, "userchats/" + userUId), { chats: [] });
         setLoading(false);
         setToastProps({ message: response?.data?.message, type: "success" });
-        navigate(`/provider/otp?email=${email}&type=provider`);
+        if (providerToken) {
+          navigate(`/provider/home`);
+        } else {
+          navigate(`/home`);
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -225,7 +229,7 @@ export default function EditProfile() {
                       <span className="fs-6">Upload</span>
                     </div>
                   </div>
-                  <Form className="py-3" onSubmit={handleSubmit}>
+                  <Form className="py-3">
                     <Form.Group
                       as={Row}
                       className="mb-3"
@@ -376,7 +380,7 @@ export default function EditProfile() {
                     )}
                     <div className="d-flex justify-content-center align-items-center py-3">
                       <Button
-                        type="submit"
+                        onClick={handleSubmit}
                         variant="contained"
                         color="success"
                         className="rounded-0 custom-green bg-green-custom w-100"

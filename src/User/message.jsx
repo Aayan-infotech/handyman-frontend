@@ -61,18 +61,18 @@ export default function Message() {
                             open ? "col-lg-3" : "col-lg-1 px-lg-0 col-4"
                           }`}
                         >
-                          <img src={user1} alt="user1" />
+                          <img src={user1} alt="user1" className="w-100"/>
                         </div>
                         <div
                           className={`${
-                            open ? "col-lg-9" : "col-lg-9 ps-lg-4 col-8"
+                            open ? "col-lg-9 px-0" : "col-lg-9 ps-lg-2 col-8"
                           }`}
                         >
                           <div className="d-flex flex-column gap-1">
-                            <h5 className="mb-0 fw-medium fs-4 text-dark">
+                            <h5 className="mb-0 fw-bold fs-5 text-dark">
                               John Doe
                             </h5>
-                            <p className="mb-0 fw-medium text-dark">
+                            <p className="mb-0 fw-medium fs-6 text-dark">
                               Lorem ipsum dolor sit amet
                             </p>
                             <span className="text-muted">2m ago</span>
@@ -98,18 +98,18 @@ export default function Message() {
                             open ? "col-lg-3" : "col-lg-1 px-lg-0 col-4"
                           }`}
                         >
-                          <img src={user2} alt="user2" />
+                          <img src={user2} alt="user2" className="w-100"/>
                         </div>
                         <div
                           className={`${
-                            open ? "col-lg-9" : "col-lg-9 ps-lg-4 col-8"
+                            open ? "col-lg-9 px-0" : "col-lg-9 ps-lg-2 col-8"
                           }`}
                         >
                           <div className="d-flex flex-column gap-1">
-                            <h5 className="mb-0 fw-medium fs-4 text-dark">
+                            <h5 className="mb-0 fw-bold fs-5 text-dark">
                               John Doe
                             </h5>
-                            <p className="mb-0 fw-medium text-dark">
+                            <p className="mb-0 fw-medium fs-6 text-dark">
                               Lorem ipsum dolor sit amet
                             </p>
                             <span className="text-muted">2m ago</span>
@@ -127,77 +127,8 @@ export default function Message() {
                       </div>
                     </div>
                   </Link>
-                  <Link className="text-decoration-none" onClick={handleChange}>
-                    <div className="user-card">
-                      <div className="row align-items-center">
-                        <div
-                          className={` ${
-                            open ? "col-lg-3" : "col-lg-1 px-lg-0 col-4"
-                          }`}
-                        >
-                          <img src={user1} alt="user1" />
-                        </div>
-                        <div
-                          className={`${
-                            open ? "col-lg-9" : "col-lg-9 ps-lg-4 col-8"
-                          }`}
-                        >
-                          <div className="d-flex flex-column gap-1">
-                            <h5 className="mb-0 fw-medium fs-4 text-dark d-flex flex-row gap-2 align-items-center">
-                              <span className="active-status"></span>
-                              John Doe
-                            </h5>
-                            <p className="mb-0 fw-medium text-dark">
-                              Lorem ipsum dolor sit amet
-                            </p>
-                            <span className="text-muted">2m ago</span>
-                          </div>
-                        </div>
-                        <div
-                          className={`${
-                            open ? "d-none" : "col-lg-2 d-none d-lg-block"
-                          }`}
-                        ></div>
-                      </div>
-                    </div>
-                  </Link>
-                  <Link className="text-decoration-none" onClick={handleChange}>
-                    <div className="user-card">
-                      <div className="row align-items-center">
-                        <div
-                          className={` ${
-                            open ? "col-lg-3" : "col-lg-1 px-lg-0 col-4"
-                          }`}
-                        >
-                          <img src={user2} alt="user2" />
-                        </div>
-                        <div
-                          className={`${
-                            open ? "col-lg-9" : "col-lg-9 ps-lg-4 col-8"
-                          }`}
-                        >
-                          <div className="d-flex flex-column gap-1">
-                            <h5 className="mb-0 fw-medium fs-4 text-dark">
-                              John Doe
-                            </h5>
-                            <p className="mb-0 fw-medium text-dark">
-                              Lorem ipsum dolor sit amet
-                            </p>
-                            <span className="text-muted">2m ago</span>
-                          </div>
-                        </div>
-                        <div
-                          className={`${
-                            open ? "d-none" : "col-lg-2 d-none d-lg-block"
-                          }`}
-                        >
-                          <div className="tick">
-                            <span className="text-muted">Pending</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
+                
+                
                 </div>
               </div>
               <div className={`${open ? "col-lg-6" : "d-none"}`}>

@@ -60,7 +60,7 @@ export default function SignUpProvider() {
   const theme = useTheme();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const guestVerify = searchParams.get("type=Guest");
+  const guestVerify = searchParams.get("type");
 
   // const handleChange = (event) => {
   //   const { value } = event.target;
@@ -88,6 +88,10 @@ export default function SignUpProvider() {
     };
     handleAllData();
   }, []);
+
+  console.log("guestVerify", guestVerify);
+
+
   const handleSignUp = async (e) => {
     e.preventDefault();
 

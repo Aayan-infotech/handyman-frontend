@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
-import { MdMessage, MdEmail, MdCall , MdOutlineSupportAgent } from "react-icons/md";
+import {
+  MdMessage,
+  MdEmail,
+  MdCall,
+  MdOutlineSupportAgent,
+} from "react-icons/md";
 import company1 from "./assets/logo/companyLogo.png";
 import Chip from "@mui/material/Chip";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -23,19 +28,21 @@ export default function JobSpecification() {
   const [loading, setLoading] = useState(false);
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const handleClose = () => setShow(false);
-  const guestCondition = localStorage.getItem("Guest") === "true";
+  const ProviderToken = localStorage.getItem("ProviderToken");
   const { id } = useParams();
+  const guestCondition = localStorage.getItem("Guest") === "true";
+
   const handleJobStatus = async () => {
     setLoading(true);
     try {
       const response = await axios.post(
         `http://54.236.98.193:7777/api/jobpost/changeJobStatus/${id}`,
         {
-          jobStatus: "Accepted",
+          jobStatus: "Assigned",
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+            Authorization: `Bearer ${ProviderToken}`,
           },
         }
       );
@@ -90,7 +97,7 @@ export default function JobSpecification() {
   };
 
   useEffect(() => {
-    if (guestCondition) {
+    if (localStorage.getItem("Guest") === "true") {
       handleGuestJob();
     } else handleJob();
   }, [id]);
@@ -101,19 +108,17 @@ export default function JobSpecification() {
     <>
       {loading && <Loader />}
       <div className="">
-          <LoggedHeader />
-                       <Link to="/provider/chat/1">
-                       <div className="admin-message">
-                        
-                           <MdOutlineSupportAgent />
-                         
-                       </div>
-                       </Link>
-                       <div className="message">
-                         <Link to="/message">
-                           <MdMessage />
-                         </Link>
-                       </div>
+        <LoggedHeader />
+        <Link to="/provider/chat/1">
+          <div className="admin-message">
+            <MdOutlineSupportAgent />
+          </div>
+        </Link>
+        <div className="message">
+          <Link to="/message">
+            <MdMessage />
+          </Link>
+        </div>
         <div className="bg-second py-5">
           <div className="container">
             <div className="row gy-4 gx-lg-2 management">

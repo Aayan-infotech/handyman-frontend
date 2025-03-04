@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
-import { MdMessage, MdEmail , MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdEmail, MdOutlineSupportAgent } from "react-icons/md";
 import serviceProviderImage from "./assets/service-provider-image.png";
 import profilePicture from "./assets/profilePicture.png";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -75,29 +75,27 @@ export default function ServiceProviderProfile() {
     }
   };
 
-  console.log(data)
+  console.log(data);
   return (
     <>
       <LoggedHeader />
-                                                                     <Link to="/support/chat/1">
-                                                                     <div className="admin-message">
-                                                                      
-                                                                         <MdOutlineSupportAgent />
-                                                                       
-                                                                     </div>
-                                                                     </Link>
-                                                                     <div className="message">
-                                                                       <Link to="/message">
-                                                                         <MdMessage />
-                                                                       </Link>
-                                                                     </div>
+      <Link to="/support/chat/1">
+        <div className="admin-message">
+          <MdOutlineSupportAgent />
+        </div>
+      </Link>
+      <div className="message">
+        <Link to="/message">
+          <MdMessage />
+        </Link>
+      </div>
       <div className="bg-second pb-3">
         <div className="container">
           <div className="image-shadow">
             <img src={serviceProviderImage} alt="image" />
-            <div className="cost">
+            {/* <div className="cost">
               <h5>$500 - $1,000/monthly</h5>
-            </div>
+            </div> */}
           </div>
           <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row ">
             <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
