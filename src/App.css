@@ -117,6 +117,13 @@
 .highlighted-text {
   color: rgba(50, 222, 132, 1) !important;
 }
+.profile-img{
+  width: 230px;
+  height: 230px;
+  object-fit: cover;
+  border: 15px solid white;
+  border-radius: 50%;
+}
 .mw-75 {
   max-width: 65% !important;
 }

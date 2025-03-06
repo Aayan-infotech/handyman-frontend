@@ -32,6 +32,7 @@ export default function MyProfile() {
   const [address, setAdress] = useState("");
   const [loading, setLoading] = useState(false);
   const [businessType, setBusinessType] = useState([]);
+  const [profile , setProfile] = useState("");
   const id =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");
   const hunterToken = localStorage.getItem("hunterToken");
@@ -65,6 +66,7 @@ export default function MyProfile() {
           setEmail(fetchedUser.email || "");
           setAdress(fetchedUser.address?.addressLine || "");
           setBusinessType(fetchedUser.businessType || []);
+          setProfile(fetchedUser.images || "");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -190,7 +192,7 @@ export default function MyProfile() {
                 <div className="col-lg-3">
                   <div className="position-relative ">
                     <div className="pos-profile start-0 mx-auto">
-                      <img src={profilePicture} alt="profile" />
+                      <img src={profile} alt="profile" className="profile-img" />
                     </div>
                   </div>
                 </div>
@@ -230,7 +232,7 @@ export default function MyProfile() {
                           </Button>
                         </Link>
                       )}
-                      {!hunterToken ? (
+                      {providerToken ? (
                         <Link to="/provider/edit/upload" className="mw-20">
                           <Button
                             variant="dark"

@@ -30,20 +30,10 @@ export default function ServiceProvider() {
   const dispatch = useDispatch();
   const address = useSelector((state) => state?.address?.address?.[0]);
 
-  // Fetch address and set latitude/longitude
   useEffect(() => {
     dispatch(getAddress());
   }, [dispatch]);
 
-  // Update latitude & longitude when address changes
-  // useEffect(() => {
-  //   if (address?.location?.coordinates) {
-  //     setLatitude(address.location.coordinates[0]);
-  //     setLongitude(address.location.coordinates[1]);
-  //   }
-  // }, [address]);
-
-  // Fetch service providers only after latitude & longitude are set
   useEffect(() => {
     if (latitude !== null && longitude !== null) {
       handleAllData();
