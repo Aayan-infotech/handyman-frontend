@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
@@ -29,8 +32,28 @@ export default function Contact() {
 
   // Handle form submission
   const onSubmit = (data) => {
-    console.log(data);
-    // You can handle your form submission logic here, like sending data to the server via axios
+
+    const contactUsData ={
+      name:data.name,
+      email:data.email,
+      message:data.message
+    }
+    console.log(data);  // For debugging: logs form data before submitting
+
+    setLoading(true);  // Set loading to true while waiting for the API response
+
+    axios
+      .post("http://54.236.98.193:7777/api/contact/send", contactUsData)  // Sending form data to the API
+      .then((response) => {
+        console.log("Response from API:", response.data);
+        setLoading(false);  // Reset loading state
+        // Optionally, show success message to the user
+      })
+      .catch((error) => {
+        console.error("There was an error sending the data:", error);
+        setLoading(false);  // Reset loading state
+        // Optionally, show error message to the user
+      });
   };
 
   return (
@@ -48,9 +71,8 @@ export default function Contact() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-  <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
-  
-</Nav>
+                  <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
+                </Nav>
                   <Nav>
                     <Link to="/welcome">
                       <Button variant="contained" color="success">
@@ -105,7 +127,6 @@ export default function Contact() {
                     <Form.Label>Message</Form.Label>
                     <Form.Control
                       as="textarea"
-                      
                       rows={4}
                       placeholder="Your Message"
                       {...register("message", { required: "Message is required" })}
