@@ -33,10 +33,10 @@ export default function Welcome() {
             <img src={bigLogo} alt="" />
             <img src={logoText} alt="" />
             <b className="fs-2">Continue as</b>
-            <p className="text-center">
+            {/* <p className="text-center">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor{" "}
-            </p>
+            </p> */}
             <div className="d-flex flex-column flex-lg-row gap-4 align-items-center avatar-selection">
               <Link to="/login" className="w-100">
                 <div className="card border-0 shadow-lg rounded-4 px-4 pe-5 py-2">
