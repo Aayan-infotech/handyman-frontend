@@ -92,10 +92,10 @@ function Home() {
               </Nav> */}
 
 
-<Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-  <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
-  <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
-</Nav>
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
+                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
+              </Nav>
 
               <Nav>
                 <Link to="/welcome">
@@ -137,7 +137,7 @@ function Home() {
                         <TextField
                           id="standard-basic"
                           // label="Job title or keyword"
-                          label = "Bussiness"
+                          label="Bussiness"
                           variant="standard"
                           className="w-100"
                         />
@@ -178,14 +178,14 @@ function Home() {
 
 
 
-<Button
-      variant="contained"
-      color="success"
-      className="custom-green px-3 py-2 w-100 rounded-0 bg-green-custom"
-      onClick={handleClick} // Button click triggers the navigation
-    >
-      Search
-    </Button>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        className="custom-green px-3 py-2 w-100 rounded-0 bg-green-custom"
+                        onClick={handleClick} // Button click triggers the navigation
+                      >
+                        Search
+                      </Button>
                     </Box>
                   </div>
                 </div>
@@ -245,9 +245,9 @@ function Home() {
                   secure more work
                 </h5>
                 <button className="btn btn-mobile py-2 px-4 my-4"
-                onClick={handleClickForSignup} // Button click triggers the navigation
+                  onClick={handleClickForSignup} // Button click triggers the navigation
                 >
-                
+
                   Sign Up
                 </button>
                 <br />
@@ -536,7 +536,7 @@ function Home() {
                       <div className="d-flex flex-column gap-2 justify-content-start">
                         <div className="d-flex justify-content-between align-items-center">
                           <h6 className="mb-0">{item?.title}</h6>
-                  
+
                         </div>
 
                         <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
