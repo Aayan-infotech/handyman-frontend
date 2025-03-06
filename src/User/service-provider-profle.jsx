@@ -18,6 +18,7 @@ import reviewImg2 from "./assets/reviewimg2.png";
 import reviewImg3 from "./assets/reviewimg3.png";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import notFound from "../assets/image-not-found.png"
 
 export default function ServiceProviderProfile() {
   const { id } = useParams();
@@ -73,7 +74,7 @@ export default function ServiceProviderProfile() {
             </div>
             <div className="position-relative order-1 order-lg-2">
               <div className="pos-profile">
-                <img src={data.images} alt="profile" className=" profile-img"/>
+                <img src={data.images || notFound} alt="profile" className=" profile-img"/>
               </div>
             </div>
 
