@@ -11,6 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 
+
 export default function PaymentDetail() {
   return (
     <>
@@ -173,6 +174,12 @@ export default function PaymentDetail() {
           </div>
         </div>
       </div>
+
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

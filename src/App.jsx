@@ -127,26 +127,11 @@ function App() {
         />
 
         {/* provider */}
-        <Route
-          path="/provider/login"
-          element={<ProtectedRoute element={<LoginProvider />} />}
-        />
-        <Route
-          path="/provider/signup"
-          element={<ProtectedRoute element={<SignUpProvider />} />}
-        />
-        <Route
-          path="/provider/upload"
-          element={<ProtectedRoute element={<Upload />} />}
-        />
-        <Route
-          path="/provider/reset"
-          element={<ProtectedRoute element={<ResetPassword />} />}
-        />
-        <Route
-          path="/provider/otp"
-          element={<ProtectedRoute element={<Otp />} />}
-        />
+        <Route path="/provider/login" element={<LoginProvider />} />
+        <Route path="/provider/signup" element={<SignUpProvider />} />
+        <Route path="/provider/upload" element={<Upload />} />
+        <Route path="/provider/reset" element={<ResetPassword />} />
+        <Route path="/provider/otp" element={<Otp />} />
         <Route
           path="/provider/job-history"
           element={<ProtectedRoute element={<JobManagement />} />}

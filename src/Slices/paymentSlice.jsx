@@ -12,6 +12,7 @@ export const handlePayment = createAsyncThunk(
       transactionMode,
       SubscriptionId,
       SubscriptionAmount,
+      type
     },
     { rejectWithValue }
   ) => {
@@ -26,6 +27,7 @@ export const handlePayment = createAsyncThunk(
           transactionMode,
           SubscriptionId,
           SubscriptionAmount,
+          type
         },
         {
           headers: {
