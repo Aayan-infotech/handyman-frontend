@@ -282,6 +282,7 @@ export default function SignUpProvider() {
                           <Select
                             labelId="demo-multiple-name-label"
                             id="demo-multiple-name"
+                            className="pad-select"
                             multiple
                             value={businessType} // Should be an array of IDs
                             onChange={handleChange}

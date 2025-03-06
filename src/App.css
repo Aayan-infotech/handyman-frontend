@@ -113,11 +113,15 @@
   font-size: 60px !important;
   font-weight: 400 !important;
 }
+.pad-select div {
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 41px !important;
+}
 .top-section .highlighted,
 .highlighted-text {
   color: rgba(50, 222, 132, 1) !important;
 }
-.profile-img{
+.profile-img {
   width: 230px;
   height: 230px;
   object-fit: cover;
@@ -500,7 +504,7 @@
   .management h5 {
     font-size: 15px !important;
     width: 88%;
-}
+  }
   .error-100vh {
     height: 100%;
     min-height: 100vh !important;
