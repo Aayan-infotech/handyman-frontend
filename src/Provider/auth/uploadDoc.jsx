@@ -26,7 +26,7 @@ const VisuallyHiddenInput = styled("input")({
 export default function Upload() {
   const [loading, setLoading] = useState(false);
   const [document, setDocument] = useState([]);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const providerId = localStorage.getItem("ProviderId");
   const navigate = useNavigate();
 
@@ -65,19 +65,20 @@ setLoading(true);
       );
 
       if (response.data.status === 200) {
-        setToastProps({ message: response.data.message, type: "success" });
+        setToastProps({ message: response.data.message, type: "success" , toastKey: Date.now() });
         setLoading(false);
         setTimeout(() => navigate("/provider/pricing"), 2000);
         
       } else {
         setLoading(false);
-        setToastProps({ message: response.data.message, type: "error" });
+        setToastProps({ message: response.data.message, type: "error" , toastKey: Date.now()});
       }
     } catch (error) {
       setLoading(false);
       setToastProps({
         message: error || "Something went wrong",
         type: "error",
+        toastKey: Date.now()
       });
     }
   };
@@ -178,7 +179,7 @@ setLoading(true);
           </div>
         </div>
       )}
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

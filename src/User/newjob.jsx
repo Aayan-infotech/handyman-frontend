@@ -41,7 +41,7 @@ export default function NewJob() {
   const [budget, setBudget] = useState("");
   const [radius, setRadius] = useState("");
   const [address, setAddress] = useState("");
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const [businessType, setBusinessType] = useState([]);
   const [requirements, setRequirements] = useState("");
   const [documents, setDocuments] = useState([]);
@@ -115,14 +115,14 @@ export default function NewJob() {
       );
 
       if (response.status === 200 || response.status === 201) {
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now()});
         setLoading(false);
         setTimeout(() => {
           navigate("/home");
         }, 2000);
       }
     } catch (error) {
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now() });
       setLoading(false);
     }
   };
@@ -314,7 +314,7 @@ export default function NewJob() {
         </>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

@@ -15,7 +15,7 @@ import Toaster from "../Toaster";
 import Loader from "../Loader";
 
 export default function ChangePassword() {
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -38,6 +38,7 @@ export default function ChangePassword() {
         setToastProps({
           message: "Password changed Successfully",
           type: "success",
+          toastKey: Date.now()
         });
         setLoading(false);
         const hunterToken = localStorage.getItem("hunterToken");
@@ -56,18 +57,19 @@ export default function ChangePassword() {
           setToastProps({
             message: "An error occurred. Please try again.",
             type: "error",
+            toastKey: Date.now()
           });
         }
       } else {
         const errorMessage =
           result.payload.message ||
           "Failed to change password. Please check your credentials.";
-        setToastProps({ message: errorMessage, type: "error" });
+        setToastProps({ message: errorMessage, type: "error", toastKey: Date.now() });
         setLoading(false);
       }
     } catch (error) {
       console.error("Error changing password:", error);
-      setToastProps({ message: error, type: "error" });
+      setToastProps({ message: error, type: "error", toastKey: Date.now() });
       setLoading(false);
     }
   };
@@ -155,7 +157,7 @@ export default function ChangePassword() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

@@ -38,7 +38,7 @@ export default function MyProfile() {
   const providerToken = localStorage.getItem("ProviderToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
@@ -97,7 +97,7 @@ export default function MyProfile() {
       );
 
       if (response.status === 200) {
-        setToastProps({ message: "You have been Logged Out", type: "success" });
+        setToastProps({ message: "You have been Logged Out", type: "success" , toastKey: Date.now() });
         localStorage.removeItem("hunterToken");
         localStorage.removeItem("hunterEmail");
         localStorage.removeItem("hunterName");
@@ -114,6 +114,7 @@ export default function MyProfile() {
       setToastProps({
         message: error?.response?.data?.message || "Logout failed",
         type: "error",
+        toastKey: Date.now()
       });
     }
   };
@@ -136,6 +137,7 @@ export default function MyProfile() {
         setToastProps({
           message: "You have been Deleted your Account",
           type: "success",
+          toastKey: Date.now()
         });
         localStorage.removeItem("hunterToken");
         localStorage.removeItem("hunterEmail");
@@ -153,6 +155,7 @@ export default function MyProfile() {
       setToastProps({
         message: error?.response?.data?.message || "Logout failed",
         type: "error",
+        toastKey: Date.now()
       });
     }
   };
@@ -509,7 +512,7 @@ export default function MyProfile() {
         </>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

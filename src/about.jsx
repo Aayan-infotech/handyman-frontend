@@ -3,7 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
 import logo from "./assets/logo.png";
 import Container from "react-bootstrap/Container";
-import { Link , useParams} from "react-router-dom";
+import { Link, useParams , useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import { GoArrowRight } from "react-icons/go";
 import logoWhite from "./assets/logo-white.png";
@@ -19,24 +19,36 @@ import axios from "axios";
 import Loader from "./Loader";
 
 export default function About() {
-    const { section  } = useParams();
+  const { section } = useParams();
   const [businessData, setBusinessData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResponse = async () => {
-      setLoading(true);
-      const response = await axios.get(
-        `http://54.236.98.193:7777/api/StaticContent/${section }`
-      );
-      console.log(response?.data?.content);
-      if (response.success === true || response.status === 200) {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `http://54.236.98.193:7777/api/StaticContent/${section}`
+        );
+
+        if (response.status === 200 && response.data.content) {
+          setBusinessData(response.data.content);
+        } else {
+          navigate("/error"); // Redirect to error page if content not found
+        }
+      } catch (error) {
+        console.error("Error fetching content:", error);
+        navigate("/error"); // Redirect to error page on API failure
+      } finally {
         setLoading(false);
-        setBusinessData(response?.data?.content);
       }
     };
-    handleResponse();
-  }, []);
+
+    if (section) handleResponse();
+    else navigate("/error"); // Redirect if section param is missing
+  }, [section, navigate]);
+
   return (
     <>
       {loading === true ? (
@@ -71,7 +83,6 @@ export default function About() {
             </Navbar>
           </div>
           <div className="container category my-5">
-           
             <div className="row gy-4 mt-3">
               <div dangerouslySetInnerHTML={{ __html: businessData }} />
             </div>

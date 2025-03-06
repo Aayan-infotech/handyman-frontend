@@ -101,7 +101,7 @@ function App() {
         />
         <Route path="/provider/chat/:id" element={<Chat />} />
         <Route path="/provider/myprofile" element={<MyProfile />} />
-
+        <Route path="/error" element={<Error />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>

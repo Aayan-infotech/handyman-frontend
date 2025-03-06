@@ -518,9 +518,9 @@ function Home() {
                           direction="row"
                           className="flex-wrap gap-2 justify-content-start align-items-start"
                         >
-                          {item.businessType.map((text) => (
+                          {item.businessType.map((text , index) => (
                             <>
-                              <Chip label={text} className=" green-line" />
+                              <Chip label={text} className=" green-line" key={index}/>
                             </>
                           ))}
                         </Stack>

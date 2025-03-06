@@ -24,7 +24,7 @@ export default function ServiceProvider() {
   const [longitude, setLongitude] = useState(80.99808160498773);
   // const [latitude, setLatitude] = useState(null);
   // const [longitude, setLongitude] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -61,12 +61,13 @@ export default function ServiceProvider() {
       if (response.status === 200) {
         setLoading(false);
         setData(response?.data?.data || []);
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
       }
       if (response.data.data.length === 0) {
         setToastProps({
           message: "No service provider available in your area",
           type: "info",
+          toastKey: Date.now()
         });
         setLoading(false);
         setData([]);
@@ -75,6 +76,7 @@ export default function ServiceProvider() {
       setToastProps({
         message: error?.response?.data?.error || "Failed to fetch data",
         type: "error",
+        toastKey: Date.now()
       });
     } finally {
       setLoading(false);
@@ -165,7 +167,7 @@ export default function ServiceProvider() {
               )}
             </div>
           </div>
-          <Toaster message={toastProps.message} type={toastProps.type} />
+         <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
         </>
       )}
     </>

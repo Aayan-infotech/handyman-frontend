@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
 import { Link, useNavigate , useLocation } from "react-router-dom";
@@ -24,7 +24,7 @@ export default function ResetPassword() {
     e.preventDefault();
     setLoading(true);
     if (newPassword !== password) {
-      setToastProps({ message: "Passwords do not match", type: "error" });
+      setToastProps({ message: "Passwords do not match", type: "error" , toastKey: Date.now() });
       return;
     }
 
@@ -38,7 +38,7 @@ export default function ResetPassword() {
       );
 
       if (response.status === 200) {
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
         localStorage.removeItem("verifyEmailOtp");
         setPassword("");
         setLoading(false);
@@ -57,11 +57,12 @@ export default function ResetPassword() {
     } catch (error) {
       console.log(error);
       setLoading(false)
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now() });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
+          toastKey: Date.now()
         });
       }
     }
@@ -140,7 +141,7 @@ export default function ResetPassword() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

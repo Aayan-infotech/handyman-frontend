@@ -14,7 +14,7 @@ import Toaster from "../Toaster";
 export default function PricingProvider() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const name = localStorage.getItem("ProviderName");
   const [title, setTitle] = useState("");
   const [transactionId, setTransactionId] = useState(45435435435);
@@ -80,6 +80,7 @@ export default function PricingProvider() {
         setToastProps({
           message: "Password changed Successfully",
           type: "success",
+          toastKey: Date.now()
         });
         setLoading(false);
         setTimeout(() => {
@@ -89,12 +90,12 @@ export default function PricingProvider() {
         const errorMessage =
           result.payload.message ||
           "Failed to change password. Please check your credentials.";
-        setToastProps({ message: errorMessage, type: "error" });
+        setToastProps({ message: errorMessage, type: "error" , toastKey: Date.now() });
         setLoading(false);
       }
     } catch (error) {
       console.error("Error changing password:", error);
-      setToastProps({ message: error, type: "error" });
+      setToastProps({ message: error, type: "error" , toastKey: Date.now() });
       setLoading(false);
     }
   };
@@ -169,7 +170,7 @@ export default function PricingProvider() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

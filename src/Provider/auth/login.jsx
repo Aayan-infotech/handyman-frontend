@@ -25,13 +25,13 @@ export default function LoginProvider() {
   const userType = "provider";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const [guestLocation, setGuestLocation] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if(!email || !password){
-      setToastProps({ message: "Please fill all fields", type: "error" });
+      setToastProps({ message: "Please fill all fields", type: "error" , toastKey: Date.now() });
       return;
     }
     setLoading(true);
@@ -56,7 +56,7 @@ export default function LoginProvider() {
         setEmail("");
         setPassword("");
         setLoading(false);
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
         setTimeout(() => {
           navigate("/provider/upload");
         }, 2000);
@@ -77,11 +77,12 @@ export default function LoginProvider() {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now()});
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
+          toastKey: Date.now()
         });
       }
     }
@@ -102,13 +103,14 @@ export default function LoginProvider() {
           localStorage.setItem("guestLocation", JSON.stringify(newLocation));
         },
         (error) => {
-          setToastProps({ message: error?.message, type: "error" });
+          setToastProps({ message: error?.message, type: "error" , toastKey: Date.now() });
         }
       );
     } else {
       setToastProps({
         message: "Geolocation is not supported by this browser.",
         type: "error",
+        toastKey: Date.now()
       });
     }
   };
@@ -235,7 +237,7 @@ export default function LoginProvider() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }
