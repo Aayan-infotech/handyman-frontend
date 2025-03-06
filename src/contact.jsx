@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
@@ -33,8 +36,28 @@ export default function Contact() {
 
   // Handle form submission
   const onSubmit = (data) => {
-    console.log(data);
-    // You can handle your form submission logic here, like sending data to the server via axios
+
+    const contactUsData ={
+      name:data.name,
+      email:data.email,
+      message:data.message
+    }
+    console.log(data);  // For debugging: logs form data before submitting
+
+    setLoading(true);  // Set loading to true while waiting for the API response
+
+    axios
+      .post("http://54.236.98.193:7777/api/contact/send", contactUsData)  // Sending form data to the API
+      .then((response) => {
+        console.log("Response from API:", response.data);
+        setLoading(false);  // Reset loading state
+        // Optionally, show success message to the user
+      })
+      .catch((error) => {
+        console.error("There was an error sending the data:", error);
+        setLoading(false);  // Reset loading state
+        // Optionally, show error message to the user
+      });
   };
 
   return (
@@ -44,12 +67,8 @@ export default function Contact() {
       ) : (
         <div className="">
           <div className="">
-            <Navbar
-              collapseOnSelect
-              expand="lg"
-              className="position-relative z-1"
-            >
-              <Container fluid>
+            <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
+             <Container fluid>
                 <Link to="/" className="py-1">
                   <img src={logo} alt="logo" />
                 </Link>
