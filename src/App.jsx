@@ -37,6 +37,7 @@ import FeaturedJobs from "./featured-jobs";
 import LatestJobs from "./latest-jobs";
 import Error from "./components/error";
 import About from "./about";
+import Contact from "./contact";
 
 const useAuth = () => {
   return !!(
@@ -56,6 +57,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/welcome" element={<Welcome />} />
+        <Route path="/contact-us" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgetPassword />} />

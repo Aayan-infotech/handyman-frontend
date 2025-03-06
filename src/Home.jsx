@@ -26,6 +26,10 @@ import company4 from "./assets/company/company4.png";
 import company5 from "./assets/company/company5.png";
 import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
+
+
+import { useNavigate } from 'react-router-dom';
+
 import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
 import Chip from "@mui/material/Chip";
@@ -43,7 +47,7 @@ function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get("http://54.236.98.193:7777/api/jobpost/business-type-count")
@@ -64,6 +68,14 @@ function Home() {
   const handleChange = (event) => {
     setAge(event.target.value);
   };
+
+  const handleClickForSignup = () => {
+    navigate('/provider/login'); // Navigate to /login route
+  };
+
+  const handleClick = () => {
+    navigate('/login'); // Navigate to /login route
+  };
   return (
     <>
       <div className="top-section">
@@ -74,10 +86,17 @@ function Home() {
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#">About Us</Link>
+              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#">About UCCCs</Link>
                 <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
+              </Nav> */}
+
+
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
+                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
               </Nav>
+
               <Nav>
                 <Link to="/welcome">
                   <Button variant="contained" color="success">
@@ -117,7 +136,8 @@ function Home() {
                         <CiSearch className="fs-4 mt-3" />
                         <TextField
                           id="standard-basic"
-                          label="Job title or keyword"
+                          // label="Job title or keyword"
+                          label="Bussiness"
                           variant="standard"
                           className="w-100"
                         />
@@ -148,12 +168,23 @@ function Home() {
                           </Select>
                         </FormControl>
                       </div>
-                      <Button
+                      {/* <Button
                         variant="contained"
                         color="success"
                         className="custom-green px-3 py-2 w-100 rounded-0 bg-green-custom"
                       >
-                        Search my job
+                        Search 
+                      </Button> */}
+
+
+
+                      <Button
+                        variant="contained"
+                        color="success"
+                        className="custom-green px-3 py-2 w-100 rounded-0 bg-green-custom"
+                        onClick={handleClick} // Button click triggers the navigation
+                      >
+                        Search
                       </Button>
                     </Box>
                   </div>
@@ -172,7 +203,6 @@ function Home() {
       <div className="container pb-5">
         <div className="category">
           <div className="d-flex flex-column gap-3">
-            <b className="fs-3 my-4 text-center">More than 10000 Users</b>
             <div className="d-flex justify-content-start justify-content-lg-between align-items-lg-end flex-column flex-md-row gap-3">
               <h2 className="mb-0">
                 Explore by <span className="highlighted-text">category</span>
@@ -181,7 +211,7 @@ function Home() {
                 to="/job-listing"
                 className="text-decoration-none custom-text-success"
               >
-                Show all jobs <GoArrowRight className="fs-4 ms-1" />
+                Show all category <GoArrowRight className="fs-4 ms-1" />
               </Link>
             </div>
             <div className="row gy-4 mt-3">
@@ -194,8 +224,8 @@ function Home() {
                           <PiBagSimpleLight className="fs-3" />
                           <h6 className="mb-0 fw-normal fs-5">{item?.name}</h6>
                           <a>
-                            {item?.count} jobs available{" "}
-                            <GoArrowRight className="fs-4 ms-1" />
+                            {/* {item?.count} jobs available{" "} */}
+                            {/* <GoArrowRight className="fs-4 ms-1" /> */}
                           </a>
                         </div>
                       </div>
@@ -214,12 +244,16 @@ function Home() {
                   Do you want to <br />
                   secure more work
                 </h5>
-                <button className="btn btn-mobile py-2 px-4 my-4">
-                  Sign Up Today
+                <button className="btn btn-mobile py-2 px-4 my-4"
+                  onClick={handleClickForSignup} // Button click triggers the navigation
+                >
+
+                  Sign Up
                 </button>
                 <br />
                 <b className="text-light ">
-                  To trade and check our plans and choose what suits you best
+                  {/* To trade and check our plans and choose what suits you best */}
+                  To Trade Hunter and check our plans and choose what suits you best
                 </b>
               </div>
             </div>
@@ -239,7 +273,7 @@ function Home() {
               to="/featured-jobs"
               className="text-decoration-none custom-text-success"
             >
-              Show all jobs <GoArrowRight className="fs-4 ms-1" />
+              Show all Bussiness <GoArrowRight className="fs-4 ms-1" />
             </Link>
           </div>
           <div className="row gy-4 mt-4">
@@ -502,10 +536,7 @@ function Home() {
                       <div className="d-flex flex-column gap-2 justify-content-start">
                         <div className="d-flex justify-content-between align-items-center">
                           <h6 className="mb-0">{item?.title}</h6>
-                          <Chip
-                            label={`$ ${item?.estimatedBudget}`}
-                            className="light-green"
-                          />
+
                         </div>
 
                         <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
@@ -553,14 +584,14 @@ function Home() {
                   <h6 className="">About</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                     <li>
-                      <a href="#companies" className="text-light">
+                      {/* <a href="#companies" className="text-light">
                         Companies
-                      </a>
+                      </a> */}
                     </li>
                     <li>
-                      <a href="#pricing" className="text-light">
+                      {/* <a href="#pricing" className="text-light">
                         Pricing
-                      </a>
+                      </a> */}
                     </li>
                     <li>
                       <a href="#terms" className="text-light">
@@ -568,9 +599,9 @@ function Home() {
                       </a>
                     </li>
                     <li>
-                      <a href="#advice" className="text-light">
+                      {/* <a href="#advice" className="text-light">
                         Advice
-                      </a>
+                      </a> */}
                     </li>
                     <li>
                       <a href="#privacy" className="text-light">
@@ -608,7 +639,7 @@ function Home() {
             </Col>
 
             {/* Right Section: Subscription */}
-            <Col md={4} className="mb-4">
+            {/* <Col md={4} className="mb-4">
               <h6>Get job notifications</h6>
               <p className="my-3">
                 The latest job news, articles, sent to your inbox weekly.
@@ -629,7 +660,7 @@ function Home() {
                   </Button>
                 </Form.Group>
               </Form>
-            </Col>
+            </Col> */}
           </Row>
 
           <hr />
