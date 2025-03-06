@@ -64,15 +64,17 @@ export default function Contact() {
         <div className="">
           <div className="">
             <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
-              <Container fluid>
+             <Container fluid>
                 <Link to="/" className="py-1">
                   <img src={logo} alt="logo" />
                 </Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                  <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
-                </Nav>
+                  <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                    <Link href="#" style={{ fontWeight: "350" }}>
+                      About Us
+                    </Link>
+                  </Nav>
                   <Nav>
                     <Link to="/welcome">
                       <Button variant="contained" color="success">
