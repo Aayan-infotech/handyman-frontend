@@ -3,7 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
 import logo from "./assets/logo.png";
 import Container from "react-bootstrap/Container";
-import { Link, useParams , useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import { GoArrowRight } from "react-icons/go";
 import logoWhite from "./assets/logo-white.png";
@@ -56,31 +56,34 @@ export default function About() {
       ) : (
         <div className="">
           <div className="">
-            <Navbar
-              collapseOnSelect
-              expand="lg"
-              className="position-relative z-1"
-            >
-              <Container fluid>
-                <Link to="/" className="py-1">
-                  <img src={logo} alt="logo" />
+             <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
+          <Container fluid>
+            <Link to="/" className="py-1">
+              <img src={logo} alt="logo" />
+            </Link>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#">About UCCCs</Link>
+                <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
+              </Nav> */}
+
+
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
+                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
+              </Nav>
+
+              <Nav>
+                <Link to="/welcome">
+                  <Button variant="contained" color="success">
+                    Get Started <GoArrowRight className="fs-4 ms-1" />
+                  </Button>
                 </Link>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                  <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                    <Link href="#">Find Jobs</Link>
-                    <Link href="#">Browse Companies</Link>
-                  </Nav>
-                  <Nav>
-                    <Link to="/welcome">
-                      <Button variant="contained" color="success">
-                        Get Started <GoArrowRight className="fs-4 ms-1" />
-                      </Button>
-                    </Link>
-                  </Nav>
-                </Navbar.Collapse>
-              </Container>
-            </Navbar>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
           </div>
           <div className="container category my-5">
             <div className="row gy-4 mt-3">
@@ -94,8 +97,8 @@ export default function About() {
                 <Col md={4} className="mb-4">
                   <img src={logoWhite} alt="logo" />
                   <p className="fw-normal mt-3">
-                    Great platform for the job seeker passionate about startups.
-                    Find your dream job easier.
+                    Great platfrom for connecting service Hunters to Service
+                    providers in Australia
                   </p>
                 </Col>
 
@@ -105,28 +108,28 @@ export default function About() {
                     <Col>
                       <h6 className="">About</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                        {/* <li>
+                      <a href="#companies" className="text-light">
+                        Companies
+                      </a>
+                    </li> */}
+                        {/* <li>
+                      <a href="#pricing" className="text-light">
+                        Pricing
+                      </a>
+                    </li> */}
                         <li>
-                          <a href="#companies" className="text-light">
-                            Companies
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#pricing" className="text-light">
-                            Pricing
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#terms" className="text-light">
+                          <a href="terms" className="text-light">
                             Terms
                           </a>
                         </li>
+                        {/* <li>
+                      <a href="#advice" className="text-light">
+                        Advice
+                      </a>
+                    </li> */}
                         <li>
-                          <a href="#advice" className="text-light">
-                            Advice
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#privacy" className="text-light">
+                          <a href="privacy" className="text-light">
                             Privacy Policy
                           </a>
                         </li>
@@ -151,7 +154,7 @@ export default function About() {
                           </a>
                         </li>
                         <li>
-                          <a href="#contact" className="text-light">
+                          <a href="/contact-us" className="text-light">
                             Contact Us
                           </a>
                         </li>
@@ -161,28 +164,28 @@ export default function About() {
                 </Col>
 
                 {/* Right Section: Subscription */}
-                <Col md={4} className="mb-4">
-                  <h6>Get job notifications</h6>
-                  <p className="my-3">
-                    The latest job news, articles, sent to your inbox weekly.
-                  </p>
-                  <Form>
-                    <Form.Group className="d-flex">
-                      <Form.Control
-                        type="email"
-                        placeholder="Email Address "
-                        className="me-2 rounded-0"
-                      />
-                      <Button
-                        variant="contained"
-                        color="success"
-                        className="custom-green px-5 py-2 rounded-0 bg-green-custom"
-                      >
-                        Subscribe
-                      </Button>
-                    </Form.Group>
-                  </Form>
-                </Col>
+                {/* <Col md={4} className="mb-4">
+              <h6>Get job notifications</h6>
+              <p className="my-3">
+                The latest job news, articles, sent to your inbox weekly.
+              </p>
+              <Form>
+                <Form.Group className="d-flex">
+                  <Form.Control
+                    type="email"
+                    placeholder="Email Address "
+                    className="me-2 rounded-0"
+                  />
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="custom-green px-5 py-2 rounded-0 bg-green-custom"
+                  >
+                    Subscribe
+                  </Button>
+                </Form.Group>
+              </Form>
+            </Col> */}
               </Row>
 
               <hr />

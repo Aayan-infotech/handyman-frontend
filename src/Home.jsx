@@ -217,8 +217,8 @@ function Home() {
             <div className="row gy-4 mt-3">
               {businessData.map((item) => (
                 <div className="col-lg-3" key={item._id}>
-                  <Link to="/welcome">
-                    <div className="card rounded-0 ">
+                  <Link to="/welcome"className="h-100">
+                    <div className="card rounded-0 h-100">
                       <div className="card-body">
                         <div className="d-flex flex-column gap-4 justify-content-start">
                           <PiBagSimpleLight className="fs-3" />
@@ -583,28 +583,28 @@ function Home() {
                 <Col>
                   <h6 className="">About</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
-                    <li>
-                      {/* <a href="#companies" className="text-light">
+                    {/* <li>
+                      <a href="#companies" className="text-light">
                         Companies
-                      </a> */}
-                    </li>
-                    <li>
-                      {/* <a href="#pricing" className="text-light">
+                      </a>
+                    </li> */}
+                    {/* <li>
+                      <a href="#pricing" className="text-light">
                         Pricing
-                      </a> */}
-                    </li>
+                      </a>
+                    </li> */}
                     <li>
-                      <a href="#terms" className="text-light">
+                      <a href="terms" className="text-light">
                         Terms
                       </a>
                     </li>
-                    <li>
-                      {/* <a href="#advice" className="text-light">
+                    {/* <li>
+                      <a href="#advice" className="text-light">
                         Advice
-                      </a> */}
-                    </li>
+                      </a>
+                    </li> */}
                     <li>
-                      <a href="#privacy" className="text-light">
+                      <a href="privacy" className="text-light">
                         Privacy Policy
                       </a>
                     </li>
@@ -629,7 +629,7 @@ function Home() {
                       </a>
                     </li>
                     <li>
-                      <a href="#contact" className="text-light">
+                      <a href="/contact-us" className="text-light">
                         Contact Us
                       </a>
                     </li>

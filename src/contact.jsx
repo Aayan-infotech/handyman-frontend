@@ -25,7 +25,11 @@ export default function Contact() {
   const [loading, setLoading] = useState(false);
 
   // React Hook Form setup
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   // Handle form submission
   const onSubmit = (data) => {
@@ -40,17 +44,22 @@ export default function Contact() {
       ) : (
         <div className="">
           <div className="">
-            <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
+            <Navbar
+              collapseOnSelect
+              expand="lg"
+              className="position-relative z-1"
+            >
               <Container fluid>
                 <Link to="/" className="py-1">
                   <img src={logo} alt="logo" />
                 </Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-  <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
-  
-</Nav>
+                  <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                    <Link href="#" style={{ fontWeight: "350" }}>
+                      About Us
+                    </Link>
+                  </Nav>
                   <Nav>
                     <Link to="/welcome">
                       <Button variant="contained" color="success">
@@ -68,7 +77,10 @@ export default function Contact() {
             <h2 className="text-center mb-4">Contact Us</h2>
             <Row className="gy-4">
               <Col md={8} className="mx-auto">
-                <Form onSubmit={handleSubmit(onSubmit)} className="contact-form">
+                <Form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="contact-form"
+                >
                   <Form.Group controlId="name" className="mb-4">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
@@ -90,7 +102,8 @@ export default function Contact() {
                       {...register("email", {
                         required: "Email is required",
                         pattern: {
-                          value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                          value:
+                            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                           message: "Please enter a valid email address",
                         },
                       })}
@@ -105,10 +118,11 @@ export default function Contact() {
                     <Form.Label>Message</Form.Label>
                     <Form.Control
                       as="textarea"
-                      
                       rows={4}
                       placeholder="Your Message"
-                      {...register("message", { required: "Message is required" })}
+                      {...register("message", {
+                        required: "Message is required",
+                      })}
                       isInvalid={!!errors.message}
                     />
                     <Form.Control.Feedback type="invalid">
@@ -116,7 +130,12 @@ export default function Contact() {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Button variant="contained" color="success" type="submit" className="w-100 py-2">
+                  <Button
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                    className="w-100 py-2"
+                  >
                     Send Message
                   </Button>
                 </Form>
@@ -128,41 +147,43 @@ export default function Contact() {
           <footer className="footer text-light">
             <Container>
               <Row>
+                {/* Left Section: Logo and Description */}
                 <Col md={4} className="mb-4">
                   <img src={logoWhite} alt="logo" />
                   <p className="fw-normal mt-3">
-                    Great platform for job seekers passionate about startups.
-                    Find your dream job easier.
+                    Great platfrom for connecting service Hunters to Service
+                    providers in Australia
                   </p>
                 </Col>
 
+                {/* Center Section: Links */}
                 <Col md={4} className="mb-4">
                   <Row>
                     <Col>
                       <h6 className="">About</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                        {/* <li>
+                      <a href="#companies" className="text-light">
+                        Companies
+                      </a>
+                    </li> */}
+                        {/* <li>
+                      <a href="#pricing" className="text-light">
+                        Pricing
+                      </a>
+                    </li> */}
                         <li>
-                          <a href="#companies" className="text-light">
-                            Companies
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#pricing" className="text-light">
-                            Pricing
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#terms" className="text-light">
+                          <a href="terms" className="text-light">
                             Terms
                           </a>
                         </li>
+                        {/* <li>
+                      <a href="#advice" className="text-light">
+                        Advice
+                      </a>
+                    </li> */}
                         <li>
-                          <a href="#advice" className="text-light">
-                            Advice
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#privacy" className="text-light">
+                          <a href="privacy" className="text-light">
                             Privacy Policy
                           </a>
                         </li>
@@ -187,7 +208,7 @@ export default function Contact() {
                           </a>
                         </li>
                         <li>
-                          <a href="#contact" className="text-light">
+                          <a href="/contact-us" className="text-light">
                             Contact Us
                           </a>
                         </li>
@@ -196,28 +217,29 @@ export default function Contact() {
                   </Row>
                 </Col>
 
-                <Col md={4} className="mb-4">
-                  <h6>Get job notifications</h6>
-                  <p className="my-3">
-                    The latest job news, articles, sent to your inbox weekly.
-                  </p>
-                  <Form>
-                    <Form.Group className="d-flex">
-                      <Form.Control
-                        type="email"
-                        placeholder="Email Address "
-                        className="me-2 rounded-0"
-                      />
-                      <Button
-                        variant="contained"
-                        color="success"
-                        className="custom-green px-5 py-2 rounded-0 bg-green-custom"
-                      >
-                        Subscribe
-                      </Button>
-                    </Form.Group>
-                  </Form>
-                </Col>
+                {/* Right Section: Subscription */}
+                {/* <Col md={4} className="mb-4">
+              <h6>Get job notifications</h6>
+              <p className="my-3">
+                The latest job news, articles, sent to your inbox weekly.
+              </p>
+              <Form>
+                <Form.Group className="d-flex">
+                  <Form.Control
+                    type="email"
+                    placeholder="Email Address "
+                    className="me-2 rounded-0"
+                  />
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="custom-green px-5 py-2 rounded-0 bg-green-custom"
+                  >
+                    Subscribe
+                  </Button>
+                </Form.Group>
+              </Form>
+            </Col> */}
               </Row>
 
               <hr />

@@ -65,22 +65,10 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route path="/home" element={<ProtectedRoute element={<Main />} />} />
-        <Route
-          path="/job-listing"
-          element={<ProtectedRoute element={<JobListing />} />}
-        />
-        <Route
-          path="/featured-jobs"
-          element={<ProtectedRoute element={<FeaturedJobs />} />}
-        />
-        <Route
-          path="/latest-jobs"
-          element={<ProtectedRoute element={<LatestJobs />} />}
-        />
-        <Route
-          path="/:section"
-          element={<ProtectedRoute element={<About />} />}
-        />
+        <Route path="/job-listing" element={<JobListing />} />
+        <Route path="/featured-jobs" element={<FeaturedJobs />} />
+        <Route path="/latest-jobs" element={<LatestJobs />} />
+        <Route path="/:section" element={<About />} />
         <Route
           path="/post-new-job"
           element={<ProtectedRoute element={<NewJob />} />}
