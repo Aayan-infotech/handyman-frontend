@@ -16,7 +16,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { ref, set  } from "firebase/database";
+import { ref, set } from "firebase/database";
 
 import { auth, db } from "../../Chat/lib/firestore";
 import {
@@ -40,7 +40,7 @@ export default function SignUp() {
   const [images, setImages] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
 
   const navigate = useNavigate();
 
@@ -66,14 +66,22 @@ export default function SignUp() {
     formData.append("radius", radius);
 
     if (!name || !email || !password || !phoneNo || !address) {
-      setToastProps({ message: "Please fill all fields!", type: "error" });
+      setToastProps({
+        message: "Please fill all fields!",
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
       return;
     }
     console.log(images[0]);
 
     if (!images.length || !images[0]) {
-      setToastProps({ message: "Please upload an avatar!", type: "error" });
+      setToastProps({
+        message: "Please upload an avatar!",
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
       return;
     }
@@ -81,9 +89,13 @@ export default function SignUp() {
     const usersRef = collection(db, "hunters");
     const q = query(usersRef, where("name", "==", name));
     const p = query(usersRef, where("email", "==", email));
-     const querySnapshot = await getDocs(q) && await getDocs(p);
+    const querySnapshot = (await getDocs(q)) && (await getDocs(p));
     if (!querySnapshot.empty) {
-      setToastProps({ message: "Select another username or email", type: "error" });
+      setToastProps({
+        message: "Select another username or email",
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
       return;
     }
@@ -115,8 +127,12 @@ export default function SignUp() {
           blocked: [],
         });
 
-        await set(ref(realtimeDb, "userchats/" + userId), { chats: [] }); 
-        setToastProps({ message: response?.data?.message, type: "success" });
+        await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         setTimeout(() => {
           navigate(`/otp?email=${email}`);
         }, 2000);
@@ -125,6 +141,7 @@ export default function SignUp() {
       setToastProps({
         message: error.response?.data?.error,
         type: "error",
+        toastKey: Date.now(),
       });
     } finally {
       setLoading(false);
@@ -285,7 +302,7 @@ export default function SignUp() {
           </div>
         </div>
       )}
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

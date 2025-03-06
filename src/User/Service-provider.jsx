@@ -24,26 +24,16 @@ export default function ServiceProvider() {
   const [longitude, setLongitude] = useState(80.99808160498773);
   // const [latitude, setLatitude] = useState(null);
   // const [longitude, setLongitude] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const address = useSelector((state) => state?.address?.address?.[0]);
 
-  // Fetch address and set latitude/longitude
   useEffect(() => {
     dispatch(getAddress());
   }, [dispatch]);
 
-  // Update latitude & longitude when address changes
-  // useEffect(() => {
-  //   if (address?.location?.coordinates) {
-  //     setLatitude(address.location.coordinates[0]);
-  //     setLongitude(address.location.coordinates[1]);
-  //   }
-  // }, [address]);
-
-  // Fetch service providers only after latitude & longitude are set
   useEffect(() => {
     if (latitude !== null && longitude !== null) {
       handleAllData();
@@ -61,12 +51,13 @@ export default function ServiceProvider() {
       if (response.status === 200) {
         setLoading(false);
         setData(response?.data?.data || []);
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
       }
       if (response.data.data.length === 0) {
         setToastProps({
           message: "No service provider available in your area",
           type: "info",
+          toastKey: Date.now()
         });
         setLoading(false);
         setData([]);
@@ -75,6 +66,7 @@ export default function ServiceProvider() {
       setToastProps({
         message: error?.response?.data?.error || "Failed to fetch data",
         type: "error",
+        toastKey: Date.now()
       });
     } finally {
       setLoading(false);
@@ -165,7 +157,7 @@ export default function ServiceProvider() {
               )}
             </div>
           </div>
-          <Toaster message={toastProps.message} type={toastProps.type} />
+         <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
         </>
       )}
     </>

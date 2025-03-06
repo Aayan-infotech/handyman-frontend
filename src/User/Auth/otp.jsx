@@ -15,7 +15,7 @@ export default function Otp({ length = 6 }) {
   const [loading, setLoading] = useState(false);
 
   const location = useLocation();
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const [otpValue, setOtpValue] = useState("");
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
@@ -83,7 +83,7 @@ export default function Otp({ length = 6 }) {
         }
       );
       if (response.status === 200 || response.status === 201) {
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
 
         setOtp(Array(length).fill(""));
         if (ProviderParams) {
@@ -103,11 +103,12 @@ export default function Otp({ length = 6 }) {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now()});
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
+          toastKey: Date.now()
         });
       }
     }
@@ -125,7 +126,7 @@ export default function Otp({ length = 6 }) {
         }
       );
       if (response.status === 200 || response.status === 201) {
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now()});
         setLoading(false);
         setOtp(Array(length).fill(""));
        
@@ -144,11 +145,12 @@ export default function Otp({ length = 6 }) {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now()});
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
+          toastKey: Date.now()
         });
       }
     }
@@ -232,7 +234,7 @@ export default function Otp({ length = 6 }) {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

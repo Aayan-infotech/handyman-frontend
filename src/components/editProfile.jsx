@@ -51,7 +51,7 @@ export default function EditProfile() {
   const [businessType, setBusinessType] = useState([]);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -198,7 +198,7 @@ export default function EditProfile() {
         }
         await set(ref(realtimeDb, "userchats/" + userUId), { chats: [] });
         setLoading(false);
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
         if (providerToken) {
           navigate(`/provider/home`);
         } else {
@@ -207,7 +207,7 @@ export default function EditProfile() {
       }
     } catch (error) {
       setLoading(false);
-      setToastProps({ message: error, type: "error" });
+      setToastProps({message: error?.response?.data?.message, type: "error", toastKey: Date.now() });
     }
   };
 
@@ -396,7 +396,7 @@ export default function EditProfile() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

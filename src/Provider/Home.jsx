@@ -22,7 +22,7 @@ export default function HomeProvider() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [data, setData] = useState([]);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
 
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
@@ -42,7 +42,7 @@ export default function HomeProvider() {
       }
     } catch (error) {
       console.error("User error:", error);
-      setToastProps({ message: "Error fetching user data", type: "error" });
+      setToastProps({ message: "Error fetching user data", type: "error" , toastKey: Date.now() });
     }
   };
 
@@ -58,13 +58,14 @@ export default function HomeProvider() {
         setToastProps({
           message: "Nearby Jobs Fetched Successfully",
           type: "success",
+          toastKey: Date.now()
         });
       } else {
         throw new Error(result.payload?.message || "Error fetching jobs.");
       }
     } catch (error) {
       console.error("Error Getting Nearby Jobs:", error);
-      setToastProps({ message: error.message, type: "error" });
+      setToastProps({ message: error.message, type: "error" , toastKey: Date.now() });
     } finally {
       setLoading(false);
     }
@@ -81,12 +82,13 @@ export default function HomeProvider() {
             setToastProps({
               message: "Nearby Jobs Fetched Successfully",
               type: "success",
+              toastKey: Date.now()
             });
           }
         })
         .catch((error) => {
           console.error("Error Getting Nearby Jobs:", error);
-          setToastProps({ message: error.message, type: "error" });
+          setToastProps({ message: error.message, type: "error" , toastKey: Date.now()});
         });
     }
   }, [providerToken]);
@@ -201,7 +203,7 @@ export default function HomeProvider() {
           </div>
         </div>
       </div>
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

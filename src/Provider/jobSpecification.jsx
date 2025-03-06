@@ -26,7 +26,7 @@ export default function JobSpecification() {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const handleClose = () => setShow(false);
   const ProviderToken = localStorage.getItem("ProviderToken");
   const { id } = useParams();
@@ -48,11 +48,11 @@ export default function JobSpecification() {
       );
       if (response.status === 200) {
         setShow(true);
-        setToastProps({ message: response.message, type: "success" });
+        setToastProps({ message: response.message, type: "success" , toastKey: Date.now() });
         setLoading(false);
       }
     } catch (error) {
-      setToastProps({ message: error, type: "error" });
+      setToastProps({message: error?.response?.data?.message, type: "error" , toastKey: Date.now()});
       setLoading(false);
     }
   };
@@ -257,7 +257,7 @@ export default function JobSpecification() {
         </Modal>
       </div>
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

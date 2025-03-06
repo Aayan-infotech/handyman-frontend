@@ -14,7 +14,7 @@ import noData from "../assets/no_data_found.gif";
 
 export default function JobManagement() {
   const [data, setData] = useState([]);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const provider = location.pathname.includes("provider");
@@ -35,12 +35,12 @@ export default function JobManagement() {
         }
       );
       if (res.status === 200) {
-        setToastProps({ message: res.data.message, type: "success" });
+        setToastProps({ message: res.data.message, type: "success" , toastKey: Date.now()});
         setData(res.data.data);
         setLoading(false);
       }
     } catch (error) {
-      setToastProps({ message: error.message, type: "error" });
+      setToastProps({ message: error.message, type: "error" , toastKey: Date.now() });
       setLoading(false);
     }
   };
@@ -126,7 +126,7 @@ export default function JobManagement() {
         </div>
       </div>
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

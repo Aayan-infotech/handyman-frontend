@@ -1,7 +1,7 @@
 import React from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { Link } from "react-router-dom";
-import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { AiFillWallet } from "react-icons/ai";
 import { SlPaypal } from "react-icons/sl";
 import { FaApplePay } from "react-icons/fa";
@@ -12,19 +12,17 @@ import Button from "@mui/material/Button";
 export default function Payment() {
   return (
     <>
-       <LoggedHeader />
-                                <Link to="/provider/chat/1">
-                                <div className="admin-message">
-                                 
-                                    <MdOutlineSupportAgent />
-                                  
-                                </div>
-                                </Link>
-                                <div className="message">
-                                  <Link to="/message">
-                                    <MdMessage />
-                                  </Link>
-                                </div>
+      <LoggedHeader />
+      <Link to="/provider/chat/1">
+        <div className="admin-message">
+          <MdOutlineSupportAgent />
+        </div>
+      </Link>
+      <div className="message">
+        <Link to="/message">
+          <MdMessage />
+        </Link>
+      </div>
       <div className="bg-second ">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
@@ -154,12 +152,12 @@ export default function Payment() {
                       <span className="text-muted fs-5">$55</span>
                     </div>
                     <Link to="/provider/paymentdetail/123">
-                    <Button
-                      variant="contained"
-                      className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4"
-                    >
-                      continue
-                    </Button>
+                      <Button
+                        variant="contained"
+                        className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4"
+                      >
+                        continue
+                      </Button>
                     </Link>
                   </div>
                 </div>
