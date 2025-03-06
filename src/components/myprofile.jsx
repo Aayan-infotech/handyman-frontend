@@ -24,6 +24,7 @@ import { getAddress } from "../Slices/addressSlice";
 import Loader from "../Loader";
 import axios from "axios";
 import Toaster from "../Toaster";
+import notFound from "../assets/image-not-found.png"
 
 export default function MyProfile() {
   const [name, setName] = useState("");
@@ -192,7 +193,7 @@ export default function MyProfile() {
                 <div className="col-lg-3">
                   <div className="position-relative ">
                     <div className="pos-profile start-0 mx-auto">
-                      <img src={profile} alt="profile" className="profile-img" />
+                      <img src={profile || notFound} alt="profile" className="profile-img" />
                     </div>
                   </div>
                 </div>
