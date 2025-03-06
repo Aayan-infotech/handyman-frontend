@@ -209,11 +209,11 @@ export default function SignUpProvider() {
       }
     } catch (error) {
       setToastProps({
-        message: error,
+        message: error?.response?.data?.message,
         type: "error",
         toastKey: Date.now(),
       });
-      console.log(error);
+      console.log(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
