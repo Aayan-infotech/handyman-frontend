@@ -18,7 +18,7 @@ import reviewImg2 from "./assets/reviewimg2.png";
 import reviewImg3 from "./assets/reviewimg3.png";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import notFound from "../assets/image-not-found.png"
+import notFound from "./assets/noprofile.png"
 
 export default function ServiceProviderProfile() {
   const { id } = useParams();

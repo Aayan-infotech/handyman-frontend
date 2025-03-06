@@ -24,7 +24,7 @@ import { getAddress } from "../Slices/addressSlice";
 import Loader from "../Loader";
 import axios from "axios";
 import Toaster from "../Toaster";
-import notFound from "../assets/image-not-found.png"
+import notFound from "./assets/noprofile.png"
 
 export default function MyProfile() {
   const [name, setName] = useState("");
