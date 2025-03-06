@@ -95,7 +95,7 @@ export default function PricingProvider() {
       }
     } catch (error) {
       console.error("Error changing password:", error);
-      setToastProps({ message: error, type: "error" , toastKey: Date.now() });
+      setToastProps({message: error?.response?.data?.message, type: "error" , toastKey: Date.now() });
       setLoading(false);
     }
   };

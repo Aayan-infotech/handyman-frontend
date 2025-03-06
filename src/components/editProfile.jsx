@@ -207,7 +207,7 @@ export default function EditProfile() {
       }
     } catch (error) {
       setLoading(false);
-      setToastProps({ message: error, type: "error", toastKey: Date.now() });
+      setToastProps({message: error?.response?.data?.message, type: "error", toastKey: Date.now() });
     }
   };
 
