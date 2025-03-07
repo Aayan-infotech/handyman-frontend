@@ -39,8 +39,8 @@ export default function HomeProvider() {
       if (result.payload?.status === 200) {
         const { businessType, address } = result.payload.data;
         setBusinessType(businessType[0]);
-        setLatitude(address?.location?.coordinates?.[1] || null);
-        setLongitude(address?.location?.coordinates?.[0] || null);
+        setLatitude(address?.location?.coordinates?.[0] || null);
+        setLongitude(address?.location?.coordinates?.[1] || null);
       } else {
         throw new Error("Failed to fetch user data.");
       }
@@ -107,7 +107,7 @@ export default function HomeProvider() {
           });
         });
     }
-  }, [providerToken]); 
+  }, [providerToken]);
 
   useEffect(() => {
     if (businessType && latitude !== null && longitude !== null) {

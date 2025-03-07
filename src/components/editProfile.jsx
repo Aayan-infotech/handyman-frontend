@@ -51,7 +51,11 @@ export default function EditProfile() {
   const [businessType, setBusinessType] = useState([]);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -94,7 +98,7 @@ export default function EditProfile() {
         if (hunterToken) {
           const hunterResponse = await dispatch(getHunterUser());
           fetchedUser = hunterResponse?.payload?.data;
-        } else if (providerToken) {
+        } else if (!fetchedUser && providerToken) {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
         }
@@ -106,8 +110,8 @@ export default function EditProfile() {
           setAddress(fetchedUser?.address?.addressLine || "");
           setBusinessName(fetchedUser?.businessName || "");
           setRegistrationNumber(fetchedUser?.ABN_Number || "");
-          setLatitude(fetchedUser?.address?.location?.coordinates[0] || "");
-          setLongitude(fetchedUser?.address?.location?.coordinates[1] || "");
+          setLatitude(fetchedUser?.address?.location?.coordinates[1] || "");
+          setLongitude(fetchedUser?.address?.location?.coordinates[0] || "");
 
           setBusinessType(
             Array.isArray(fetchedUser.businessType)
@@ -171,6 +175,8 @@ export default function EditProfile() {
 
       if (response.status === 200 || response.status === 201) {
         const userUId = providerUid || hunterUid;
+        const userData = response?.data?.updatedUser;
+        
         // Update Firestore Database
         if (providerToken) {
           await setDoc(doc(db, "providers", userUId), {
@@ -183,7 +189,8 @@ export default function EditProfile() {
 
             blocked: [],
           });
-
+          localStorage.setItem("ProviderName", name);
+          localStorage.setItem("ProviderEmail", email);
           // Update Realtime Database
         } else {
           await setDoc(doc(db, "hunters", userUId), {
@@ -195,10 +202,16 @@ export default function EditProfile() {
             longitude,
             blocked: [],
           });
+          localStorage.setItem("hunterName", name);
+          localStorage.setItem("hunterEmail", email);
         }
         await set(ref(realtimeDb, "userchats/" + userUId), { chats: [] });
         setLoading(false);
-        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         if (providerToken) {
           navigate(`/provider/home`);
         } else {
@@ -207,7 +220,11 @@ export default function EditProfile() {
       }
     } catch (error) {
       setLoading(false);
-      setToastProps({message: error?.response?.data?.message, type: "error", toastKey: Date.now() });
+      setToastProps({
+        message: error?.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
     }
   };
 
@@ -396,7 +413,11 @@ export default function EditProfile() {
         </div>
       )}
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }
