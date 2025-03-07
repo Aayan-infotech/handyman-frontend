@@ -27,9 +27,7 @@ export default function LatestJobs() {
   useEffect(() => {
     const handleResponse = async () => {
       setLoading(true);
-      const response = await axios.get(
-        "http://54.236.98.193:7777/api/jobs"
-      );
+      const response = await axios.get("http://54.236.98.193:7777/api/jobs");
       console.log(response);
       if (response.data.success === true || response.data.status === 200) {
         setLoading(false);
@@ -46,31 +44,34 @@ export default function LatestJobs() {
       ) : (
         <div className="">
           <div className="">
-            <Navbar
-              collapseOnSelect
-              expand="lg"
-              className="position-relative z-1"
-            >
-              <Container fluid>
-                <Link to="/" className="py-1">
-                  <img src={logo} alt="logo" />
+             <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
+          <Container fluid>
+            <Link to="/" className="py-1">
+              <img src={logo} alt="logo" />
+            </Link>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#">About UCCCs</Link>
+                <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
+              </Nav> */}
+
+
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
+                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
+              </Nav>
+
+              <Nav>
+                <Link to="/welcome">
+                  <Button variant="contained" color="success">
+                    Get Started <GoArrowRight className="fs-4 ms-1" />
+                  </Button>
                 </Link>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                  <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                    <Link href="#">Find Jobs</Link>
-                    <Link href="#">Browse Companies</Link>
-                  </Nav>
-                  <Nav>
-                    <Link to="/welcome">
-                      <Button variant="contained" color="success">
-                        Get Started <GoArrowRight className="fs-4 ms-1" />
-                      </Button>
-                    </Link>
-                  </Nav>
-                </Navbar.Collapse>
-              </Container>
-            </Navbar>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
           </div>
           <div className="latest-job pt-5">
             <div className="container jobs my-5">
@@ -87,12 +88,9 @@ export default function LatestJobs() {
                         <div className="card-body">
                           <div className="d-flex flex-row gap-4 align-items-start">
                             <div className="d-flex flex-column gap-2 justify-content-start">
-                              <div className="d-flex justify-content-between align-items-center">
+                              <div className="d-flex justify-content-start align-items-center">
                                 <h6 className="mb-0">{item?.title}</h6>
-                                <Chip
-                                  label={`$ ${item?.estimatedBudget}`}
-                                  className="light-green"
-                                />
+                               
                               </div>
 
                               <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
@@ -107,10 +105,11 @@ export default function LatestJobs() {
                                 direction="row"
                                 className="flex-wrap gap-2 justify-content-start align-items-start"
                               >
-                                {item.businessType.map((text) => (
+                                {item.businessType.map((text, index) => (
                                   <>
                                     <Chip
                                       label={text}
+                                      key={index}
                                       className=" green-line"
                                     />
                                   </>
@@ -133,8 +132,8 @@ export default function LatestJobs() {
                 <Col md={4} className="mb-4">
                   <img src={logoWhite} alt="logo" />
                   <p className="fw-normal mt-3">
-                    Great platform for the job seeker passionate about startups.
-                    Find your dream job easier.
+                    Great platfrom for connecting service Hunters to Service
+                    providers in Australia
                   </p>
                 </Col>
 
@@ -144,28 +143,28 @@ export default function LatestJobs() {
                     <Col>
                       <h6 className="">About</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                        {/* <li>
+                      <a href="#companies" className="text-light">
+                        Companies
+                      </a>
+                    </li> */}
+                        {/* <li>
+                      <a href="#pricing" className="text-light">
+                        Pricing
+                      </a>
+                    </li> */}
                         <li>
-                          <a href="#companies" className="text-light">
-                            Companies
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#pricing" className="text-light">
-                            Pricing
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#terms" className="text-light">
+                          <a href="terms" className="text-light">
                             Terms
                           </a>
                         </li>
+                        {/* <li>
+                      <a href="#advice" className="text-light">
+                        Advice
+                      </a>
+                    </li> */}
                         <li>
-                          <a href="#advice" className="text-light">
-                            Advice
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#privacy" className="text-light">
+                          <a href="privacy" className="text-light">
                             Privacy Policy
                           </a>
                         </li>
@@ -190,7 +189,7 @@ export default function LatestJobs() {
                           </a>
                         </li>
                         <li>
-                          <a href="#contact" className="text-light">
+                          <a href="/contact-us" className="text-light">
                             Contact Us
                           </a>
                         </li>
@@ -200,28 +199,28 @@ export default function LatestJobs() {
                 </Col>
 
                 {/* Right Section: Subscription */}
-                <Col md={4} className="mb-4">
-                  <h6>Get job notifications</h6>
-                  <p className="my-3">
-                    The latest job news, articles, sent to your inbox weekly.
-                  </p>
-                  <Form>
-                    <Form.Group className="d-flex">
-                      <Form.Control
-                        type="email"
-                        placeholder="Email Address "
-                        className="me-2 rounded-0"
-                      />
-                      <Button
-                        variant="contained"
-                        color="success"
-                        className="custom-green px-5 py-2 rounded-0 bg-green-custom"
-                      >
-                        Subscribe
-                      </Button>
-                    </Form.Group>
-                  </Form>
-                </Col>
+                {/* <Col md={4} className="mb-4">
+              <h6>Get job notifications</h6>
+              <p className="my-3">
+                The latest job news, articles, sent to your inbox weekly.
+              </p>
+              <Form>
+                <Form.Group className="d-flex">
+                  <Form.Control
+                    type="email"
+                    placeholder="Email Address "
+                    className="me-2 rounded-0"
+                  />
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="custom-green px-5 py-2 rounded-0 bg-green-custom"
+                  >
+                    Subscribe
+                  </Button>
+                </Form.Group>
+              </Form>
+            </Col> */}
               </Row>
 
               <hr />

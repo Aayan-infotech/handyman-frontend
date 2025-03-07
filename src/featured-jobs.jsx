@@ -275,8 +275,8 @@ export default function FeaturedJobs() {
             <Col md={4} className="mb-4">
               <img src={logoWhite} alt="logo" />
               <p className="fw-normal mt-3">
-                Great platform for the job seeker passionate about startups.
-                Find your dream job easier.
+                Great platfrom for connecting service Hunters to Service
+                providers in Australia
               </p>
             </Col>
 
@@ -286,28 +286,28 @@ export default function FeaturedJobs() {
                 <Col>
                   <h6 className="">About</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
-                    <li>
+                    {/* <li>
                       <a href="#companies" className="text-light">
                         Companies
                       </a>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                       <a href="#pricing" className="text-light">
                         Pricing
                       </a>
-                    </li>
+                    </li> */}
                     <li>
-                      <a href="#terms" className="text-light">
+                      <a href="terms" className="text-light">
                         Terms
                       </a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a href="#advice" className="text-light">
                         Advice
                       </a>
-                    </li>
+                    </li> */}
                     <li>
-                      <a href="#privacy" className="text-light">
+                      <a href="privacy" className="text-light">
                         Privacy Policy
                       </a>
                     </li>
@@ -332,7 +332,7 @@ export default function FeaturedJobs() {
                       </a>
                     </li>
                     <li>
-                      <a href="#contact" className="text-light">
+                      <a href="/contact-us" className="text-light">
                         Contact Us
                       </a>
                     </li>
@@ -342,7 +342,7 @@ export default function FeaturedJobs() {
             </Col>
 
             {/* Right Section: Subscription */}
-            <Col md={4} className="mb-4">
+            {/* <Col md={4} className="mb-4">
               <h6>Get job notifications</h6>
               <p className="my-3">
                 The latest job news, articles, sent to your inbox weekly.
@@ -363,7 +363,7 @@ export default function FeaturedJobs() {
                   </Button>
                 </Form.Group>
               </Form>
-            </Col>
+            </Col> */}
           </Row>
 
           <hr />

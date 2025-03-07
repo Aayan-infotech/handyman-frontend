@@ -1,7 +1,7 @@
 import React from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { Link } from "react-router-dom";
-import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { CiBank } from "react-icons/ci";
 import { FaWifi } from "react-icons/fa";
 import Button from "@mui/material/Button";
@@ -11,22 +11,21 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
 
+
 export default function PaymentDetail() {
   return (
     <>
-        <LoggedHeader />
-                           <Link to="/provider/chat/1">
-                           <div className="admin-message">
-                            
-                               <MdOutlineSupportAgent />
-                             
-                           </div>
-                           </Link>
-                           <div className="message">
-                             <Link to="/message">
-                               <MdMessage />
-                             </Link>
-                           </div>
+      <LoggedHeader />
+      <Link to="/provider/chat/1">
+        <div className="admin-message">
+          <MdOutlineSupportAgent />
+        </div>
+      </Link>
+      <div className="message">
+        <Link to="/message">
+          <MdMessage />
+        </Link>
+      </div>
       <div className="bg-second ">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
@@ -157,12 +156,12 @@ export default function PaymentDetail() {
                               />
                             </FormGroup>
                             <Link to="/provider/home">
-                            <Button
-                              variant="contained"
-                              className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4"
-                            >
-                              Pay Now
-                            </Button>
+                              <Button
+                                variant="contained"
+                                className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4"
+                              >
+                                Pay Now
+                              </Button>
                             </Link>
                           </Box>
                         </div>
@@ -175,6 +174,12 @@ export default function PaymentDetail() {
           </div>
         </div>
       </div>
+
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

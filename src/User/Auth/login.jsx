@@ -22,7 +22,7 @@ import { auth } from "../../Chat/lib/firestore";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const userType = "hunter";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function Login() {
     e.preventDefault();
 
     if(!email || !password){
-      setToastProps({ message: "Please fill all fields", type: "error" });
+      setToastProps({ message: "Please fill all fields", type: "error" , toastKey: Date.now() });
       return;
     }
     setLoading(true);
@@ -55,7 +55,7 @@ export default function Login() {
         setEmail("");
         setPassword("");
         setLoading(false);
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now()});
         setTimeout(() => {
           navigate("/home");
         }, 2000);
@@ -68,11 +68,12 @@ export default function Login() {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now() });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
+          toastKey: Date.now()
         });
       }
     }
@@ -177,7 +178,7 @@ export default function Login() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

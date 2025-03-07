@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
-import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import Button from "@mui/material/Button";
@@ -14,7 +14,11 @@ import Toaster from "../Toaster";
 export default function PricingProvider() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const name = localStorage.getItem("ProviderName");
   const [title, setTitle] = useState("");
   const [transactionId, setTransactionId] = useState(45435435435);
@@ -26,13 +30,12 @@ export default function PricingProvider() {
   const [subscriptionId, setSubscriptionId] = useState(
     "67aef862ccb4059e6e9f4bd4"
   );
-
+  const [subscriptionType, setSubscriptionType] = useState("");
   const [description, setDescription] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false); // Define loading state
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user?.data);
-  console.log(transactionDate);
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -45,6 +48,8 @@ export default function PricingProvider() {
         setDescription(res?.data?.data?.description);
         setSubscriptionAmount(res?.data?.data?.amount);
         setTransactionAmount(res?.data?.data?.amount);
+        setSubscriptionId(res?.data?.data?._id);
+        setSubscriptionType(res?.data?.data?.type);
         console.log(data);
 
         setLoading(false);
@@ -58,7 +63,6 @@ export default function PricingProvider() {
   const homeNavigation = () => {
     navigate("/provider/home");
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,12 +78,14 @@ export default function PricingProvider() {
           transactionMode,
           SubscriptionId: subscriptionId,
           SubscriptionAmount: subscriptionAmount,
+          type: subscriptionType,
         })
       );
       if (handlePayment.fulfilled.match(result)) {
         setToastProps({
           message: "Password changed Successfully",
           type: "success",
+          toastKey: Date.now(),
         });
         setLoading(false);
         setTimeout(() => {
@@ -89,12 +95,20 @@ export default function PricingProvider() {
         const errorMessage =
           result.payload.message ||
           "Failed to change password. Please check your credentials.";
-        setToastProps({ message: errorMessage, type: "error" });
+        setToastProps({
+          message: errorMessage,
+          type: "error",
+          toastKey: Date.now(),
+        });
         setLoading(false);
       }
     } catch (error) {
       console.error("Error changing password:", error);
-      setToastProps({ message: error, type: "error" });
+      setToastProps({
+        message: error?.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
     }
   };
@@ -107,19 +121,16 @@ export default function PricingProvider() {
         <div>
           <LoggedHeader />
           <div className="">
-             
-                                           <Link to="/provider/chat/1">
-                                           <div className="admin-message">
-                                            
-                                               <MdOutlineSupportAgent />
-                                             
-                                           </div>
-                                           </Link>
-                                           <div className="message">
-                                             <Link to="/message">
-                                               <MdMessage />
-                                             </Link>
-                                           </div>
+            <Link to="/provider/chat/1">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Link>
+            <div className="message">
+              <Link to="/message">
+                <MdMessage />
+              </Link>
+            </div>
             <div className="bg-second fixed-curl">
               <div className="container">
                 <div className="top-section-main py-4 px-lg-5">
@@ -149,16 +160,15 @@ export default function PricingProvider() {
                           <FaRegCircleCheck />
                         </div>
                         <span className="text-dark">{title}</span>
-                      
-                          <Button
-                            variant="contained"
-                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                            // onClick={handleSubmit}
-                            onClick={homeNavigation}
-                          >
-                            Purchase
-                          </Button>
-                       
+
+                        <Button
+                          variant="contained"
+                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                          // onClick={handleSubmit}
+                          onClick={homeNavigation}
+                        >
+                          Purchase
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -169,7 +179,11 @@ export default function PricingProvider() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

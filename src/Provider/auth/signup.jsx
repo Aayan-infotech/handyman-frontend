@@ -52,7 +52,11 @@ export default function SignUpProvider() {
   const [businessType, setBusinessType] = useState([]);
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [images, setImages] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -91,7 +95,6 @@ export default function SignUpProvider() {
 
   console.log("guestVerify", guestVerify);
 
-
   const handleSignUp = async (e) => {
     e.preventDefault();
 
@@ -103,11 +106,13 @@ export default function SignUpProvider() {
       !address ||
       !password ||
       !businessType ||
-      !registrationNumber
+      !registrationNumber ||
+      !name
     ) {
       setToastProps({
         message: "Please fill all required fields",
         type: "error",
+        toastKey: Date.now(),
       });
       return;
     }
@@ -138,9 +143,13 @@ export default function SignUpProvider() {
     const usersRef = collection(db, "providers");
     const q = query(usersRef, where("name", "==", name));
     const p = query(usersRef, where("email", "==", email));
-    const querySnapshot = await getDocs(q) && await getDocs(p);
+    const querySnapshot = (await getDocs(q)) && (await getDocs(p));
     if (!querySnapshot.empty) {
-      setToastProps({ message: "Select another name and email", type: "error" });
+      setToastProps({
+        message: "Select another name and email",
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
       return;
     }
@@ -167,7 +176,7 @@ export default function SignUpProvider() {
         setLatitude(null);
         setLongitude(null);
         setImages(null);
-        setLoading(false);
+
         const firebaseUser = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -188,17 +197,23 @@ export default function SignUpProvider() {
         });
 
         await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
+        setLoading(false);
         setTimeout(() => {
           navigate(`/provider/otp?email=${email}&type=provider`);
         }, 2000);
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
       }
     } catch (error) {
       setToastProps({
-        message: error,
+        message: error?.response?.data?.message,
         type: "error",
+        toastKey: Date.now(),
       });
-      console.log(error);
+      console.log(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -267,6 +282,7 @@ export default function SignUpProvider() {
                           <Select
                             labelId="demo-multiple-name-label"
                             id="demo-multiple-name"
+                            className="pad-select"
                             multiple
                             value={businessType} // Should be an array of IDs
                             onChange={handleChange}
@@ -367,7 +383,7 @@ export default function SignUpProvider() {
                             const formattedAddress =
                               place?.formatted_address || place?.name;
                             setAddress(formattedAddress);
-                            console.log(place)
+                            console.log(place);
                             setLatitude(place.geometry.location.lat());
                             setLongitude(place.geometry.location.lng());
                           }}
@@ -445,7 +461,11 @@ export default function SignUpProvider() {
           </div>
         </div>
       )}
-      <Toaster message={toastProps.message} type={toastProps.type} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

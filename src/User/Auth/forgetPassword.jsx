@@ -14,7 +14,7 @@ import Loader from "../../Loader";
 import facebook from "../assets/logo/facebook.png";
 import google from "../assets/logo/iconGoogle.png";
 export default function ForgetPassword() {
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const location = useLocation();
@@ -39,7 +39,7 @@ export default function ForgetPassword() {
 
       if (response.status === 200) {
         localStorage.setItem("forgetEmail", email);
-        setToastProps({ message: response?.data?.message, type: "success" });
+        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
         setEmail("");
         setLoading(false);
         if (ProviderParams) {
@@ -58,7 +58,7 @@ export default function ForgetPassword() {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" });
+      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now()});
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
@@ -130,7 +130,7 @@ export default function ForgetPassword() {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { TbSpeakerphone } from "react-icons/tb";
-import { MdMessage  ,MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import speaker from "./assets/announcement.png";
 import arrow from "./assets/arrow.png";
 import Slider from "react-slick";
@@ -25,11 +25,11 @@ export default function MainProvider() {
   };
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const name = localStorage.getItem("ProviderName")
+  const name = localStorage.getItem("ProviderName");
   const dispatch = useDispatch();
   const token = localStorage.getItem("ProviderToken");
   const user = useSelector((state) => state?.user?.user?.data);
-  
+
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -52,25 +52,22 @@ export default function MainProvider() {
         <Loader />
       ) : (
         <div>
-         <LoggedHeader />
-                                        <Link to="/provider/chat/1">
-                                        <div className="admin-message">
-                                         
-                                            <MdOutlineSupportAgent />
-                                          
-                                        </div>
-                                        </Link>
-                                        <div className="message">
-                                          <Link to="/message">
-                                            <MdMessage />
-                                          </Link>
-                                        </div>
+          <LoggedHeader />
+          <Link to="/provider/chat/1">
+            <div className="admin-message">
+              <MdOutlineSupportAgent />
+            </div>
+          </Link>
+          <div className="message">
+            <Link to="/message">
+              <MdMessage />
+            </Link>
+          </div>
           <div className="bg-second">
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">
                 <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
                   <h5 className="user">Hello {name}</h5>
-                 
                 </div>
                 <div className="row py-3 gy-4 mt-lg-4 gx-5">
                   {data?.map((item) => (
@@ -81,8 +78,11 @@ export default function MainProvider() {
                             <h2 className="mt-3">${item.amount}</h2>
                             <span className="line-white"></span>
                             <h6 className="fw-bold">{item.title}</h6>
-                            <div dangerouslySetInnerHTML={{ __html: item.description}}></div>
-                          
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: item.description,
+                              }}
+                            ></div>
                           </div>
                         </div>
                       </Link>

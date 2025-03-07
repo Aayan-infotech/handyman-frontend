@@ -51,31 +51,34 @@ export default function JobListing() {
       ) : (
         <div className="">
           <div className="">
-            <Navbar
-              collapseOnSelect
-              expand="lg"
-              className="position-relative z-1"
-            >
-              <Container fluid>
-                <Link to="/" className="py-1">
-                  <img src={logo} alt="logo" />
+             <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
+          <Container fluid>
+            <Link to="/" className="py-1">
+              <img src={logo} alt="logo" />
+            </Link>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#">About UCCCs</Link>
+                <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
+              </Nav> */}
+
+
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
+                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
+              </Nav>
+
+              <Nav>
+                <Link to="/welcome">
+                  <Button variant="contained" color="success">
+                    Get Started <GoArrowRight className="fs-4 ms-1" />
+                  </Button>
                 </Link>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                  <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                    <Link href="#">Find Jobs</Link>
-                    <Link href="#">Browse Companies</Link>
-                  </Nav>
-                  <Nav>
-                    <Link to="/welcome">
-                      <Button variant="contained" color="success">
-                        Get Started <GoArrowRight className="fs-4 ms-1" />
-                      </Button>
-                    </Link>
-                  </Nav>
-                </Navbar.Collapse>
-              </Container>
-            </Navbar>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
           </div>
           <div className="container category my-5">
             <div className="d-flex justify-content-start justify-content-lg-between align-items-lg-end flex-column flex-md-row gap-3">
@@ -86,16 +89,16 @@ export default function JobListing() {
             <div className="row gy-4 mt-3">
               {businessData.map((item) => (
                 <div className="col-lg-3" key={item.id}>
-                  <Link to="/welcome">
-                    <div className="card rounded-0 ">
+                  <Link to="/welcome" className="h-100">
+                    <div className="card rounded-0 h-100">
                       <div className="card-body">
                         <div className="d-flex flex-column gap-4 justify-content-start">
                           <PiBagSimpleLight className="fs-3" />
                           <h6 className="mb-0 fw-normal fs-5">{item?.name}</h6>
-                          <a>
+                          {/* <a>
                             {item?.count} jobs available{" "}
                             <GoArrowRight className="fs-4 ms-1" />
-                          </a>
+                          </a> */}
                         </div>
                       </div>
                     </div>

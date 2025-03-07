@@ -22,7 +22,11 @@ export default function HomeProvider() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [data, setData] = useState([]);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
 
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
@@ -35,14 +39,18 @@ export default function HomeProvider() {
       if (result.payload?.status === 200) {
         const { businessType, address } = result.payload.data;
         setBusinessType(businessType[0]);
-        setLatitude(address?.location?.coordinates?.[1] || null);
-        setLongitude(address?.location?.coordinates?.[0] || null);
+        setLatitude(address?.location?.coordinates?.[0] || null);
+        setLongitude(address?.location?.coordinates?.[1] || null);
       } else {
         throw new Error("Failed to fetch user data.");
       }
     } catch (error) {
       console.error("User error:", error);
-      setToastProps({ message: "Error fetching user data", type: "error" });
+      setToastProps({
+        message: "Error fetching user data",
+        type: "error",
+        toastKey: Date.now(),
+      });
     }
   };
 
@@ -58,13 +66,18 @@ export default function HomeProvider() {
         setToastProps({
           message: "Nearby Jobs Fetched Successfully",
           type: "success",
+          toastKey: Date.now(),
         });
       } else {
         throw new Error(result.payload?.message || "Error fetching jobs.");
       }
     } catch (error) {
       console.error("Error Getting Nearby Jobs:", error);
-      setToastProps({ message: error.message, type: "error" });
+      setToastProps({
+        message: error.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
     } finally {
       setLoading(false);
     }
@@ -72,7 +85,7 @@ export default function HomeProvider() {
 
   useEffect(() => {
     if (providerToken) {
-      getUser().then(handleAllData);
+      getUser();
     } else {
       dispatch(getGuestProviderJobs())
         .then((response) => {
@@ -81,15 +94,26 @@ export default function HomeProvider() {
             setToastProps({
               message: "Nearby Jobs Fetched Successfully",
               type: "success",
+              toastKey: Date.now(),
             });
           }
         })
         .catch((error) => {
           console.error("Error Getting Nearby Jobs:", error);
-          setToastProps({ message: error.message, type: "error" });
+          setToastProps({
+            message: error.message,
+            type: "error",
+            toastKey: Date.now(),
+          });
         });
     }
   }, [providerToken]);
+
+  useEffect(() => {
+    if (businessType && latitude !== null && longitude !== null) {
+      handleAllData();
+    }
+  }, [businessType, latitude, longitude]); // Runs when state updates
 
   return (
     <>
@@ -148,7 +172,7 @@ export default function HomeProvider() {
                           <div className="col-lg-4">
                             <div className="d-flex flex-row gap-3 align-items-center">
                               <div className="d-flex flex-column align-items-start gap-1">
-                                <h3 className="mb-0">{job.businessType}</h3>
+                                <h3 className="mb-0">{job.title}</h3>
                                 <h6>
                                   {new Date(job.createdAt).toDateString()}
                                 </h6>
@@ -159,7 +183,7 @@ export default function HomeProvider() {
                           <div className="col-lg-3">
                             <div className="d-flex flex-row gap-3 align-items-center">
                               <div className="d-flex flex-column align-items-start gap-1">
-                                <h3 className="mb-0">{job.businessType}</h3>
+                                <h3 className="mb-0">{job.title}</h3>
                                 <h6>
                                   {new Date(job.createdAt).toDateString()}
                                 </h6>
@@ -201,7 +225,11 @@ export default function HomeProvider() {
           </div>
         </div>
       </div>
-      <Toaster message={toastProps.message} type={toastProps.type} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

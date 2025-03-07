@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
 import "../../User/user.css";
@@ -10,6 +10,8 @@ import Loader from "../../Loader";
 import { styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import { getProviderUser } from "../../Slices/userSlice";
+import { useDispatch } from "react-redux";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -24,35 +26,94 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function Upload() {
+  const location = useLocation();
+  console.log(location.pathname);
   const [loading, setLoading] = useState(false);
   const [document, setDocument] = useState([]);
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
+  const dispatch = useDispatch();
   const providerId = localStorage.getItem("ProviderId");
   const navigate = useNavigate();
+  const getUploadProfile = async () => {
+    try {
+      if (providerId) {
+        const result = await dispatch(getProviderUser());
+        if (result.payload?.status === 200) {
+          const { files } = result.payload.data;
+          setDocument(files);
+        } else {
+          throw new Error("Failed to fetch user data.");
+        }
+      }
+    } catch (error) {
+      console.error("User error:", error);
+      setToastProps({
+        message: "Error fetching user data",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
+  useEffect(() => {
+    getUploadProfile();
+  }, []);
 
   const handleFileChange = (event) => {
     const files = event.target.files;
     setDocument(files.length > 0 ? files : null);
   };
 
-  const handleDelete = (indexToDelete) => {
-    setDocument((prevDocs) => {
-      const updatedDocs = Array.from(prevDocs).filter(
-        (_, index) => index !== indexToDelete
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      const response = await axios.delete(
+        `http://54.236.98.193:7777/api/provider/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+          },
+        }
       );
-      return updatedDocs.length > 0 ? updatedDocs : null;
-    });
+      if (response.status === 200) {
+        setLoading(false);
+        setToastProps({
+          message: response.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
+        getUploadProfile();
+      }
+    } catch (error) {
+      setLoading(false);
+      setToastProps({
+        message: error || "Something went wrong",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
   };
 
   const handleUpload = async () => {
-    if (!document) return;
+    if (!document || document.length === 0) {
+      setToastProps({
+        message: "No files uploaded",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      return;
+    }
 
     const formData = new FormData();
     Array.from(document).forEach((file) => {
       formData.append("file", file);
     });
     console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
-setLoading(true);
+    setLoading(true);
     try {
       const response = await axios.post(
         `http://54.236.98.193:7777/api/provider/upload/${providerId}`,
@@ -65,19 +126,35 @@ setLoading(true);
       );
 
       if (response.data.status === 200) {
-        setToastProps({ message: response.data.message, type: "success" });
+        setToastProps({
+          message: response.data.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         setLoading(false);
-        setTimeout(() => navigate("/provider/pricing"), 2000);
-        
+        setTimeout(
+          () =>
+            navigate(
+              location.pathname === "/provider/upload"
+                ? "/provider/pricing"
+                : "/provider/home"
+            ),
+          2000
+        );
       } else {
         setLoading(false);
-        setToastProps({ message: response.data.message, type: "error" });
+        setToastProps({
+          message: response.data.message,
+          type: "error",
+          toastKey: Date.now(),
+        });
       }
     } catch (error) {
       setLoading(false);
       setToastProps({
         message: error || "Something went wrong",
         type: "error",
+        toastKey: Date.now(),
       });
     }
   };
@@ -151,11 +228,11 @@ setLoading(true);
 
                   {document && document.length > 0 && (
                     <Stack direction="row" className="flex-wrap gap-1">
-                      {Array?.from(document).map((file, index) => (
-                        <div className="py-1" key={index}>
+                      {Array?.from(document).map((file) => (
+                        <div className="py-1" key={file._id}>
                           <Chip
-                            label={file?.name}
-                            onDelete={() => handleDelete(index)}
+                            label={file?.name || file?.filename}
+                            onDelete={() => handleDelete(file._id)}
                           />
                         </div>
                       ))}
@@ -178,7 +255,11 @@ setLoading(true);
           </div>
         </div>
       )}
-      <Toaster message={toastProps.message} type={toastProps.type} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

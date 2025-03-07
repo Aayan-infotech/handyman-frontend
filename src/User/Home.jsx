@@ -17,7 +17,7 @@ import Toaster from "../Toaster";
 
 export default function Main() {
   const name = localStorage.getItem("hunterName");
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const settings = {
     dots: false,
     infinite: true,
@@ -376,7 +376,7 @@ export default function Main() {
         </div>
       </div>
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }

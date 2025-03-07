@@ -41,8 +41,9 @@ export const getProviderJobs = createAsyncThunk(
         `http://54.236.98.193:7777/api/provider/getJobs`,
         {
           businessType,
-          latitude,
           longitude,
+          latitude,
+          
         }
       );
 

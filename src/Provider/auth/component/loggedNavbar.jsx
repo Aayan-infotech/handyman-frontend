@@ -10,14 +10,14 @@ import { FaRegUserCircle } from "react-icons/fa";
 import Toaster from "../../../Toaster";
 
 export default function LoggedHeader() {
-  const [toastProps, setToastProps] = useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const location = useLocation();
   const guestCondition = JSON.parse(localStorage.getItem("Guest")) || false;
 
   console.log("guestCondition", guestCondition);
 
   const handleGuest = () => {
-    setToastProps({ message: "Please login first", type: "error" });
+    setToastProps({ message: "Please login first", type: "error" , toastKey: Date.now() });
   };
 
   return (
@@ -67,7 +67,7 @@ export default function LoggedHeader() {
         </Container>
       </Navbar>
 
-      <Toaster message={toastProps.message} type={toastProps.type} />
+     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
     </>
   );
 }
