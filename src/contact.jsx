@@ -1,7 +1,6 @@
 
 
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
 import logo from "./assets/logo.png";
@@ -21,27 +20,28 @@ import {
 import axios from "axios";
 import Loader from "./Loader";
 import { useForm } from "react-hook-form"; // Importing React Hook Form
+import { toast, ToastContainer } from "react-toastify"; // Importing Toastify
+
+// You must import the CSS for Toastify to work properly
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Contact() {
   const { section } = useParams();
-  const [businessData, setBusinessData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // React Hook Form setup
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+
 
   // Handle form submission
   const onSubmit = (data) => {
+    const contactUsData = {
+      name: data.name,
+      email: data.email,
+      message: data.message
+    };
 
-    const contactUsData ={
-      name:data.name,
-      email:data.email,
-      message:data.message
-    }
     console.log(data);  // For debugging: logs form data before submitting
 
     setLoading(true);  // Set loading to true while waiting for the API response
@@ -51,12 +51,19 @@ export default function Contact() {
       .then((response) => {
         console.log("Response from API:", response.data);
         setLoading(false);  // Reset loading state
-        // Optionally, show success message to the user
+        
+        // Show success toast
+        toast.success("Message sent successfully!");
+
+        // Reset the form after successful submission
+        reset();
       })
       .catch((error) => {
         console.error("There was an error sending the data:", error);
         setLoading(false);  // Reset loading state
-        // Optionally, show error message to the user
+        
+        // Show error toast
+        toast.error("There was an error sending your message. Please try again.");
       });
   };
 
@@ -292,6 +299,10 @@ export default function Contact() {
           </footer>
         </div>
       )}
+
+      {/* Toastify Container */}
+      <ToastContainer />
     </>
   );
 }
+
