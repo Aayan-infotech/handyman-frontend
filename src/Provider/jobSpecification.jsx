@@ -36,9 +36,9 @@ export default function JobSpecification() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://54.236.98.193:7777/api/jobpost/changeJobStatus/${id}`,
+        `http://54.236.98.193:7777/api/jobpost/acceptJob/${id}`,
         {
-          jobStatus: "Assigned",
+          providerId: localStorage.getItem("ProviderId"),
         },
         {
           headers: {
@@ -134,9 +134,9 @@ export default function JobSpecification() {
                       </div>
                       <div className="d-flex flex-row gap-4 align-items-center pb-3 pt-2">
                         <div className="contact">
-                          <Link to="/provider/home">
+                          <a href="/provider/home">
                             <MdMessage />
-                          </Link>
+                          </a>
                         </div>
                         <div className="contact">
                           <Link to="/provider/home">
@@ -150,9 +150,10 @@ export default function JobSpecification() {
                         </div>
                       </div>
                       <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
-                        <Chip label="Fulltime" variant="outlined" />
-                        <Chip label="On-site working" variant="outlined" />
-                        <Chip label="Hourly" variant="outlined" />
+                        {data.businessType?.map((item , index) => (
+                          <Chip label={item} variant="outlined" key={index} />
+                        ))}
+                       
                       </div>
                       <ul className="list-unstyled d-flex flex-column gap-2">
                         <li>
@@ -177,9 +178,7 @@ export default function JobSpecification() {
                   <div className="col-lg-6">
                     <h3 className="fw-bold">Job Description</h3>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
+                     {data?.requirements}
                     </p>
                     <hr />
                     <div className="d-flex flex-column gap-3 align-items-start more-info">
