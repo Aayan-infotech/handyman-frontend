@@ -180,7 +180,10 @@ function App() {
           path="/provider/myprofile"
           element={<ProtectedRoute element={<MyProfile />} />}
         />
-
+        <Route
+          path="/provider/edit/upload"
+          element={<ProtectedRoute element={<Upload />} />}
+        />
         <Route path="/error" element={<Error />} />
         <Route path="*" element={<Error />} />
       </Routes>
