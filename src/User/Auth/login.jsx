@@ -63,6 +63,17 @@ export default function Login() {
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
+        localStorage.removeItem("ProviderToken");
+        localStorage.removeItem(
+          "ProviderEmail"
+        );
+        localStorage.removeItem(
+          "ProviderName"
+        
+        );
+        localStorage.removeItem("ProviderId");
+        localStorage.removeItem("ProviderUId");
+        localStorage.removeItem("Guest");
         console.log(response);
       }
     } catch (error) {
