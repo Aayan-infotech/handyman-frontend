@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, useLocation } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
-import "../User/user.css"
+import "../../user.css"
 import { FaRegUserCircle } from "react-icons/fa";
 import axios from "axios";
 
