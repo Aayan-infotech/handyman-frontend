@@ -1,6 +1,3 @@
-
-
-
 import React from "react";
 import logo from "../../../assets/logo.png";
 import Container from "react-bootstrap/Container";
@@ -13,20 +10,20 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
 import "../../user.css";
 import { FaRegUserCircle } from "react-icons/fa";
-import axios from "axios";  // Import axios for API calls
+import axios from "axios"; // Import axios for API calls
 
 export default function LoggedHeader() {
   const location = useLocation();
 
- const hunterId = localStorage.getItem("hunterId");
+  const hunterId = localStorage.getItem("hunterId");
 
   const providerId = localStorage.getItem("ProviderId");
 
   const guestCondition = JSON.parse(localStorage.getItem("Guest")) || false;
-  
+
   // Determine userType based on available ID
-  const userType = hunterId ? 'hunter' : 'provider';  // If hunterId exists, userType is 'hunter', else 'provider'
-  const userId = hunterId || providerId;  // Use hunterId if hunterType, else providerId
+  const userType = hunterId ? "hunter" : "provider"; // If hunterId exists, userType is 'hunter', else 'provider'
+  const userId = hunterId || providerId; // Use hunterId if hunterType, else providerId
 
   // Function to call the GET API when the notification icon is clicked
   const handleNotificationClick = () => {
@@ -49,7 +46,11 @@ export default function LoggedHeader() {
 
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" className="position-relative z-1 loggedheader">
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        className="position-relative z-1 loggedheader"
+      >
         <Container fluid>
           {!hunterId ? (
             <Link to="/provider/home" className="py-1">
@@ -66,19 +67,22 @@ export default function LoggedHeader() {
           )}
 
           <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
-            {(location.pathname === "/post-new-job" || location.pathname === "/home") && (
+            {(location.pathname === "/post-new-job" ||
+              location.pathname === "/home") && (
               <div className="position-relative icon">
                 <IoIosSearch />
                 <Form.Control placeholder="search" className="w-100" />
               </div>
             )}
 
-
-
-<div className="ms-auto d-flex justify-content-between align-items-center gap-4">
-               <Link className="notification" to="/notification" onClick={handleNotificationClick}>
-                 <IoMdNotificationsOutline className="fs-4" />
-               </Link>
+            <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
+              <Link
+                className="notification"
+                to="/notification"
+                onClick={handleNotificationClick}
+              >
+                <IoMdNotificationsOutline className="fs-4" />
+              </Link>
 
               {!hunterId ? (
                 <Link to="/provider/myprofile">

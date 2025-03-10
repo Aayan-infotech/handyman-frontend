@@ -38,6 +38,7 @@ import LatestJobs from "./latest-jobs";
 import Error from "./components/error";
 import About from "./about";
 import Contact from "./contact";
+import ChangeRadius from "./components/changeRadius";
 
 const useAuth = () => {
   return !!(
@@ -100,6 +101,10 @@ function App() {
         <Route
           path="/notification"
           element={<ProtectedRoute element={<Notification />} />}
+        />
+         <Route
+          path="/change-radius"
+          element={<ProtectedRoute element={<ChangeRadius />} />}
         />
         <Route
           path="/myprofile"

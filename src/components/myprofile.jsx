@@ -385,31 +385,33 @@ export default function MyProfile() {
                       : "col-lg-3"
                   }`}
                 >
-                  <div className="card border-0 rounded-5 h-100">
-                    <div className="card-body">
-                      <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${
-                          Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                        }`}
-                      >
-                        <div className="circle-container">
-                          <div className="progress-circle">
-                            <div className="lock-icon">
-                              <PiCircleHalfFill />
+                  <Link to="/change-radius">
+                    <div className="card border-0 rounded-5 h-100">
+                      <div className="card-body">
+                        <div
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
+                        >
+                          <div className="circle-container">
+                            <div className="progress-circle">
+                              <div className="lock-icon">
+                                <PiCircleHalfFill />
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="d-flex flex-row gap-3 align-items-center">
-                          <span className="text-success text-center">
-                            Radius Setting
-                          </span>
+                          <div className="d-flex flex-row gap-3 align-items-center">
+                            <span className="text-success text-center">
+                              Radius Setting
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
                 <div
                   className={` ${
