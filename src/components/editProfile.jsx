@@ -7,7 +7,7 @@ import Toaster from "../Toaster";
 import Row from "react-bootstrap/Row";
 import "../User/user.css";
 import { IoImageOutline } from "react-icons/io5";
-import LoggedHeader from "../User/Auth/component/loggedNavbar";
+import LoggedHeader from "./loggedNavbar";
 import { useDispatch } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";

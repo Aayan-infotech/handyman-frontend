@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import LoggedHeader from "../User/Auth/component/loggedNavbar";
+import LoggedHeader from "./loggedNavbar";
 import {
   MdMessage,
   MdOutlineWork,
