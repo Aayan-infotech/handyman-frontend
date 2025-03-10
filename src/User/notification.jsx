@@ -23,7 +23,7 @@ export default function Notification() {
       <div className="bg-second">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
-            <h1>Notifications</h1>
+            <h1>Notificationcccc</h1>
             <div className="d-flex flex-column gap-3 mt-4">
               <div className="card notification-card border-0 rounded-4">
                 <div className="card-body px-3">
