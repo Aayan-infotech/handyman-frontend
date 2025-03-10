@@ -245,7 +245,6 @@ export default function SignUpProvider() {
                         <Form.Control
                           className="pos-image-selector"
                           type="file"
-                          multiple
                           onChange={(e) => setImages(e.target.files)}
                         />
                       </div>
