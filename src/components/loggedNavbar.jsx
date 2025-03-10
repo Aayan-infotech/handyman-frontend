@@ -5,12 +5,13 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, useLocation } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
-import "../User/user.css"
+import "../User/user.css";
 import { FaRegUserCircle } from "react-icons/fa";
 import axios from "axios";
 
 export default function LoggedHeader() {
   const Location = useLocation();
+  const providerToken = localStorage.getItem("providerToken");
   return (
     <>
       <Navbar
@@ -19,7 +20,7 @@ export default function LoggedHeader() {
         className="position-relative z-1 loggedheader hwtwrfe"
       >
         <Container fluid>
-          <Link to="/provider/home" className="py-1">
+          <Link to={`${providerToken ? "/provider/home" : "/home"}`} className="py-1">
             <img src={logo} alt="logo" />
           </Link>
           {Location.pathname === "/post-new-job" ? (
