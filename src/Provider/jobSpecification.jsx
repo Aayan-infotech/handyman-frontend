@@ -29,6 +29,9 @@ export default function JobSpecification() {
   const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
   const handleClose = () => setShow(false);
   const ProviderToken = localStorage.getItem("ProviderToken");
+  const ProviderId = localStorage.getItem('ProviderId')
+  
+  console.log(ProviderToken,'//////')
   const { id } = useParams();
   const guestCondition = localStorage.getItem("Guest") === "true";
 
@@ -36,15 +39,10 @@ export default function JobSpecification() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://54.236.98.193:7777/api/jobpost/acceptJob/${id}`,
-        {
-          providerId: localStorage.getItem("ProviderId"),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${ProviderToken}`,
-          },
-        }
+
+       `http://54.236.98.193:7777/api/provider/acceptCount/${ProviderId}`,
+        console.log(id,'///iid '),
+ 
       );
       if (response.status === 200) {
         setShow(true);
@@ -61,6 +59,7 @@ export default function JobSpecification() {
     try {
       const response = await axios.get(
         `http://54.236.98.193:7777/api/jobpost/jobpost-details/${id}`,
+     
 
         {
           headers: {
