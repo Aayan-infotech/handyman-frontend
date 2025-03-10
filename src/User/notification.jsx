@@ -6,6 +6,7 @@ import Loader from "../Loader";
 import Toaster from "../Toaster";
 import "./user.css";
 import noData from "../assets/no_data_found.gif";
+import { data } from "react-router-dom";
 
 export default function Notification() {
   const hunterId = localStorage.getItem("hunterId");
@@ -27,7 +28,8 @@ export default function Notification() {
     try {
       const url = `http://54.236.98.193:7777/api/notification/getAll/${userType}/${userId}`;
       const response = await axios.get(url);
-      setNotifications(Array.isArray(response.data) ? response.data : []);
+  
+      setNotifications(Array.isArray(response.data.data) ? response.data.data : []);
     } catch (error) {
       setToastProps({
         message: "Failed to fetch notifications",
@@ -61,7 +63,7 @@ export default function Notification() {
 
   const allData = [...massNotifications, ...notifications];
   console.log(massNotifications);
-  console.log(notifications);
+  console.log(notifications,'.....');
   console.log(allData);
 
   return (
@@ -109,23 +111,25 @@ export default function Notification() {
                     </div>
                   ))}
                   {notifications.map((notification, index) => (
+                    
                     <div
                       key={index}
                       className="card notification-card border-0 rounded-4"
                     >
                       <div className="card-body px-3">
                         <div className="d-flex justify-content-between align-items-center">
-                          <h5 className="mb-0">Apply Success</h5>
+                          <h5 className="mb-0">{notification.type}</h5>
                           <div>
                             <span className="ms-3 me-1">
                               <FaRegClock />
                             </span>
-                            <span>10h ago</span>
+                            <span> {new Date(
+                                notification.createdAt
+                              ).toLocaleString()}</span>
                           </div>
                         </div>
                         <p className="mt-3 mb-0">
-                          You have applied for a job at Queenify Group as a UI
-                          Designer
+                        {notification.text}
                         </p>
                       </div>
                     </div>
