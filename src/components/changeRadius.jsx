@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import Header from "./Navbar";
 import "../User/user.css";
 import axios from "axios";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
-import { getProviderUser } from "../Slices/userSlice";
-import { useDispatch } from "react-redux";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,6 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useTheme } from "@mui/material/styles";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,25 +24,67 @@ const MenuProps = {
   },
 };
 
-const radiusOptions = ["10 km", "20 km", "40 km", "80 km", "160 km"];
+const radiusOptions = ["10", "20", "40", "80", "160"];
 
 export default function ChangeRadius() {
-  const location = useLocation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
-  const [selectedRadius, setSelectedRadius] = useState([]);
-  const dispatch = useDispatch();
-  const providerId = localStorage.getItem("ProviderId");
-  const navigate = useNavigate();
-  const theme = useTheme();
+  const [selectedRadius, setSelectedRadius] = useState(radiusOptions[0]); // Default value
 
   const handleChange = (event) => {
-    const { value } = event.target;
-    setSelectedRadius(typeof value === "string" ? value.split(",") : value);
+    setSelectedRadius(parseInt(event.target.value, 10)); // Ensure number format
+  };
+
+  const handleChangeRadius = async () => {
+    setLoading(true);
+    const token = localStorage.getItem("hunterToken");
+
+    if (!token) {
+      setToastProps({
+        message: "Authentication failed: No token provided.",
+        type: "error",
+        toastKey: toastProps.toastKey + 1,
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.patch(
+        "http://54.236.98.193:7777/api/hunter/updateRadius",
+        { radius: selectedRadius }, // Send as a number
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setToastProps({
+          message: "Radius updated successfully!",
+          type: "success",
+          toastKey: Date.now(),
+        });
+        setTimeout(() => {
+          navigate("/myprofile");
+        } , 2000)
+      }
+    } catch (error) {
+      console.error("Error updating radius:", error);
+      setToastProps({
+        message: "Failed to update radius.",
+        type: "error",
+        toastKey: toastProps.toastKey + 1,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,14 +107,13 @@ export default function ChangeRadius() {
                     <Select
                       labelId="radius-select-label"
                       id="radius-select"
-                      multiple
-                      value={selectedRadius}
+                      value={selectedRadius} // Always controlled
                       onChange={handleChange}
                       input={<OutlinedInput label="Select Radius" />}
                       MenuProps={MenuProps}
                     >
                       {radiusOptions.map((radius) => (
-                        <MenuItem key={radius} value={radius}>
+                        <MenuItem key={radius} value={parseInt(radius, 10)}>
                           {radius}
                         </MenuItem>
                       ))}
@@ -85,6 +124,7 @@ export default function ChangeRadius() {
                       size="large"
                       className="rounded-0 custom-green bg-green-custom w-100 text-light"
                       color="success"
+                      onClick={handleChangeRadius}
                     >
                       Submit
                     </Button>
@@ -103,3 +143,4 @@ export default function ChangeRadius() {
     </>
   );
 }
+
