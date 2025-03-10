@@ -45,7 +45,7 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const userType = "hunter";
-  const radius = "50";
+  const radius = "5000";
 
   const handleSignUp = async (e) => {
     e.preventDefault();

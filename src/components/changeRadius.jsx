@@ -57,7 +57,7 @@ export default function ChangeRadius() {
     try {
       const response = await axios.patch(
         "http://54.236.98.193:7777/api/hunter/updateRadius",
-        { radius: selectedRadius }, // Send as a number
+        { radius: selectedRadius * 1000 }, // Send as a number
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ export default function ChangeRadius() {
         });
         setTimeout(() => {
           navigate("/myprofile");
-        } , 2000)
+        }, 2000);
       }
     } catch (error) {
       console.error("Error updating radius:", error);
@@ -143,4 +143,3 @@ export default function ChangeRadius() {
     </>
   );
 }
-
