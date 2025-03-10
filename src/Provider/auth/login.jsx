@@ -72,6 +72,10 @@ export default function LoginProvider() {
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
         localStorage.setItem("ProviderUId", userId);
         localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
+        localStorage.removeItem("hunterToken");
+        localStorage.removeItem("hunterEmail");
+        localStorage.removeItem("hunterName");
+        localStorage.removeItem("hunterId");
         console.log(response);
       }
     } catch (error) {
