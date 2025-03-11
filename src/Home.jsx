@@ -28,7 +28,7 @@ import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
 
 import Autocomplete from "react-google-autocomplete";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
@@ -48,7 +48,6 @@ function Home() {
   const [businessData, setBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
-
 
   const [address, setAddress] = useState("");
 
@@ -83,7 +82,9 @@ function Home() {
   };
 
   const handleClick = () => {
-    navigate(`/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`); // Navigate to /login route
+    navigate(
+      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`
+    ); // Navigate to /login route
   };
   return (
     <>
@@ -140,70 +141,49 @@ function Home() {
                   <div className="">
                     <Box
                       component="form"
-                      className="d-flex justify-content-center align-items-center gap-4 flex-column flex-lg-row"
+                      className="d-flex justify-content-center align-items-end gap-4 flex-column flex-lg-row"
                     >
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
                         <CiSearch className="fs-4 mt-3" />
-            
 
                         <TextField
-      id="standard-basic"
-      label="Business"
-      variant="standard"
-      className="w-100"
-      select
-      fullWidth
-      value={selectedBusiness} // Bind the selected value to TextField
-      onChange={handleBusinessChange} // Update state when selection changes
-      SelectProps={{
-        MenuProps: {
-          PaperProps: {
-            style: {
-              maxHeight: 200, // Limit dropdown height
-            },
-          },
-        },
-      }}
-    >
-      {/* Map over the businessData array to display business names */}
-      {businessData && businessData.length > 0 ? (
-        businessData.map((business, index) => (
-          <MenuItem key={index} value={business.name}>
-            {business.name}
-          </MenuItem>
-        ))
-      ) : (
-        <MenuItem disabled>No recent jobs available.</MenuItem>
-      )}
-    </TextField>
-                      </div>
-                      <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
-                        <SlLocationPin className="fs-4 mt-3" />
-                        {/* <FormControl
+                          id="standard-basic"
+                          label="Business"
                           variant="standard"
-                          sx={{ minWidth: 200 }}
                           className="w-100"
+                          select
+                          fullWidth
+                          value={selectedBusiness} // Bind the selected value to TextField
+                          onChange={handleBusinessChange} // Update state when selection changes
+                          SelectProps={{
+                            MenuProps: {
+                              PaperProps: {
+                                style: {
+                                  maxHeight: 200, // Limit dropdown height
+                                },
+                              },
+                            },
+                          }}
                         >
-                          <InputLabel id="demo-simple-select-standard-label">
-                            Enter Locationfff
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
-                            value={age}
-                            onChange={handleChange}
-                            label="Age"
-                          >
-                            <MenuItem value="">
-                              <em>None</em>
+                          {/* Map over the businessData array to display business names */}
+                          {businessData && businessData.length > 0 ? (
+                            businessData.map((business, index) => (
+                              <MenuItem key={index} value={business.name}>
+                                {business.name}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem disabled>
+                              No recent jobs available.
                             </MenuItem>
-
-                          </Select>
-                        </FormControl> */}
-
+                          )}
+                        </TextField>
+                      </div>
+                      <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
+                        <SlLocationPin className="fs-4 mt-3" />
+                     
 
                         <Form.Group as={Row}>
-
                           <Col sm="8">
                             <Autocomplete
                               className="form-control address-landing"
@@ -223,8 +203,6 @@ function Home() {
                             />
                           </Col>
                         </Form.Group>
-
-
                       </div>
                       {/* <Button
                         variant="contained"
