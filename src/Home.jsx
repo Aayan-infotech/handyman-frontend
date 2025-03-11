@@ -4,7 +4,6 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
 import Toaster from "./Toaster";
-import { toast } from 'react-toastify';
 import logo from "./assets/logo.png";
 import logoWhite from "./assets/logo-white.png";
 import underline from "./assets/underline.png";
@@ -13,9 +12,6 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { CiSearch } from "react-icons/ci";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import { SlLocationPin } from "react-icons/sl";
 import sidepic from "./assets/sidepic.png";
 import { Link } from "react-router-dom";
@@ -28,10 +24,8 @@ import company4 from "./assets/company/company4.png";
 import company5 from "./assets/company/company5.png";
 import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
-
 import Autocomplete from "react-google-autocomplete";
 import { useNavigate } from "react-router-dom";
-
 import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
 import Chip from "@mui/material/Chip";
@@ -50,7 +44,6 @@ function Home() {
   const [businessData, setBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
-
   const [address, setAddress] = useState("");
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -87,20 +80,19 @@ function Home() {
     navigate("/provider/login"); // Navigate to /login route
   };
 
-
   const handleClick = () => {
-  
     if (!selectedBusiness || !latitude || !longitude) {
-     
       setToastProps({
-        message: 'Please enter business and location before searching',
+        message: "Please enter business and location before searching",
         type: "error",
         toastKey: Date.now(),
       });
-      return; 
+      return;
     }
-  
-    navigate(`/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`);
+
+    navigate(
+      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`
+    );
   };
   return (
     <>
@@ -197,26 +189,22 @@ function Home() {
                       </div>
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
                         <SlLocationPin className="fs-4 mt-3" />
-                     
-
-                     
-                            <Autocomplete
-                              className="form-control address-landing ps-0"
-                              apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
-                              style={{ width: "100%" }}
-                              onPlaceSelected={(place) => {
-                                const formattedAddress =
-                                  place?.formatted_address || place?.name;
-                                setAddress(formattedAddress);
-                                setLatitude(place.geometry.location.lat());
-                                setLongitude(place.geometry.location.lng());
-                              }}
-                              options={{
-                                types: ["address"],
-                              }}
-                              defaultValue={address}
-                            />
-                       
+                        <Autocomplete
+                          className="form-control address-landing ps-0"
+                          apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
+                          style={{ width: "100%" }}
+                          onPlaceSelected={(place) => {
+                            const formattedAddress =
+                              place?.formatted_address || place?.name;
+                            setAddress(formattedAddress);
+                            setLatitude(place.geometry.location.lat());
+                            setLongitude(place.geometry.location.lng());
+                          }}
+                          options={{
+                            types: ["address"],
+                          }}
+                          defaultValue={address}
+                        />
                       </div>
                       {/* <Button
                         variant="contained"
@@ -689,30 +677,6 @@ function Home() {
                 </Col>
               </Row>
             </Col>
-
-            {/* Right Section: Subscription */}
-            {/* <Col md={4} className="mb-4">
-              <h6>Get job notifications</h6>
-              <p className="my-3">
-                The latest job news, articles, sent to your inbox weekly.
-              </p>
-              <Form>
-                <Form.Group className="d-flex">
-                  <Form.Control
-                    type="email"
-                    placeholder="Email Address "
-                    className="me-2 rounded-0"
-                  />
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="custom-green px-5 py-2 rounded-0 bg-green-custom"
-                  >
-                    Subscribe
-                  </Button>
-                </Form.Group>
-              </Form>
-            </Col> */}
           </Row>
 
           <hr />
@@ -746,10 +710,10 @@ function Home() {
       </footer>
 
       <Toaster
-            message={toastProps.message}
-            type={toastProps.type}
-            toastKey={toastProps.toastKey}
-          />
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }
