@@ -74,7 +74,7 @@ function Home() {
   };
 
   const handleClick = () => {
-    navigate('/login'); // Navigate to /login route
+    navigate('/search'); // Navigate to /login route
   };
   return (
     <>
@@ -86,13 +86,7 @@ function Home() {
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#">About UCCCs</Link>
-                <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
-              </Nav> */}
-
-
-              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+           <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
                 <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
                 <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
               </Nav>

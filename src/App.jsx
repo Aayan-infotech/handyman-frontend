@@ -39,6 +39,7 @@ import Error from "./components/error";
 import About from "./about";
 import Contact from "./contact";
 import ChangeRadius from "./components/changeRadius";
+import Search from "./Search";
 import ServicesProvider from "./User/services-provider";
 
 const useAuth = () => {
@@ -58,6 +59,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/contact-us" element={<Contact />} />
         <Route path="/login" element={<Login />} />
