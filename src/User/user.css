@@ -214,8 +214,8 @@
 }
 .pos-design-icon {
   position: absolute;
-  right: 0;
-  top: 95px;
+  right: -60px;
+  top: 125px;
 }
 .pos-design-pillai {
   position: absolute;
@@ -226,6 +226,10 @@
   position: absolute;
   right: -45px;
   top: 50px;
+}
+
+.pos-design-icon img {
+  width: calc(100% - 30%);
 }
 .dots {
   background-color: #fff;
