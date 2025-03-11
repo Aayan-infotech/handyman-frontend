@@ -199,10 +199,9 @@ function Home() {
                         <SlLocationPin className="fs-4 mt-3" />
                      
 
-                        <Form.Group as={Row}>
-                          <Col sm="8">
+                     
                             <Autocomplete
-                              className="form-control address-landing"
+                              className="form-control address-landing ps-0"
                               apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
                               style={{ width: "100%" }}
                               onPlaceSelected={(place) => {
@@ -217,8 +216,7 @@ function Home() {
                               }}
                               defaultValue={address}
                             />
-                          </Col>
-                        </Form.Group>
+                       
                       </div>
                       {/* <Button
                         variant="contained"
