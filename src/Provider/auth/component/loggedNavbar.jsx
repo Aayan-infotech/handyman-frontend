@@ -36,8 +36,8 @@ export default function LoggedHeader() {
             <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
           )}
 
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
+     
+      
             <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
               {(location.pathname === "/post-new-job" ||
                 location.pathname === "/home") && (
@@ -63,7 +63,7 @@ export default function LoggedHeader() {
                 )}
               </div>
             </div>
-          </Navbar.Collapse>
+      
         </Container>
       </Navbar>
 
