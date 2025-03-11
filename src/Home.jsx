@@ -667,7 +667,7 @@ function Home() {
           <Row className="mt-4">
             <Col lg={6}>
               <p className="text-start">
-                2024 @ Cloud Connect. All rights reserved.
+                2025 @ TradeHunter. All rights reserved.
               </p>
             </Col>
             <Col lg={6}>

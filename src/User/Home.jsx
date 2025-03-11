@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
-import { MdMessage , MdOutlineSupportAgent } from "react-icons/md";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -17,7 +17,11 @@ import Toaster from "../Toaster";
 
 export default function Main() {
   const name = localStorage.getItem("hunterName");
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const settings = {
     dots: false,
     infinite: true,
@@ -31,18 +35,16 @@ export default function Main() {
   return (
     <>
       <LoggedHeader />
-                                             <Link to="/support/chat/1">
-                                             <div className="admin-message">
-                                              
-                                                 <MdOutlineSupportAgent />
-                                               
-                                             </div>
-                                             </Link>
-                                             <div className="message">
-                                               <Link to="/message">
-                                                 <MdMessage />
-                                               </Link>
-                                             </div>
+      <Link to="/support/chat/1">
+        <div className="admin-message">
+          <MdOutlineSupportAgent />
+        </div>
+      </Link>
+      <div className="message">
+        <Link to="/message">
+          <MdMessage />
+        </Link>
+      </div>
       <div className="bg-second">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
@@ -245,130 +247,6 @@ export default function Main() {
                       </div>
                     </div>
                   </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="card green-card border-0 rounded-4 position-relative overflow-hidden mh-200">
-                      <div className="card-body">
-                        <div className="d-flex flex-column align-items-start gap-2">
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                        </div>
-                        <h3 className="mt-3">Plumbing</h3>
-
-                        <div className="pos-design-icon">
-                          <img src={grassCutting} alt="grassCutting" />
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="card green-card border-0 rounded-4 position-relative overflow-hidden mh-200">
-                      <div className="card-body">
-                        <div className="d-flex flex-column align-items-start gap-2">
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                        </div>
-                        <h3 className="mt-3">Electrical</h3>
-
-                        <div className="pos-design-icon">
-                          <img src={pillai} alt="pillai" />
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="card green-card border-0 rounded-4 position-relative overflow-hidden mh-200">
-                      <div className="card-body">
-                        <div className="d-flex flex-column align-items-start gap-2">
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                        </div>
-                        <h3 className="mt-3">AC Repair</h3>
-                        <div className="pos-design-icon">
-                          <img src={acRepair} alt="arrow" />
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="card green-card border-0 rounded-4 position-relative overflow-hidden mh-200">
-                      <div className="card-body">
-                        <div className="d-flex flex-column align-items-start gap-2">
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                        </div>
-                        <h3 className="mt-3">AC Repair</h3>
-
-                        <div className="pos-design-icon">
-                          <img src={arrow} alt="arrow" />
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="card green-card border-0 rounded-4 position-relative overflow-hidden mh-200">
-                      <div className="card-body">
-                        <div className="d-flex flex-column align-items-start gap-2">
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                            <div className="dots"></div>
-                          </div>
-                        </div>
-                        <h3 className="mt-3">New Job</h3>
-                        <h6>Post New Job</h6>
-                        <div className="pos-design-icon">
-                          <img src={arrow} alt="arrow" />
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
                 </Swiper>
               </div>
             </div>
@@ -376,7 +254,11 @@ export default function Main() {
         </div>
       </div>
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }
