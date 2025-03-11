@@ -101,11 +101,11 @@ export default function Chat() {
   console.log(currentUser);
 
   return (
-    <div className={`d-flex flex-column gap-3`}>
+    <div className={`d-flex flex-column gap-3 pb-4 bg-second`}>
       <div className="card border-0 rounded-3">
         <div className="card-body p-2">
           <div className="d-flex flex-row gap-2 align-items-center justify-content-between">
-            <div className="d-flex flex-row align-items-center gap-2">
+            <div className="d-flex flex-row align-items-center gap-2 profile-icon">
               <img src={user1} alt="user1" height={60} width={60} />
               <div className="d-flex flex-column gap-1">
                 <h5 className="mb-0 fw-medium fs-5 text-dark">John Doe</h5>

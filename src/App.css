@@ -555,8 +555,11 @@
   .mobile h5 {
     font-size: 30px !important;
   }
+  .profile-icon img{
+    width: 60px !important;
+  }
   .standard-input input {
-    border: 1px solid #32de84;
+    /* border: 1px solid #32de84; */
     border-radius: 40px;
     padding: 22px 30px;
     color: #979797;
