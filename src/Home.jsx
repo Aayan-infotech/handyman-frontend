@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
+import Toaster from "./Toaster";
+import { toast } from 'react-toastify';
 import logo from "./assets/logo.png";
 import logoWhite from "./assets/logo-white.png";
 import underline from "./assets/underline.png";
@@ -50,7 +52,11 @@ function Home() {
   const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
 
   const [address, setAddress] = useState("");
-
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const navigate = useNavigate();
@@ -81,10 +87,20 @@ function Home() {
     navigate("/provider/login"); // Navigate to /login route
   };
 
+
   const handleClick = () => {
-    navigate(
-      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`
-    ); // Navigate to /login route
+  
+    if (!selectedBusiness || !latitude || !longitude) {
+     
+      setToastProps({
+        message: 'Please enter business and location before searching',
+        type: "error",
+        toastKey: Date.now(),
+      });
+      return; 
+    }
+  
+    navigate(`/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`);
   };
   return (
     <>
@@ -730,6 +746,12 @@ function Home() {
           </Row>
         </Container>
       </footer>
+
+      <Toaster
+            message={toastProps.message}
+            type={toastProps.type}
+            toastKey={toastProps.toastKey}
+          />
     </>
   );
 }
