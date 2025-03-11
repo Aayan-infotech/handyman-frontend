@@ -22,15 +22,23 @@ import { auth } from "../../Chat/lib/firestore";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const userType = "hunter";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if(!email || !password){
-      setToastProps({ message: "Please fill all fields", type: "error" , toastKey: Date.now() });
+    if (!email || !password) {
+      setToastProps({
+        message: "Please fill all fields",
+        type: "error",
+        toastKey: Date.now(),
+      });
       return;
     }
     setLoading(true);
@@ -51,11 +59,21 @@ export default function Login() {
       );
 
       if (response.status === 200) {
-        await signInWithEmailAndPassword(auth, email, password);
+        const firebaseUser = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const userId = firebaseUser.user.uid;
+
         setEmail("");
         setPassword("");
         setLoading(false);
-        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now()});
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         setTimeout(() => {
           navigate("/home");
         }, 2000);
@@ -63,14 +81,10 @@ export default function Login() {
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
+        localStorage.setItem("hunterUId", userId);
         localStorage.removeItem("ProviderToken");
-        localStorage.removeItem(
-          "ProviderEmail"
-        );
-        localStorage.removeItem(
-          "ProviderName"
-        
-        );
+        localStorage.removeItem("ProviderEmail");
+        localStorage.removeItem("ProviderName");
         localStorage.removeItem("ProviderId");
         localStorage.removeItem("ProviderUId");
         localStorage.removeItem("Guest");
@@ -79,12 +93,16 @@ export default function Login() {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now() });
+      setToastProps({
+        message: error?.response?.data?.error,
+        type: "error",
+        toastKey: Date.now(),
+      });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
-          toastKey: Date.now()
+          toastKey: Date.now(),
         });
       }
     }
@@ -102,7 +120,9 @@ export default function Login() {
               <div className="card shadow">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">LOGIN</h2>
-                  <p className="text-center mt-lg-5 mb-lg-4">Great You are Back</p>
+                  <p className="text-center mt-lg-5 mb-lg-4">
+                    Great You are Back
+                  </p>
                   <Form className="py-3">
                     <Form.Group
                       as={Row}
@@ -173,23 +193,27 @@ export default function Login() {
               </div>
               <hr className="hr h-100" />
               <div className="hr mb-4">
-              <Link to="/signup" className="w-100">
-                <Button
-                  variant="contained"
-                  color="success"
-                  className="fw-semibold custom-green-outline w-100 rounded-5 fs-5"
-                  size="small"
-                >
-                  Create Account
-                </Button>
-              </Link>
+                <Link to="/signup" className="w-100">
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="fw-semibold custom-green-outline w-100 rounded-5 fs-5"
+                    size="small"
+                  >
+                    Create Account
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       )}
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

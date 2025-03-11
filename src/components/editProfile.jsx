@@ -155,10 +155,13 @@ export default function EditProfile() {
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
     formData.append("ABN_Number", registrationNumber);
-    formData.append("userType", providerId ? "provider" : "hunter");
+
     formData.append("businessName", businessName);
-    if (images && images.length > 0) {
+
+    if (images && images instanceof FileList && images.length > 0) {
       formData.append("images", images[0]);
+    } else if (typeof images === "string") {
+      formData.append("images", images);
     }
 
     businessType.forEach((type) => {
@@ -166,64 +169,28 @@ export default function EditProfile() {
     });
 
     try {
-      // Update Backend API
       const response = await axios.put(
-        `http://54.236.98.193:7777/api/auth/update/${
-          providerId ? providerId : hunterId
-        }`,
+        `http://54.236.98.193:7777/api/${
+          providerId ? "provider" : "hunter"
+        }/updateById/${providerId ? providerId : hunterId}`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${providerToken || hunterToken}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       if (response.status === 200 || response.status === 201) {
         const userUId = providerUid || hunterUid;
-        const userData = response?.data?.updatedUser;
-
-        // Update Firestore Database
-        if (providerToken) {
-          await setDoc(doc(db, "providers", userUId), {
-            name,
-            email,
-            phoneNo: number,
-            address,
-            latitude,
-            longitude,
-
-            blocked: [],
-          });
-          localStorage.setItem("ProviderName", name);
-          localStorage.setItem("ProviderEmail", email);
-          // Update Realtime Database
-        } else {
-          await setDoc(doc(db, "hunters", userUId), {
-            name,
-            email,
-            phoneNo: number,
-            address,
-            latitude,
-            longitude,
-            blocked: [],
-          });
-          localStorage.setItem("hunterName", name);
-          localStorage.setItem("hunterEmail", email);
-        }
-        await set(ref(realtimeDb, "userchats/" + userUId), { chats: [] });
         setLoading(false);
         setToastProps({
           message: response?.data?.message,
           type: "success",
           toastKey: Date.now(),
         });
-        if (providerToken) {
-          navigate(`/provider/home`);
-        } else {
-          navigate(`/home`);
-        }
+        navigate(providerToken ? `/provider/home` : `/home`);
       }
     } catch (error) {
       setLoading(false);
@@ -240,15 +207,15 @@ export default function EditProfile() {
       setPreviewImage(images); // Use the existing image URL
     }
   }, [images]);
-  
+
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the first selected file
+    const file = e.target.files[0];
     if (file) {
       setImages(e.target.files); // Store the file list
       setPreviewImage(URL.createObjectURL(file)); // Create a preview URL
     }
   };
-  console.log(images)
+  console.log(images);
 
   return (
     <>
@@ -280,23 +247,21 @@ export default function EditProfile() {
                     </>
                   ) : (
                     <div className=" mt-3 profile d-flex align-items-center justify-content-center flex-column">
-                      
                       <div className="position-relative">
-                      <img
-                        src={previewImage}
-                        alt="profile"
-                        className="profile-image rounded-5 "
-                      />
-                        <div className="position-absolute end-0 bottom-0 ">
-                        <Form.Control
-                          className="pos-image-selector"
-                          type="file"
-                          onChange={handleImageChange}
+                        <img
+                          src={previewImage}
+                          alt="profile"
+                          className="profile-image rounded-5 "
                         />
-                        <FaPen className=""/>
+                        <div className="position-absolute end-0 bottom-0 ">
+                          <Form.Control
+                            className="pos-image-selector"
+                            type="file"
+                            onChange={handleImageChange}
+                          />
+                          <FaPen className="" />
+                        </div>
                       </div>
-                      </div>
-                    
                     </div>
                   )}
                   <Form className="py-3">

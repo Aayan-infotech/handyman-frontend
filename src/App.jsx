@@ -40,6 +40,7 @@ import About from "./about";
 import Contact from "./contact";
 import ChangeRadius from "./components/changeRadius";
 import Search from "./Search";
+import ServicesProvider from "./User/services-provider";
 
 const useAuth = () => {
   return !!(
@@ -119,6 +120,10 @@ function App() {
         <Route
           path="/editProfile"
           element={<ProtectedRoute element={<EditProfile />} />}
+        />
+         <Route
+          path="/services-provider"
+          element={<ProtectedRoute element={<ServicesProvider />} />}
         />
 
         {/* provider */}

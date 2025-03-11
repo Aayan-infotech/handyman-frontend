@@ -147,6 +147,7 @@
 .green-card {
   background-color: #32de84;
   color: #fff;
+  z-index: 999;
 }
 
 .message {
