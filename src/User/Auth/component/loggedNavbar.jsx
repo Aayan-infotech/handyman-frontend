@@ -17,47 +17,49 @@ export default function LoggedHeader() {
       <Navbar
         collapseOnSelect
         expand="lg"
-        className="position-relative z-1 loggedheader hwtwrfe"
+        className="position-relative z-1 loggedheader"
       >
         <Container fluid>
-          <Link
-            to={`${providerToken ? "/provider/home" : "/home"}`}
-            className="py-1"
-          >
-            <img src={logo} alt="logo" />
-          </Link>
-          {Location.pathname === "/post-new-job" ? (
-            <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
-          ) : (
-            <></>
-          )}
-
-          <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
-            {Location.pathname === "/post-new-job" ||
-            Location.pathname === "/home" ? (
-              <>
-                <div className="position-relative icon ">
-                  <IoIosSearch />
-                  <Form.Control placeholder="search" className="w-100" />
-                </div>
-              </>
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <Link
+              to={`${providerToken ? "/provider/home" : "/home"}`}
+              className="py-1"
+            >
+              <img src={logo} alt="logo" />
+            </Link>
+            {Location.pathname === "/post-new-job" ? (
+              <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
             ) : (
               <></>
             )}
 
-            <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
-              <Link className="notification" to="/notification">
-                <IoMdNotificationsOutline className="fs-4" />
-              </Link>
-              {location.pathname.includes("provider") ? (
-                <Link to="/provider/myprofile">
-                  <FaRegUserCircle className="fs-1" />
-                </Link>
+            <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
+              {Location.pathname === "/post-new-job" ||
+              Location.pathname === "/home" ? (
+                <>
+                  <div className="position-relative icon ">
+                    <IoIosSearch />
+                    <Form.Control placeholder="search" className="w-100" />
+                  </div>
+                </>
               ) : (
-                <Link to="/myprofile">
-                  <FaRegUserCircle className="fs-1" />
-                </Link>
+                <></>
               )}
+
+              <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
+                <Link className="notification" to="/notification">
+                  <IoMdNotificationsOutline className="fs-4" />
+                </Link>
+                {location.pathname.includes("provider") ? (
+                  <Link to="/provider/myprofile">
+                    <FaRegUserCircle className="fs-1" />
+                  </Link>
+                ) : (
+                  <Link to="/myprofile">
+                    <FaRegUserCircle className="fs-1" />
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </Container>
