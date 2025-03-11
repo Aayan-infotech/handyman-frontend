@@ -117,14 +117,9 @@ function Search() {
               </Navbar.Collapse>
             </Container>
           </Navbar>
-          <div className="message">
-            <Link to="/message">
-              <MdMessage />
-            </Link>
-          </div>
           <div className="bg-second py-3">
             <div className="container top-section-main">
-              <div className="row mt-4 gy-4 management">
+              <div className="row gy-4 management">
                 {filteredJobs.length === 0 ? (
                   <div className="d-flex justify-content-center">
                     <img
@@ -150,14 +145,14 @@ function Search() {
                               </div>
                             </div>
                             <div className="col-lg-7">
-                              <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-center">
+                              <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-start">
                                 <div className="d-flex flex-row gap-2 align-items-center">
                                   <BiCoinStack />
                                   <h5 className="mb-0">
                                     ${job.estimatedBudget}
                                   </h5>
                                 </div>
-                                <div className="d-flex flex-row gap-2 align-items-center">
+                                <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
                                   <PiBag />
                                   <h5 className="mb-0 text-trun">
                                     {job.jobLocation.jobAddressLine}
