@@ -79,7 +79,7 @@ function Home() {
   };
 
   const handleClickForSignup = () => {
-    navigate('/provider/login'); // Navigate to /login route
+    navigate("/provider/login"); // Navigate to /login route
   };
 
   const handleClick = () => {
@@ -94,13 +94,20 @@ function Home() {
               <img src={logo} alt="logo" />
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
-                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
+            <Navbar.Collapse
+              id="responsive-navbar-nav"
+              className="px-3 pt-2 p-lg-0"
+            >
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-2 gap-lg-5 ">
+                <Link href="#" style={{ fontWeight: "350" }}>
+                  About Us
+                </Link>
+                <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                  Contact Us
+                </Link>
               </Nav>
 
-              <Nav>
+              <Nav className="mb-4">
                 <Link to="/welcome">
                   <Button variant="contained" color="success">
                     Get Started <GoArrowRight className="fs-4 ms-1" />
@@ -227,8 +234,6 @@ function Home() {
                         Search 
                       </Button> */}
 
-
-
                       <Button
                         variant="contained"
                         color="success"
@@ -295,16 +300,17 @@ function Home() {
                   Do you want to <br />
                   secure more work
                 </h5>
-                <button className="btn btn-mobile py-2 px-4 my-4"
+                <button
+                  className="btn btn-mobile py-2 px-4 my-4"
                   onClick={handleClickForSignup} // Button click triggers the navigation
                 >
-
                   Sign Up
                 </button>
                 <br />
                 <b className="text-light ">
                   {/* To trade and check our plans and choose what suits you best */}
-                  To Trade Hunter and check our plans and choose what suits you best
+                  To Trade Hunter and check our plans and choose what suits you
+                  best
                 </b>
               </div>
             </div>
@@ -587,7 +593,6 @@ function Home() {
                       <div className="d-flex flex-column gap-2 justify-content-start">
                         <div className="d-flex justify-content-between align-items-center">
                           <h6 className="mb-0">{item?.title}</h6>
-
                         </div>
 
                         <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
@@ -602,7 +607,11 @@ function Home() {
                         >
                           {item.businessType.map((text, index) => (
                             <>
-                              <Chip label={text} className=" green-line" key={index} />
+                              <Chip
+                                label={text}
+                                className=" green-line"
+                                key={index}
+                              />
                             </>
                           ))}
                         </Stack>
