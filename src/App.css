@@ -506,6 +506,10 @@
   border-radius: 50%;
 }
 
+.form-control:focus {
+  box-shadow: none !important;
+}
+
 @media screen and (max-width: 768px) {
   .profile-img {
     width: 100%;
