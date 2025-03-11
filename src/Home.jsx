@@ -27,8 +27,7 @@ import company5 from "./assets/company/company5.png";
 import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
 
-
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
@@ -70,11 +69,11 @@ function Home() {
   };
 
   const handleClickForSignup = () => {
-    navigate('/provider/login'); // Navigate to /login route
+    navigate("/provider/login"); // Navigate to /login route
   };
 
   const handleClick = () => {
-    navigate('/search'); // Navigate to /login route
+    navigate("/search"); // Navigate to /login route
   };
   return (
     <>
@@ -85,13 +84,20 @@ function Home() {
               <img src={logo} alt="logo" />
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-           <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
-                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
+            <Navbar.Collapse
+              id="responsive-navbar-nav"
+              className="px-3 pt-2 p-lg-0"
+            >
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-2 gap-lg-5 ">
+                <Link href="#" style={{ fontWeight: "350" }}>
+                  About Us
+                </Link>
+                <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                  Contact Us
+                </Link>
               </Nav>
 
-              <Nav>
+              <Nav className="mb-4">
                 <Link to="/welcome">
                   <Button variant="contained" color="success">
                     Get Started <GoArrowRight className="fs-4 ms-1" />
@@ -170,8 +176,6 @@ function Home() {
                         Search 
                       </Button> */}
 
-
-
                       <Button
                         variant="contained"
                         color="success"
@@ -211,7 +215,7 @@ function Home() {
             <div className="row gy-4 mt-3">
               {businessData.map((item) => (
                 <div className="col-lg-3" key={item._id}>
-                  <Link to="/welcome"className="h-100">
+                  <Link to="/welcome" className="h-100">
                     <div className="card rounded-0 h-100">
                       <div className="card-body">
                         <div className="d-flex flex-column gap-4 justify-content-start">
@@ -238,16 +242,17 @@ function Home() {
                   Do you want to <br />
                   secure more work
                 </h5>
-                <button className="btn btn-mobile py-2 px-4 my-4"
+                <button
+                  className="btn btn-mobile py-2 px-4 my-4"
                   onClick={handleClickForSignup} // Button click triggers the navigation
                 >
-
                   Sign Up
                 </button>
                 <br />
                 <b className="text-light ">
                   {/* To trade and check our plans and choose what suits you best */}
-                  To Trade Hunter and check our plans and choose what suits you best
+                  To Trade Hunter and check our plans and choose what suits you
+                  best
                 </b>
               </div>
             </div>
@@ -530,7 +535,6 @@ function Home() {
                       <div className="d-flex flex-column gap-2 justify-content-start">
                         <div className="d-flex justify-content-between align-items-center">
                           <h6 className="mb-0">{item?.title}</h6>
-
                         </div>
 
                         <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
@@ -543,9 +547,13 @@ function Home() {
                           direction="row"
                           className="flex-wrap gap-2 justify-content-start align-items-start"
                         >
-                          {item.businessType.map((text , index) => (
+                          {item.businessType.map((text, index) => (
                             <>
-                              <Chip label={text} className=" green-line" key={index}/>
+                              <Chip
+                                label={text}
+                                className=" green-line"
+                                key={index}
+                              />
                             </>
                           ))}
                         </Stack>
