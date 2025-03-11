@@ -458,7 +458,14 @@
   justify-content: center;
   align-items: center;
 }
-
+.address-landing {
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 1px solid #949494 !important;
+  border-radius: 0 !important;
+  
+}
 .lock-icon {
   position: absolute;
   width: 40px;

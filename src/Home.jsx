@@ -27,7 +27,7 @@ import company5 from "./assets/company/company5.png";
 import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
 
-
+import Autocomplete from "react-google-autocomplete";
 import { useNavigate } from 'react-router-dom';
 
 import company8 from "./assets/company/company8.png";
@@ -47,6 +47,13 @@ function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
+  const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
+
+
+  const [address, setAddress] = useState("");
+
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     axios
@@ -64,7 +71,9 @@ function Home() {
         setRecentJob(res?.data?.data);
       });
   }, []);
-
+  const handleBusinessChange = (event) => {
+    setSelectedBusiness(event.target.value); // Update the selected business
+  };
   const handleChange = (event) => {
     setAge(event.target.value);
   };
@@ -74,7 +83,7 @@ function Home() {
   };
 
   const handleClick = () => {
-    navigate('/search'); // Navigate to /login route
+    navigate(`/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`); // Navigate to /login route
   };
   return (
     <>
@@ -86,7 +95,7 @@ function Home() {
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-           <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
                 <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
                 <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
               </Nav>
@@ -128,23 +137,48 @@ function Home() {
                     >
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
                         <CiSearch className="fs-4 mt-3" />
+            
+
                         <TextField
-                          id="standard-basic"
-                          // label="Job title or keyword"
-                          label="Bussiness"
-                          variant="standard"
-                          className="w-100"
-                        />
+      id="standard-basic"
+      label="Business"
+      variant="standard"
+      className="w-100"
+      select
+      fullWidth
+      value={selectedBusiness} // Bind the selected value to TextField
+      onChange={handleBusinessChange} // Update state when selection changes
+      SelectProps={{
+        MenuProps: {
+          PaperProps: {
+            style: {
+              maxHeight: 200, // Limit dropdown height
+            },
+          },
+        },
+      }}
+    >
+      {/* Map over the businessData array to display business names */}
+      {businessData && businessData.length > 0 ? (
+        businessData.map((business, index) => (
+          <MenuItem key={index} value={business.name}>
+            {business.name}
+          </MenuItem>
+        ))
+      ) : (
+        <MenuItem disabled>No recent jobs available.</MenuItem>
+      )}
+    </TextField>
                       </div>
-                      <div className="d-flex justify-content-start justify-content-lg-centeralign-items-center gap-2 w-100">
+                      <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
                         <SlLocationPin className="fs-4 mt-3" />
-                        <FormControl
+                        {/* <FormControl
                           variant="standard"
                           sx={{ minWidth: 200 }}
                           className="w-100"
                         >
                           <InputLabel id="demo-simple-select-standard-label">
-                            Enter Location
+                            Enter Locationfff
                           </InputLabel>
                           <Select
                             labelId="demo-simple-select-standard-label"
@@ -156,11 +190,34 @@ function Home() {
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
-                            <MenuItem value={"India"}>India</MenuItem>
-                            <MenuItem value={"USA"}>USA</MenuItem>
-                            <MenuItem value={"Europe"}>Europe</MenuItem>
+
                           </Select>
-                        </FormControl>
+                        </FormControl> */}
+
+
+                        <Form.Group as={Row}>
+
+                          <Col sm="8">
+                            <Autocomplete
+                              className="form-control address-landing"
+                              apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
+                              style={{ width: "100%" }}
+                              onPlaceSelected={(place) => {
+                                const formattedAddress =
+                                  place?.formatted_address || place?.name;
+                                setAddress(formattedAddress);
+                                setLatitude(place.geometry.location.lat());
+                                setLongitude(place.geometry.location.lng());
+                              }}
+                              options={{
+                                types: ["address"],
+                              }}
+                              defaultValue={address}
+                            />
+                          </Col>
+                        </Form.Group>
+
+
                       </div>
                       {/* <Button
                         variant="contained"
@@ -211,7 +268,7 @@ function Home() {
             <div className="row gy-4 mt-3">
               {businessData.map((item) => (
                 <div className="col-lg-3" key={item._id}>
-                  <Link to="/welcome"className="h-100">
+                  <Link to="/welcome" className="h-100">
                     <div className="card rounded-0 h-100">
                       <div className="card-body">
                         <div className="d-flex flex-column gap-4 justify-content-start">
@@ -543,9 +600,9 @@ function Home() {
                           direction="row"
                           className="flex-wrap gap-2 justify-content-start align-items-start"
                         >
-                          {item.businessType.map((text , index) => (
+                          {item.businessType.map((text, index) => (
                             <>
-                              <Chip label={text} className=" green-line" key={index}/>
+                              <Chip label={text} className=" green-line" key={index} />
                             </>
                           ))}
                         </Stack>
