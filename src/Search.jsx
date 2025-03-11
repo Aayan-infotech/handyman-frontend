@@ -1,10 +1,11 @@
 
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { BiCoinStack } from "react-icons/bi";
+import { Row, Col } from 'react-bootstrap';
+
 import { PiBag } from "react-icons/pi";
 import Button from "@mui/material/Button";
 import Form from "react-bootstrap/Form";
@@ -14,6 +15,9 @@ import Navbar from "react-bootstrap/Navbar";
 import logo from "./assets/logo.png";
 import { GoArrowRight } from "react-icons/go";
 import { useNavigate } from 'react-router-dom';
+import { FaFacebook, FaDribbble, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa'; // Add social icons
+
+import logoWhite from './assets/logo-white.png'
 function Search() {
   // Dummy data for job listings
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,9 +46,11 @@ function Search() {
   const filteredJobs = dummyJobs.filter((job) =>
     job.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   const handleClick = () => {
     navigate('/welcome'); // Navigate to /login route
   };
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
@@ -78,22 +84,6 @@ function Search() {
 
       <div className="bg-second py-3">
         <div className="container top-section-main">
-          <div className="d-flex justify-content-between align-items-center mb-4 mt-3">
-            <h2 className="fw-normal">Job Requests</h2>
-          </div>
-
-          <div className="d-flex justify-content-start align-items-center">
-            <div className="position-relative icon">
-              <IoIosSearch className="mt-1" />
-              <Form.Control
-                placeholder="Search for something"
-                className="search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-
           <div className="row mt-4 gy-4 management">
             {filteredJobs.length === 0 ? (
               <div className="d-flex justify-content-center">
@@ -102,12 +92,8 @@ function Search() {
             ) : (
               filteredJobs.map((job) => (
                 <div className="col-lg-12" key={job.id}>
-                
-<div   className="card border-0 rounded-3 px-4"
-
->
-
-<div className="card-body">
+                  <div className="card border-0 rounded-3 px-4">
+                    <div className="card-body">
                       <div className="row gy-4 gx-1 align-items-center">
                         <div className="col-lg-3">
                           <div className="d-flex flex-row gap-3 align-items-center">
@@ -135,7 +121,6 @@ function Search() {
                           <Button
                             variant="contained"
                             className="custom-green bg-green-custom rounded-5 py-3 w-100"
-
                             onClick={handleClick} // Button click triggers the navigation
                           >
                             Contact
@@ -143,10 +128,7 @@ function Search() {
                         </div>
                       </div>
                     </div>
-
-</div>
-
-                 
+                  </div>
                 </div>
               ))
             )}
@@ -154,7 +136,96 @@ function Search() {
         </div>
       </div>
 
-      
+      {/* Footer */}
+      <footer className="footer text-light">
+        <Container>
+          <Row>
+            {/* Left Section: Logo and Description */}
+            <Col md={4} className="mb-4">
+              <img src={logoWhite} alt="logo" />
+              <p className="fw-normal mt-3">
+                Great platform for connecting service Hunters to Service
+                providers in Australia
+              </p>
+            </Col>
+
+            {/* Center Section: Links */}
+            <Col md={4} className="mb-4">
+              <Row>
+                <Col>
+                  <h6>About</h6>
+                  <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                    <li>
+                      <a href="terms" className="text-light">
+                        Terms
+                      </a>
+                    </li>
+                    <li>
+                      <a href="privacy" className="text-light">
+                        Privacy Policy
+                      </a>
+                    </li>
+                  </ul>
+                </Col>
+                <Col>
+                  <h6>Resources</h6>
+                  <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                    <li>
+                      <a href="#help-docs" className="text-light">
+                        Help Docs
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#guide" className="text-light">
+                        Guide
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#updates" className="text-light">
+                        Updates
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/contact-us" className="text-light">
+                        Contact Us
+                      </a>
+                    </li>
+                  </ul>
+                </Col>
+              </Row>
+            </Col>
+
+          </Row>
+
+          <hr />
+          <Row className="mt-4">
+            <Col lg={6}>
+              <p className="text-start">
+                2025 @ TradeHunter. All rights reserved.
+              </p>
+            </Col>
+            <Col lg={6}>
+              <div className="social-icons d-flex justify-content-center justify-content-lg-end gap-4 mb-3">
+                <a href="#facebook" className="text-light bg-dark">
+                  <FaFacebook size={16} />
+                </a>
+                <a href="#dribble" className="text-light">
+                  <FaDribbble size={16} />
+                </a>
+                <a href="#instagram" className="text-light">
+                  <FaInstagram size={16} />
+                </a>
+                <a href="#twitter" className="text-light">
+                  <FaTwitter size={16} />
+                </a>
+                <a href="#linkedin" className="text-light">
+                  <FaLinkedin size={16} />
+                </a>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </footer>
     </>
   );
 }
