@@ -1,11 +1,8 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { IoIosSearch } from "react-icons/io";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { BiCoinStack } from "react-icons/bi";
-import { Row, Col } from 'react-bootstrap';
-
+import { Row, Col } from "react-bootstrap";
 import { PiBag } from "react-icons/pi";
 import Button from "@mui/material/Button";
 import Form from "react-bootstrap/Form";
@@ -14,42 +11,51 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "./assets/logo.png";
 import { GoArrowRight } from "react-icons/go";
-import { useNavigate } from 'react-router-dom';
-import { FaFacebook, FaDribbble, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa'; // Add social icons
-
-import logoWhite from './assets/logo-white.png'
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  FaFacebook,
+  FaDribbble,
+  FaInstagram,
+  FaTwitter,
+  FaLinkedin,
+} from "react-icons/fa"; // Add social icons
+import Loader from "./Loader";
+import noData from "./assets/no_data_found.gif";
+import logoWhite from "./assets/logo-white.png";
 function Search() {
-  // Dummy data for job listings
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const latitude = searchParams.get("lat");
+  const longitude = searchParams.get("lng");
+  const businessType = searchParams.get("businessType");
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const dummyJobs = [
-    {
-      id: 1,
-      title: "Software Developer",
-      createdAt: "2025-03-01T00:00:00Z",
-      estimatedBudget: 5000,
-      jobLocation: {
-        jobAddressLine: "123 Tech Street, Silicon Valley",
-      },
-    },
-    {
-      id: 2,
-      title: "Product Manager",
-      createdAt: "2025-02-15T00:00:00Z",
-      estimatedBudget: 7000,
-      jobLocation: {
-        jobAddressLine: "456 Startup Avenue, San Francisco",
-      },
-    },
-  ];
+  const [data, setData] = useState([]);
 
-  const filteredJobs = dummyJobs.filter((job) =>
+  const filteredJobs = data.filter((job) =>
     job.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleClick = () => {
-    navigate('/welcome'); // Navigate to /login route
+    navigate("/welcome");
   };
+
+  const handleSearchJob = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `http://54.236.98.193:7777/api/jobPost/jobsByBusinessType/?lat=${latitude}&lng=${longitude}&businessType=${businessType}`
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleSearchJob();
+  }, [businessType, longitude, latitude]);
 
   return (
     <>
@@ -59,13 +65,20 @@ function Search() {
             <img src={logo} alt="logo" />
           </Link>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-              <Link to="#" style={{ fontWeight: "350" }}>About Us</Link>
-              <Link to="/contact-us" style={{ fontWeight: "350" }}>Contact Us</Link>
+          <Navbar.Collapse
+            id="responsive-navbar-nav"
+            className="px-3 pt-2 p-lg-0"
+          >
+            <Nav className="me-auto d-flex flex-column flex-lg-row gap-2 gap-lg-5 ">
+              <Link href="#" style={{ fontWeight: "350" }}>
+                About Us
+              </Link>
+              <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                Contact Us
+              </Link>
             </Nav>
 
-            <Nav>
+            <Nav className="mb-4">
               <Link to="/welcome">
                 <Button variant="contained" color="success">
                   Get Started <GoArrowRight className="fs-4 ms-1" />
@@ -87,12 +100,12 @@ function Search() {
           <div className="row mt-4 gy-4 management">
             {filteredJobs.length === 0 ? (
               <div className="d-flex justify-content-center">
-                <h4>No job requests found.</h4>
+                <img src={noData} alt="No Data Found" className="w-nodata" />
               </div>
             ) : (
               filteredJobs.map((job) => (
-                <div className="col-lg-12" key={job.id}>
-                  <div className="card border-0 rounded-3 px-4">
+                <div className="col-lg-12" key={job._id}>
+                  <div className="card border-0 rounded-5 shadow px-4">
                     <div className="card-body">
                       <div className="row gy-4 gx-1 align-items-center">
                         <div className="col-lg-3">
@@ -194,7 +207,6 @@ function Search() {
                 </Col>
               </Row>
             </Col>
-
           </Row>
 
           <hr />
