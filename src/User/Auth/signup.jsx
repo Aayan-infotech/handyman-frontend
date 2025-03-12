@@ -115,6 +115,7 @@ export default function SignUp() {
         );
         const userId = firebaseUser.user.uid;
         console.log(userId);
+        localStorage.setItem("hunterUId", userId);
 
         await setDoc(doc(db, "hunters", userId), {
           name,

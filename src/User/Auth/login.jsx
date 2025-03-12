@@ -22,6 +22,7 @@ import { auth } from "../../Chat/lib/firestore";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const hunterUID = localStorage.getItem("hunterUId")
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -50,6 +51,7 @@ export default function Login() {
           email: email,
           password: password,
           userType: userType,
+          UID:hunterUID
         },
         {
           headers: {
@@ -81,7 +83,6 @@ export default function Login() {
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
-        localStorage.setItem("hunterUId", userId);
         localStorage.removeItem("ProviderToken");
         localStorage.removeItem("ProviderEmail");
         localStorage.removeItem("ProviderName");
