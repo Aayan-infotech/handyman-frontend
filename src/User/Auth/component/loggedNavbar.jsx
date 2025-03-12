@@ -11,7 +11,8 @@ import axios from "axios";
 
 export default function LoggedHeader() {
   const Location = useLocation();
-  const providerToken = localStorage.getItem("providerToken");
+  const providerToken = localStorage.getItem("ProviderToken");
+  console.log(providerToken)
   return (
     <>
       <Navbar
@@ -50,7 +51,7 @@ export default function LoggedHeader() {
                 <Link className="notification" to="/notification">
                   <IoMdNotificationsOutline className="fs-4" />
                 </Link>
-                {location.pathname.includes("provider") ? (
+                {providerToken ? (
                   <Link to="/provider/myprofile">
                     <FaRegUserCircle className="fs-1" />
                   </Link>

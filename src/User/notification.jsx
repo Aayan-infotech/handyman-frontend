@@ -13,7 +13,6 @@ export default function Notification() {
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
-
   const [notifications, setNotifications] = useState([]);
   const [massNotifications, setMassNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,9 +63,7 @@ export default function Notification() {
   }, []);
 
   const allData = [...massNotifications, ...notifications];
-  console.log(massNotifications);
-  console.log(notifications, ".....");
-  console.log(allData);
+
 
   return (
     <>
