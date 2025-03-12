@@ -25,13 +25,21 @@ export default function LoginProvider() {
   const userType = "provider";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const [guestLocation, setGuestLocation] = useState(null);
-
+  const ProviderUId = localStorage.getItem("ProviderUId");
   const handleLogin = async (e) => {
     e.preventDefault();
-    if(!email || !password){
-      setToastProps({ message: "Please fill all fields", type: "error" , toastKey: Date.now() });
+    if (!email || !password) {
+      setToastProps({
+        message: "Please fill all fields",
+        type: "error",
+        toastKey: Date.now(),
+      });
       return;
     }
     setLoading(true);
@@ -42,6 +50,7 @@ export default function LoginProvider() {
           email: email,
           password: password,
           userType: userType,
+          UID:ProviderUId
         },
         {
           headers: {
@@ -51,12 +60,20 @@ export default function LoginProvider() {
       );
 
       if (response.status === 200) {
-        const firebaseUser = await signInWithEmailAndPassword(auth, email, password);
-         const userId = firebaseUser.user.uid;
+        const firebaseUser = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const userId = firebaseUser.user.uid;
         setEmail("");
         setPassword("");
         setLoading(false);
-        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         setTimeout(() => {
           navigate("/provider/upload");
         }, 2000);
@@ -70,7 +87,7 @@ export default function LoginProvider() {
           response?.data?.data?.user?.contactName
         );
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
-        localStorage.setItem("ProviderUId", userId);
+
         localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
         localStorage.removeItem("hunterToken");
         localStorage.removeItem("hunterEmail");
@@ -81,12 +98,16 @@ export default function LoginProvider() {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now()});
+      setToastProps({
+        message: error?.response?.data?.error,
+        type: "error",
+        toastKey: Date.now(),
+      });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
-          toastKey: Date.now()
+          toastKey: Date.now(),
         });
       }
     }
@@ -107,14 +128,18 @@ export default function LoginProvider() {
           localStorage.setItem("guestLocation", JSON.stringify(newLocation));
         },
         (error) => {
-          setToastProps({ message: error?.message, type: "error" , toastKey: Date.now() });
+          setToastProps({
+            message: error?.message,
+            type: "error",
+            toastKey: Date.now(),
+          });
         }
       );
     } else {
       setToastProps({
         message: "Geolocation is not supported by this browser.",
         type: "error",
-        toastKey: Date.now()
+        toastKey: Date.now(),
       });
     }
   };
@@ -143,7 +168,9 @@ export default function LoginProvider() {
               <div className="card shadow">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">LOGIN</h2>
-                  <p className="text-center mt-lg-5 mb-lg-4">Great You are Back</p>
+                  <p className="text-center mt-lg-5 mb-lg-4">
+                    Great You are Back
+                  </p>
 
                   <Form className="py-3">
                     <Form.Group
@@ -241,7 +268,11 @@ export default function LoginProvider() {
         </div>
       )}
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

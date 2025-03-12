@@ -160,6 +160,9 @@ export default function MyProfile() {
         localStorage.removeItem("ProviderId");
         localStorage.removeItem("ProviderUId");
         localStorage.removeItem("Guest");
+        localStorage.removeItem("hunterUId");
+        localStorage.removeItem("ProviderUId");
+        localStorage.clear();
         setTimeout(() => navigate("/welcome"), 2000);
       }
     } catch (error) {
