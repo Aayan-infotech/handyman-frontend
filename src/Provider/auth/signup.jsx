@@ -184,6 +184,7 @@ export default function SignUpProvider() {
         );
         const userId = firebaseUser.user.uid;
         console.log(userId);
+        localStorage.setItem("ProviderUId", userId);
 
         await setDoc(doc(db, "providers", userId), {
           name,
@@ -245,7 +246,6 @@ export default function SignUpProvider() {
                         <Form.Control
                           className="pos-image-selector"
                           type="file"
-                          multiple
                           onChange={(e) => setImages(e.target.files)}
                         />
                       </div>

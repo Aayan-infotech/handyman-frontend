@@ -7,7 +7,7 @@ import Toaster from "../Toaster";
 import Row from "react-bootstrap/Row";
 import "../User/user.css";
 import { IoImageOutline } from "react-icons/io5";
-import LoggedHeader from "../User/Auth/component/loggedNavbar";
+import LoggedHeader from "./loggedNavbar";
 import { useDispatch } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";
@@ -21,7 +21,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { ref, set } from "firebase/database";
-
+import { FaPen } from "react-icons/fa";
 import { auth, db } from "../Chat/lib/firestore";
 import {
   collection,
@@ -49,6 +49,9 @@ export default function EditProfile() {
   const hunterUid = localStorage.getItem("hunterUId");
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
+  const [images, setImages] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null); // Store the preview image
+
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [toastProps, setToastProps] = useState({
@@ -105,6 +108,7 @@ export default function EditProfile() {
 
         if (fetchedUser) {
           setName(fetchedUser?.contactName || fetchedUser?.name || "");
+          setImages(fetchedUser?.images || "");
           setNumber(fetchedUser?.phoneNo || "");
           setEmail(fetchedUser?.email || "");
           setAddress(fetchedUser?.address?.addressLine || "");
@@ -151,72 +155,42 @@ export default function EditProfile() {
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
     formData.append("ABN_Number", registrationNumber);
-    formData.append("userType", providerId ? "provider" : "hunter");
+
     formData.append("businessName", businessName);
+
+    if (images && images instanceof FileList && images.length > 0) {
+      formData.append("images", images[0]);
+    } else if (typeof images === "string") {
+      formData.append("images", images);
+    }
 
     businessType.forEach((type) => {
       formData.append("businessType[]", type);
     });
 
     try {
-      // Update Backend API
       const response = await axios.put(
-        `http://54.236.98.193:7777/api/auth/update/${
-          providerId ? providerId : hunterId
-        }`,
+        `http://54.236.98.193:7777/api/${
+          providerId ? "provider" : "hunter"
+        }/updateById/${providerId ? providerId : hunterId}`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${providerToken || hunterToken}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       if (response.status === 200 || response.status === 201) {
         const userUId = providerUid || hunterUid;
-        const userData = response?.data?.updatedUser;
-        
-        // Update Firestore Database
-        if (providerToken) {
-          await setDoc(doc(db, "providers", userUId), {
-            name,
-            email,
-            phoneNo: number,
-            address,
-            latitude,
-            longitude,
-
-            blocked: [],
-          });
-          localStorage.setItem("ProviderName", name);
-          localStorage.setItem("ProviderEmail", email);
-          // Update Realtime Database
-        } else {
-          await setDoc(doc(db, "hunters", userUId), {
-            name,
-            email,
-            phoneNo: number,
-            address,
-            latitude,
-            longitude,
-            blocked: [],
-          });
-          localStorage.setItem("hunterName", name);
-          localStorage.setItem("hunterEmail", email);
-        }
-        await set(ref(realtimeDb, "userchats/" + userUId), { chats: [] });
         setLoading(false);
         setToastProps({
           message: response?.data?.message,
           type: "success",
           toastKey: Date.now(),
         });
-        if (providerToken) {
-          navigate(`/provider/home`);
-        } else {
-          navigate(`/home`);
-        }
+        navigate(providerToken ? `/provider/home` : `/home`);
       }
     } catch (error) {
       setLoading(false);
@@ -227,6 +201,21 @@ export default function EditProfile() {
       });
     }
   };
+
+  useEffect(() => {
+    if (images && typeof images === "string") {
+      setPreviewImage(images); // Use the existing image URL
+    }
+  }, [images]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImages(e.target.files); // Store the file list
+      setPreviewImage(URL.createObjectURL(file)); // Create a preview URL
+    }
+  };
+  console.log(images);
 
   return (
     <>
@@ -240,12 +229,41 @@ export default function EditProfile() {
               <div className="card shadow mb-4">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">Edit Profile</h2>
-                  <div className="my-3 profile d-flex align-items-center justify-content-center flex-column">
-                    <div className="color-profile d-flex flex-column justify-content-center align-items-center">
-                      <IoImageOutline />
-                      <span className="fs-6">Upload</span>
+                  {images === null ? (
+                    <>
+                      <div className="position-relative">
+                        <div className="mt-3 profile d-flex align-items-center justify-content-center flex-column">
+                          <div className="color-profile d-flex flex-column justify-content-center align-items-center">
+                            <IoImageOutline />
+                            <span className="fs-6">Upload</span>
+                          </div>
+                        </div>
+                        <Form.Control
+                          className="pos-image-selector"
+                          type="file"
+                          onChange={(e) => setImages(e.target.files)}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className=" mt-3 profile d-flex align-items-center justify-content-center flex-column">
+                      <div className="position-relative">
+                        <img
+                          src={previewImage}
+                          alt="profile"
+                          className="profile-image rounded-5 "
+                        />
+                        <div className="position-absolute end-0 bottom-0 ">
+                          <Form.Control
+                            className="pos-image-selector"
+                            type="file"
+                            onChange={handleImageChange}
+                          />
+                          <FaPen className="" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <Form className="py-3">
                     <Form.Group
                       as={Row}

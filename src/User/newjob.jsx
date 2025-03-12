@@ -31,6 +31,18 @@ function getStyles(name, personName, theme) {
   };
 }
 
+const extractCity = (addressComponents) => {
+  for (let component of addressComponents) {
+    if (component.types.includes("locality")) {
+      return component.long_name; // City name
+    }
+    if (component.types.includes("administrative_area_level_1")) {
+      return component.long_name; // Fallback if locality is not found
+    }
+  }
+  return "";
+};
+
 export default function NewJob() {
   const [startTime, setStartTime] = useState(dayjs().hour(9).minute(0));
   const [endTime, setEndTime] = useState(dayjs().hour(17).minute(0));
@@ -41,7 +53,12 @@ export default function NewJob() {
   const [budget, setBudget] = useState("");
   const [radius, setRadius] = useState("");
   const [address, setAddress] = useState("");
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [city, setCity] = useState("");
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const [businessType, setBusinessType] = useState([]);
   const [requirements, setRequirements] = useState("");
   const [documents, setDocuments] = useState([]);
@@ -86,10 +103,11 @@ export default function NewJob() {
     formData.append("jobRadius", radius);
     formData.append("jobAddressLine", address);
     formData.append("estimatedBudget", budget);
+    formData.append("city", city);
     businessType.forEach((type) => {
       formData.append("businessType[]", type);
     });
-    
+
     formData.append("requirements", requirements);
     formData.append("timeframe[from]", startTime.unix());
     formData.append("timeframe[to]", endTime.unix());
@@ -115,19 +133,27 @@ export default function NewJob() {
       );
 
       if (response.status === 200 || response.status === 201) {
-        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now()});
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         setLoading(false);
         setTimeout(() => {
           navigate("/home");
         }, 2000);
       }
     } catch (error) {
-      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now() });
+      setToastProps({
+        message: error?.response?.data?.error,
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
     }
   };
 
-  console.log(businessType)
+  console.log(businessType);
 
   return (
     <>
@@ -137,11 +163,9 @@ export default function NewJob() {
         <>
           <LoggedHeader />
           <Link to="/support/chat/1">
-          <div className="admin-message">
-           
+            <div className="admin-message">
               <MdOutlineSupportAgent />
-            
-          </div>
+            </div>
           </Link>
           <div className="message">
             <Link to="/message">
@@ -175,6 +199,10 @@ export default function NewJob() {
                         setAddress(formattedAddress);
                         setLatitude(place.geometry.location.lat());
                         setLongitude(place.geometry.location.lng());
+                        const extractedCity = extractCity(
+                          place.address_components
+                        );
+                        setCity(extractedCity);
                       }}
                       options={{
                         types: ["address"],
@@ -314,7 +342,11 @@ export default function NewJob() {
         </>
       )}
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

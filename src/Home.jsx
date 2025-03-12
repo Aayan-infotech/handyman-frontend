@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
+import Toaster from "./Toaster";
 import logo from "./assets/logo.png";
 import logoWhite from "./assets/logo-white.png";
 import underline from "./assets/underline.png";
@@ -11,9 +12,6 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { CiSearch } from "react-icons/ci";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import { SlLocationPin } from "react-icons/sl";
 import sidepic from "./assets/sidepic.png";
 import { Link } from "react-router-dom";
@@ -26,10 +24,8 @@ import company4 from "./assets/company/company4.png";
 import company5 from "./assets/company/company5.png";
 import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
-
-
-import { useNavigate } from 'react-router-dom';
-
+import Autocomplete from "react-google-autocomplete";
+import { useNavigate } from "react-router-dom";
 import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
 import Chip from "@mui/material/Chip";
@@ -47,6 +43,15 @@ function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
+  const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
+  const [address, setAddress] = useState("");
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     axios
@@ -64,17 +69,30 @@ function Home() {
         setRecentJob(res?.data?.data);
       });
   }, []);
-
+  const handleBusinessChange = (event) => {
+    setSelectedBusiness(event.target.value); // Update the selected business
+  };
   const handleChange = (event) => {
     setAge(event.target.value);
   };
 
   const handleClickForSignup = () => {
-    navigate('/provider/login'); // Navigate to /login route
+    navigate("/provider/login"); // Navigate to /login route
   };
 
   const handleClick = () => {
-    navigate('/login'); // Navigate to /login route
+    if (!selectedBusiness || !latitude || !longitude) {
+      setToastProps({
+        message: "Please enter business and location before searching",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      return;
+    }
+
+    navigate(
+      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`
+    );
   };
   return (
     <>
@@ -85,19 +103,20 @@ function Home() {
               <img src={logo} alt="logo" />
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#">About UCCCs</Link>
-                <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
-              </Nav> */}
-
-
-              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
-                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
+            <Navbar.Collapse
+              id="responsive-navbar-nav"
+              className="px-3 pt-2 p-lg-0"
+            >
+              <Nav className="me-auto d-flex flex-column flex-lg-row gap-2 gap-lg-5 ">
+                <Link href="#" style={{ fontWeight: "350" }}>
+                  About Us
+                </Link>
+                <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                  Contact Us
+                </Link>
               </Nav>
 
-              <Nav>
+              <Nav className="mb-4">
                 <Link to="/welcome">
                   <Button variant="contained" color="success">
                     Get Started <GoArrowRight className="fs-4 ms-1" />
@@ -130,43 +149,62 @@ function Home() {
                   <div className="">
                     <Box
                       component="form"
-                      className="d-flex justify-content-center align-items-center gap-4 flex-column flex-lg-row"
+                      className="d-flex justify-content-center align-items-end gap-4 flex-column flex-lg-row"
                     >
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
                         <CiSearch className="fs-4 mt-3" />
+
                         <TextField
                           id="standard-basic"
-                          // label="Job title or keyword"
-                          label="Bussiness"
+                          label="Business"
                           variant="standard"
                           className="w-100"
-                        />
-                      </div>
-                      <div className="d-flex justify-content-start justify-content-lg-centeralign-items-center gap-2 w-100">
-                        <SlLocationPin className="fs-4 mt-3" />
-                        <FormControl
-                          variant="standard"
-                          sx={{ minWidth: 200 }}
-                          className="w-100"
+                          select
+                          fullWidth
+                          value={selectedBusiness} // Bind the selected value to TextField
+                          onChange={handleBusinessChange} // Update state when selection changes
+                          SelectProps={{
+                            MenuProps: {
+                              PaperProps: {
+                                style: {
+                                  maxHeight: 200, // Limit dropdown height
+                                },
+                              },
+                            },
+                          }}
                         >
-                          <InputLabel id="demo-simple-select-standard-label">
-                            Enter Location
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
-                            value={age}
-                            onChange={handleChange}
-                            label="Age"
-                          >
-                            <MenuItem value="">
-                              <em>None</em>
+                          {/* Map over the businessData array to display business names */}
+                          {businessData && businessData.length > 0 ? (
+                            businessData.map((business, index) => (
+                              <MenuItem key={index} value={business.name}>
+                                {business.name}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem disabled>
+                              No recent jobs available.
                             </MenuItem>
-                            <MenuItem value={"India"}>India</MenuItem>
-                            <MenuItem value={"USA"}>USA</MenuItem>
-                            <MenuItem value={"Europe"}>Europe</MenuItem>
-                          </Select>
-                        </FormControl>
+                          )}
+                        </TextField>
+                      </div>
+                      <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
+                        <SlLocationPin className="fs-4 mt-3" />
+                        <Autocomplete
+                          className="form-control address-landing ps-0"
+                          apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
+                          style={{ width: "100%" }}
+                          onPlaceSelected={(place) => {
+                            const formattedAddress =
+                              place?.formatted_address || place?.name;
+                            setAddress(formattedAddress);
+                            setLatitude(place.geometry.location.lat());
+                            setLongitude(place.geometry.location.lng());
+                          }}
+                          options={{
+                            types: ["address"],
+                          }}
+                          defaultValue={address}
+                        />
                       </div>
                       {/* <Button
                         variant="contained"
@@ -175,8 +213,6 @@ function Home() {
                       >
                         Search 
                       </Button> */}
-
-
 
                       <Button
                         variant="contained"
@@ -217,7 +253,7 @@ function Home() {
             <div className="row gy-4 mt-3">
               {businessData.map((item) => (
                 <div className="col-lg-3" key={item._id}>
-                  <Link to="/welcome"className="h-100">
+                  <Link to="/welcome" className="h-100">
                     <div className="card rounded-0 h-100">
                       <div className="card-body">
                         <div className="d-flex flex-column gap-4 justify-content-start">
@@ -244,16 +280,17 @@ function Home() {
                   Do you want to <br />
                   secure more work
                 </h5>
-                <button className="btn btn-mobile py-2 px-4 my-4"
+                <button
+                  className="btn btn-mobile py-2 px-4 my-4"
                   onClick={handleClickForSignup} // Button click triggers the navigation
                 >
-
                   Sign Up
                 </button>
                 <br />
                 <b className="text-light ">
                   {/* To trade and check our plans and choose what suits you best */}
-                  To Trade Hunter and check our plans and choose what suits you best
+                  To Trade Hunter and check our plans and choose what suits you
+                  best
                 </b>
               </div>
             </div>
@@ -536,7 +573,6 @@ function Home() {
                       <div className="d-flex flex-column gap-2 justify-content-start">
                         <div className="d-flex justify-content-between align-items-center">
                           <h6 className="mb-0">{item?.title}</h6>
-
                         </div>
 
                         <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
@@ -549,9 +585,13 @@ function Home() {
                           direction="row"
                           className="flex-wrap gap-2 justify-content-start align-items-start"
                         >
-                          {item.businessType.map((text , index) => (
+                          {item.businessType.map((text, index) => (
                             <>
-                              <Chip label={text} className=" green-line" key={index}/>
+                              <Chip
+                                label={text}
+                                className=" green-line"
+                                key={index}
+                              />
                             </>
                           ))}
                         </Stack>
@@ -637,37 +677,13 @@ function Home() {
                 </Col>
               </Row>
             </Col>
-
-            {/* Right Section: Subscription */}
-            {/* <Col md={4} className="mb-4">
-              <h6>Get job notifications</h6>
-              <p className="my-3">
-                The latest job news, articles, sent to your inbox weekly.
-              </p>
-              <Form>
-                <Form.Group className="d-flex">
-                  <Form.Control
-                    type="email"
-                    placeholder="Email Address "
-                    className="me-2 rounded-0"
-                  />
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="custom-green px-5 py-2 rounded-0 bg-green-custom"
-                  >
-                    Subscribe
-                  </Button>
-                </Form.Group>
-              </Form>
-            </Col> */}
           </Row>
 
           <hr />
           <Row className="mt-4">
             <Col lg={6}>
               <p className="text-start">
-                2024 @ Cloud Connect. All rights reserved.
+                2025 @ TradeHunter. All rights reserved.
               </p>
             </Col>
             <Col lg={6}>
@@ -692,6 +708,12 @@ function Home() {
           </Row>
         </Container>
       </footer>
+
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

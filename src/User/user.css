@@ -147,6 +147,7 @@
 .green-card {
   background-color: #32de84;
   color: #fff;
+  z-index: 999;
 }
 
 .message {
@@ -214,8 +215,8 @@
 }
 .pos-design-icon {
   position: absolute;
-  right: 0;
-  top: 95px;
+  right: -60px;
+  top: 125px;
 }
 .pos-design-pillai {
   position: absolute;
@@ -226,6 +227,10 @@
   position: absolute;
   right: -45px;
   top: 50px;
+}
+
+.pos-design-icon img {
+  width: calc(100% - 30%);
 }
 .dots {
   background-color: #fff;
@@ -320,7 +325,7 @@
   border-radius: 40px;
   border: 0;
   padding: 10px 10px 10px 28px !important;
-  min-width: 350px;
+  min-width: 300px;
   width: 100%;
 }
 .management svg {
