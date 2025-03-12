@@ -18,18 +18,12 @@ import MenuItem from "@mui/material/MenuItem";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { ref, set } from "firebase/database";
 
-import { auth, db } from "../../Chat/lib/firestore";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  setDoc,
-  doc,
-} from "firebase/firestore";
+import { auth } from "../../Chat/lib/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import upload from "../../Chat/lib/upload";
 import { realtimeDb } from "../../Chat/lib/firestore";
 
@@ -130,7 +124,7 @@ export default function SignUpProvider() {
     });
     formData.append("ABN_Number", registrationNumber);
     formData.append("userType", "provider");
-    formData.append("radius", "50");
+    formData.append("radius", "10000");
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
     if (!guestVerify) {
@@ -140,13 +134,21 @@ export default function SignUpProvider() {
     if (images && images.length > 0) {
       formData.append("images", images[0]);
     }
-    const usersRef = collection(db, "providers");
-    const q = query(usersRef, where("name", "==", name));
-    const p = query(usersRef, where("email", "==", email));
-    const querySnapshot = (await getDocs(q)) && (await getDocs(p));
-    if (!querySnapshot.empty) {
+    try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.length > 0) {
+        setToastProps({
+          message: "Email already in use, please log in or use another email",
+          type: "error",
+          toastKey: Date.now(),
+        });
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking email:", error);
       setToastProps({
-        message: "Select another name and email",
+        message: "Error checking email",
         type: "error",
         toastKey: Date.now(),
       });
@@ -186,16 +188,16 @@ export default function SignUpProvider() {
         console.log(userId);
         localStorage.setItem("ProviderUId", userId);
 
-        await setDoc(doc(db, "providers", userId), {
-          name,
-          email,
-          phoneNo,
-          address,
-          latitude,
-          longitude,
-          id: userId,
-          blocked: [],
-        });
+        // await setDoc(doc(db, "providers", userId), {
+        //   name,
+        //   email,
+        //   phoneNo,
+        //   address,
+        //   latitude,
+        //   longitude,
+        //   id: userId,
+        //   blocked: [],
+        // });
 
         await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
         setLoading(false);
