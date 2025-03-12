@@ -1,21 +1,57 @@
-import React, { useState } from "react";
-import LoggedHeader from "./Auth/component/loggedNavbar";
+import React, { useState, useEffect } from "react";
+import LoggedHeader from "../User/Auth/component/loggedNavbar";
 import Form from "react-bootstrap/Form";
 import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
-import "./user.css";
+import "../User/user.css";
 import { FaArrowLeft } from "react-icons/fa";
 import user1 from "../assets/user1.png";
 import user2 from "../assets/user2.png";
 import { Link } from "react-router-dom";
-import Chat from "../Chat/chat";
+import Chat from "./chat";
+import { ref, push, set, onValue } from "firebase/database";
+import { realtimeDb } from "./lib/firestore";
+
 export default function Message() {
   const [open, setOpen] = useState(false);
+  console.log(localStorage.getItem("hunterName"));
+  const [messages, setMessages] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  useEffect(() => {
+    const storedUserId = location.pathname.includes("/provider")
+      ? localStorage.getItem("ProviderUId")
+      : localStorage.getItem("hunterUId");
+    setCurrentUser(storedUserId || "");
+  }, [location]);
   const handleChange = () => {
     setOpen(true);
   };
+
   const handleBack = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const chatMessagesRef = ref(realtimeDb, `chat_list`);
+    const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = Object.values(snapshot.val()).filter(
+          (chat) => chat.userId1 === currentUser || chat.userId2 === currentUser
+        );
+        data.sort((a, b) => a.createdAt - b.createdAt);
+        setMessages(data);
+      } else {
+        setMessages([]);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [currentUser]);
+
+  console.log(messages);
+  console.log("currentUser", currentUser);
+
   return (
     <>
       <LoggedHeader />
@@ -61,7 +97,7 @@ export default function Message() {
                             open ? "col-lg-3" : "col-lg-1 px-lg-0 col-4"
                           }`}
                         >
-                          <img src={user1} alt="user1" className="w-100"/>
+                          <img src={user1} alt="user1" className="w-100" />
                         </div>
                         <div
                           className={`${
@@ -98,7 +134,7 @@ export default function Message() {
                             open ? "col-lg-3" : "col-lg-1 px-lg-0 col-4"
                           }`}
                         >
-                          <img src={user2} alt="user2" className="w-100"/>
+                          <img src={user2} alt="user2" className="w-100" />
                         </div>
                         <div
                           className={`${
@@ -127,13 +163,11 @@ export default function Message() {
                       </div>
                     </div>
                   </Link>
-                
-                
                 </div>
               </div>
               <div className={`${open ? "col-lg-6" : "d-none"}`}>
                 <div className=" message-box">
-                  <Chat />
+                  <Chat open={open} />
                 </div>
               </div>
             </div>

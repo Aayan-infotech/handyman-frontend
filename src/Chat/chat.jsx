@@ -7,80 +7,187 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
-import { ref, push, set, onValue } from "firebase/database";
-import { realtimeDb } from "./lib/firestore";
+import { ref, push, set, onValue, update } from "firebase/database";
+import { realtimeDb, auth } from "./lib/firestore";
+
+const sendMessage = async (
+  msgType,
+  msg,
+  chatId,
+  receiverId,
+  isReceiverOnline,
+  setMessages,
+  jobId
+) => {
+  if (!chatId || !jobId) {
+    console.error("Chat ID or Job ID is missing");
+    return;
+  }
+  const time = Date.now();
+  const senderId = auth.currentUser?.uid;
+  if (!senderId) {
+    console.error("Sender ID is undefined");
+    return;
+  }
+
+  console.log("Sending message with Job ID:", jobId);
+
+  const chat = {
+    msg,
+    timeStamp: time,
+    type: msgType,
+    receiverId,
+    senderId,
+    jobId,
+  };
+
+  const users = {
+    receiverId,
+    senderId,
+    jobName: "Job Title",
+    jobId,
+  };
+
+  const chatMap = { messages: chat, users };
+  console.log("CHAT MAP =>", chatMap);
+
+  try {
+    const newMessageRef = push(ref(realtimeDb, `chats/${chatId}/messages`));
+    await set(newMessageRef, chat);
+    setMessages((prevMessages) => [...prevMessages, chat]);
+
+    await set(ref(realtimeDb, `chats/${chatId}/jobStatus`), {
+      status: "Pending",
+      acceptedBy: "",
+    });
+    await set(
+      ref(realtimeDb, `chatList/${senderId}/${receiverId}/${chatId}`),
+      chatMap
+    );
+    await set(
+      ref(realtimeDb, `chatList/${receiverId}/${senderId}/${chatId}`),
+      chatMap
+    );
+
+    if (!isReceiverOnline) {
+      await update(
+        ref(realtimeDb, `chatList/${receiverId}/${senderId}/${chatId}`),
+        {
+          unRead: 1,
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Firebase Error:", error.message);
+  }
+};
 
 export default function Chat() {
-  const location = useLocation();
   const [show, setShow] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [text, setText] = useState("");
+  const [msg, setMsg] = useState("");
   const [chatId, setChatId] = useState(null);
-  const [receiverId] = useState("TWhwzZu1xCNFmqaq3r9KVrRiE0q1");
+  const [receiverId] = useState("IFEWMaijDDWqXHlQQ5Xl1Heih1l1");
   const [currentUser, setCurrentUser] = useState(null);
-
-  // Retrieve current user ID
+  const location = useLocation();
+  const jobId = new URLSearchParams(location.search).get("jobId");
   useEffect(() => {
     const storedUserId = location.pathname.includes("/provider")
-      ? localStorage.getItem("ProviderId")
-      : localStorage.getItem("hunterId");
+      ? localStorage.getItem("ProviderUId")
+      : localStorage.getItem("hunterUId");
     setCurrentUser(storedUserId || "");
   }, [location]);
 
-  // Fetch messages when chatId and currentUser are available
+  // useEffect(() => {
+  //   if (!currentUser || !receiverId || !chatId) return;
+
+  //   const chatMessagesRef = ref(realtimeDb, `chats/${chatId}/messages`);
+  //   const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
+  //     if (snapshot.exists()) {
+  //       const data = Object.values(snapshot.val());
+  //       data.sort((a, b) => a.createdAt - b.createdAt);
+  //       setMessages(data);
+  //     } else {
+  //       setMessages([]);
+  //     }
+  //   });
+
+  //   return () => unsubscribe();
+  // }, []);
+
   useEffect(() => {
-    if (!currentUser || !receiverId || !chatId) return;
-
+    if (!chatId) return;
     const chatMessagesRef = ref(realtimeDb, `chats/${chatId}/messages`);
-    const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = Object.values(snapshot.val());
-        data.sort((a, b) => a.createdAt - b.createdAt);
-        setMessages(data);
-      } else {
-        setMessages([]);
-      }
+    onValue(chatMessagesRef, (snapshot) => {
+      setMessages(
+        snapshot.exists()
+          ? Object.values(snapshot.val()).sort(
+              (a, b) => a.timeStamp - b.timeStamp
+            )
+          : []
+      );
     });
+  }, [chatId]);
 
-    return () => unsubscribe(); // Proper cleanup to prevent memory leaks
-  }, [chatId, currentUser, receiverId]);
-
-  // Handle message send
-
-  // Generate and store a consistent chat ID
   useEffect(() => {
     if (!currentUser || !receiverId) return;
-
-    const generateChatId = () => {
-      return [currentUser, receiverId].sort().join("_");
-    };
-
-    const newChatId = generateChatId();
-    console.log("Generated Chat ID:", newChatId);
-
-    setChatId(newChatId);
-    localStorage.setItem("chatId", newChatId); // Store chat ID for persistence
+    setChatId([currentUser, receiverId].sort().join("_chat_"));
   }, [currentUser, receiverId]);
 
-  const handleSend = async () => {
-    if (text.trim() === "" || !currentUser || !chatId) return;
+  // useEffect(() => {
+  //   if (!currentUser || !receiverId) return;
 
-    try {
-      const newMessageRef = push(ref(realtimeDb, `chats/${chatId}/messages`));
-      await set(newMessageRef, {
-        senderId: currentUser,
-        receiverId: receiverId,
-        name:
-          localStorage.getItem("hunterName") ||
-          localStorage.getItem("ProviderName"),
-        type: localStorage.getItem("hunterName") ? "hunter" : "provider",
-        text,
-        createdAt: Date.now(),
-      });
-      setText("");
-    } catch (err) {
-      console.log("Error sending message:", err);
-    }
+  //   const generateChatId = () => {
+  //     return [currentUser, receiverId].sort().join("_");
+  //   };
+
+  //   const newChatId = generateChatId();
+  //   console.log("Generated Chat ID:", newChatId);
+
+  //   setChatId(newChatId);
+  //   localStorage.setItem("chatId", newChatId);
+  // }, [currentUser, receiverId]);
+
+  // const handleSend = async () => {
+  //   if (text.trim() === "" || !currentUser || !chatId) return;
+
+  //   try {
+  //     const newMessageRef = push(ref(realtimeDb, `chats/${chatId}/messages`));
+  //     await set(newMessageRef, {
+  //       senderId: currentUser,
+  //       receiverId: receiverId,
+  //       name:
+  //         localStorage.getItem("hunterName") ||
+  //         localStorage.getItem("ProviderName"),
+  //       type: localStorage.getItem("hunterName") ? "hunter" : "provider",
+  //       text,
+  //       createdAt: Date.now(),
+  //     });
+  //     setText("");
+  //   } catch (err) {
+  //     console.log("Error sending message:", err);
+  //   }
+  // };
+
+  const handleSend = async () => {
+    console.log("Send button clicked");
+   
+    if (msg.trim() === "" || !chatId || !jobId) return;
+    console.error("Message, Chat ID, or Job ID is missing");
+    console.log("Chat ID:", chatId);
+    console.log("Job ID:", jobId);
+
+    msg;
+    await sendMessage(
+      "text",
+      msg,
+      chatId,
+      receiverId,
+      false,
+      setMessages,
+      jobId
+    );
+    setMsg("");
   };
 
   // Handle visibility toggle
@@ -98,7 +205,6 @@ export default function Chat() {
   }, [location]);
 
   console.log("messages", messages);
-  console.log(currentUser);
 
   return (
     <div className={`d-flex flex-column gap-3 pb-4 bg-second`}>
@@ -119,24 +225,30 @@ export default function Chat() {
           </div>
         </div>
       </div>
-      <div className="row">
-        <div className="col-lg-10 mx-auto">
-          <div className="card rounded-5 border-0 shadow">
-            <div className="card-body px-4 py-3">
-              <span className="text-center d-flex">
-                Do you want to work with them for this job
-                <br /> Home cleaning
-              </span>
-              <div className="d-flex justify-content-evenly mt-3">
-                <button className="btn btn-primary px-5">Yes</button>
-                <button className="btn btn-danger px-5">No</button>
+      <div className="container-fluid">
+        <div className="row">
+          <div className={`mw-condition mx-auto`}>
+            <div className="card rounded-5 border-0 shadow">
+              <div className="card-body px-4 py-3">
+                <span className="text-center d-flex justify-content-center">
+                  Do you want to work with them for this job
+                  <br /> Home cleaning
+                </span>
+                <div className="d-flex justify-content-evenly mt-3">
+                  <button className="btn btn-primary px-5">Yes</button>
+                  <button className="btn btn-danger px-5">No</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={`position-relative ${show ? "bg-second h-100" : ""}`}>
+      <div
+        className={`position-relative container${
+          show ? "bg-second h-100" : ""
+        }`}
+      >
         <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
           {messages.map((msg, index) => (
             <div
@@ -150,10 +262,10 @@ export default function Chat() {
                     : "msg-recieved mb-1"
                 }
               >
-                {msg.text}
+                {msg.msg}
               </p>
               <span className="text-muted time-status">
-                {new Date(msg.createdAt).toLocaleTimeString()}
+                {new Date(msg.timeStamp).toLocaleTimeString()}
               </span>
             </div>
           ))}
@@ -164,8 +276,8 @@ export default function Chat() {
             <Form.Control
               placeholder="Type Message"
               className="w-100 border-0 py-3 px-3 rounded-5"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
+              value={msg}
+              onChange={(e) => setMsg(e.target.value)}
             />
             <IoSendSharp onClick={handleSend} style={{ cursor: "pointer" }} />
           </div>

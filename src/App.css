@@ -464,7 +464,6 @@
   border-right: 0 !important;
   border-bottom: 1px solid #949494 !important;
   border-radius: 0 !important;
-  
 }
 .lock-icon {
   position: absolute;
@@ -509,14 +508,15 @@
 .form-control:focus {
   box-shadow: none !important;
 }
-
+.mw-condition {
+  max-width: 500px !important;
+}
 @media screen and (max-width: 768px) {
   .profile-img {
     width: 100%;
-   height: 100%;
- 
+    height: 100%;
+
     border: 8px solid white;
-  
   }
   .w-nodata {
     width: 100% !important;
@@ -566,7 +566,7 @@
   .mobile h5 {
     font-size: 30px !important;
   }
-  .profile-icon img{
+  .profile-icon img {
     width: 60px !important;
   }
   .standard-input input {

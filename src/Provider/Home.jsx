@@ -22,6 +22,7 @@ export default function HomeProvider() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [data, setData] = useState([]);
+  const [radius, setRadius] = useState(null);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -39,8 +40,9 @@ export default function HomeProvider() {
       if (result.payload?.status === 200) {
         const { businessType, address } = result.payload.data;
         setBusinessType(businessType[0]);
-        setLatitude(address?.location?.coordinates?.[0] || null);
-        setLongitude(address?.location?.coordinates?.[1] || null);
+        setLatitude(address?.location?.coordinates?.[1] || null);
+        setLongitude(address?.location?.coordinates?.[0] || null);
+        setRadius(address?.radius || null);
       } else {
         throw new Error("Failed to fetch user data.");
       }
@@ -59,7 +61,7 @@ export default function HomeProvider() {
     setLoading(true);
     try {
       const result = await dispatch(
-        getProviderJobs({ businessType, latitude, longitude })
+        getProviderJobs({ businessType, latitude, longitude, radius })
       );
       if (getProviderJobs.fulfilled.match(result)) {
         setData(result.payload?.data || []);

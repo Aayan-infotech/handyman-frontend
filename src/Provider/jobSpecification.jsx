@@ -12,7 +12,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { IoIosStar } from "react-icons/io";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
@@ -26,12 +26,15 @@ export default function JobSpecification() {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const handleClose = () => setShow(false);
   const ProviderToken = localStorage.getItem("ProviderToken");
-  const ProviderId = localStorage.getItem('ProviderId')
-  
-  console.log(ProviderToken,'//////')
+  const ProviderId = localStorage.getItem("ProviderId");
+  const navigate = useNavigate();
   const { id } = useParams();
   const guestCondition = localStorage.getItem("Guest") === "true";
 
@@ -39,18 +42,24 @@ export default function JobSpecification() {
     setLoading(true);
     try {
       const response = await axios.post(
-
-       `http://54.236.98.193:7777/api/provider/acceptCount/${ProviderId}`,
-        console.log(id,'///iid '),
- 
+        `http://54.236.98.193:7777/api/provider/acceptCount/${ProviderId}`,
+        console.log(id, "///iid ")
       );
       if (response.status === 200) {
         setShow(true);
-        setToastProps({ message: response.message, type: "success" , toastKey: Date.now() });
+        setToastProps({
+          message: response.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         setLoading(false);
       }
     } catch (error) {
-      setToastProps({message: error?.response?.data?.message, type: "error" , toastKey: Date.now()});
+      setToastProps({
+        message: error?.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
     }
   };
@@ -59,7 +68,6 @@ export default function JobSpecification() {
     try {
       const response = await axios.get(
         `http://54.236.98.193:7777/api/jobpost/jobpost-details/${id}`,
-     
 
         {
           headers: {
@@ -93,6 +101,10 @@ export default function JobSpecification() {
       console.error("Error Getting Nearby Jobs:", error);
       setLoading(false);
     }
+  };
+
+  const handleChat = () => {
+    navigate(`/provider/chat/${data.user}?jobId=${data?._id}`);
   };
 
   useEffect(() => {
@@ -131,7 +143,7 @@ export default function JobSpecification() {
                           <h6>24/01/24</h6>
                         </div>
                       </div>
-                      <div className="d-flex flex-row gap-4 align-items-center pb-3 pt-2">
+                      {/* <div className="d-flex flex-row gap-4 align-items-center pb-3 pt-2">
                         <div className="contact">
                           <a href="/provider/home">
                             <MdMessage />
@@ -147,12 +159,11 @@ export default function JobSpecification() {
                             <MdCall />
                           </a>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
-                        {data.businessType?.map((item , index) => (
+                        {data.businessType?.map((item, index) => (
                           <Chip label={item} variant="outlined" key={index} />
                         ))}
-                       
                       </div>
                       <ul className="list-unstyled d-flex flex-column gap-2">
                         <li>
@@ -176,9 +187,7 @@ export default function JobSpecification() {
 
                   <div className="col-lg-6">
                     <h3 className="fw-bold">Job Description</h3>
-                    <p>
-                     {data?.requirements}
-                    </p>
+                    <p>{data?.requirements}</p>
                     <hr />
                     <div className="d-flex flex-column gap-3 align-items-start more-info">
                       <div className="row gy-4 w-100">
@@ -244,18 +253,26 @@ export default function JobSpecification() {
               Job Request <br /> Accepted
             </h3>
           </Modal.Body>
-          <Link to="/provider/chat/1234" className="mx-auto w-75">
+          {/* <Link to="/provider/chat/1234" className=""> */}
+          <div className="mx-auto w-75">
             <Button
               variant="contained"
               className="custom-green bg-green-custom rounded-5 py-3 w-100 mb-4"
+              onClick={handleChat}
             >
               Message
             </Button>
-          </Link>
+          </div>
+
+          {/* </Link> */}
         </Modal>
       </div>
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }
