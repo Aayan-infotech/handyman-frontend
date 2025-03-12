@@ -384,7 +384,7 @@ export default function MyProfile() {
                 <div
                   className={` ${
                     Location.pathname.includes("provider")
-                      ? "col-lg-2"
+                      ? "d-none"
                       : "col-lg-3"
                   }`}
                 >
