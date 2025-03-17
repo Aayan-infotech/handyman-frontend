@@ -43,7 +43,6 @@ export default function JobSpecification() {
     try {
       const response = await axios.post(
         `http://54.236.98.193:7777/api/provider/acceptCount/${ProviderId}`,
-        console.log(id, "///iid ")
       );
       if (response.status === 200) {
         setShow(true);
@@ -126,7 +125,7 @@ export default function JobSpecification() {
           </div>
         </Link>
         <div className="message">
-          <Link to="/message">
+          <Link to="/provider/message">
             <MdMessage />
           </Link>
         </div>
