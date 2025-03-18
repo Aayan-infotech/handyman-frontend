@@ -5,10 +5,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { getProviderUser } from "../Slices/userSlice";
 import { handlePayment } from "../Slices/paymentSlice";
 import Loader from "../Loader";
-import axios from "axios"; // Import axios
+import axios from "axios"; 
 import Toaster from "../Toaster";
 
 export default function PricingProvider() {
@@ -20,45 +19,50 @@ export default function PricingProvider() {
     toastKey: 0,
   });
   const name = localStorage.getItem("ProviderName");
-  const [title, setTitle] = useState("");
   const [transactionId, setTransactionId] = useState(45435435435);
   const [transactionDate, setTransactionDate] = useState(new Date());
   const [transactionStatus, setTransactionStatus] = useState("done");
   const [subscriptionAmount, setSubscriptionAmount] = useState("");
   const [transactionAmount, setTransactionAmount] = useState("");
   const [transactionMode, setTransactionMode] = useState("Pending");
-  const [subscriptionId, setSubscriptionId] = useState(
-    "67aef862ccb4059e6e9f4bd4"
-  );
+  const [subscriptionId, setSubscriptionId] = useState("");
   const [subscriptionType, setSubscriptionType] = useState("");
   const [description, setDescription] = useState("");
-  const [data, setData] = useState([]);
+  const [planName, setPlanName] = useState("");
+  const [validity, setValidity] = useState("");
+  const [data, setData] = useState([]); // Update this to store new API data
   const [loading, setLoading] = useState(false); // Define loading state
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user?.data);
+
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       try {
+        // Make API call to the new endpoint
         const res = await axios.get(
-          `http://54.236.98.193:7777/api/subscription/getSubscriptionById/${id}`
+          `http://54.236.98.193:7777/api/SubscriptionNew/subscription-plan/${id}` // Send id to API
         );
-        setData(res?.data?.data);
-        setTitle(res?.data?.data?.title);
-        setDescription(res?.data?.data?.description);
-        setSubscriptionAmount(res?.data?.data?.amount);
-        setTransactionAmount(res?.data?.data?.amount);
-        setSubscriptionId(res?.data?.data?._id);
-        setSubscriptionType(res?.data?.data?.type);
-        console.log(data);
+        // Set the response data into the state
+        const subscriptionData = res?.data?.data;
+        setData(subscriptionData);
+        setPlanName(subscriptionData?.planName);
+        setSubscriptionAmount(subscriptionData?.amount);
+        setTransactionAmount(subscriptionData?.amount);
+        setSubscriptionId(subscriptionData?._id);
+        setSubscriptionType(subscriptionData?.type);
+        setDescription(subscriptionData?.description);
+        setValidity(subscriptionData?.validity);
+        console.log(subscriptionData);
 
         setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
     getData();
-  }, []);
+  }, [id]);
 
   const homeNavigation = () => {
     navigate("/provider/home");
@@ -83,7 +87,7 @@ export default function PricingProvider() {
       );
       if (handlePayment.fulfilled.match(result)) {
         setToastProps({
-          message: "Password changed Successfully",
+          message: "Subscription purchased successfully!",
           type: "success",
           toastKey: Date.now(),
         });
@@ -94,7 +98,7 @@ export default function PricingProvider() {
       } else {
         const errorMessage =
           result.payload.message ||
-          "Failed to change password. Please check your credentials.";
+          "Failed to complete the transaction. Please try again.";
         setToastProps({
           message: errorMessage,
           type: "error",
@@ -103,7 +107,7 @@ export default function PricingProvider() {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error changing password:", error);
+      console.error("Error during transaction:", error);
       setToastProps({
         message: error?.response?.data?.message,
         type: "error",
@@ -135,36 +139,30 @@ export default function PricingProvider() {
               <div className="container">
                 <div className="top-section-main py-4 px-lg-5">
                   <h3 className="pb-3">Hello {name}</h3>
-                  <h2 className="fw-bold fs-1 mt-4">{title}</h2>
+                  <h2 className="fw-bold fs-1 mt-4">{planName}</h2>
                   <div className="row mt-5 px-3 px-lg-0">
                     <div className="col-lg-4 mx-auto pt-4">
                       <div className="d-flex flex-column gap-4">
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
-                            <span className="highlighted-text">30GB</span> Per
+                            <span className="highlighted-text">{validity}GB</span> Per
                             Month
                           </h2>
                           <FaRegCircleCheck />
                         </div>
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
-                            <span className="highlighted-text">5TB</span> Per
+                            <span className="highlighted-text">{subscriptionAmount}</span> Per
                             Month
                           </h2>
                           <FaRegCircleCheck />
                         </div>
-                        <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
-                          <h2>
-                            <span className="highlighted-text">1</span> CPU’s
-                          </h2>
-                          <FaRegCircleCheck />
-                        </div>
-                        <span className="text-dark">{title}</span>
+
+                        <span className="text-dark" dangerouslySetInnerHTML={{ __html: description }}></span>
 
                         <Button
                           variant="contained"
                           className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                          // onClick={handleSubmit}
                           onClick={homeNavigation}
                         >
                           Purchase

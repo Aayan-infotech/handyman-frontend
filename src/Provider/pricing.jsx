@@ -1,28 +1,13 @@
+
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
-import { TbSpeakerphone } from "react-icons/tb";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
-import speaker from "./assets/announcement.png";
-import arrow from "./assets/arrow.png";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../Loader";
-import Toaster from "../Toaster";
 import { useDispatch, useSelector } from "react-redux";
-import { getProviderUser } from "../Slices/userSlice";
 
 export default function MainProvider() {
-  const settings = {
-    dots: false,
-    infinite: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    vertical: true,
-    verticalSwiping: true,
-  };
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const name = localStorage.getItem("ProviderName");
@@ -35,13 +20,13 @@ export default function MainProvider() {
       setLoading(true);
       try {
         const res = await axios.get(
-          "http://54.236.98.193:7777/api/subscription/getAllSubscription"
+          "http://54.236.98.193:7777/api/SubscriptionNew/subscription-plans"
         );
         setData(res?.data?.data);
-        setLoading(false);
       } catch (error) {
         console.log(error);
       }
+      setLoading(false);
     };
     getData();
   }, []);
@@ -69,19 +54,18 @@ export default function MainProvider() {
                 <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
                   <h5 className="user">Hello {name}</h5>
                 </div>
-                <div className="row py-3 gy-4 mt-lg-4 gx-5">
+                <div className="row py-3 gy-4 mt-lg-4 gx-4">
                   {data?.map((item) => (
-                    <div className="col-lg-4" key={item._id}>
+                    <div className="col-lg-4 col-md-6" key={item._id}>
                       <Link to={`/provider/pricing-detail/${item._id}`}>
                         <div className="card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
                           <div className="card-body d-flex flex-column gap-3 align-items-center">
-                            <h2 className="mt-3">${item.amount}</h2>
+                            <h3 className="mt-3">{item.planName}</h3>
+                            <h5 className="mt-3">${item.amount}</h5>
+                            <h4>KM Radius: {item.kmRadius}</h4>
                             <span className="line-white"></span>
-                            <h6 className="fw-bold">{item.title}</h6>
                             <div
-                              dangerouslySetInnerHTML={{
-                                __html: item.description,
-                              }}
+                              dangerouslySetInnerHTML={{ __html: item.description }}
                             ></div>
                           </div>
                         </div>
