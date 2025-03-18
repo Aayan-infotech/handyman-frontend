@@ -65,17 +65,79 @@ export default function PricingProvider() {
   }, [id]);
 
   const homeNavigation = () => {
-    navigate("/provider/home");
+    navigate("/home");
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const result = await dispatch(
+  //       handlePayment({
+  //         transactionId,
+  //         userId:id,
+  //         subscriptionPlanId:subscriptionId,
+  //         transactionDate,
+  //         transactionStatus,
+          
+  //         transactionAmount,
+  //         transactionMode,
+  //         SubscriptionId: subscriptionId,
+  //         SubscriptionAmount: subscriptionAmount,
+  //         type: subscriptionType,
+  //       })
+  //     );
+  //     if (handlePayment.fulfilled.match(result)) {
+  //       setToastProps({
+  //         message: "Subscription purchased successfully!",
+  //         type: "success",
+  //         toastKey: Date.now(),
+  //       });
+  //       setLoading(false);
+  //       // setTimeout(() => {
+  //       //   navigate("/provider/myprofile");
+  //       // }, 2000);
+  //       setTimeout(() => {
+  //         navigate("/home"); // ✅ Navigate to home
+  //       }, 2000);
+        
+  //     } else {
+  //       const errorMessage =
+  //         result.payload.message ||
+  //         "Failed to complete the transaction. Please try again.";
+  //       setToastProps({
+  //         message: errorMessage,
+  //         type: "error",
+  //         toastKey: Date.now(),
+  //       });
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during transaction:", error);
+  //     setToastProps({
+  //       message: error?.response?.data?.message,
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //     setLoading(false);
+  //   }
+  // };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const result = await dispatch(
         handlePayment({
           transactionId,
+          userId: id,  // ✅ Added userId
+          subscriptionPlanId: subscriptionId, // ✅ Added subscriptionPlanId
+          amount: subscriptionAmount, // ✅ Added amount
+          paymentMethod: "credit_card", // ✅ Added paymentMethod
           transactionDate,
           transactionStatus,
           transactionAmount,
@@ -85,6 +147,7 @@ export default function PricingProvider() {
           type: subscriptionType,
         })
       );
+  
       if (handlePayment.fulfilled.match(result)) {
         setToastProps({
           message: "Subscription purchased successfully!",
@@ -92,8 +155,9 @@ export default function PricingProvider() {
           toastKey: Date.now(),
         });
         setLoading(false);
+  
         setTimeout(() => {
-          navigate("/provider/myprofile");
+          navigate("/home"); // ✅ Navigate to home
         }, 2000);
       } else {
         const errorMessage =
@@ -116,7 +180,7 @@ export default function PricingProvider() {
       setLoading(false);
     }
   };
-
+  
   return (
     <>
       {loading ? (
@@ -163,7 +227,7 @@ export default function PricingProvider() {
                         <Button
                           variant="contained"
                           className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                          onClick={homeNavigation}
+                          onClick={handleSubmit}
                         >
                           Purchase
                         </Button>
