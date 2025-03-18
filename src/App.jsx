@@ -16,7 +16,7 @@ import JobDetail from "./User/job-detail";
 import ServiceProvider from "./User/Service-provider";
 import ServiceProviderProfile from "./User/service-provider-profle";
 import ScrollToTop from "./ScrollToTop";
-import Message from "./User/message";
+import Message from "./Chat/message";
 import Notification from "./User/notification";
 import MyProfile from "./components/myprofile";
 import ChangePassword from "./components/changePassword";

@@ -22,7 +22,7 @@ export default function PaymentDetail() {
         </div>
       </Link>
       <div className="message">
-        <Link to="/message">
+        <Link to="/provider/message">
           <MdMessage />
         </Link>
       </div>
