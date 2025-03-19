@@ -430,7 +430,7 @@ export default function SignUpProvider() {
                     <span>
                       By tapping “Sign Up” you accept our{" "}
                       <Link
-                        to="/Provider/forgot-password"
+                        to="/terms"
                         className="highlighted-text text-decoration-none"
                       >
                         terms and conditions

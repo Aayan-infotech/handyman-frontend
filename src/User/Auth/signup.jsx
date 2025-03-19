@@ -285,7 +285,7 @@ export default function SignUp() {
                   <span>
                     By tapping “Sign Up” you accept our{" "}
                     <Link
-                      to="/forgot-password"
+                      to="/terms"
                       className="highlighted-text text-decoration-none"
                     >
                       terms and condition

@@ -219,12 +219,12 @@ export default function JobSpecification() {
                     <hr />
                     {!guestCondition ? (
                       <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-75">
-                        <Button
+                        {/* <Button
                           variant="contained"
                           className="custom-green bg-red-outline rounded-5 py-3 w-50"
                         >
                           Reject
-                        </Button>
+                        </Button> */}
                         <Button
                           variant="contained"
                           onClick={handleJobStatus}

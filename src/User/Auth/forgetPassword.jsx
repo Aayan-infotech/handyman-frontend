@@ -69,6 +69,7 @@ export default function ForgetPassword() {
   };
   return (
     <>
+    
       {loading === true ? (
         <Loader />
       ) : (
@@ -81,7 +82,7 @@ export default function ForgetPassword() {
               ) : null}
               <div className="card shadow">
                 <div className="card-body">
-                  <h2 className="text-center fw-bold fs-1">Forget Password</h2>
+                  <h2 className="text-center fw-bold fs-1">Forgot Password</h2>
                   <p className="text-center mt-5 mb-4">
                     Please enter your registered email to reset password
                   </p>
