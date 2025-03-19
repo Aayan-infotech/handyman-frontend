@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
@@ -7,7 +8,7 @@ import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { handlePayment } from "../Slices/paymentSlice";
 import Loader from "../Loader";
-import axios from "axios"; 
+import axios from "axios";
 import Toaster from "../Toaster";
 
 export default function PricingProvider() {
@@ -21,6 +22,8 @@ export default function PricingProvider() {
   const name = localStorage.getItem("ProviderName");
   const [transactionId, setTransactionId] = useState(45435435435);
   const [transactionDate, setTransactionDate] = useState(new Date());
+  const [kmRadius, setKmRadius] = useState(""); // New state for kmRadius
+
   const [transactionStatus, setTransactionStatus] = useState("done");
   const [subscriptionAmount, setSubscriptionAmount] = useState("");
   const [transactionAmount, setTransactionAmount] = useState("");
@@ -48,6 +51,7 @@ export default function PricingProvider() {
         setData(subscriptionData);
         setPlanName(subscriptionData?.planName);
         setSubscriptionAmount(subscriptionData?.amount);
+        setKmRadius(subscriptionData?.kmRadius); // ✅ Store kmRadius from API response
         setTransactionAmount(subscriptionData?.amount);
         setSubscriptionId(subscriptionData?._id);
         setSubscriptionType(subscriptionData?.type);
@@ -68,79 +72,23 @@ export default function PricingProvider() {
     navigate("/home");
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     const result = await dispatch(
-  //       handlePayment({
-  //         transactionId,
-  //         userId:id,
-  //         subscriptionPlanId:subscriptionId,
-  //         transactionDate,
-  //         transactionStatus,
-          
-  //         transactionAmount,
-  //         transactionMode,
-  //         SubscriptionId: subscriptionId,
-  //         SubscriptionAmount: subscriptionAmount,
-  //         type: subscriptionType,
-  //       })
-  //     );
-  //     if (handlePayment.fulfilled.match(result)) {
-  //       setToastProps({
-  //         message: "Subscription purchased successfully!",
-  //         type: "success",
-  //         toastKey: Date.now(),
-  //       });
-  //       setLoading(false);
-  //       // setTimeout(() => {
-  //       //   navigate("/provider/myprofile");
-  //       // }, 2000);
-  //       setTimeout(() => {
-  //         navigate("/home"); // ✅ Navigate to home
-  //       }, 2000);
-        
-  //     } else {
-  //       const errorMessage =
-  //         result.payload.message ||
-  //         "Failed to complete the transaction. Please try again.";
-  //       setToastProps({
-  //         message: errorMessage,
-  //         type: "error",
-  //         toastKey: Date.now(),
-  //       });
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during transaction:", error);
-  //     setToastProps({
-  //       message: error?.response?.data?.message,
-  //       type: "error",
-  //       toastKey: Date.now(),
-  //     });
-  //     setLoading(false);
-  //   }
-  // };
-
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const result = await dispatch(
         handlePayment({
-      
-          userId:providerId,  // ✅ Added userId
+
+          userId: providerId,  // ✅ Added userId
           subscriptionPlanId: id, // ✅ Added subscriptionPlanId
           amount: subscriptionAmount, // ✅ Added amount
           paymentMethod: "credit_card", // ✅ Added paymentMethod
         })
       );
-  
+
       if (handlePayment.fulfilled.match(result)) {
         setToastProps({
           message: "Subscription purchased successfully!",
@@ -148,7 +96,7 @@ export default function PricingProvider() {
           toastKey: Date.now(),
         });
         setLoading(false);
-  
+
         setTimeout(() => {
           navigate("/home"); // ✅ Navigate to home
         }, 2000);
@@ -173,7 +121,7 @@ export default function PricingProvider() {
       setLoading(false);
     }
   };
-  
+
   return (
     <>
       {loading ? (
@@ -200,19 +148,46 @@ export default function PricingProvider() {
                   <div className="row mt-5 px-3 px-lg-0">
                     <div className="col-lg-4 mx-auto pt-4">
                       <div className="d-flex flex-column gap-4">
+
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
-                            <span className="highlighted-text">{validity}GB</span> Per
-                            Month
+                            <span className="highlighted-text">{kmRadius} km</span> Radius
                           </h2>
                           <FaRegCircleCheck />
                         </div>
+
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
                             <span className="highlighted-text">{subscriptionAmount}</span> Amount
+
                           </h2>
                           <FaRegCircleCheck />
                         </div>
+
+
+
+                        {/* <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
+                          <h2>
+                            <span className="highlighted-text">
+                            Validity for {' '}
+                              {validity === 30 ? "Monthly" : 'Yearly'}
+                            </span>
+                          </h2>
+                       
+                        </div> */}
+                        <div
+                          className="d-flex flex-column align-items-center justify-content-center price-detail"
+                          style={{ color: "rgba(50, 205, 222, 1) !important", textAlign: "center" }}
+                        >
+                          <h2>
+                            <span style={{ color: "rgba(50, 205, 222, 1)" }}
+                            >
+                              Validity for {validity === 30 ? "Monthly" : "Yearly"}
+                            </span>
+                          </h2>
+                        </div>
+
+
 
                         <span className="text-dark" dangerouslySetInnerHTML={{ __html: description }}></span>
 
