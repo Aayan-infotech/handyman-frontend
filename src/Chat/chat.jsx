@@ -93,6 +93,11 @@ const sendMessage = async (
   }
 };
 
+const filterMessageDataByChatId = (chatId, messageData) => {
+  if (!chatId || !Array.isArray(messageData)) return null;
+  return messageData.find((msg) => msg.chatId === chatId) || null;
+};
+
 export default function Chat({ messageData, messages, selectedChat }) {
   const [show, setShow] = useState(false);
   const [messagesPeople, setMessagesPeople] = useState([]);
@@ -100,7 +105,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [loading, setLoading] = useState(false);
   const [chatId, setChatId] = useState(selectedChat?.chatId);
   const [validMessageData, setValidMessageData] = useState(null);
-  console.log("message data in chat", selectedChat);
+  console.log("message data in chat", messages);
+  console.log("chat id in chat", chatId);
+  const chatMessage = selectedChat?.messages;
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -112,6 +119,15 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const { id } = useParams();
   const storedUserId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");
+  const [filteredMessageData, setFilteredMessageData] = useState(null);
+
+  useEffect(() => {
+    if (chatId && Array.isArray(messageData)) {
+      setFilteredMessageData(filterMessageDataByChatId(chatId, messageData));
+    }
+  }, [chatId, messageData]);
+
+  console.log("filteredMessageData", filteredMessageData);
   const validateAndSetMessageData = (
     storedUserId,
     messageData,
@@ -119,8 +135,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
   ) => {
     if (
       storedUserId &&
-      messageData?.sender?._id !== storedUserId &&
-      messageData?.receiver?._id !== storedUserId
+      messages?.senderId !== storedUserId &&
+      messages?.receiverId !== storedUserId
     ) {
       console.log("Valid message data:", messageData);
       setValidMessageData(messageData);
@@ -135,12 +151,13 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   console.log("Filtered messageData:", validMessageData);
   const hunterId = localStorage.getItem("hunterId");
-  const receiverId = id || messageData?.sender?._id;
+  const receiverId = id || chatMessage?.senderId;
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
   const jobId =
     new URLSearchParams(location.search).get("jobId") ||
-    messageData?.jobPost?._id;
+    messageData?.jobPost?._id ||
+    selectedChat?.users?.jobId;
   useEffect(() => {
     const storedUserId = location.pathname.includes("/provider")
       ? localStorage.getItem("ProviderId")
@@ -184,10 +201,6 @@ export default function Chat({ messageData, messages, selectedChat }) {
   }, [currentUser, receiverId]);
 
   const handleSend = async () => {
-    console.log("Send button clicked");
-    console.log("chatId", chatId);
-    console.log("jobId", jobId);
-    console.log("currentUser", currentUser);
     if (msg.trim() === "" || !chatId || !jobId || !currentUser) return;
 
     await sendMessage(
@@ -198,7 +211,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       currentUser,
       false,
       setMessagesPeople,
-      jobId
+      selectedChat?.users?.jobId
     );
     setMsg("");
   };
@@ -249,7 +262,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     handleProvider();
   }, [location]);
 
-  console.log("messagesPeople", messagesPeople);
+  console.log("messageData in chat", messageData);
 
   if (loading) return <Loader />;
 
@@ -320,73 +333,80 @@ export default function Chat({ messageData, messages, selectedChat }) {
           }`}
         >
           <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
-            <Stack spacing={1} className="d-block">
-              <div className="fl-left ">
-                <Skeleton
-                  variant="rounded"
-                  className="mb-3"
-                  animation="wave"
-                  width={210}
-                  height={20}
-                />
-                <Skeleton
-                  variant="rounded"
-                  className="mb-3"
-                  animation="wave"
-                  width={150}
-                  height={20}
-                />
-                <Skeleton
-                  variant="rounded"
-                  animation="wave"
-                  width={110}
-                  height={20}
-                />
-              </div>
-              <div className="fl-right ">
-                <Skeleton
-                  variant="rounded"
-                  className="mb-3"
-                  animation="wave"
-                  width={210}
-                  height={20}
-                />
-                <Skeleton
-                  variant="rounded"
-                  className="mb-3"
-                  animation="wave"
-                  width={150}
-                  height={20}
-                />
-                <Skeleton
-                  variant="rounded"
-                  animation="wave"
-                  width={110}
-                  height={20}
-                />
-              </div>
-            </Stack>
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={
-                  msg.senderId === currentUser ? "fl-right" : "fl-left"
-                }
-              >
-                <p
-                  className={
-                    msg.senderId === currentUser
-                      ? "msg-sent mb-1"
-                      : "msg-recieved mb-1"
-                  }
-                >
-                  {msg.msg}
-                </p>
-                <span className="text-muted time-status">
-                  {new Date(msg.timeStamp).toLocaleTimeString()}
-                </span>
-              </div>
-            ))}
+            {messages.length === 0 ? (
+              <>
+                <Stack spacing={1} className="d-block">
+                  <div className="fl-left ">
+                    <Skeleton
+                      variant="rounded"
+                      className="mb-3"
+                      animation="wave"
+                      width={210}
+                      height={20}
+                    />
+                    <Skeleton
+                      variant="rounded"
+                      className="mb-3"
+                      animation="wave"
+                      width={150}
+                      height={20}
+                    />
+                    <Skeleton
+                      variant="rounded"
+                      animation="wave"
+                      width={110}
+                      height={20}
+                    />
+                  </div>
+                  <div className="fl-right ">
+                    <Skeleton
+                      variant="rounded"
+                      className="mb-3"
+                      animation="wave"
+                      width={210}
+                      height={20}
+                    />
+                    <Skeleton
+                      variant="rounded"
+                      className="mb-3"
+                      animation="wave"
+                      width={150}
+                      height={20}
+                    />
+                    <Skeleton
+                      variant="rounded"
+                      animation="wave"
+                      width={110}
+                      height={20}
+                    />
+                  </div>
+                </Stack>
+              </>
+            ) : (
+              <>
+                {messages?.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={
+                      msg.senderId === currentUser ? "fl-right" : "fl-left"
+                    }
+                  >
+                    <p
+                      className={
+                        msg.senderId === currentUser
+                          ? "msg-sent mb-1"
+                          : "msg-recieved mb-1"
+                      }
+                    >
+                      {msg?.msg}
+                    </p>
+                    <span className="text-muted time-status">
+                      {new Date(msg.timeStamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
 
           <div className={`send-box ${show ? "container mb-5" : ""}`}>

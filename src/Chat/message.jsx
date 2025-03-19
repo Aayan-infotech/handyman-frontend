@@ -20,9 +20,8 @@ export default function Message() {
   const [messageData, setMessageData] = useState({});
   const [selectedChat, setSelectedChat] = useState(null); // Track selected chat
   const location = useLocation();
-
+  const [chatMessages, setChatMessages] = useState([]);
   const userFinder = location.pathname.includes("/provider");
-
 
   useEffect(() => {
     const storedUserId = location.pathname.includes("/provider")
@@ -37,7 +36,6 @@ export default function Message() {
   const handleChat = useCallback(async () => {
     if (messages.length === 0) return; // Prevent API call if no messages exist
 
-    setLoading(true);
     try {
       // Loop through all messages and make API calls
       const apiCalls = messages.map(async (message) => {
@@ -73,11 +71,10 @@ export default function Message() {
       setMessageData(newMessageData);
     } catch (error) {
       console.error("Error fetching chat data:", error);
-    } finally {
-      setLoading(false);
     }
   }, [messages]);
 
+  console.log("message data", messageData);
   const getChatList = useCallback((user) => {
     if (!user) return;
 
@@ -102,6 +99,39 @@ export default function Message() {
 
     return () => off(chatListRef, listener);
   }, []);
+  console.log("messages in chat", messages);
+
+  const getChatMessages = useCallback((selectedChat) => {
+    if (!selectedChat || !selectedChat.chatId) return;
+
+    const { chatId, users } = selectedChat;
+    const { jobId } = users;
+
+    if (!jobId || !chatId) {
+      console.error("Missing jobId or chatId in selectedChat");
+      return;
+    }
+
+    const chatMessagesRef = ref(
+      realtimeDb,
+      `chats/${jobId}/${chatId}/messages`
+    );
+
+    const listener = onValue(chatMessagesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const messagesData = snapshot.val();
+        const formattedMessages = Object.keys(messagesData)
+          .map((key) => ({ ...messagesData[key], id: key }))
+          .sort((a, b) => a.timeStamp - b.timeStamp);
+
+        setChatMessages(formattedMessages); // Store messages separately
+      } else {
+        setChatMessages([]); // If no messages, set empty array
+      }
+    });
+
+    return () => off(chatMessagesRef, listener);
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
@@ -109,6 +139,12 @@ export default function Message() {
       return cleanup;
     }
   }, [currentUser, getChatList]);
+  useEffect(() => {
+    if (selectedChat) {
+      const cleanup = getChatMessages(selectedChat);
+      return cleanup;
+    }
+  }, [selectedChat]); // ✅ Remove `getChatMessages` from dependencies
 
   useEffect(() => {
     handleChat();
@@ -123,6 +159,11 @@ export default function Message() {
   console.log("selectedChat", selectedChat);
 
   if (loading) return <Loader />;
+
+  console.log(
+    "messageData[item.chatId]?.receiver?.name",
+    messageData["67d1308e4081444fc023f371_chat_67d15adf2d910cb3dcfcb0c3"]
+  );
 
   return (
     <>
@@ -181,14 +222,14 @@ export default function Message() {
                               <Avatar
                                 alt="Image"
                                 src={
-                                  userFinder
+                                  !userFinder
                                     ? messageData[item.chatId]?.receiver?.images
                                     : messageData[item.chatId]?.sender?.images
                                 }
                                 className="w-100"
                                 style={{ height: "82px", width: "82px" }}
                               >
-                                {userFinder
+                                {!userFinder
                                   ? messageData[
                                       item.chatId
                                     ]?.receiver?.contactName
@@ -196,17 +237,15 @@ export default function Message() {
                                       ?.charAt(0) ||
                                     messageData[item.chatId]?.receiver?.name
                                       ?.toUpperCase()
-                                      ?.charAt(0) ||
-                                    ""
-                                  : messageData[item.chatId]?.sender?.name
-                                      ?.toUpperCase()
-                                      ?.charAt(0) ||
-                                    messageData[
+                                      ?.charAt(0)
+                                  : messageData[
                                       item.chatId
                                     ]?.sender?.contactName
                                       ?.toUpperCase()
                                       ?.charAt(0) ||
-                                    ""}
+                                    messageData[item.chatId]?.sender?.name
+                                      ?.toUpperCase()
+                                      ?.charAt(0)}
                               </Avatar>
                             </div>
 
@@ -217,11 +256,12 @@ export default function Message() {
                             >
                               <div className="d-flex flex-column gap-1">
                                 <h5 className="mb-0 fw-bold fs-5 text-dark">
-                                  {userFinder === true
+                                  {!userFinder
                                     ? messageData[item.chatId]?.receiver
                                         ?.contactName ||
                                       messageData[item.chatId]?.receiver?.name
-                                    : messageData[item.chatId]?.sender?.name ||
+                                    : messageData[item.chatId]?.sender
+                                        ?.name ||
                                       messageData[item.chatId]?.sender
                                         ?.contactName}
                                 </h5>
@@ -247,9 +287,8 @@ export default function Message() {
                 <div className="col-lg-6">
                   <div className="message-box">
                     <Chat
-                     
                       messageData={messageData}
-                      messages={messages}
+                      messages={chatMessages}
                       selectedChat={selectedChat}
                     />
                   </div>

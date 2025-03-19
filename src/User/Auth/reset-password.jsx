@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
 import { Link, useNavigate , useLocation } from "react-router-dom";
@@ -10,10 +10,10 @@ import axios from "axios";
 import Toaster from "../../Toaster";
 import Loader from "../../Loader";
 export default function ResetPassword() {
-  const [password, setPassword] = react.useState("");
-  const [newPassword, setNewPassword] = react.useState("");
-  const [toastProps, setToastProps] = react.useState({ message: "", type: "" });
-  const [loading, setLoading] = react.useState(false);
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [toastProps, setToastProps] =useState({ message: "", type: "" });
+  const [loading, setLoading] = useState(false);
   const email = localStorage.getItem("verifyEmailOtp");
   const location = useLocation();
   const ProviderParams = location.pathname.includes("provider");
