@@ -92,7 +92,7 @@ export default function MyProfile() {
       }
 
       const response = await axios.post(
-        "http://54.236.98.193:7777/api/auth/logout",
+        "http://3.223.253.106:7777/api/auth/logout",
         {
           userType: hunterToken ? "hunter" : "provider",
         },
@@ -139,7 +139,7 @@ export default function MyProfile() {
       }
 
       const response = await axios.delete(
-        `http://54.236.98.193:7777/api/DeleteAccount/${
+        `http://3.223.253.106:7777/api/DeleteAccount/${
           providerId ? "provider" : "hunter"
         }/${providerId || hunterId}`
       );

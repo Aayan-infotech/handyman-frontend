@@ -47,7 +47,7 @@ export default function Contact() {
     setLoading(true);  // Set loading to true while waiting for the API response
 
     axios
-      .post("http://54.236.98.193:7777/api/contact/send", contactUsData)  // Sending form data to the API
+      .post("http://3.223.253.106:7777/api/contact/send", contactUsData)  // Sending form data to the API
       .then((response) => {
         console.log("Response from API:", response.data);
         setLoading(false);  // Reset loading state

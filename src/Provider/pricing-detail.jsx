@@ -34,14 +34,14 @@ export default function PricingProvider() {
   const [loading, setLoading] = useState(false); // Define loading state
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user?.data);
-
+  const providerId = localStorage.getItem("ProviderId");
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       try {
         // Make API call to the new endpoint
         const res = await axios.get(
-          `http://54.236.98.193:7777/api/SubscriptionNew/subscription-plan/${id}` // Send id to API
+          `http://3.223.253.106:7777/api/SubscriptionNew/subscription-plan/${id}` // Send id to API
         );
         // Set the response data into the state
         const subscriptionData = res?.data?.data;
@@ -133,18 +133,11 @@ export default function PricingProvider() {
     try {
       const result = await dispatch(
         handlePayment({
-          transactionId,
-          userId: id,  // ✅ Added userId
-          subscriptionPlanId: subscriptionId, // ✅ Added subscriptionPlanId
+      
+          userId:providerId,  // ✅ Added userId
+          subscriptionPlanId: id, // ✅ Added subscriptionPlanId
           amount: subscriptionAmount, // ✅ Added amount
           paymentMethod: "credit_card", // ✅ Added paymentMethod
-          transactionDate,
-          transactionStatus,
-          transactionAmount,
-          transactionMode,
-          SubscriptionId: subscriptionId,
-          SubscriptionAmount: subscriptionAmount,
-          type: subscriptionType,
         })
       );
   
@@ -216,8 +209,8 @@ export default function PricingProvider() {
                         </div>
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
-                            <span className="highlighted-text">{subscriptionAmount}</span> Per
-                            Month
+                            <span className="highlighted-text">{subscriptionAmount}</span> Amount
+                         
                           </h2>
                           <FaRegCircleCheck />
                         </div>

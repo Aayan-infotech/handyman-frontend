@@ -29,6 +29,9 @@ export default function HomeProvider() {
     toastKey: 0,
   });
 
+
+  console.log(businessType,'.....bussiness type')
+
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
   const guestCondition = localStorage.getItem("Guest") === "true";

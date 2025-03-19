@@ -18,7 +18,7 @@ import axios from "axios";
 //   ) => {
 //     try {
 //       const response = await axios.post(
-//         `http://54.236.98.193:7777/api/payment/createPayment`,
+//         `http://3.223.253.106:7777/api/payment/createPayment`,
 //         {
 //           transactionId,
 //           transactionDate,
@@ -61,7 +61,7 @@ import axios from "axios";
 //   ) => {
 //     try {
 //       const response = await axios.post(
-//         `http://54.236.98.193:7777/api/demoTransaction/transaction`,
+//         `http://3.223.253.106:7777/api/demoTransaction/transaction`,
 //         {
 //           transactionId,
 //           transactionDate,
@@ -109,7 +109,7 @@ export const handlePayment = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `http://54.236.98.193:7777/api/demoTransaction/transaction`,
+        `http://3.223.253.106:7777/api/demoTransaction/transaction`,
         {
           transactionId,
           userId, 

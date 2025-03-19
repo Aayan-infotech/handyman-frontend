@@ -30,7 +30,7 @@ export default function JobManagement() {
     setLoading(true);
     try {
       const res = await axios.get(
-        "http://54.236.98.193:7777/api/jobpost/getJobPostByUserId",
+        "http://3.223.253.106:7777/api/jobpost/getJobPostByUserId",
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -67,7 +67,7 @@ export default function JobManagement() {
   const handleJobDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://54.236.98.193:7777/api/jobPost/${id}`, {
+      await axios.delete(`http://3.223.253.106:7777/api/jobPost/${id}`, {
         headers: { Authorization: `Bearer ${hunterToken}` },
       });
 

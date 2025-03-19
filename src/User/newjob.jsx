@@ -80,7 +80,7 @@ export default function NewJob() {
     const handleAllData = async () => {
       try {
         const response = await axios.get(
-          "http://54.236.98.193:7777/api/service/getAllServices"
+          "http://3.223.253.106:7777/api/service/getAllServices"
         );
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
@@ -122,7 +122,7 @@ export default function NewJob() {
 
     try {
       const response = await axios.post(
-        "http://54.236.98.193:7777/api/jobpost/jobpost",
+        "http://3.223.253.106:7777/api/jobpost/jobpost",
         formData,
         {
           headers: {

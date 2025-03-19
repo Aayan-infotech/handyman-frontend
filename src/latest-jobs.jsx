@@ -27,7 +27,7 @@ export default function LatestJobs() {
   useEffect(() => {
     const handleResponse = async () => {
       setLoading(true);
-      const response = await axios.get("http://54.236.98.193:7777/api/jobs");
+      const response = await axios.get("http://3.223.253.106:7777/api/jobs");
       console.log(response);
       if (response.data.success === true || response.data.status === 200) {
         setLoading(false);
