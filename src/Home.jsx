@@ -55,7 +55,7 @@ function Home() {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get("http://54.236.98.193:7777/api/jobpost/business-type-count")
+      .get("http://3.223.253.106:7777/api/jobpost/business-type-count")
       .then((res) => {
         const limitedData = res?.data?.data?.slice(0, 8) || []; // Ensure only 8 items
         setBusinessData(limitedData);
@@ -64,7 +64,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("http://54.236.98.193:7777/api/jobs/getRecentJobs")
+      .get("http://3.223.253.106:7777/api/jobs/getRecentJobs")
       .then((res) => {
         setRecentJob(res?.data?.data);
       });

@@ -56,7 +56,7 @@ export default function ChangeRadius() {
 
     try {
       const response = await axios.patch(
-        "http://54.236.98.193:7777/api/hunter/updateRadius",
+        "http://3.223.253.106:7777/api/hunter/updateRadius",
         { radius: selectedRadius * 1000 }, // Send as a number
         {
           headers: {

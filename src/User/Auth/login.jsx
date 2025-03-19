@@ -46,7 +46,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "http://54.236.98.193:7777/api/auth/login",
+        "http://3.223.253.106:7777/api/auth/login",
         {
           email: email,
           password: password,

@@ -53,7 +53,7 @@ function Search() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://54.236.98.193:7777/api/jobPost/jobsByBusinessType/?lat=${latitude}&lng=${longitude}&businessType=${businessType}`
+        `http://3.223.253.106:7777/api/jobPost/jobsByBusinessType/?lat=${latitude}&lng=${longitude}&businessType=${businessType}`
       );
       if (res.data.status === 200) {
         setData(res.data.data);
