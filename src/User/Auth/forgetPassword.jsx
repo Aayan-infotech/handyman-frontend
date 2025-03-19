@@ -69,6 +69,7 @@ export default function ForgetPassword() {
   };
   return (
     <>
+    
       {loading === true ? (
         <Loader />
       ) : (
