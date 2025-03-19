@@ -41,6 +41,7 @@ import Contact from "./contact";
 import ChangeRadius from "./components/changeRadius";
 import Search from "./Search";
 import ServicesProvider from "./User/services-provider";
+import AdminChat from "./Chat/admin-chat";
 
 const useAuth = () => {
   return !!(
@@ -91,7 +92,7 @@ function App() {
         />
         <Route
           path="/support/chat/:id"
-          element={<ProtectedRoute element={<Chat />} />}
+          element={<ProtectedRoute element={<AdminChat />} />}
         />
         <Route
           path="/service-profile/:id"
@@ -154,7 +155,7 @@ function App() {
         />
         <Route
           path="/provider/chat/:id"
-          element={<ProtectedRoute element={<Chat />} />}
+          element={<ProtectedRoute element={<AdminChat />} />}
         />
         <Route
           path="/provider/editProfile"
