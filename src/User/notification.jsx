@@ -25,7 +25,7 @@ export default function Notification() {
   const fetchNotifications = async () => {
     if (!userId) return;
     try {
-      const url = `http://54.236.98.193:7777/api/notification/getAll/${userType}/${userId}`;
+      const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
       const response = await axios.get(url);
 
       setNotifications(
@@ -42,7 +42,7 @@ export default function Notification() {
 
   const fetchMassNotifications = async () => {
     try {
-      const url = `http://54.236.98.193:7777/api/massNotification/?userType=${userType}`;
+      const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
       const response = await axios.get(url);
       setMassNotifications(Array.isArray(response.data) ? response.data : []);
     } catch (error) {

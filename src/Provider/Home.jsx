@@ -22,11 +22,15 @@ export default function HomeProvider() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [data, setData] = useState([]);
+  const [radius, setRadius] = useState(null);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
+
+
+  console.log(businessType,'.....bussiness type')
 
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
@@ -39,8 +43,9 @@ export default function HomeProvider() {
       if (result.payload?.status === 200) {
         const { businessType, address } = result.payload.data;
         setBusinessType(businessType[0]);
-        setLatitude(address?.location?.coordinates?.[0] || null);
-        setLongitude(address?.location?.coordinates?.[1] || null);
+        setLatitude(address?.location?.coordinates?.[1] || null);
+        setLongitude(address?.location?.coordinates?.[0] || null);
+        setRadius(address?.radius || null);
       } else {
         throw new Error("Failed to fetch user data.");
       }
@@ -59,7 +64,7 @@ export default function HomeProvider() {
     setLoading(true);
     try {
       const result = await dispatch(
-        getProviderJobs({ businessType, latitude, longitude })
+        getProviderJobs({ businessType, latitude, longitude, radius })
       );
       if (getProviderJobs.fulfilled.match(result)) {
         setData(result.payload?.data || []);
@@ -122,7 +127,7 @@ export default function HomeProvider() {
         <MdOutlineSupportAgent />
       </Link>
       <div className="message">
-        <Link to="/message">
+        <Link to="/provider/message">
           <MdMessage />
         </Link>
       </div>

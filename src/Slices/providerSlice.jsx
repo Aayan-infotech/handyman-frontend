@@ -9,7 +9,7 @@ export const getProviderNearbyJobs = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `http://54.236.98.193:7777/api/provider/getNearbyJobs`,
+        `http://3.223.253.106:7777/api/provider/getNearbyJobs`,
         {
           businessType,
           services,
@@ -35,15 +35,18 @@ export const getProviderNearbyJobs = createAsyncThunk(
 
 export const getProviderJobs = createAsyncThunk(
   "/Provider/getProviderJobs",
-  async ({ businessType, latitude, longitude }, { rejectWithValue }) => {
+  async (
+    { businessType, latitude, longitude, radius },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.post(
-        `http://54.236.98.193:7777/api/provider/getJobs`,
+        `http://3.223.253.106:7777/api/provider/getJobs`,
         {
           businessType,
           longitude,
           latitude,
-          
+          radius,
         }
       );
 
@@ -59,7 +62,7 @@ export const getGuestProviderJobs = createAsyncThunk(
   async ({ latitude, longitude }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://54.236.98.193:7777/api/provider/getNearbyJobsForGuest`,
+        `http://3.223.253.106:7777/api/provider/getNearbyJobsForGuest`,
         {
           latitude,
           longitude,
@@ -78,7 +81,7 @@ export const getGuestProviderJobId = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://54.236.98.193:7777/api/provider/getJobByIdForGuest/${id}`
+        `http://3.223.253.106:7777/api/provider/getJobByIdForGuest/${id}`
       );
 
       return response.data;

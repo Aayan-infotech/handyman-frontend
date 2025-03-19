@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { handlePayment } from "../Slices/paymentSlice";
 import Loader from "../Loader";
-import axios from "axios"; 
+import axios from "axios";
 import Toaster from "../Toaster";
 
 export default function PricingProvider() {
@@ -21,6 +21,8 @@ export default function PricingProvider() {
   const name = localStorage.getItem("ProviderName");
   const [transactionId, setTransactionId] = useState(45435435435);
   const [transactionDate, setTransactionDate] = useState(new Date());
+  const [kmRadius, setKmRadius] = useState(""); // New state for kmRadius
+
   const [transactionStatus, setTransactionStatus] = useState("done");
   const [subscriptionAmount, setSubscriptionAmount] = useState("");
   const [transactionAmount, setTransactionAmount] = useState("");
@@ -34,20 +36,21 @@ export default function PricingProvider() {
   const [loading, setLoading] = useState(false); // Define loading state
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user?.data);
-
+  const providerId = localStorage.getItem("ProviderId");
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       try {
         // Make API call to the new endpoint
         const res = await axios.get(
-          `http://54.236.98.193:7777/api/SubscriptionNew/subscription-plan/${id}` // Send id to API
+          `http://3.223.253.106:7777/api/SubscriptionNew/subscription-plan/${id}` // Send id to API
         );
         // Set the response data into the state
         const subscriptionData = res?.data?.data;
         setData(subscriptionData);
         setPlanName(subscriptionData?.planName);
         setSubscriptionAmount(subscriptionData?.amount);
+        setKmRadius(subscriptionData?.kmRadius); // ✅ Store kmRadius from API response
         setTransactionAmount(subscriptionData?.amount);
         setSubscriptionId(subscriptionData?._id);
         setSubscriptionType(subscriptionData?.type);
@@ -65,7 +68,7 @@ export default function PricingProvider() {
   }, [id]);
 
   const homeNavigation = () => {
-    navigate("/provider/home");
+    navigate("/home");
   };
 
   const handleSubmit = async (e) => {
@@ -75,16 +78,13 @@ export default function PricingProvider() {
     try {
       const result = await dispatch(
         handlePayment({
-          transactionId,
-          transactionDate,
-          transactionStatus,
-          transactionAmount,
-          transactionMode,
-          SubscriptionId: subscriptionId,
-          SubscriptionAmount: subscriptionAmount,
-          type: subscriptionType,
+          userId: providerId,
+          subscriptionPlanId: id,
+          amount: subscriptionAmount,
+          paymentMethod: "credit_card",
         })
       );
+
       if (handlePayment.fulfilled.match(result)) {
         setToastProps({
           message: "Subscription purchased successfully!",
@@ -92,8 +92,9 @@ export default function PricingProvider() {
           toastKey: Date.now(),
         });
         setLoading(false);
+
         setTimeout(() => {
-          navigate("/provider/myprofile");
+          navigate("/provider/home"); // ✅ Navigate to home
         }, 2000);
       } else {
         const errorMessage =
@@ -124,14 +125,14 @@ export default function PricingProvider() {
       ) : (
         <div>
           <LoggedHeader />
-          <div className="">
+          <div className="h-100">
             <Link to="/provider/chat/1">
               <div className="admin-message">
                 <MdOutlineSupportAgent />
               </div>
             </Link>
             <div className="message">
-              <Link to="/message">
+              <Link to="/provider/message">
                 <MdMessage />
               </Link>
             </div>
@@ -145,25 +146,57 @@ export default function PricingProvider() {
                       <div className="d-flex flex-column gap-4">
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
-                            <span className="highlighted-text">{validity}GB</span> Per
-                            Month
-                          </h2>
-                          <FaRegCircleCheck />
-                        </div>
-                        <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
-                          <h2>
-                            <span className="highlighted-text">{subscriptionAmount}</span> Per
-                            Month
+                            <span className="highlighted-text">
+                              {kmRadius} km
+                            </span>{" "}
+                            Radius
                           </h2>
                           <FaRegCircleCheck />
                         </div>
 
-                        <span className="text-dark" dangerouslySetInnerHTML={{ __html: description }}></span>
+                        <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
+                          <h2>
+                            <span className="highlighted-text">
+                              {subscriptionAmount}
+                            </span>{" "}
+                            Amount
+                          </h2>
+                          <FaRegCircleCheck />
+                        </div>
+
+                        {/* <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
+                          <h2>
+                            <span className="highlighted-text">
+                            Validity for {' '}
+                              {validity === 30 ? "Monthly" : 'Yearly'}
+                            </span>
+                          </h2>
+                       
+                        </div> */}
+                        <div
+                          className="d-flex flex-column align-items-center justify-content-center price-detail"
+                          style={{
+                            color: "rgba(50, 205, 222, 1) !important",
+                            textAlign: "center",
+                          }}
+                        >
+                          <h2>
+                            <span style={{ color: "rgba(50, 205, 222, 1)" }}>
+                              Validity for{" "}
+                              {validity === 30 ? "Monthly" : "Yearly"}
+                            </span>
+                          </h2>
+                        </div>
+
+                        <span
+                          className="text-dark"
+                          dangerouslySetInnerHTML={{ __html: description }}
+                        ></span>
 
                         <Button
                           variant="contained"
                           className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                          onClick={homeNavigation}
+                          onClick={handleSubmit}
                         >
                           Purchase
                         </Button>

@@ -16,7 +16,7 @@ import JobDetail from "./User/job-detail";
 import ServiceProvider from "./User/Service-provider";
 import ServiceProviderProfile from "./User/service-provider-profle";
 import ScrollToTop from "./ScrollToTop";
-import Message from "./User/message";
+import Message from "./Chat/message";
 import Notification from "./User/notification";
 import MyProfile from "./components/myprofile";
 import ChangePassword from "./components/changePassword";
@@ -41,6 +41,7 @@ import Contact from "./contact";
 import ChangeRadius from "./components/changeRadius";
 import Search from "./Search";
 import ServicesProvider from "./User/services-provider";
+import AdminChat from "./Chat/admin-chat";
 
 const useAuth = () => {
   return !!(
@@ -91,7 +92,7 @@ function App() {
         />
         <Route
           path="/support/chat/:id"
-          element={<ProtectedRoute element={<Chat />} />}
+          element={<ProtectedRoute element={<AdminChat />} />}
         />
         <Route
           path="/service-profile/:id"
@@ -154,7 +155,7 @@ function App() {
         />
         <Route
           path="/provider/chat/:id"
-          element={<ProtectedRoute element={<Chat />} />}
+          element={<ProtectedRoute element={<AdminChat />} />}
         />
         <Route
           path="/provider/editProfile"

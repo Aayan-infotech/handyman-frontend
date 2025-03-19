@@ -11,7 +11,7 @@ import axios from "axios";
 
 export default function LoggedHeader() {
   const Location = useLocation();
-  const providerToken = localStorage.getItem("providerToken");
+  const providerToken = localStorage.getItem("ProviderToken");
   return (
     <>
       <Navbar

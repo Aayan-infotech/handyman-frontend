@@ -30,11 +30,11 @@ export default function JobListing() {
   const [businessData, setBusinessData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+useEffect(() => {
     const handleResponse = async () => {
       setLoading(true);
       const response = await axios.get(
-        "http://54.236.98.193:7777/api/jobpost/business-type-count"
+        "http://3.223.253.106:7777/api/jobpost/business-type-count"
       );
       console.log(response);
       if (response.data.success === true  || response.data.status === 200) {
@@ -86,7 +86,7 @@ export default function JobListing() {
                 Explore by <span className="highlighted-text">category</span>
               </h2>
             </div>
-            <div className="row gy-4 mt-3">
+            <div className="row gy-4 mt-3">        
               {businessData.map((item) => (
                 <div className="col-lg-3" key={item.id}>
                   <Link to="/welcome" className="h-100">

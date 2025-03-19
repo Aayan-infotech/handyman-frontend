@@ -15,6 +15,7 @@ import Loader from "../../Loader";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { ref, set } from "firebase/database";
 
@@ -24,8 +25,8 @@ import {
   query,
   where,
   getDocs,
-  setDoc,
-  doc,
+  // setDoc,
+  // doc,
 } from "firebase/firestore";
 import upload from "../../Chat/lib/upload";
 import { realtimeDb } from "../../Chat/lib/firestore";
@@ -40,7 +41,11 @@ export default function SignUp() {
   const [images, setImages] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
 
   const navigate = useNavigate();
 
@@ -86,13 +91,22 @@ export default function SignUp() {
       return;
     }
 
-    const usersRef = collection(db, "hunters");
-    const q = query(usersRef, where("name", "==", name));
-    const p = query(usersRef, where("email", "==", email));
-    const querySnapshot = (await getDocs(q)) && (await getDocs(p));
-    if (!querySnapshot.empty) {
+    // const usersRef = collection(db, "hunters");
+    try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.length > 0) {
+        setToastProps({
+          message: "Email already in use, please log in or use another email",
+          type: "error",
+          toastKey: Date.now(),
+        });
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking email:", error);
       setToastProps({
-        message: "Select another username or email",
+        message: "Error checking email",
         type: "error",
         toastKey: Date.now(),
       });
@@ -102,7 +116,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "http://54.236.98.193:7777/api/auth/signup",
+        "http://3.223.253.106:7777/api/auth/signup",
 
         formData
       );
@@ -117,16 +131,16 @@ export default function SignUp() {
         console.log(userId);
         localStorage.setItem("hunterUId", userId);
 
-        await setDoc(doc(db, "hunters", userId), {
-          name,
-          email,
-          phoneNo,
-          address,
-          latitude,
-          longitude,
-          id: userId,
-          blocked: [],
-        });
+        // await setDoc(doc(db, "hunters", userId), {
+        //   name,
+        //   email,
+        //   phoneNo,
+        //   address,
+        //   latitude,
+        //   longitude,
+        //   id: userId,
+        //   blocked: [],
+        // });
 
         await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
         setToastProps({
@@ -303,7 +317,11 @@ export default function SignUp() {
           </div>
         </div>
       )}
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

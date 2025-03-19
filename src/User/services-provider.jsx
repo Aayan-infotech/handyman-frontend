@@ -55,7 +55,7 @@ export default function ServicesProvider() {
     try {
       const decodedBusinessType = decodeURIComponent(businessType);
       const res = await axios.get(
-        `http://54.236.98.193:7777/api/provider/byBusinessType?lat=${latitude}&lng=${longitude}&radius=${radius}&businessType=${decodedBusinessType}`
+        `http://3.223.253.106:7777/api/provider/byBusinessType?lat=${latitude}&lng=${longitude}&radius=${radius}&businessType=${decodedBusinessType}`
       );
       if (res?.data?.status === 200) {
         setData(res?.data?.data);
