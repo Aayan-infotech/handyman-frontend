@@ -1,6 +1,5 @@
 FROM node:20 AS build
 
-# Set the working directo
 
 WORKDIR /usr/src/app
 
