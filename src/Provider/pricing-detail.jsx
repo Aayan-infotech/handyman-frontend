@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
@@ -72,8 +71,6 @@ export default function PricingProvider() {
     navigate("/home");
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -81,11 +78,10 @@ export default function PricingProvider() {
     try {
       const result = await dispatch(
         handlePayment({
-
-          userId: providerId,  // ✅ Added userId
-          subscriptionPlanId: id, // ✅ Added subscriptionPlanId
-          amount: subscriptionAmount, // ✅ Added amount
-          paymentMethod: "credit_card", // ✅ Added paymentMethod
+          userId: providerId,
+          subscriptionPlanId: id,
+          amount: subscriptionAmount,
+          paymentMethod: "credit_card",
         })
       );
 
@@ -98,7 +94,7 @@ export default function PricingProvider() {
         setLoading(false);
 
         setTimeout(() => {
-          navigate("/home"); // ✅ Navigate to home
+          navigate("/provider/home"); // ✅ Navigate to home
         }, 2000);
       } else {
         const errorMessage =
@@ -129,7 +125,7 @@ export default function PricingProvider() {
       ) : (
         <div>
           <LoggedHeader />
-          <div className="">
+          <div className="h-100">
             <Link to="/provider/chat/1">
               <div className="admin-message">
                 <MdOutlineSupportAgent />
@@ -148,23 +144,25 @@ export default function PricingProvider() {
                   <div className="row mt-5 px-3 px-lg-0">
                     <div className="col-lg-4 mx-auto pt-4">
                       <div className="d-flex flex-column gap-4">
-
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
-                            <span className="highlighted-text">{kmRadius} km</span> Radius
+                            <span className="highlighted-text">
+                              {kmRadius} km
+                            </span>{" "}
+                            Radius
                           </h2>
                           <FaRegCircleCheck />
                         </div>
 
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
-                            <span className="highlighted-text">{subscriptionAmount}</span> Amount
-
+                            <span className="highlighted-text">
+                              {subscriptionAmount}
+                            </span>{" "}
+                            Amount
                           </h2>
                           <FaRegCircleCheck />
                         </div>
-
-
 
                         {/* <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
@@ -177,19 +175,23 @@ export default function PricingProvider() {
                         </div> */}
                         <div
                           className="d-flex flex-column align-items-center justify-content-center price-detail"
-                          style={{ color: "rgba(50, 205, 222, 1) !important", textAlign: "center" }}
+                          style={{
+                            color: "rgba(50, 205, 222, 1) !important",
+                            textAlign: "center",
+                          }}
                         >
                           <h2>
-                            <span style={{ color: "rgba(50, 205, 222, 1)" }}
-                            >
-                              Validity for {validity === 30 ? "Monthly" : "Yearly"}
+                            <span style={{ color: "rgba(50, 205, 222, 1)" }}>
+                              Validity for{" "}
+                              {validity === 30 ? "Monthly" : "Yearly"}
                             </span>
                           </h2>
                         </div>
 
-
-
-                        <span className="text-dark" dangerouslySetInnerHTML={{ __html: description }}></span>
+                        <span
+                          className="text-dark"
+                          dangerouslySetInnerHTML={{ __html: description }}
+                        ></span>
 
                         <Button
                           variant="contained"

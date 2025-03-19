@@ -141,8 +141,8 @@ export default function JobManagement() {
                               </div>
                             </div>
                           </div>
-                          <div className="col-lg-8">
-                            <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
+                          <div className="col-lg-7">
+                            <div className="d-flex flex-column flex-lg-row gap-2 align-items-lg-center justify-content-lg-between">
                               <div className="d-flex flex-row gap-2 align-items-center">
                                 <BiCoinStack />
                                 <h5 className="mb-0">
@@ -157,8 +157,8 @@ export default function JobManagement() {
                               </div>
                             </div>
                           </div>
-                          <div className="col-lg-2 details">
-                            <div className="d-flex flex-row align-items-center gap-3">
+                          <div className="col-lg-3 details">
+                            <div className="d-flex flex-row align-items-center gap-3 justify-content-lg-end">
                               <h5 className="mb-0 text-success text-center text-lg-start">
                                 {item.jobStatus}
                               </h5>
