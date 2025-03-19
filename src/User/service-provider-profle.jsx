@@ -28,7 +28,7 @@ export default function ServiceProviderProfile() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://54.236.98.193:7777/api/provider/${id}`
+        `http://3.223.253.106:7777/api/provider/${id}`
       );
       setData(response?.data?.data);
       setLoading(false);

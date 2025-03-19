@@ -3,7 +3,7 @@ import axios from "axios";
 import { Cookies } from "react-cookie";
 
 const cookies = new Cookies();
-export const REACT_APP_BASE_URL = "http://54.236.98.193:7777/api/";
+export const REACT_APP_BASE_URL = "http://3.223.253.106:7777/api/";
 
 const axiosInstance = axios.create({
   baseURL: REACT_APP_BASE_URL,

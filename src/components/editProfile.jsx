@@ -81,7 +81,7 @@ export default function EditProfile() {
     const handleAllData = async () => {
       try {
         const response = await axios.get(
-          "http://54.236.98.193:7777/api/service/getAllServices"
+          "http://3.223.253.106:7777/api/service/getAllServices"
         );
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
@@ -170,7 +170,7 @@ export default function EditProfile() {
 
     try {
       const response = await axios.put(
-        `http://54.236.98.193:7777/api/${
+        `http://3.223.253.106:7777/api/${
           providerId ? "provider" : "hunter"
         }/updateById/${providerId ? providerId : hunterId}`,
         formData,

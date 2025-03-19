@@ -72,7 +72,7 @@ export default function Upload() {
     setLoading(true);
     try {
       const response = await axios.delete(
-        `http://54.236.98.193:7777/api/provider/delete/${id}`,
+        `http://3.223.253.106:7777/api/provider/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
@@ -116,7 +116,7 @@ export default function Upload() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://54.236.98.193:7777/api/provider/upload/${providerId}`,
+        `http://3.223.253.106:7777/api/provider/upload/${providerId}`,
         formData,
         {
           headers: {

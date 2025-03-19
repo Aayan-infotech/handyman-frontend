@@ -47,7 +47,7 @@ export default function Message() {
         }
 
         const response = await axios.post(
-          "http://54.236.98.193:7777/api/match/getMatchedData",
+          "http://3.223.253.106:7777/api/match/getMatchedData",
           { jobPostId: jobId, senderId, receiverId }
         );
 

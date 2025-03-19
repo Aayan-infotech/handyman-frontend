@@ -27,7 +27,7 @@ export default function JobDetail() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://54.236.98.193:7777/api/jobpost/jobpost-details/${id}`,
+        `http://3.223.253.106:7777/api/jobpost/jobpost-details/${id}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,

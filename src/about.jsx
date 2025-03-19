@@ -29,7 +29,7 @@ export default function About() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://54.236.98.193:7777/api/StaticContent/${section}`
+          `http://3.223.253.106:7777/api/StaticContent/${section}`
         );
 
         if (response.status === 200 && response.data.content) {
