@@ -118,6 +118,8 @@ export default function Login() {
           <Header />
           <div className="container login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
+            <h1 className="highlighted-text">Service Hunter</h1>
+
               <div className="card shadow">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">LOGIN</h2>

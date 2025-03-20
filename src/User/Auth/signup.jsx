@@ -172,6 +172,7 @@ export default function SignUp() {
           <Header />
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
+            <h1 className="highlighted-text">Service Hunter</h1>
               <div className="card shadow mb-4">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">Sign Up</h2>
