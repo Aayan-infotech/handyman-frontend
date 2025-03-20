@@ -106,7 +106,7 @@ function App() {
           path="/notification"
           element={<ProtectedRoute element={<Notification />} />}
         />
-         <Route
+        <Route
           path="/change-radius"
           element={<ProtectedRoute element={<ChangeRadius />} />}
         />
@@ -122,7 +122,7 @@ function App() {
           path="/editProfile"
           element={<ProtectedRoute element={<EditProfile />} />}
         />
-         <Route
+        <Route
           path="/services-provider"
           element={<ProtectedRoute element={<ServicesProvider />} />}
         />
@@ -155,6 +155,10 @@ function App() {
         />
         <Route
           path="/provider/chat/:id"
+          element={<ProtectedRoute element={<Chat />} />}
+        />
+        <Route
+          path="/provider/admin/chat/"
           element={<ProtectedRoute element={<AdminChat />} />}
         />
         <Route
