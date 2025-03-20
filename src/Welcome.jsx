@@ -1,3 +1,4 @@
+
 import react from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -14,7 +15,7 @@ export default function Welcome() {
   return (
     <>
       <div className="bg-welcome">
-        <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
+        {/* <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
           <Container fluid>
             <Link to="/" className="py-1">
               <img src={logo} alt="logo" />
@@ -27,7 +28,35 @@ export default function Welcome() {
               </Nav>
             </Navbar.Collapse>
           </Container>
-        </Navbar>
+        </Navbar> */}
+
+              <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
+                  <Container fluid>
+                    <Link to="/" className="py-1">
+                      <img src={logo} alt="logo" />
+                    </Link>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse
+                      id="responsive-navbar-nav"
+                      className="px-3 pt-2 p-lg-0"
+                    >
+                      <Nav className="me-auto d-flex flex-column flex-lg-row gap-2 gap-lg-5 ">
+                        <Link href="#" style={{ fontWeight: "350" }}>
+                          About Us
+                        </Link>
+                        <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                          Contact Us
+                        </Link>
+                      </Nav>
+        
+                      <Nav className="mb-4">
+                        <Link to="/welcome">
+                        
+                        </Link>
+                      </Nav>
+                    </Navbar.Collapse>
+                  </Container>
+                </Navbar>
         <div className="container top-avatar">
           <div className="d-flex justify-content-center align-items-center flex-column gap-1">
             <img src={bigLogo} alt="" />
