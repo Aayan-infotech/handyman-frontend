@@ -44,12 +44,33 @@ export default function Header() {
                                 Contact Us
                               </Link>
                             </Nav>
-              
-                            <Nav className="mb-4">
-                              <Link to="/welcome">
-                               
-                              </Link>
-                            </Nav>
+           
+
+<Nav>
+              <div className="d-flex flex-row gap-1">
+                <Link to="/login">
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="rounded-0"
+                    size="small"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <hr className="h-100" />
+                <Link to="/signup">
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="rounded-0 custom-green-outline"
+                    size="small"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              </div>
+            </Nav>
                           </Navbar.Collapse>
                         </Container>
                       </Navbar>

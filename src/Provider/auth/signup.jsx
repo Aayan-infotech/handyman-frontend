@@ -231,7 +231,7 @@ export default function SignUpProvider() {
           <Header />
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
-              <h1 className="highlighted-text">Service Provider</h1>
+              <h1 className="highlighted-text">Service Providers</h1>
               <div className="card shadow mb-4">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">Sign Up</h2>
@@ -378,7 +378,7 @@ export default function SignUpProvider() {
                       </Form.Label>
                       <Col sm="7">
                         <Autocomplete
-                          className="form-control"
+                          className="form-control google-remover"
                           apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
                           style={{ width: "100%" }}
                           onPlaceSelected={(place) => {

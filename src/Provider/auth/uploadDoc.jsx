@@ -63,6 +63,34 @@ export default function Upload() {
     getUploadProfile();
   }, []);
 
+  useEffect(() => {
+    if (location.pathname === "/provider/upload") {
+      const getUploadProfile = async () => {
+        try {
+          if (providerId) {
+            const result = await dispatch(getProviderUser());
+            if (result.payload?.status === 200) {
+              const { files } = result.payload.data;
+              if (files.length === 0) {
+                navigate("/provider/upload");
+                return;
+              }
+              navigate("/provider/pricing");
+            }
+          }
+        } catch (error) {
+          console.error("User error:", error);
+          setToastProps({
+            message: "Error fetching user data",
+            type: "error",
+            toastKey: Date.now(),
+          });
+        }
+      };
+      getUploadProfile();
+    }
+  }, [location.pathname]);
+
   const handleFileChange = (event) => {
     const files = event.target.files;
     setDocument(files.length > 0 ? files : null);
@@ -227,27 +255,60 @@ export default function Upload() {
                   </div>
 
                   {document && document.length > 0 && (
-                    <Stack direction="row" className="flex-wrap gap-1">
-                      {Array?.from(document).map((file) => (
-                        <div className="py-1" key={file._id}>
-                          <Chip
-                            label={file?.name || file?.filename}
-                            onDelete={() => handleDelete(file._id)}
-                          />
+                    <div direction="row" className=" row gy-4">
+                      {Array.from(document).map((file, index) => (
+                        <div className="col-lg-4 py-1" key={index}>
+                          <div className="card p-3 w-100">
+                            <div className="card-body p-0">
+                              {file.type?.includes("image") || file.name?.match(/\.(jpg|jpeg|png|gif)$/i) || file.path?.includes("image") || file.path?.match(/\.(jpg|jpeg|png|gif)$/i) ? (
+                                <img
+                                  src={file instanceof File ? URL.createObjectURL(file) : file.path}
+                                  alt="docImage"
+                                  className="object-fit-contain w-100 rounded-4"
+                                  height={100}
+                                />
+                              ) : file.type?.includes("pdf") || file.name?.endsWith(".pdf") ? (
+                                <iframe
+                                  src={file instanceof File ? URL.createObjectURL(file) : file.path}
+                                  className="w-100 rounded-4 "
+                                  height={100}
+                                  title={`PDF Preview ${index}`}
+                                />
+                              ) : (
+                                <p className="text-center">Unsupported file type</p>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       ))}
-                    </Stack>
+
+                    </div>
                   )}
 
+
                   <div className="d-flex justify-content-center gap-2 mt-5 align-items-center">
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      color="error"
-                      onClick={() => navigate("/provider/pricing")}
-                    >
-                      Skip For Now
-                    </Button>
+                    {
+                      location.pathname === "/provider/upload" ?
+                        <Button
+                          variant="outlined"
+                          size="large"
+                          color="error"
+                          onClick={() => navigate("/provider/pricing")}
+                        >
+                          Skip For Now
+                        </Button>
+                        :
+                        <Button
+                          variant="outlined"
+                          size="large"
+                          color="error"
+                          onClick={() => navigate("/provider/home")}
+                        >
+                          Back to Home Page
+                        </Button>
+
+                    }
+
                   </div>
                 </div>
               </div>

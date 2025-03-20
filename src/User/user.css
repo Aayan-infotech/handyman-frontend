@@ -6,60 +6,73 @@
   height: 100%;
   min-height: 103.5vh !important;
 }
+
 .mh-200 {
   height: 220px;
 }
+
 .mw-40 {
   max-width: 400px;
   width: 100%;
 }
+
 .h-100vh {
   height: 100%;
   min-height: 100vh !important;
 }
+
 .bg-center {
   min-height: 85vh;
   height: 100%;
 }
-.select-ion
-  .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+
+.select-ion .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 0.375rem 0.75rem !important;
   border-radius: 41px !important;
 }
+
 .select-ion .css-sc8y68-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
   border-radius: 0.375rem !important;
 }
+
 .login .card {
   width: calc(100% - 50%);
 
   padding: 20px 30px;
   border-radius: 30px;
 }
+
 .login .hr {
   width: calc(100% - 50%);
 }
+
 .login .icons-color img {
   width: fit-content;
 }
+
 .loggedheader input {
   background-color: #f5f7fa;
   color: #f5f7fa;
   max-width: 300px;
   border-radius: 30px;
 }
+
 .position-relative.icon svg {
   position: absolute;
   top: 10px;
   left: 10px;
 }
+
 .loggedheader {
   background-color: #fff;
 }
+
 .bg-second {
   background-color: #f5f7fa;
   min-height: 89vh;
   height: 100%;
 }
+
 .management .MuiChip-outlined {
   font-size: 16px;
   color: #32de84;
@@ -67,16 +80,20 @@
   border-radius: 50px;
   border: 1px solid #e1d3ff !important;
 }
+
 .management li svg {
   width: 18px;
   height: 18px;
 }
+
 .management li span {
   margin-right: 10px;
 }
+
 .management hr {
   border: 2px solid #f1f1f1 !important;
 }
+
 .management .more-info svg {
   background-color: #32de84;
   padding: 15px;
@@ -85,29 +102,35 @@
   width: 70px;
   height: 70px;
 }
+
 .notification {
   background-color: #f5f7fa;
   padding: 8px;
   border-radius: 50%;
 }
+
 .notification svg {
   color: #fe5c73;
 }
+
 .position-relative.icon input {
   padding: 5px 5px 5px 30px;
 }
+
 .position-relative.icon-speaker {
   background-color: #fff;
   height: 60px;
   width: 100%;
   border-radius: 30px;
 }
+
 .position-relative.icon-speaker img {
   position: absolute;
   top: 10px;
   left: 15px;
   width: fit-content !important;
 }
+
 .mySwiper span {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -115,9 +138,11 @@
   -webkit-line-clamp: 1;
   text-overflow: clip;
 }
+
 .mySwiper {
   position: relative;
 }
+
 .mySwiper .slick-prev {
   position: absolute;
   top: 3px;
@@ -131,6 +156,7 @@
   border-radius: 6px;
   z-index: 1;
 }
+
 .mySwiper .slick-next {
   position: absolute;
   top: 30px;
@@ -144,6 +170,7 @@
   border-radius: 6px;
   z-index: 1;
 }
+
 .green-card {
   background-color: #32de84;
   color: #fff;
@@ -161,42 +188,52 @@
   z-index: 999;
   box-shadow: 0 0 25px gray;
 }
+
 .outline-card {
   border: 1px solid #32de84;
   border-radius: 50px;
   background-color: transparent !important;
 }
+
 .outline-card-none {
   border: 1px solid #32de84;
   border-radius: 50px;
 }
+
 .outline-card svg {
   width: 26px !important;
   height: 26px !important;
 }
+
 .management .green-card {
   background-color: #32de84;
   border: 0;
   border-radius: 50px;
 }
+
 .swiper-services .swiper-button-disabled {
   display: none;
 }
+
 .swiper-services .swiper-button-prev,
 .swiper-services .swiper-button-next {
   background-color: #32cdde;
   border-radius: 50%;
   padding: 26px;
 }
+
 .swiper-services h3 {
   font-weight: 700 !important;
 }
+
 .swiper-services .swiper-slide .green-card {
   background-color: #32cdde !important;
 }
+
 .swiper-services .swiper-slide:nth-child(even) .green-card {
   background-color: #32de84 !important;
 }
+
 .swiper-services .swiper-button-prev::after,
 .swiper-services .swiper-button-next::after {
   color: #fff;
@@ -209,20 +246,24 @@
   height: 38px;
   width: 38px;
 }
+
 .blue-card {
   background-color: #32cdde;
   color: #fff;
 }
+
 .pos-design-icon {
   position: absolute;
   right: -60px;
   top: 125px;
 }
+
 .pos-design-pillai {
   position: absolute;
   right: -15px;
   top: 50px;
 }
+
 .pos-design-bag {
   position: absolute;
   right: -45px;
@@ -232,23 +273,28 @@
 .pos-design-icon img {
   width: calc(100% - 30%);
 }
+
 .dots {
   background-color: #fff;
   border-radius: 50%;
   padding: 3px;
 }
+
 .mySwiper .slick-list {
   width: calc(100% - 10%);
   transform: translate(61px, 15px) !important;
 }
+
 .mySwiper .slick-next:hover,
 .mySwiper .slick-prev:hover {
   background-color: #00b556 !important;
 }
+
 .mySwiper .slick-next:hover::before,
 .mySwiper .slick-prev:hover::before {
   border-bottom: 12px solid #fff;
 }
+
 .mySwiper .slick-prev::before {
   content: "";
   border-left: 6px solid transparent;
@@ -259,6 +305,7 @@
   top: 8px;
   left: 5px;
 }
+
 .mySwiper .slick-next::before {
   content: "";
   transform: rotate(90deg);
@@ -276,20 +323,24 @@
   font-size: 28px;
   font-weight: 600;
 }
+
 .position-relative.icon-speaker input {
   height: 55px !important;
   padding-left: 50px;
 }
+
 .download {
   background-color: #32de84;
   border-radius: 50%;
   padding: 20px;
 }
+
 .download svg {
   font-size: 3rem;
   color: #fff;
   font-weight: 900;
 }
+
 .form-post-job .input1,
 .form-post-job select,
 .form-post-job textarea {
@@ -298,12 +349,14 @@
   padding: 22px 30px;
   color: #979797;
 }
+
 .standard-input fieldset {
   border: 1px solid #32de84;
   border-radius: 40px;
   padding: 22px 30px;
   color: #979797;
 }
+
 .form-post-job select {
   --bs-form-select-bg-img: url("./assets/cursor.png");
 }
@@ -311,16 +364,20 @@
 .bg-second a {
   text-decoration: none;
 }
+
 .form-post-job select option {
   color: #979797;
 }
+
 .login input {
   border: 1px solid rgba(171, 171, 171, 1) !important;
 }
+
 .otp-input input {
   border: 0 !important;
   border-radius: 20px !important;
 }
+
 .search {
   border-radius: 40px;
   border: 0;
@@ -328,33 +385,41 @@
   min-width: 300px;
   width: 100%;
 }
+
 .management svg {
   width: 40px;
   height: 40px;
   color: #32de84;
 }
+
 .management h5 {
   font-size: 20px;
 }
+
 .text-trun {
   width: 300px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .management h3 {
   font-size: 22px !important;
   font-weight: 600 !important;
 }
+
 .management .col-lg-4 {
   padding: 0 !important;
 }
+
 .management .w-40 {
   width: 33% !important;
 }
+
 .image-shadow {
   position: relative;
 }
+
 .image-shadow::after {
   position: absolute;
   content: "";
@@ -363,6 +428,7 @@
   width: 100%;
   left: 0;
 }
+
 .image-shadow .cost {
   position: absolute;
   left: 0;
@@ -374,21 +440,25 @@
   color: #fff;
   z-index: 1;
 }
+
 .cost h5 {
   font-size: 50px;
   font-weight: bold;
 }
+
 .pos-profile {
   position: absolute;
   top: -80px;
   left: -120px;
 }
+
 .circle-km {
   background-color: black;
   padding: 5px;
   border-radius: 50%;
   position: relative;
 }
+
 .circle-km::before {
   border: 1px solid black;
   border-radius: 50%;
@@ -400,6 +470,7 @@
   left: -3px;
   padding: 7px;
 }
+
 .circle-km::after {
   border: 1px solid black;
   border-radius: 50%;
@@ -411,6 +482,7 @@
   left: -6px;
   padding: 10px;
 }
+
 .contact svg {
   border: 1px solid #32de84;
   color: #32de84;
@@ -418,25 +490,31 @@
   padding: 10px;
   border-radius: 50%;
 }
+
 .swiper-review-people .card {
   background-color: #32de85d2;
 }
+
 .swiper-review-people p {
   margin-top: 25px;
 }
+
 .swiper-review-people .swiper-slide:nth-child(odd) img {
   border: 8px solid #f28724;
   border-radius: 50%;
 }
+
 .swiper-review-people .swiper-slide:nth-child(even) img {
   border: 8px solid #ff6f7f;
   border-radius: 50%;
 }
+
 .user-card {
   background-color: #32de856b;
   padding: 14px 20px;
   border-radius: 30px;
 }
+
 .tick .user-seen {
   color: #00b556;
   width: 100%;
@@ -444,16 +522,19 @@
   justify-content: center;
   padding-left: 32px;
 }
+
 .tick .text-muted {
   width: 100%;
   display: flex;
   justify-content: center;
   padding-left: 16px;
 }
+
 .tick span,
 .message-box .active {
   position: relative;
 }
+
 .message-box .active.col-lg-1::after {
   position: absolute;
   content: "";
@@ -467,6 +548,7 @@
 
   top: 0;
 }
+
 .message-box .active.col-lg-3::after {
   position: absolute;
   content: "";
@@ -478,6 +560,7 @@
   right: 12px;
   top: 0;
 }
+
 .active-status {
   background: #54d969;
   height: 18px;
@@ -485,6 +568,7 @@
   border-radius: 50%;
   display: flex;
 }
+
 .tick span.text-muted::after {
   content: "";
   height: 18px;
@@ -497,6 +581,7 @@
   top: -10px;
   right: 2px;
 }
+
 .tick span.user-seen::after {
   content: "";
   height: 18px;
@@ -509,6 +594,7 @@
   top: -10px;
   right: 2px;
 }
+
 .msg-recieved {
   background-color: #fceed4;
   padding: 10px 14px;
@@ -518,6 +604,7 @@
   /* max-width: 50%; */
   max-width: 100%;
 }
+
 .msg-sent {
   background-color: #32de84;
   padding: 10px 14px;
@@ -528,11 +615,13 @@
   max-width: 100%;
   color: #fff;
 }
+
 .fl-left {
   float: left;
   width: 55%;
   margin: 5px 0;
 }
+
 .fl-right {
   float: right;
   width: 55%;
@@ -543,17 +632,21 @@
   justify-content: end;
   align-items: end;
 }
+
 .fl-right p {
   text-align: start;
 }
+
 .time-status {
   font-size: 12px;
 }
+
 .input-send {
   position: relative;
   display: flex;
   width: calc(100% - 10%);
 }
+
 .input-send-provider {
   position: fixed;
   bottom: 10px;
@@ -564,6 +657,7 @@
   max-width: calc(100% - 20%);
   min-width: 350px;
 }
+
 .input-send svg {
   position: absolute;
   background-color: #32de84;
@@ -575,17 +669,21 @@
   height: 40px;
   width: 40px;
 }
+
 .notification-card {
   background-color: #32de85;
   color: #fff;
 }
+
 .notification-read-card {
   background-color: #32de8559;
   color: #000;
 }
+
 .notification-read-card p {
   color: #484848;
 }
+
 .image-shadow .exper {
   position: absolute;
   /* left: 0; */
@@ -597,6 +695,7 @@
   color: #fff;
   z-index: 1;
 }
+
 .profile .color-profile {
   background-color: #32de84;
   border-radius: 50%;
@@ -605,48 +704,63 @@
   color: #fff;
   text-align: center;
 }
-.profile svg {
+
+.pac-logo::after {
+  display: none !important;
 }
+
+.profile svg {}
+
 @media screen and (max-width: 768px) {
   .login .card {
     width: calc(100% - 8%);
   }
+
   .login .hr {
     width: calc(100% - 8%);
   }
+
   .mySwiper .slick-list {
     width: calc(100% - 21%);
     transform: translate(61px, 15px) !important;
   }
+
   .image-shadow img {
     height: 130px;
     object-fit: cover;
   }
+
   .cost h5 {
     font-size: 20px;
     font-weight: bold;
   }
+
   .mySwiper .slick-prev,
   .mySwiper .slick-next {
     left: 88%;
   }
+
   .management h3 {
     font-size: 20px !important;
   }
+
   .management svg {
     width: 30px;
     height: 30px;
   }
+
   .management img,
   .swiper-review-people img {
     width: fit-content !important;
   }
+
   .message {
     right: 15px;
     background-color: #32de84;
     border-radius: 50%;
     padding: 10px;
   }
+
   .management .MuiChip-outlined {
     font-size: 15px;
     color: #32de84;
@@ -654,6 +768,7 @@
     border-radius: 50px;
     border: 1px solid #e1d3ff !important;
   }
+
   .pos-profile {
     position: absolute;
     top: -80px;
@@ -663,6 +778,7 @@
     /* height: 100%; */
     z-index: 999;
   }
+
   .user-card img {
     width: fit-content;
   }
