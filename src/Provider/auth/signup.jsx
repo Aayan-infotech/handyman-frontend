@@ -100,8 +100,8 @@ export default function SignUpProvider() {
       !address ||
       !password ||
       !businessType ||
-      !registrationNumber ||
-      !name
+      !registrationNumber
+      // !images
     ) {
       setToastProps({
         message: "Please fill all required fields",

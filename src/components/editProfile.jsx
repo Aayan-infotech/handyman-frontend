@@ -151,22 +151,22 @@ export default function EditProfile() {
     formData.append("name", name);
     formData.append("phoneNo", number);
     formData.append("email", email);
-    formData.append("addressLine", address);
-    formData.append("latitude", latitude);
-    formData.append("longitude", longitude);
-    formData.append("ABN_Number", registrationNumber);
+    // formData.append("addressLine", address);
+    // formData.append("latitude", latitude);
+    // formData.append("longitude", longitude);
+    // formData.append("ABN_Number", registrationNumber);
 
-    formData.append("businessName", businessName);
+    // formData.append("businessName", businessName);
 
-    if (images && images instanceof FileList && images.length > 0) {
-      formData.append("images", images[0]);
-    } else if (typeof images === "string") {
-      formData.append("images", images);
-    }
+    // if (images && images instanceof FileList && images.length > 0) {
+    //   formData.append("images", images[0]);
+    // } else if (typeof images === "string") {
+    //   formData.append("images", images);
+    // }
 
-    businessType.forEach((type) => {
-      formData.append("businessType[]", type);
-    });
+    // businessType.forEach((type) => {
+    //   formData.append("businessType[]", type);
+    // });
 
     try {
       const response = await axios.put(

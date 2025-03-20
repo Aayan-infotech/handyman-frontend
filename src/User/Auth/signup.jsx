@@ -79,17 +79,17 @@ export default function SignUp() {
       setLoading(false);
       return;
     }
-    console.log(images[0]);
+    // console.log(images[0]);
 
-    if (!images.length || !images[0]) {
-      setToastProps({
-        message: "Please upload an avatar!",
-        type: "error",
-        toastKey: Date.now(),
-      });
-      setLoading(false);
-      return;
-    }
+    // if (!images.length || !images[0]) {
+    //   setToastProps({
+    //     message: "Please upload an avatar!",
+    //     type: "error",
+    //     toastKey: Date.now(),
+    //   });
+    //   setLoading(false);
+    //   return;
+    // }
 
     // const usersRef = collection(db, "hunters");
     try {
