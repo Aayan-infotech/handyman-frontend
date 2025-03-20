@@ -210,7 +210,7 @@ export default function SignUp() {
                       <Col sm="8">
                         <Form.Control
                           type="text"
-                          placeholder="Henry"
+                          placeholder="Name"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                         />
