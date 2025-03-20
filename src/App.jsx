@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./Home";
@@ -42,7 +42,8 @@ import ChangeRadius from "./components/changeRadius";
 import Search from "./Search";
 import ServicesProvider from "./User/services-provider";
 import AdminChat from "./Chat/admin-chat";
-
+import { getProviderUser } from "./Slices/userSlice";
+import { useDispatch } from "react-redux";
 const useAuth = () => {
   return !!(
     localStorage.getItem("hunterToken") || localStorage.getItem("ProviderToken")
@@ -106,7 +107,7 @@ function App() {
           path="/notification"
           element={<ProtectedRoute element={<Notification />} />}
         />
-         <Route
+        <Route
           path="/change-radius"
           element={<ProtectedRoute element={<ChangeRadius />} />}
         />
@@ -122,7 +123,7 @@ function App() {
           path="/editProfile"
           element={<ProtectedRoute element={<EditProfile />} />}
         />
-         <Route
+        <Route
           path="/services-provider"
           element={<ProtectedRoute element={<ServicesProvider />} />}
         />
