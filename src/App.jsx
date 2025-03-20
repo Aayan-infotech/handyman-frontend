@@ -163,7 +163,7 @@ function App() {
         />
         <Route
           path="/provider/forgetpassword"
-          element={<ProtectedRoute element={<ForgetPassword />} />}
+          element={<ForgetPassword />}
         />
         <Route
           path="/provider/pricing"
