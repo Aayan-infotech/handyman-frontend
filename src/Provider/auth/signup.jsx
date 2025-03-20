@@ -269,7 +269,7 @@ export default function SignUpProvider() {
                       <Col sm="7">
                         <Form.Control
                           type="text"
-                          placeholder="Henry"
+                          placeholder="Name"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                         />
