@@ -15,7 +15,11 @@ import Toaster from "../Toaster";
 import Loader from "../Loader";
 
 export default function ChangePassword() {
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -38,38 +42,72 @@ export default function ChangePassword() {
         setToastProps({
           message: "Password changed Successfully",
           type: "success",
-          toastKey: Date.now()
+          toastKey: Date.now(),
         });
         setLoading(false);
         const hunterToken = localStorage.getItem("hunterToken");
         const providerToken = localStorage.getItem("ProviderToken");
 
         if (hunterToken) {
+          localStorage.removeItem("hunterToken");
+          localStorage.removeItem("hunterEmail");
+          localStorage.removeItem("hunterName");
+          localStorage.removeItem("hunterId");
+          localStorage.removeItem("ProviderToken");
+          localStorage.removeItem("ProviderEmail");
+          localStorage.removeItem("ProviderName");
+          localStorage.removeItem("ProviderId");
+          localStorage.removeItem("ProviderUId");
+          localStorage.removeItem("Guest");
+          localStorage.removeItem("hunterUId");
+          localStorage.removeItem("ProviderUId");
+          localStorage.clear();
           setTimeout(() => {
-            navigate("/myprofile");
+            navigate("/login");
           }, 2000);
         } else if (providerToken) {
+          localStorage.removeItem("hunterToken");
+          localStorage.removeItem("hunterEmail");
+          localStorage.removeItem("hunterName");
+          localStorage.removeItem("hunterId");
+          localStorage.removeItem("ProviderToken");
+          localStorage.removeItem("ProviderEmail");
+          localStorage.removeItem("ProviderName");
+          localStorage.removeItem("ProviderId");
+          localStorage.removeItem("ProviderUId");
+          localStorage.removeItem("Guest");
+          localStorage.removeItem("hunterUId");
+          localStorage.removeItem("ProviderUId");
+          localStorage.clear();
           setTimeout(() => {
-            navigate("/provider/myprofile");
+            navigate("/provider/login");
           }, 2000);
         } else {
           console.error("No token found!");
           setToastProps({
             message: "An error occurred. Please try again.",
             type: "error",
-            toastKey: Date.now()
+            toastKey: Date.now(),
           });
         }
       } else {
         const errorMessage =
           result.payload.message ||
           "Failed to change password. Please check your credentials.";
-        setToastProps({ message: errorMessage, type: "error", toastKey: Date.now() });
+        setToastProps({
+          message: errorMessage,
+          type: "error",
+          toastKey: Date.now(),
+        });
         setLoading(false);
       }
     } catch (error) {
       console.error("Error changing password:", error);
-      setToastProps({message: error?.response?.data?.message, type: "error", toastKey: Date.now() });
+      setToastProps({
+        message: error?.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
       setLoading(false);
     }
   };
@@ -157,7 +195,11 @@ export default function ChangePassword() {
         </div>
       )}
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }
