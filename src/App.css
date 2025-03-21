@@ -522,6 +522,27 @@
 .mw-condition {
   max-width: 500px !important;
 }
+.sort-input {
+  width: 100% !important;
+  max-width: 300px !important;
+  height: 40px !important;
+  background-color: #fff !important;
+  border-radius: 20px !important;
+}
+.sort-input .css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  color: #000 !important;
+}
+.sort-input .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root {
+  line-height: 1rem !important;
+  top: -3px !important;
+}
+.sort-input .css-1ll44ll-MuiOutlinedInput-notchedOutline {
+  border: 0 !important;
+}
+.sort-input
+  .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 9.5px 14px !important;
+}
 @media screen and (max-width: 768px) {
   .profile-img {
     width: 100%;

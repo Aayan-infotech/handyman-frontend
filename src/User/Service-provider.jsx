@@ -6,38 +6,94 @@ import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
-// import company1 from "./assets/logo/companyLogo.png";
-// import company2 from "./assets/logo/companyLogo1.png";
-// import company3 from "./assets/logo/companyLogo2.png";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
 import { GrMapLocation } from "react-icons/gr";
 import NoData from "../assets/no_data_found.gif";
+import Table from "react-bootstrap/Table";
+import FormControl from "@mui/material/FormControl";
+
+const ITEM_HEIGHT = 40;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 150,
+    },
+  },
+};
 
 export default function ServiceProvider() {
   const [data, setData] = useState([]);
-  const [latitude, setLatitude] = useState(26.86223751316575);
-  const [longitude, setLongitude] = useState(80.99808160498773);
-  // const [latitude, setLatitude] = useState(null);
-  // const [longitude, setLongitude] = useState(null);
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
+  const [filteredData, setFilteredData] = useState([]);
+  const [businessType, setBusinessType] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
-  const address = useSelector((state) => state?.address?.address?.[0]);
-
+  const token = localStorage.getItem("hunterToken");
+  const handleChange = (event) => {
+    setBusinessType(event.target.value);
+  };
   useEffect(() => {
     dispatch(getAddress());
   }, [dispatch]);
 
   useEffect(() => {
+    handleGetData();
     if (latitude !== null && longitude !== null) {
       handleAllData();
     }
   }, [latitude, longitude]);
+
+  const handleGetData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        "http://3.223.253.106:7777/api/address/addresses-by-id",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response?.data?.[0]?.location?.coordinates);
+      if (response.status === 200) {
+        setLongitude(response?.data?.[0]?.location?.coordinates[0]);
+        setLatitude(response?.data?.[0]?.location?.coordinates[1]);
+        setLoading(false);
+
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
+      }
+    } catch (error) {
+      setToastProps({
+        message: error?.response?.data?.error || "Failed to fetch data",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
 
   const handleAllData = async () => {
     setLoading(true);
@@ -50,13 +106,17 @@ export default function ServiceProvider() {
       if (response.status === 200) {
         setLoading(false);
         setData(response?.data?.data || []);
-        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
       }
       if (response.data.data.length === 0) {
         setToastProps({
           message: "No service provider available in your area",
           type: "info",
-          toastKey: Date.now()
+          toastKey: Date.now(),
         });
         setLoading(false);
         setData([]);
@@ -65,12 +125,28 @@ export default function ServiceProvider() {
       setToastProps({
         message: error?.response?.data?.error || "Failed to fetch data",
         type: "error",
-        toastKey: Date.now()
+        toastKey: Date.now(),
       });
     } finally {
       setLoading(false);
     }
   };
+
+  const filterData = () => {
+    if (businessType.length === 0) {
+      setFilteredData(data);
+    } else {
+      setFilteredData(
+        data.filter((provider) =>
+          provider.businessType.some((type) => businessType.includes(type))
+        )
+      );
+    }
+  };
+
+  useEffect(() => {
+    filterData();
+  }, [businessType, data]);
 
   console.log(data);
 
@@ -93,22 +169,61 @@ export default function ServiceProvider() {
           </div>
           <div className="bg-second py-3">
             <div className="container">
-              <div className="d-flex justify-content-start align-items-center">
-                <div className="position-relative icon">
-                  <IoIosSearch className="mt-1" />
-                  <Form.Control
-                    placeholder="search for something"
-                    className="search"
-                  />
+              <div className="row gy-4">
+                <div className="col-lg-12">
+                  <div className="d-flex justify-content-lg-between flex-column flex-lg-row gap-4">
+                    <div className="position-relative icon">
+                      <IoIosSearch className="mt-1" />
+                      <Form.Control
+                        placeholder="search for something"
+                        className="search"
+                      />
+                    </div>
+                    <FormControl className="sort-input" sx={{ m: 1 }}>
+                      <InputLabel id="radius-select-label">
+                        Select BusinessType
+                      </InputLabel>
+                      <Select
+                        labelId="business-type-select-label"
+                        id="business-type-select"
+                        multiple
+                        value={businessType}
+                        onChange={handleChange}
+                        input={<OutlinedInput label="Select Business Type" />}
+                        renderValue={(selected) => selected.join(", ")}
+                        MenuProps={MenuProps}
+                        placeholder="Select Business Type"
+                      >
+                        {Array.from(
+                          new Set(
+                            data.flatMap((provider) => provider.businessType)
+                          )
+                        ).map((type, index) => (
+                          <MenuItem key={index} value={type}>
+                            <Checkbox checked={businessType.includes(type)} />
+                            <ListItemText primary={type} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    {/* {data?.map((provider, index) => (
+                          <div key={provider._id} className="col-lg-12">
+                            <FormControlLabel
+                              control={<Checkbox />}
+                              label={provider?.businessType}
+                            />
+                          </div>
+                        ))} */}
+                  </div>
                 </div>
-              </div>
-              {data.length === 0 ? (
-                <div className="d-flex justify-content-center flex-column gap-1 align-items-center">
-                  <img src={NoData} alt="noData" className="w-nodata"/>
-                </div>
-              ) : (
-                <div className="row mt-4 gy-4 management">
-                  {data?.map((provider, index) => (
+                <div className="col-lg-12">
+                  {data.length === 0 ? (
+                    <div className="d-flex justify-content-center flex-column gap-1 align-items-center">
+                      <img src={NoData} alt="noData" className="w-nodata" />
+                    </div>
+                  ) : (
+                    <div className=" management">
+                      {/* {data?.map((provider, index) => (
                     <div key={provider._id} className="col-lg-12">
                       <Link to={`/service-profile/${provider._id}`}>
                         <div className="card border-0 rounded-3 px-4">
@@ -151,12 +266,85 @@ export default function ServiceProvider() {
                         </div>
                       </Link>
                     </div>
-                  ))}
+                  ))} */}
+                      <div className="card shadow border-0 rounded-5 p-lg-3">
+                        <div className="card-body">
+                          <Table responsive hover >
+                            <thead className="">
+                              <tr className="">
+                                <th className="green-card-important py-3 text-center">
+                                  #
+                                </th>
+                                <th className="green-card-important py-3 text-center">
+                                  Name
+                                </th>
+                                <th className="green-card-important py-3 text-center">
+                                  BusinessType
+                                </th>
+                                <th className="green-card-important py-3 text-center">
+                                  Distance(km)
+                                </th>
+                                <th className="green-card-important py-3 text-center">
+                                  Address
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {filteredData?.map((provider, index) => (
+                                <tr key={provider._id} className="text-center">
+                                  <td>{index + 1}</td>
+                                  <td>
+                                    {" "}
+                                    <Link
+                                      to={`/service-profile/${provider._id}`}
+                                      className="text-dark"
+                                    >
+                                      {provider.businessName}
+                                    </Link>
+                                  </td>
+                                  <td
+                                    className={`text-start flex-wrap ${
+                                      provider.businessType.length === 1
+                                        ? ""
+                                        : "d-flex"
+                                    }`}
+                                  >
+                                    {Array.isArray(provider?.businessType) &&
+                                    provider.businessType.length > 0
+                                      ? provider.businessType.map(
+                                          (type, index) => (
+                                            <>
+                                              <div key={index}>
+                                                {type}
+                                                {" ,  "}
+                                              </div>
+                                            </>
+                                          )
+                                        )
+                                      : "No Category"}
+                                  </td>
+
+                                  <td>
+                                    {(provider.distance / 1000).toFixed(2)}
+                                  </td>
+                                  <td>{provider.address.addressLine}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
-         <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+          <Toaster
+            message={toastProps.message}
+            type={toastProps.type}
+            toastKey={toastProps.toastKey}
+          />
         </>
       )}
     </>
