@@ -190,7 +190,8 @@ export default function EditProfile() {
           type: "success",
           toastKey: Date.now(),
         });
-        navigate(providerToken ? `/provider/home` : `/home`);
+        setTimeout
+        navigate(providerToken ? `/provider/myprofile` : `/myprofile`);
       }
     } catch (error) {
       setLoading(false);
