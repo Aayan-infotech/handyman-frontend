@@ -14,6 +14,7 @@ import { IoEyeSharp, IoTrashOutline } from "react-icons/io5";
 import Table from "react-bootstrap/Table";
 import FormControl from "@mui/material/FormControl";
 
+const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
