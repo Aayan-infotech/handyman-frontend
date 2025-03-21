@@ -29,6 +29,7 @@ export default function ResetPassword() {
         type: "error",
         toastKey: Date.now(),
       });
+      setLoading(false);
       return;
     }
 
