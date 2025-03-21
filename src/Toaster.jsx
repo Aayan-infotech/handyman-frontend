@@ -15,6 +15,8 @@ const Toaster = ({ message, type, toastKey }) => {
         case 'info':
           toast.info(message);
           break;
+
+          
         case 'warning':
           toast.warning(message);
           break;
