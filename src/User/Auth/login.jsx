@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
+import { Eye, EyeOff } from "lucide-react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../user.css";
@@ -22,6 +23,8 @@ import { auth } from "../../Chat/lib/firestore";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const hunterUID = localStorage.getItem("hunterUId")
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -145,7 +148,7 @@ export default function Login() {
                       </Col>
                     </Form.Group>
 
-                    <Form.Group
+                    {/* <Form.Group
                       as={Row}
                       className="mb-3"
                       controlId="formPlaintextPassword"
@@ -161,7 +164,34 @@ export default function Login() {
                           onChange={(e) => setPassword(e.target.value)}
                         />
                       </Col>
-                    </Form.Group>
+                    </Form.Group> */}
+
+<Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+  <Form.Label column sm="3">
+    Password
+  </Form.Label>
+  <Col sm="7" className="position-relative">
+    <Form.Control
+      type={showPassword ? "text" : "password"}
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
+    <span
+      onClick={() => setShowPassword(!showPassword)}
+      style={{
+        position: "absolute",
+        right: "10px",
+        top: "50%",
+        transform: "translateY(-50%)",
+        cursor: "pointer",
+      }}
+    >
+      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+    </span>
+  </Col>
+</Form.Group>
+
                   </Form>
                   <Link
                     to="/forgot-password"
