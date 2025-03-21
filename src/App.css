@@ -539,13 +539,17 @@
   top: -3px !important;
 }
 .sort-input .css-1ll44ll-MuiOutlinedInput-notchedOutline,
-.sort-input .css-mp9f0v {
+.sort-input .css-mp9f0v,
+.sort-input .css-5v2ak0 {
   border: 0 !important;
 }
 .sort-input
   .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
 .sort-input .css-mp9f0v {
   padding: 9.5px 14px !important;
+}
+table th {
+  vertical-align: top;
 }
 @media screen and (max-width: 768px) {
   .profile-img {
