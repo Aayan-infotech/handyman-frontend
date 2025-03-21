@@ -551,6 +551,9 @@
 table th {
   vertical-align: top;
 }
+.css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
+  background-color: rgb(75 215 142 / 55%) !important;
+}
 @media screen and (max-width: 768px) {
   .profile-img {
     width: 100%;
