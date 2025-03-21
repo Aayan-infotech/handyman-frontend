@@ -430,29 +430,35 @@ export default function SignUpProvider() {
                       </Col>
                     </Form.Group> */}
 
-<Form.Group as={Row} className="mb-3">
-  <Form.Label column sm="5">Password</Form.Label>
-  <Col sm="7" className="position-relative">
-    <Form.Control
-      type={showPassword ? "text" : "password"}
-      placeholder="Password"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-    />
-    <span
-      onClick={() => setShowPassword(!showPassword)}
-      style={{
-        position: "absolute",
-        right: "10px",
-        top: "50%",
-        transform: "translateY(-50%)",
-        cursor: "pointer",
-      }}
-    >
-      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-    </span>
-  </Col>
-</Form.Group>
+                    <Form.Group as={Row} className="mb-3">
+                      <Form.Label column sm="5">
+                        Password
+                      </Form.Label>
+                      <Col sm="7" className="position-relative">
+                        <Form.Control
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <span
+                          onClick={() => setShowPassword(!showPassword)}
+                          style={{
+                            position: "absolute",
+                            right: "20px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={20} />
+                          ) : (
+                            <Eye size={20} />
+                          )}
+                        </span>
+                      </Col>
+                    </Form.Group>
 
                     <span>
                       By tapping “Sign Up” you accept our{" "}

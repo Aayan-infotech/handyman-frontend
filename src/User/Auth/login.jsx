@@ -25,7 +25,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const hunterUID = localStorage.getItem("hunterUId")
+  const hunterUID = localStorage.getItem("hunterUId");
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -54,7 +54,7 @@ export default function Login() {
           email: email,
           password: password,
           userType: userType,
-          UID:hunterUID
+          UID: hunterUID,
         },
         {
           headers: {
@@ -121,7 +121,7 @@ export default function Login() {
           <Header />
           <div className="container login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
-            <h1 className="highlighted-text">Service Hunters</h1>
+              <h1 className="highlighted-text">Service Hunters</h1>
 
               <div className="card shadow">
                 <div className="card-body">
@@ -166,32 +166,39 @@ export default function Login() {
                       </Col>
                     </Form.Group> */}
 
-<Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-  <Form.Label column sm="3">
-    Password
-  </Form.Label>
-  <Col sm="7" className="position-relative">
-    <Form.Control
-      type={showPassword ? "text" : "password"}
-      placeholder="Password"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-    />
-    <span
-      onClick={() => setShowPassword(!showPassword)}
-      style={{
-        position: "absolute",
-        right: "10px",
-        top: "50%",
-        transform: "translateY(-50%)",
-        cursor: "pointer",
-      }}
-    >
-      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-    </span>
-  </Col>
-</Form.Group>
-
+                    <Form.Group
+                      as={Row}
+                      className="mb-3"
+                      controlId="formPlaintextPassword"
+                    >
+                      <Form.Label column sm="3">
+                        Password
+                      </Form.Label>
+                      <Col sm="7" className="position-relative">
+                        <Form.Control
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <span
+                          onClick={() => setShowPassword(!showPassword)}
+                          style={{
+                            position: "absolute",
+                            right: "20px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={20} />
+                          ) : (
+                            <Eye size={20} />
+                          )}
+                        </span>
+                      </Col>
+                    </Form.Group>
                   </Form>
                   <Link
                     to="/forgot-password"

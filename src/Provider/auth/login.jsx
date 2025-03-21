@@ -229,7 +229,7 @@ export default function LoginProvider() {
       onClick={() => setShowPassword(!showPassword)}
       style={{
         position: "absolute",
-        right: "10px",
+        right: "20px",
         top: "50%",
         transform: "translateY(-50%)",
         cursor: "pointer",
