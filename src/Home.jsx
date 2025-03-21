@@ -83,7 +83,7 @@ function Home() {
   const handleClick = () => {
     if (!selectedBusiness || !latitude || !longitude) {
       setToastProps({
-        message: "Please enter business and location before searching",
+        message: "Please enter businesses and location before searching",
         type: "error",
         toastKey: Date.now(),
       });
@@ -156,7 +156,7 @@ function Home() {
 
                         <TextField
                           id="standard-basic"
-                          label="Business"
+                          label="Businesses"
                           variant="standard"
                           className="w-100"
                           select
@@ -304,7 +304,7 @@ function Home() {
         <div className="jobs">
           <div className="d-flex justify-content-start justify-content-lg-between align-items-start flex-column flex-md-row gap-3">
             <h2 className="mb-0">
-              Featured <span className="text-primary">Business</span>
+              Featured <span className="text-primary">Businesses</span>
             </h2>
             <Link
               to="/featured-jobs"
@@ -368,7 +368,7 @@ function Home() {
                     </span>
                     <Stack direction="row" spacing={1} className="mt-3">
                       <Chip label="Design" className="light-green" />
-                      <Chip label="Business" className="light-blue" />
+                      <Chip label="Businesses" className="light-blue" />
                     </Stack>
                   </div>
                 </div>

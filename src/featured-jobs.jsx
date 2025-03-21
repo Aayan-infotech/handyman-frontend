@@ -110,7 +110,7 @@ export default function FeaturedJobs() {
                   </span>
                   <Stack direction="row" spacing={1} className="mt-3">
                     <Chip label="Design" className="light-green" />
-                    <Chip label="Business" className="light-blue" />
+                    <Chip label="Businesses" className="light-blue" />
                   </Stack>
                 </div>
               </div>
