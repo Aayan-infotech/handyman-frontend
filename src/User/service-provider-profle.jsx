@@ -95,10 +95,6 @@ export default function ServiceProviderProfile() {
           </div>
           <div className="d-flex justify-content-between align-items-center mt-3  flex-column flex-lg-row gap-3">
             <div className="d-flex flex-row gap-4 align-items-center">
-              <div className="d-flex flex-row gap-2 align-items-center">
-                <IoIosStar size={30} />
-                <span>4.2 RatIngs</span>
-              </div>
               <div className="d-flex flex-row gap-3 align-items-center">
                 <div className="circle-km"></div>
                 <span>{(data?.address?.radius / 1000).toFixed(2)} km</span>
