@@ -137,27 +137,27 @@ export default function SignUpProvider() {
     if (images && images.length > 0) {
       formData.append("images", images[0]);
     }
-    try {
-      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.length > 0) {
-        setToastProps({
-          message: "Email already in use, please log in or use another email",
-          type: "error",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-        return;
-      }
-    } catch (error) {
-      console.error("Error checking email:", error);
-      setToastProps({
-        message: "Error checking email",
-        type: "error",
-        toastKey: Date.now(),
-      });
-      setLoading(false);
-      return;
-    }
+    // try {
+    //   const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    //   if (signInMethods.length > 0) {
+    //     setToastProps({
+    //       message: "Email already in use, please log in or use another email",
+    //       type: "error",
+    //       toastKey: Date.now(),
+    //     });
+    //     setLoading(false);
+    //     return;
+    //   }
+    // } catch (error) {
+    //   console.error("Error checking email:", error);
+    //   setToastProps({
+    //     message: "Error checking email",
+    //     type: "error",
+    //     toastKey: Date.now(),
+    //   });
+    //   setLoading(false);
+    //   return;
+    // }
 
     setLoading(true);
     try {
@@ -182,14 +182,14 @@ export default function SignUpProvider() {
         setLongitude(null);
         setImages(null);
 
-        const firebaseUser = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const userId = firebaseUser.user.uid;
-        console.log(userId);
-        localStorage.setItem("ProviderUId", userId);
+        // const firebaseUser = await createUserWithEmailAndPassword(
+        //   auth,
+        //   email,
+        //   password
+        // );
+        // const userId = firebaseUser.user.uid;
+        // console.log(userId);
+        // localStorage.setItem("ProviderUId", userId);
 
         // await setDoc(doc(db, "providers", userId), {
         //   name,
@@ -202,16 +202,16 @@ export default function SignUpProvider() {
         //   blocked: [],
         // });
 
-        await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
+        // await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
         setLoading(false);
-        setTimeout(() => {
-          navigate(`/provider/otp?email=${email}&type=provider`);
-        }, 2000);
         setToastProps({
           message: response?.data?.message,
           type: "success",
           toastKey: Date.now(),
         });
+        setTimeout(() => {
+          navigate(`/provider/otp?email=${email}&type=provider`);
+        }, 2000);
       }
     } catch (error) {
       setToastProps({
