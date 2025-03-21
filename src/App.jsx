@@ -114,10 +114,7 @@ function App() {
           path="/latest-jobs"
           element={<UnProtectedRoute element={<LatestJobs />} />}
         />
-        <Route
-          path="/:section"
-          element={<UnProtectedRoute element={<About />} />}
-        />
+        <Route path="/:section" element={<About />} />
         <Route
           path="/post-new-job"
           element={<ProtectedRoute element={<NewJob />} />}

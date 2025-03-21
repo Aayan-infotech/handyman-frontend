@@ -75,11 +75,11 @@ export default function About() {
               </Nav>
 
               <Nav>
-                <Link to="/welcome">
+                {/* <Link to="/welcome">
                   <Button variant="contained" color="success">
                     Get Started <GoArrowRight className="fs-4 ms-1" />
                   </Button>
-                </Link>
+                </Link> */}
               </Nav>
             </Navbar.Collapse>
           </Container>
