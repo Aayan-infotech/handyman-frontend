@@ -140,7 +140,7 @@ export default function MyProfile() {
 
       const response = await axios.delete(
         `http://3.223.253.106:7777/api/DeleteAccount/${
-          providerId ? "provider" : "hunter"
+          providerId ? "provider" : "delete"
         }/${providerId || hunterId}`
       );
 

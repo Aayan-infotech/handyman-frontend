@@ -13,6 +13,7 @@ import google from "../assets/logo/iconGoogle.png";
 import Loader from "../../Loader";
 import Toaster from "../../Toaster";
 import axios from "axios";
+import { Eye, EyeOff } from "lucide-react";
 
 
 
@@ -25,6 +26,8 @@ import { auth } from "../../Chat/lib/firestore";
 export default function LoginProvider() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const userType = "provider";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -194,7 +197,7 @@ export default function LoginProvider() {
                       </Col>
                     </Form.Group>
 
-                    <Form.Group
+                    {/* <Form.Group
                       as={Row}
                       className="mb-3"
                       controlId="formPlaintextPassword"
@@ -210,7 +213,32 @@ export default function LoginProvider() {
                           onChange={(e) => setPassword(e.target.value)}
                         />
                       </Col>
-                    </Form.Group>
+                    </Form.Group> */}
+
+
+<Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+  <Form.Label column sm="3">Password</Form.Label>
+  <Col sm="7" className="position-relative">
+    <Form.Control
+      type={showPassword ? "text" : "password"}
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
+    <span
+      onClick={() => setShowPassword(!showPassword)}
+      style={{
+        position: "absolute",
+        right: "10px",
+        top: "50%",
+        transform: "translateY(-50%)",
+        cursor: "pointer",
+      }}
+    >
+      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+    </span>
+  </Col>
+</Form.Group>
                   </Form>
                   <Link
                     to="/provider/forgetpassword"

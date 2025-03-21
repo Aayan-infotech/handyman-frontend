@@ -227,7 +227,7 @@ function Home() {
                 </div>
               </div>
               <span className="fs-6 text-muted">
-                Popular : UI Designer, UX Researcher, Android, Admin
+                UI Designer, UX Researcher, Android, Admin
               </span>
             </div>
             <div className="col-lg-3 position-relative z-1">
@@ -289,7 +289,7 @@ function Home() {
                 <br />
                 <b className="text-light ">
                   {/* To trade and check our plans and choose what suits you best */}
-                  To Trade Hunter and check our plans and choose what suits you
+                  To Trade Hunters and check our plans and choose what suits you
                   best
                 </b>
               </div>

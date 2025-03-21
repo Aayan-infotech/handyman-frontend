@@ -7,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../../User/user.css";
 import { IoImageOutline } from "react-icons/io5";
+import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import Toaster from "../../Toaster";
 import Autocomplete from "react-google-autocomplete";
@@ -42,6 +43,8 @@ export default function SignUpProvider() {
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
   const [registrationNumber, setRegistrationNumber] = useState("");
@@ -413,7 +416,7 @@ export default function SignUpProvider() {
                       </Col>
                     </Form.Group>
 
-                    <Form.Group as={Row} className="mb-3">
+                    {/* <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Password
                       </Form.Label>
@@ -425,7 +428,31 @@ export default function SignUpProvider() {
                           onChange={(e) => setPassword(e.target.value)}
                         />
                       </Col>
-                    </Form.Group>
+                    </Form.Group> */}
+
+<Form.Group as={Row} className="mb-3">
+  <Form.Label column sm="5">Password</Form.Label>
+  <Col sm="7" className="position-relative">
+    <Form.Control
+      type={showPassword ? "text" : "password"}
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
+    <span
+      onClick={() => setShowPassword(!showPassword)}
+      style={{
+        position: "absolute",
+        right: "10px",
+        top: "50%",
+        transform: "translateY(-50%)",
+        cursor: "pointer",
+      }}
+    >
+      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+    </span>
+  </Col>
+</Form.Group>
 
                     <span>
                       By tapping “Sign Up” you accept our{" "}
