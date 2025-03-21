@@ -54,7 +54,7 @@ export default function Login() {
           email: email,
           password: password,
           userType: userType,
-          UID: hunterUID,
+          // UID: hunterUID,
         },
         {
           headers: {
@@ -64,16 +64,16 @@ export default function Login() {
       );
 
       if (response.status === 200) {
-        const firebaseUser = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const userId = firebaseUser.user.uid;
+        // const firebaseUser = await signInWithEmailAndPassword(
+        //   auth,
+        //   email,
+        //   password
+        // );
+        // const userId = firebaseUser.user.uid;
 
-        setEmail("");
-        setPassword("");
-        setLoading(false);
+        // setEmail("");
+        // setPassword("");
+        // setLoading(false);
         setToastProps({
           message: response?.data?.message,
           type: "success",

@@ -11,7 +11,18 @@ import Toaster from "../Toaster";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
 import { IoEyeSharp, IoTrashOutline } from "react-icons/io5";
+import Table from "react-bootstrap/Table";
+import FormControl from "@mui/material/FormControl";
 
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 150,
+    },
+  },
+};
 export default function JobManagement() {
   const [data, setData] = useState([]);
   const [toastProps, setToastProps] = useState({
@@ -76,7 +87,7 @@ export default function JobManagement() {
         type: "success",
         toastKey: Date.now(),
       });
-      fetchJobs()
+      fetchJobs();
     } catch (error) {
       setToastProps({
         message: "Failed to delete job",

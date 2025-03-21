@@ -9,7 +9,6 @@ import Row from "react-bootstrap/Row";
 import "../user.css";
 // import { Form, Col } from "react-bootstrap";
 
-
 import { Eye, EyeOff } from "lucide-react";
 import { IoImageOutline } from "react-icons/io5";
 import axios from "axios";
@@ -39,7 +38,6 @@ export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
 
   const [showPassword, setShowPassword] = useState(false);
   const [phoneNo, setPhoneNo] = useState("");
@@ -99,27 +97,27 @@ export default function SignUp() {
     // }
 
     // const usersRef = collection(db, "hunters");
-    try {
-      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.length > 0) {
-        setToastProps({
-          message: "Email already in use, please log in or use another email",
-          type: "error",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-        return;
-      }
-    } catch (error) {
-      console.error("Error checking email:", error);
-      setToastProps({
-        message: "Error checking email",
-        type: "error",
-        toastKey: Date.now(),
-      });
-      setLoading(false);
-      return;
-    }
+    // try {
+    //   const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    //   if (signInMethods.length > 0) {
+    //     setToastProps({
+    //       message: "Email already in use, please log in or use another email",
+    //       type: "error",
+    //       toastKey: Date.now(),
+    //     });
+    //     setLoading(false);
+    //     return;
+    //   }
+    // } catch (error) {
+    //   console.error("Error checking email:", error);
+    //   setToastProps({
+    //     message: "Error checking email",
+    //     type: "error",
+    //     toastKey: Date.now(),
+    //   });
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       const response = await axios.post(
@@ -129,14 +127,14 @@ export default function SignUp() {
       );
 
       if (response.status === 200 || response.status === 201) {
-        const firebaseUser = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const userId = firebaseUser.user.uid;
-        console.log(userId);
-        localStorage.setItem("hunterUId", userId);
+        // const firebaseUser = await createUserWithEmailAndPassword(
+        //   auth,
+        //   email,
+        //   password
+        // );
+        // const userId = firebaseUser.user.uid;
+        // console.log(userId);
+        // localStorage.setItem("hunterUId", userId);
 
         // await setDoc(doc(db, "hunters", userId), {
         //   name,
@@ -149,7 +147,7 @@ export default function SignUp() {
         //   blocked: [],
         // });
 
-        await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
+        // await set(ref(realtimeDb, "userchats/" + userId), { chats: [] });
         setToastProps({
           message: response?.data?.message,
           type: "success",
@@ -179,7 +177,7 @@ export default function SignUp() {
           <Header />
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
-            <h1 className="highlighted-text">Service Hunters</h1>
+              <h1 className="highlighted-text">Service Hunters</h1>
               <div className="card shadow mb-4">
                 <div className="card-body">
                   <h2 className="text-center fw-bold fs-1">Sign Up</h2>
@@ -290,32 +288,39 @@ export default function SignUp() {
                       </Col>
                     </Form.Group> */}
 
-
-<Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-      <Form.Label column sm="4">
-        Password
-      </Form.Label>
-      <Col sm="8" className="position-relative">
-        <Form.Control
-          type={showPassword ? "text" : "password"}
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <span
-          onClick={() => setShowPassword(!showPassword)}
-          style={{
-            position: "absolute",
-            right: "20px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            cursor: "pointer",
-          }}
-        >
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-        </span>
-      </Col>
-    </Form.Group>
+                    <Form.Group
+                      as={Row}
+                      className="mb-3"
+                      controlId="formPlaintextPassword"
+                    >
+                      <Form.Label column sm="4">
+                        Password
+                      </Form.Label>
+                      <Col sm="8" className="position-relative">
+                        <Form.Control
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <span
+                          onClick={() => setShowPassword(!showPassword)}
+                          style={{
+                            position: "absolute",
+                            right: "20px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={20} />
+                          ) : (
+                            <Eye size={20} />
+                          )}
+                        </span>
+                      </Col>
+                    </Form.Group>
                   </Form>
                   <span>
                     By tapping “Sign Up” you accept our{" "}
