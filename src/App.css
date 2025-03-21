@@ -534,7 +534,8 @@
   color: #000 !important;
 }
 .sort-input .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root,
-.sort-input .css-mp9f0v {
+.sort-input .css-mp9f0v,
+.sort-input .css-160rfsr {
   line-height: 1rem !important;
   top: -3px !important;
 }
@@ -551,7 +552,8 @@
 table th {
   vertical-align: top;
 }
-.css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
+.css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root.Mui-selected,
+.css-5dycmn.Mui-selected {
   background-color: rgb(75 215 142 / 55%) !important;
 }
 @media screen and (max-width: 768px) {
