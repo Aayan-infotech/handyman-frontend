@@ -18,7 +18,6 @@ import { GrMapLocation } from "react-icons/gr";
 import NoData from "../assets/no_data_found.gif";
 
 export default function ServiceProvider() {
-  const [loader, setLoader] = useState(false);
   const [data, setData] = useState([]);
   const [latitude, setLatitude] = useState(26.86223751316575);
   const [longitude, setLongitude] = useState(80.99808160498773);

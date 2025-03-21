@@ -55,7 +55,7 @@
   height: 30px !important;
   color: #32de84;
 }
-.loggedheader .justify-content-between img {
+.loggedheader .justify-content-between .justify-content-between img {
   width: 45px;
   height: 45px;
   border-radius: 50%;
