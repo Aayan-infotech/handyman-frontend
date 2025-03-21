@@ -50,10 +50,16 @@
   border: 2px solid #32de84;
   z-index: 999;
 }
-.management .details svg{
+.management .details svg {
   width: 30px !important;
   height: 30px !important;
   color: #32de84;
+}
+.loggedheader .justify-content-between img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .bg-welcome .bg-green-custom {
   max-width: 300px;

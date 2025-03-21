@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./Home";
@@ -55,26 +61,63 @@ const ProtectedRoute = ({ element }) => {
   return useAuth() ? element : <Welcome />;
 };
 
+const UnProtectedRoute = ({ element }) => {
+  return !useAuth() ? element : <Error />;
+};
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/contact-us" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/forgot-password" element={<ForgetPassword />} />
-        <Route path="/otp" element={<Otp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/" element={<UnProtectedRoute element={<Home />} />} />
+        <Route
+          path="/search"
+          element={<UnProtectedRoute element={<Search />} />}
+        />
+        <Route
+          path="/welcome"
+          element={<UnProtectedRoute element={<Welcome />} />}
+        />
+
+        <Route
+          path="/contact-us"
+          element={<UnProtectedRoute element={<Contact />} />}
+        />
+        <Route
+          path="/login"
+          element={<UnProtectedRoute element={<Login />} />}
+        />
+        <Route
+          path="/signup"
+          element={<UnProtectedRoute element={<SignUp />} />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<UnProtectedRoute element={<ForgetPassword />} />}
+        />
+        <Route path="/otp" element={<UnProtectedRoute element={<Otp />} />} />
+        <Route
+          path="/reset-password"
+          element={<UnProtectedRoute element={<ResetPassword />} />}
+        />
 
         <Route path="/home" element={<ProtectedRoute element={<Main />} />} />
-        <Route path="/job-listing" element={<JobListing />} />
-        <Route path="/featured-jobs" element={<FeaturedJobs />} />
-        <Route path="/latest-jobs" element={<LatestJobs />} />
-        <Route path="/:section" element={<About />} />
+        <Route
+          path="/job-listing"
+          element={<UnProtectedRoute element={<JobListing />} />}
+        />
+        <Route
+          path="/featured-jobs"
+          element={<UnProtectedRoute element={<FeaturedJobs />} />}
+        />
+        <Route
+          path="/latest-jobs"
+          element={<UnProtectedRoute element={<LatestJobs />} />}
+        />
+        <Route
+          path="/:section"
+          element={<UnProtectedRoute element={<About />} />}
+        />
         <Route
           path="/post-new-job"
           element={<ProtectedRoute element={<NewJob />} />}
@@ -129,10 +172,22 @@ function App() {
         />
 
         {/* provider */}
-        <Route path="/provider/login" element={<LoginProvider />} />
-        <Route path="/provider/signup" element={<SignUpProvider />} />
-        <Route path="/provider/upload" element={<Upload />} />
-        <Route path="/provider/reset" element={<ResetPassword />} />
+        <Route
+          path="/provider/login"
+          element={<UnProtectedRoute element={<LoginProvider />} />}
+        />
+        <Route
+          path="/provider/signup"
+          element={<UnProtectedRoute element={<SignUpProvider />} />}
+        />
+        <Route
+          path="/provider/upload"
+          element={<ProtectedRoute element={<Upload />} />}
+        />
+        <Route
+          path="/provider/reset"
+          element={<UnProtectedRoute element={<ResetPassword />} />}
+        />
         <Route path="/provider/otp" element={<Otp />} />
         <Route
           path="/provider/job-history"
@@ -168,7 +223,7 @@ function App() {
         />
         <Route
           path="/provider/forgetpassword"
-          element={<ForgetPassword />}
+          element={<ProtectedRoute element={<ForgetPassword />} />}
         />
         <Route
           path="/provider/pricing"
