@@ -298,7 +298,7 @@ export default function EditProfile() {
                         />
                       </Col>
                     </Form.Group>
-                    <Form.Group
+                    {/* <Form.Group
                       as={Row}
                       className="mb-3"
                       controlId="formPlaintextEmail"
@@ -313,7 +313,26 @@ export default function EditProfile() {
                           onChange={(e) => setEmail(e.target.value)}
                         />
                       </Col>
-                    </Form.Group>
+                    </Form.Group> */}
+
+
+<Form.Group
+  as={Row}
+  className="mb-3"
+  controlId="formPlaintextEmail"
+>
+  <Form.Label column sm="4">
+    Email Address
+  </Form.Label>
+  <Col sm="8">
+    <Form.Control
+      type="email"
+      value={email}
+      disabled
+    />
+  </Col>
+</Form.Group>
+
                     <Form.Group
                       as={Row}
                       className="mb-3"
