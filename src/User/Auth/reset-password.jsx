@@ -1,7 +1,7 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
-import { Link, useNavigate , useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -12,7 +12,7 @@ import Loader from "../../Loader";
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [toastProps, setToastProps] =useState({ message: "", type: "" });
+  const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const [loading, setLoading] = useState(false);
   const email = localStorage.getItem("verifyEmailOtp");
   const location = useLocation();
@@ -24,7 +24,11 @@ export default function ResetPassword() {
     e.preventDefault();
     setLoading(true);
     if (newPassword !== password) {
-      setToastProps({ message: "Passwords do not match", type: "error" , toastKey: Date.now() });
+      setToastProps({
+        message: "Passwords do not match",
+        type: "error",
+        toastKey: Date.now(),
+      });
       return;
     }
 
@@ -37,8 +41,12 @@ export default function ResetPassword() {
         }
       );
 
-      if (response.status === 200) {
-        setToastProps({ message: response?.data?.message, type: "success" , toastKey: Date.now() });
+      if (response.status === 200 || response.status === 201) {
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         localStorage.removeItem("verifyEmailOtp");
         setPassword("");
         setLoading(false);
@@ -56,13 +64,17 @@ export default function ResetPassword() {
       console.log(response.data);
     } catch (error) {
       console.log(error);
-      setLoading(false)
-      setToastProps({ message: error?.response?.data?.error, type: "error" , toastKey: Date.now() });
+      setLoading(false);
+      setToastProps({
+        message: error?.response?.data?.error,
+        type: "error",
+        toastKey: Date.now(),
+      });
       if (error?.response?.data?.message && !error?.response?.data?.error) {
         setToastProps({
           message: error?.response?.data?.message,
           type: "error",
-          toastKey: Date.now()
+          toastKey: Date.now(),
         });
       }
     }
@@ -77,7 +89,7 @@ export default function ResetPassword() {
           <Header />
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
-            {ProviderParams ? (
+              {ProviderParams ? (
                 <h1 className="highlighted-text">Service Provider</h1>
               ) : null}
               <div className="card shadow">
@@ -141,7 +153,11 @@ export default function ResetPassword() {
         </div>
       )}
 
-     <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }
