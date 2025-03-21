@@ -13,6 +13,12 @@ import noData from "../assets/no_data_found.gif";
 import { IoEyeSharp, IoTrashOutline } from "react-icons/io5";
 import Table from "react-bootstrap/Table";
 import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
 
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
@@ -26,6 +32,7 @@ const MenuProps = {
 };
 export default function JobManagement() {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -34,9 +41,21 @@ export default function JobManagement() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const provider = location.pathname.includes("provider");
-
+  const [jobStatus, setJobStatus] = useState([]);
   const hunterToken = localStorage.getItem("hunterToken");
   const ProviderToken = localStorage.getItem("ProviderToken");
+
+  const handleChange = (event) => {
+    setJobStatus(event.target.value);
+  };
+
+  useEffect(() => {
+    if (jobStatus.length === 0) {
+      setFilteredData(data);
+    } else {
+      setFilteredData(data.filter((job) => jobStatus.includes(job.jobStatus)));
+    }
+  }, [jobStatus, data]);
 
   const fetchJobs = async () => {
     setLoading(true);
@@ -53,8 +72,8 @@ export default function JobManagement() {
         const filteredData = res.data.data.filter(
           (job) => job.jobStatus !== "Deleted"
         );
-
         setData(filteredData);
+        setFilteredData(filteredData);
         setToastProps({
           message: res.data.message,
           type: "success",
@@ -119,7 +138,7 @@ export default function JobManagement() {
           </div>
           <div className="bg-second py-3">
             <div className="container">
-              <div className="d-flex justify-content-start align-items-center">
+              <div className="d-flex justify-content-lg-between flex-column flex-lg-row gap-4">
                 <div className="position-relative icon ">
                   <IoIosSearch className="mt-1" />
                   <Form.Control
@@ -127,6 +146,29 @@ export default function JobManagement() {
                     className="search"
                   />
                 </div>
+                <FormControl className="sort-input" sx={{ m: 1 }}>
+                  <InputLabel id="radius-select-label">Job status</InputLabel>
+                  <Select
+                    labelId="business-type-select-label"
+                    id="business-type-select"
+                    multiple
+                    value={jobStatus}
+                    onChange={handleChange}
+                    input={<OutlinedInput label="Select Business Type" />}
+                    renderValue={(selected) => selected.join(", ")}
+                    MenuProps={MenuProps}
+                    placeholder="Select Business Type"
+                  >
+                    {Array.from(
+                      new Set(data.flatMap((provider) => provider.jobStatus))
+                    ).map((type, index) => (
+                      <MenuItem key={index} value={type}>
+                        <Checkbox checked={jobStatus.includes(type)} />
+                        <ListItemText primary={type} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </div>
               <div className="row mt-4 gy-4 management">
                 {data.length === 0 && (
@@ -138,7 +180,68 @@ export default function JobManagement() {
                     />
                   </div>
                 )}
-                {data.map((item) => (
+                <div className="card shadow border-0 rounded-5 p-lg-3">
+                  <div className="card-body">
+                    <Table responsive hover>
+                      <thead className="">
+                        <tr className="">
+                          <th className="green-card-important py-3 text-center">
+                            #
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Title
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Price
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Address
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Date Posted
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            job Status
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredData?.map((provider, index) => (
+                          <tr key={provider._id} className="text-center">
+                            <td>{index + 1}</td>
+                            <td> {provider.title}</td>
+                            <td className={`text-start flex-wrap`}>
+                              ${provider.estimatedBudget}
+                            </td>
+
+                            <td>{provider?.jobLocation?.jobAddressLine}</td>
+                            <td>
+                              {" "}
+                              {new Date(provider?.date).toLocaleDateString()}
+                            </td>
+                            <td>{provider.jobStatus}</td>
+                            <td className="d-grid">
+                              <span>
+                                <Link to={`/job-detail/${provider._id}`}>
+                                  <IoEyeSharp height={10} />
+                                </Link>
+                                <IoTrashOutline
+                                  onClick={() => handleJobDelete(provider._id)}
+                                  style={{ cursor: "pointer" }}
+                                  height={10}
+                                />
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                </div>
+                {/* {data.map((item) => (
                   <div className="col-lg-12" key={item._id}>
                     <div className="card border-0 rounded-3 px-4">
                       <div className="card-body">
@@ -189,7 +292,7 @@ export default function JobManagement() {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>

@@ -136,7 +136,7 @@ export default function JobDetail() {
                 </div>
               </div>
               <hr />
-              <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-lg-75">
+              {/* <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-lg-75">
                 <div className="card outline-card">
                   <div className="card-body d-flex flex-row gap-2 align-items-center">
                     <span>{data.rating || "0.0"}</span>
@@ -148,7 +148,7 @@ export default function JobDetail() {
                     {data.review || "No reviews available"}
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

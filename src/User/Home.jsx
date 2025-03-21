@@ -16,16 +16,85 @@ import { Link } from "react-router-dom";
 import Toaster from "../Toaster";
 import axios from "axios";
 import Loader from "../Loader";
-
+import Button from "@mui/material/Button";
+import Table from "react-bootstrap/Table";
+import { IoEyeSharp, IoTrashOutline } from "react-icons/io5";
 export default function Main() {
   const [loading, setLoading] = useState(false);
   const [businessData, setBusinessData] = useState([]);
   const name = localStorage.getItem("hunterName");
+  const [filteredData, setFilteredData] = useState([]);
+  const [jobStatus, setJobStatus] = useState([]);
+  const hunterToken = localStorage.getItem("hunterToken");
+  const ProviderToken = localStorage.getItem("ProviderToken");
+  const [data, setData] = useState([]);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
+
+  const handleJobDelete = async (id) => {
+    setLoading(true);
+    try {
+      await axios.delete(`http://3.223.253.106:7777/api/jobPost/${id}`, {
+        headers: { Authorization: `Bearer ${hunterToken}` },
+      });
+
+      setToastProps({
+        message: "Job deleted successfully!",
+        type: "success",
+        toastKey: Date.now(),
+      });
+      fetchJobs();
+    } catch (error) {
+      setToastProps({
+        message: "Failed to delete job",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        "http://3.223.253.106:7777/api/jobpost/getJobPostByUserId",
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken || hunterToken}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        const filteredData = res.data.data.filter(
+          (job) => job.jobStatus !== "Deleted"
+        );
+        setData(filteredData);
+        setFilteredData(filteredData);
+        setToastProps({
+          message: res.data.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
+      }
+    } catch (error) {
+      setToastProps({
+        message: error.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   useEffect(() => {
     const handleJobs = async () => {
@@ -45,6 +114,11 @@ export default function Main() {
     };
     handleJobs();
   }, []);
+
+  useEffect(() => {
+    const pendingJobs = data.filter((job) => job.jobStatus === "Pending");
+    setFilteredData(pendingJobs.slice(0, 10)); // Limit to 10 jobs
+  }, [data]);
 
   return (
     <>
@@ -162,6 +236,81 @@ export default function Main() {
                         <div>No popular services available.</div>
                       )}
                     </Swiper>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-start flex-column gap-3 align-items-start pt-5">
+                  <div className="d-flex justify-content-between align-items-center w-100">
+                    <h5 className="user">Pending Job Post</h5>
+                    <Link to="/job-management">
+                      <Button
+                        variant="contained"
+                        color="success"
+                        className="rounded-0 custom-green bg-green-custom"
+                      >
+                        View All
+                      </Button>
+                    </Link>
+                  </div>
+
+                  <div className="w-100 management ">
+                    <Table responsive hover>
+                      <thead className="">
+                        <tr className="">
+                          <th className="green-card-important py-3 text-center">
+                            #
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Title
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Price
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Address
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Date Posted
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            job Status
+                          </th>
+                          <th className="green-card-important py-3 text-center">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredData?.map((provider, index) => (
+                          <tr key={provider._id} className="text-center">
+                            <td>{index + 1}</td>
+                            <td> {provider.title}</td>
+                            <td className={`text-start flex-wrap`}>
+                              ${provider.estimatedBudget}
+                            </td>
+
+                            <td>{provider?.jobLocation?.jobAddressLine}</td>
+                            <td>
+                              {" "}
+                              {new Date(provider?.date).toLocaleDateString()}
+                            </td>
+                            <td>{provider.jobStatus}</td>
+                            <td className="d-grid">
+                              <span>
+                                <Link to={`/job-detail/${provider._id}`}>
+                                  <IoEyeSharp height={10} />
+                                </Link>
+                                <IoTrashOutline
+                                  onClick={() => handleJobDelete(provider._id)}
+                                  style={{ cursor: "pointer" }}
+                                  height={10}
+                                />
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
                   </div>
                 </div>
               </div>
