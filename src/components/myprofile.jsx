@@ -83,11 +83,6 @@ export default function MyProfile() {
     fetchUserData();
   }, [dispatch, hunterToken, providerToken]);
 
-
-
-
-
-  
   const signOut = async () => {
     try {
       const token = hunterToken || providerToken;
@@ -222,9 +217,12 @@ export default function MyProfile() {
                 <div className="col-lg-6">
                   <div className="  mt-5 mt-lg-0 text-center text-lg-start">
                     <h3 className="fw-bold fs-1">{name}</h3>
-                    <h5 className="text-muted">{user?.userType}</h5>
-
-                   
+                    <h5
+                      className="text-muted"
+                      style={{ textTransform: "capitalize" }}
+                    >
+                      {user?.userType}
+                    </h5>
                   </div>
                 </div>
 
