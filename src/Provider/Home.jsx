@@ -123,7 +123,7 @@ export default function HomeProvider() {
   return (
     <>
       <LoggedHeader />
-      <Link to="/provider/chat/1" className="admin-message">
+      <Link to="/provider/admin/chat/" className="admin-message">
         <MdOutlineSupportAgent />
       </Link>
       <div className="message">

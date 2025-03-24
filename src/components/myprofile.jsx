@@ -30,12 +30,13 @@ export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [backgroundImg, setBackgroundImg] = useState("");
-  const [showModal, setShowModal] = useState(false);//NEW
-  const [description, setDescription] = useState("");//NEW
+  const [showModal, setShowModal] = useState(false); //NEW
+  const [description, setDescription] = useState(""); //NEW
   const [aboutText, setAboutText] = useState(""); // Store "about" text after saving
 
-  const userId = localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");//new
-  const userType = localStorage.getItem("hunterToken") ? "Hunter" : "Provider";// new
+  const userId =
+    localStorage.getItem("hunterId") || localStorage.getItem("ProviderId"); //new
+  const userType = localStorage.getItem("hunterToken") ? "Hunter" : "Provider"; // new
 
   const [email, setEmail] = useState("");
   const [address, setAdress] = useState("");
@@ -57,19 +58,18 @@ export default function MyProfile() {
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
 
-// new
+  // new
   useEffect(() => {
     if (userId) {
       fetchBackgroundImage();
     }
   }, [userId]);
 
-
-
-
   const fetchBackgroundImage = async () => {
     try {
-      const response = await axios.get(`http://3.223.253.106:7777/api/backgroundImg/${userId}`);
+      const response = await axios.get(
+        `http://3.223.253.106:7777/api/backgroundImg/${userId}`
+      );
       setBackgroundImg(response.data.data[0].backgroundImg);
     } catch (error) {
       console.error("Error fetching background image:", error);
@@ -78,7 +78,7 @@ export default function MyProfile() {
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    console.log(file,'.....file')
+    console.log(file, ".....file");
     if (!file) return;
 
     const formData = new FormData();
@@ -87,15 +87,16 @@ export default function MyProfile() {
     formData.append("userId", userId);
 
     try {
-      
-      const response = await axios.post("http://3.223.253.106:7777/api/backgroundImg/upload", formData);
-      console.log(response,'response')
+      const response = await axios.post(
+        "http://3.223.253.106:7777/api/backgroundImg/upload",
+        formData
+      );
+      console.log(response, "response");
       fetchBackgroundImage(); // Refresh image after upload
     } catch (error) {
       console.error("Error uploading background image:", error);
     }
   };
-
 
   useEffect(() => {
     axios
@@ -122,7 +123,6 @@ export default function MyProfile() {
       })
       .catch((error) => console.error("Error updating about:", error));
   };
-
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -258,7 +258,9 @@ export default function MyProfile() {
       ) : (
         <>
           <LoggedHeader />
-          <Link to={`/${hunterToken ? "support" : "provider"}/chat/1`}>
+          <Link
+            to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
+          >
             <div className="admin-message">
               <MdOutlineSupportAgent />
             </div>
@@ -270,31 +272,31 @@ export default function MyProfile() {
           </div>
           <div className="bg-second pb-3">
             <div className="container">
-         
-
-<div className="profile-container">
-      <div className="image-shadow">
-        <img className="w-100 "  src={backgroundImg || "default-image.jpg"} alt="background" />
-        <div className="exper">
-          <FaPen
-            className="text-dark"
-            style={{ cursor: "pointer" }}
-            onClick={() => document.getElementById("fileInput").click()}
-          />
-          <input
-            type="file"
-            id="fileInput"
-            style={{ display: "none" }}
-            onChange={handleImageUpload}
-            accept="image/*"
-          />
-        </div>
-      </div>
-    </div> 
-
-
-
-
+              <div className="profile-container">
+                <div className="image-shadow">
+                  <img
+                    className="w-100 "
+                    src={backgroundImg || "default-image.jpg"}
+                    alt="background"
+                  />
+                  <div className="exper">
+                    <FaPen
+                      className="text-dark"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        document.getElementById("fileInput").click()
+                      }
+                    />
+                    <input
+                      type="file"
+                      id="fileInput"
+                      style={{ display: "none" }}
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+              </div>
 
               <div className="row gy-4 gx-lg-3">
                 <div className="col-lg-3">
@@ -309,51 +311,59 @@ export default function MyProfile() {
                   </div>
                 </div>
 
-            
+                <div className="col-lg-6">
+                  <div className="mt-5 mt-lg-0 text-center text-lg-start">
+                    <h3 className="fw-bold fs-1">{name}</h3>
+                    <h5
+                      className="text-muted"
+                      style={{ textTransform: "capitalize" }}
+                    >
+                      {user?.userType}
+                    </h5>
 
+                    {aboutText ? (
+                      <p className="mt-3">{aboutText}</p> // Show updated "about" text
+                    ) : (
+                      <button
+                        className="btn btn-primary mt-3"
+                        onClick={() => setShowModal(true)}
+                      >
+                        Added Description
+                      </button>
+                    )}
+                  </div>
 
-
-<div className="col-lg-6">
-      <div className="mt-5 mt-lg-0 text-center text-lg-start">
-        <h3 className="fw-bold fs-1">{name}</h3>
-        <h5 className="text-muted" style={{ textTransform: "capitalize" }}>
-          {user?.userType}
-        </h5>
-
-        {aboutText ? (
-          <p className="mt-3">{aboutText}</p> // Show updated "about" text
-        ) : (
-          <button className="btn btn-primary mt-3" onClick={() => setShowModal(true)}>
-            Added Description
-          </button>
-        )}
-      </div>
-
-      {/* Modal Component */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Description</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <textarea
-            className="form-control"
-            rows="3"
-            placeholder="Enter your description..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSave}>
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
-
+                  {/* Modal Component */}
+                  <Modal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    centered
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>Add Description</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        placeholder="Enter your description..."
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      ></textarea>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Close
+                      </Button>
+                      <Button variant="primary" onClick={handleSave}>
+                        Save
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </div>
 
                 <div className="col-lg-3">
                   <div className="w-100 ">
