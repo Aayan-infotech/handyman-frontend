@@ -119,7 +119,7 @@ export default function NewJob() {
     // });
 
     Array.from(documents).forEach((file) => {
-      formData.append("file", file);
+      formData.append("documents", file);
     });
 
     console.log("FormData to be sent:", Object.fromEntries(formData.entries()));

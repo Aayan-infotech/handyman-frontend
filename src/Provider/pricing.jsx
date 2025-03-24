@@ -1,35 +1,74 @@
-
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Loader from "../Loader";
 import { useDispatch, useSelector } from "react-redux";
+import { getProviderUser } from "../Slices/userSlice";
 
 export default function MainProvider() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+
   const name = localStorage.getItem("ProviderName");
   const dispatch = useDispatch();
   const token = localStorage.getItem("ProviderToken");
   const user = useSelector((state) => state?.user?.user?.data);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const providerId = localStorage.getItem("ProviderId");
 
   useEffect(() => {
-    const getData = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(
-          "http://3.223.253.106:7777/api/SubscriptionNew/subscription-plans"
-        );
-        setData(res?.data?.data);
-      } catch (error) {
-        console.log(error);
-      }
-      setLoading(false);
-    };
-    getData();
-  }, []);
+    if (location.pathname === "/provider/pricing") {
+      const getUploadProfile = async () => {
+        try {
+          if (providerId) {
+            setLoading(true);
+            const result = await dispatch(getProviderUser());
+            if (result.payload?.status === 200) {
+              const subscriptionStatus = result.payload.data.subscriptionStatus;
+
+              setSubscriptionStatus(subscriptionStatus);
+              if (subscriptionStatus === 1) {
+                navigate("/provider/home");
+                setLoading(false);
+                return;
+              }
+              navigate("/provider/pricing");
+              setLoading(false);
+            }
+          }
+        } catch (error) {
+          console.error("User error:", error);
+        }
+      };
+      getUploadProfile();
+    }
+  }, [location.pathname]);
+
+  console.log(subscriptionStatus);
+
+  useEffect(() => {
+    if (subscriptionStatus === 0) {
+      const getData = async () => {
+        setLoading(true);
+        try {
+          const res = await axios.get(
+            "http://3.223.253.106:7777/api/SubscriptionNew/subscription-plans"
+          );
+          if (res?.data?.status === 200) {
+            setData(res?.data?.data);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        setLoading(false);
+      };
+      getData();
+    }
+  }, [subscriptionStatus]);
 
   return (
     <>
@@ -57,15 +96,22 @@ export default function MainProvider() {
                 <div className="row py-3 gy-4 mt-lg-4">
                   {data?.map((item) => (
                     <div className="col-lg-4 col-md-6" key={item._id}>
-                      <Link to={`/provider/pricing-detail/${item._id}`} className="d-flex h-100">
+                      <Link
+                        to={`/provider/pricing-detail/${item._id}`}
+                        className="d-flex h-100"
+                      >
                         <div className="h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
                           <div className="card-body d-flex flex-column gap-3 align-items-center">
-                            <h3 className="mt-3 text-center">{item.planName}</h3>
+                            <h3 className="mt-3 text-center">
+                              {item.planName}
+                            </h3>
                             <h5 className="mt-3">${item.amount}</h5>
                             <h4>KM Radius: {item.kmRadius}</h4>
                             <span className="line-white"></span>
                             <div
-                              dangerouslySetInnerHTML={{ __html: item.description }}
+                              dangerouslySetInnerHTML={{
+                                __html: item.description,
+                              }}
                             ></div>
                           </div>
                         </div>
