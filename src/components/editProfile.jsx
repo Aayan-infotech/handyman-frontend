@@ -161,7 +161,7 @@ export default function EditProfile() {
 
     try {
       const response = await axios.put(
-        `http://3.223.253.106:7777/api/${providerId ? "provider" : "hunter"
+        `http://3.223.253.106:7777/api/${providerId ? "Prvdr" : "hunter"
         }/updateById/${providerId ? providerId : hunterId}`,
         formData,
         {
@@ -436,7 +436,7 @@ export default function EditProfile() {
                           <div className="d-flex flex-wrap gap-2">
                             {businessType.map((type, index) => (
 
-                              <div key={index} className="rounded-0 custom-green bg-green-custom" style={{ color: "white" }}>
+                              <div key={index} className="rounded-5 custom-green bg-green-custom" style={{ color: "white" }}>
                                 {type}
                               </div>
                             ))}

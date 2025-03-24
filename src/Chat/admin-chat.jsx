@@ -38,13 +38,8 @@ const sendMessage = async (
     );
     await set(newMessageRef, chat);
 
-    setMessages((prevMessages) => [...prevMessages, chat]);
-
-    // Step 3: Update job status in chat
-    // await set(ref(realtimeDb, `chatsAdmin/${chatId}/jobStatus`), {
-    //   status: "Pending",
-    //   acceptedBy: "",
-    // });
+    // Remove this manual state update to avoid duplication
+    // setMessages((prevMessages) => [...prevMessages, chat]); ❌ REMOVE THIS
   } catch (error) {
     console.error("Firebase Error:", error.message);
   }

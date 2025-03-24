@@ -29,8 +29,7 @@ export default function HomeProvider() {
     toastKey: 0,
   });
 
-
-  console.log(businessType,'.....bussiness type')
+  console.log(businessType, ".....bussiness type");
 
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
@@ -138,9 +137,6 @@ export default function HomeProvider() {
           </div>
           <div className="d-flex justify-content-between align-items-center mb-4 mt-3">
             <h2 className="fw-normal">Job Requests</h2>
-            <a href="#" className="text-dark">
-              See More
-            </a>
           </div>
           <div className="d-flex justify-content-start align-items-center">
             <div className="position-relative icon">
