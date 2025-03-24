@@ -62,15 +62,6 @@ export default function EditProfile() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  // const handleChange = (event) => {
-  //   const { value } = event.target;
-  //   setBusinessType((prev) => {
-  //     const selectedValues = Array.isArray(value) ? value : [value];
-
-  //     // Merge old and new selections, ensuring uniqueness
-  //     return Array.from(new Set([...prev, ...selectedValues]));
-  //   });
-  // };
 
   const handleChange = (event) => {
     const { value } = event.target;
@@ -158,11 +149,11 @@ export default function EditProfile() {
 
     // formData.append("businessName", businessName);
 
-    // if (images && images instanceof FileList && images.length > 0) {
-    //   formData.append("images", images[0]);
-    // } else if (typeof images === "string") {
-    //   formData.append("images", images);
-    // }
+    if (images && images instanceof FileList && images.length > 0) {
+      formData.append("images", images[0]);
+    } else if (typeof images === "string") {
+      formData.append("images", images);
+    }
 
     // businessType.forEach((type) => {
     //   formData.append("businessType[]", type);
@@ -170,8 +161,7 @@ export default function EditProfile() {
 
     try {
       const response = await axios.put(
-        `http://3.223.253.106:7777/api/${
-          providerId ? "provider" : "hunter"
+        `http://3.223.253.106:7777/api/${providerId ? "provider" : "hunter"
         }/updateById/${providerId ? providerId : hunterId}`,
         formData,
         {
@@ -298,7 +288,10 @@ export default function EditProfile() {
                         />
                       </Col>
                     </Form.Group>
-                    {/* <Form.Group
+
+
+
+                    <Form.Group
                       as={Row}
                       className="mb-3"
                       controlId="formPlaintextEmail"
@@ -310,28 +303,10 @@ export default function EditProfile() {
                         <Form.Control
                           type="email"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          disabled
                         />
                       </Col>
-                    </Form.Group> */}
-
-
-<Form.Group
-  as={Row}
-  className="mb-3"
-  controlId="formPlaintextEmail"
->
-  <Form.Label column sm="4">
-    Email Address
-  </Form.Label>
-  <Col sm="8">
-    <Form.Control
-      type="email"
-      value={email}
-      disabled
-    />
-  </Col>
-</Form.Group>
+                    </Form.Group>
 
                     <Form.Group
                       as={Row}
@@ -375,15 +350,7 @@ export default function EditProfile() {
                               value={businessType} // Should be an array of IDs
                               onChange={handleChange}
                               renderValue={(selected) => selected.join(", ")}
-                              // renderValue={(selected) =>
-                              //   selected
-                              //     .map(
-                              //       (id) =>
-                              //         businessData.find((data) => data.name === id)
-                              //           ?.name
-                              //     )
-                              //     .join(", ")
-                              // }
+
                             >
                               {businessData.map((data) => (
                                 <MenuItem key={data._id} value={data?.name}>
@@ -433,6 +400,51 @@ export default function EditProfile() {
                         </Col>
                       </Form.Group>
                     )}
+
+                    {providerToken && (
+                      <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">
+                          Change Business Type
+                        </Form.Label>
+                        <Col sm="8">
+                          <FormControl className="w-100 select-ion">
+                            <Select
+                              labelId="demo-multiple-name-label"
+                              id="demo-multiple-name"
+                              multiple
+                              value={businessType} // Bind selected values
+                              onChange={handleChange}
+                              renderValue={(selected) => selected.join(", ")}
+                            >
+                              {businessData.map((data) => (
+                                <MenuItem key={data._id} value={data.name}>
+                                  {data.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Col>
+                      </Form.Group>
+                    )}
+
+                    <div  >
+
+
+                      {providerToken && businessType.length > 0 && (
+                        <div className="business-type-cards mt-3">
+                          <h5>Selected Business Types:</h5>
+                          <div className="d-flex flex-wrap gap-2">
+                            {businessType.map((type, index) => (
+
+                              <div key={index} className="rounded-0 custom-green bg-green-custom" style={{ color: "white" }}>
+                                {type}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="d-flex justify-content-center align-items-center py-3">
                       <Button
                         onClick={handleSubmit}

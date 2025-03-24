@@ -66,6 +66,7 @@ export default function Upload() {
   useEffect(() => {
     if (location.pathname === "/provider/upload") {
       const getUploadProfile = async () => {
+        setLoading(true);
         try {
           if (providerId) {
             const result = await dispatch(getProviderUser());
@@ -73,9 +74,11 @@ export default function Upload() {
               const { files } = result.payload.data;
               if (files.length === 0) {
                 navigate("/provider/upload");
+                setLoading(false);
                 return;
               }
               navigate("/provider/pricing");
+              setLoading(false);
             }
           }
         } catch (error) {
@@ -114,7 +117,6 @@ export default function Upload() {
           type: "success",
           toastKey: Date.now(),
         });
-        getUploadProfile();
       }
     } catch (error) {
       setLoading(false);
@@ -159,7 +161,6 @@ export default function Upload() {
           type: "success",
           toastKey: Date.now(),
         });
-        setLoading(false);
         setTimeout(
           () =>
             navigate(
@@ -169,6 +170,7 @@ export default function Upload() {
             ),
           2000
         );
+        setLoading(false);
       } else {
         setLoading(false);
         setToastProps({
@@ -260,55 +262,64 @@ export default function Upload() {
                         <div className="col-lg-4 py-1" key={index}>
                           <div className="card p-3 w-100">
                             <div className="card-body p-0">
-                              {file.type?.includes("image") || file.name?.match(/\.(jpg|jpeg|png|gif)$/i) || file.path?.includes("image") || file.path?.match(/\.(jpg|jpeg|png|gif)$/i) ? (
+                              {file.type?.includes("image") ||
+                              file.name?.match(/\.(jpg|jpeg|png|gif)$/i) ||
+                              file.path?.includes("image") ||
+                              file.path?.match(/\.(jpg|jpeg|png|gif)$/i) ? (
                                 <img
-                                  src={file instanceof File ? URL.createObjectURL(file) : file.path}
+                                  src={
+                                    file instanceof File
+                                      ? URL.createObjectURL(file)
+                                      : file.path
+                                  }
                                   alt="docImage"
                                   className="object-fit-contain w-100 rounded-4"
                                   height={100}
                                 />
-                              ) : file.type?.includes("pdf") || file.name?.endsWith(".pdf") ? (
+                              ) : file.type?.includes("pdf") ||
+                                file.name?.endsWith(".pdf") ? (
                                 <iframe
-                                  src={file instanceof File ? URL.createObjectURL(file) : file.path}
+                                  src={
+                                    file instanceof File
+                                      ? URL.createObjectURL(file)
+                                      : file.path
+                                  }
                                   className="w-100 rounded-4 "
                                   height={100}
                                   title={`PDF Preview ${index}`}
                                 />
                               ) : (
-                                <p className="text-center">Unsupported file type</p>
+                                <p className="text-center">
+                                  Unsupported file type
+                                </p>
                               )}
                             </div>
                           </div>
                         </div>
                       ))}
-
                     </div>
                   )}
 
-
                   <div className="d-flex justify-content-center gap-2 mt-5 align-items-center">
-                    {
-                      location.pathname === "/provider/upload" ?
-                        <Button
-                          variant="outlined"
-                          size="large"
-                          color="error"
-                          onClick={() => navigate("/provider/pricing")}
-                        >
-                          Skip For Now
-                        </Button>
-                        :
-                        <Button
-                          variant="outlined"
-                          size="large"
-                          color="error"
-                          onClick={() => navigate("/provider/home")}
-                        >
-                          Back to Home Page
-                        </Button>
-
-                    }
-
+                    {location.pathname === "/provider/upload" ? (
+                      <Button
+                        variant="outlined"
+                        size="large"
+                        color="error"
+                        onClick={() => navigate("/provider/pricing")}
+                      >
+                        Skip For Now
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        size="large"
+                        color="error"
+                        onClick={() => navigate("/provider/home")}
+                      >
+                        Back to Home Page
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

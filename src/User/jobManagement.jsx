@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
@@ -19,7 +19,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
-
+import Pagination from "react-bootstrap/Pagination";
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -38,12 +38,24 @@ export default function JobManagement() {
     type: "",
     toastKey: 0,
   });
+
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const provider = location.pathname.includes("provider");
   const [jobStatus, setJobStatus] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const hunterToken = localStorage.getItem("hunterToken");
   const ProviderToken = localStorage.getItem("ProviderToken");
+  const queryParams = new URLSearchParams(location.search);
+  let currentPage = parseInt(queryParams.get("page")) || 1;
+  const navigate = useNavigate();
+  // Auto-update URL if `page` is missing
+  useEffect(() => {
+    if (!queryParams.get("page")) {
+      queryParams.set("page", "1");
+      navigate(`?${queryParams.toString()}`, { replace: true });
+    }
+  }, [location.search, navigate]);
 
   const handleChange = (event) => {
     setJobStatus(event.target.value);
@@ -61,7 +73,7 @@ export default function JobManagement() {
     setLoading(true);
     try {
       const res = await axios.get(
-        "http://3.223.253.106:7777/api/jobpost/getJobPostByUserId",
+        `http://3.223.253.106:7777/api/jobpost/getJobPostByUserId?page=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -72,8 +84,9 @@ export default function JobManagement() {
         const filteredData = res.data.data.filter(
           (job) => job.jobStatus !== "Deleted"
         );
-        setData(filteredData);
-        setFilteredData(filteredData);
+        setData(res.data.data);
+        setFilteredData(res.data.data);
+        setTotalPages(res.data.pagination.totalPages);
         setToastProps({
           message: res.data.message,
           type: "success",
@@ -91,9 +104,9 @@ export default function JobManagement() {
     }
   };
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  // useEffect(() => {
+  //   fetchJobs();
+  // }, []);
 
   const handleJobDelete = async (id) => {
     setLoading(true);
@@ -117,6 +130,19 @@ export default function JobManagement() {
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchJobs(currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    fetchJobs(currentPage);
+  }, [currentPage]);
+
+  const handlePageChange = (page) => {
+    queryParams.set("page", page.toString());
+    navigate(`?${queryParams.toString()}`);
   };
 
   return (
@@ -239,6 +265,17 @@ export default function JobManagement() {
                         ))}
                       </tbody>
                     </Table>
+                    <Pagination className="justify-content-center pagination-custom">
+                      {[...Array(totalPages)].map((_, index) => (
+                        <Pagination.Item
+                          key={index + 1}
+                          active={index + 1 === currentPage}
+                          onClick={() => handlePageChange(index + 1)}
+                        >
+                          {index + 1}
+                        </Pagination.Item>
+                      ))}
+                    </Pagination>
                   </div>
                 </div>
                 {/* {data.map((item) => (

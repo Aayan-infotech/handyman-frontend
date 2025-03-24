@@ -549,6 +549,15 @@
 .sort-input .css-mp9f0v {
   padding: 9.5px 14px !important;
 }
+.pagination-custom a {
+  color: #000 !important;
+}
+.pagination-custom .active span {
+  background-color: rgba(50, 222, 132, 1) !important;
+  color: #fff !important;
+  border-color: rgba(50, 222, 132, 1) !important;
+  margin-right: 0 !important;
+}
 table th {
   vertical-align: top;
 }

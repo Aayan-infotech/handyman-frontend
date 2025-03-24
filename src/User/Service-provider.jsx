@@ -88,7 +88,7 @@ export default function ServiceProvider() {
       }
     } catch (error) {
       setToastProps({
-        message: error?.response?.data?.error || "Failed to fetch data",
+        message: error?.response?.data?.error || error.response?.data?.message,
         type: "error",
         toastKey: Date.now(),
       });
@@ -123,7 +123,7 @@ export default function ServiceProvider() {
       }
     } catch (error) {
       setToastProps({
-        message: error?.response?.data?.error || "Failed to fetch data",
+        message: error?.response?.data?.error || error.response?.data?.message,
         type: "error",
         toastKey: Date.now(),
       });

@@ -126,7 +126,7 @@ export default function PricingProvider() {
         <div>
           <LoggedHeader />
           <div className="h-100">
-            <Link to="/provider/chat/1">
+            <Link to="/provider/admin/chat/">
               <div className="admin-message">
                 <MdOutlineSupportAgent />
               </div>

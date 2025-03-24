@@ -98,17 +98,10 @@ export default function Login() {
       console.log(error);
       setLoading(false);
       setToastProps({
-        message: error?.response?.data?.error,
+        message: error?.response?.data?.error || error.response?.data?.message,
         type: "error",
         toastKey: Date.now(),
       });
-      if (error?.response?.data?.message && !error?.response?.data?.error) {
-        setToastProps({
-          message: error?.response?.data?.message,
-          type: "error",
-          toastKey: Date.now(),
-        });
-      }
     }
   };
 

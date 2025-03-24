@@ -425,6 +425,14 @@
 
 .image-shadow {
   position: relative;
+
+}
+
+
+.image-shadow img{
+  max-height: 300px;
+  object-fit: contain;
+  object-position: top;
 }
 
 .image-shadow::after {

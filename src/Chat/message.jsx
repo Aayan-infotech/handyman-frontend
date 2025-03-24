@@ -11,11 +11,13 @@ import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
 import axios from "axios";
 import Avatar from "@mui/material/Avatar";
-
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
 export default function Message() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [messageLoader, setMessageLoader] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [messageData, setMessageData] = useState({});
   const [selectedChat, setSelectedChat] = useState(null); // Track selected chat
@@ -35,7 +37,7 @@ export default function Message() {
 
   const handleChat = useCallback(async () => {
     if (messages.length === 0) return; // Prevent API call if no messages exist
-
+    setMessageLoader(true);
     try {
       // Loop through all messages and make API calls
       const apiCalls = messages.map(async (message) => {
@@ -69,13 +71,16 @@ export default function Message() {
       }, {});
 
       setMessageData(newMessageData);
+      setMessageLoader(false);
     } catch (error) {
       console.error("Error fetching chat data:", error);
+      setMessageLoader(false);
     }
   }, [messages]);
 
   console.log("message data", messageData);
   const getChatList = useCallback((user) => {
+    setMessageLoader(true);
     if (!user) return;
 
     const chatListRef = ref(realtimeDb, `chatList/${user}`);
@@ -92,8 +97,10 @@ export default function Message() {
           }))
         );
         setMessages(formattedChatList);
+        setMessageLoader(false);
       } else {
         setMessages([]);
+        setMessageLoader(false);
       }
     });
 
@@ -102,6 +109,7 @@ export default function Message() {
   console.log("messages in chat", messages);
 
   const getChatMessages = useCallback((selectedChat) => {
+    setMessageLoader(true);
     if (!selectedChat || !selectedChat.chatId) return;
 
     const { chatId, users } = selectedChat;
@@ -124,9 +132,11 @@ export default function Message() {
           .map((key) => ({ ...messagesData[key], id: key }))
           .sort((a, b) => a.timeStamp - b.timeStamp);
 
-        setChatMessages(formattedMessages); // Store messages separately
+        setChatMessages(formattedMessages);
+        setMessageLoader(false);
       } else {
-        setChatMessages([]); // If no messages, set empty array
+        setChatMessages([]);
+        setMessageLoader(false);
       }
     });
 
@@ -144,7 +154,7 @@ export default function Message() {
       const cleanup = getChatMessages(selectedChat);
       return cleanup;
     }
-  }, [selectedChat]); // ✅ Remove `getChatMessages` from dependencies
+  }, [selectedChat]);
 
   useEffect(() => {
     handleChat();
@@ -203,6 +213,31 @@ export default function Message() {
                         className="w-nodata"
                       />
                     </div>
+                  ) : messageLoader === true ? (
+                    <>
+                      <Stack spacing={1} className="d-block">
+                        <div className=" ">
+                          <Skeleton
+                            variant="rounded"
+                            className="mb-3 rounded-4"
+                            animation="wave"
+                            height={80}
+                          />
+                          <Skeleton
+                            variant="rounded"
+                            className="mb-3 rounded-4"
+                            animation="wave"
+                            height={80}
+                          />
+                          <Skeleton
+                            variant="rounded"
+                            animation="wave"
+                            className="mb-3 rounded-4"
+                            height={80}
+                          />
+                        </div>
+                      </Stack>
+                    </>
                   ) : (
                     messages.map((item) => (
                       <Link
@@ -260,8 +295,7 @@ export default function Message() {
                                     ? messageData[item.chatId]?.receiver
                                         ?.contactName ||
                                       messageData[item.chatId]?.receiver?.name
-                                    : messageData[item.chatId]?.sender
-                                        ?.name ||
+                                    : messageData[item.chatId]?.sender?.name ||
                                       messageData[item.chatId]?.sender
                                         ?.contactName}
                                 </h5>
