@@ -70,11 +70,11 @@ export default function Main() {
         }
       );
       if (res.status === 200) {
-        const filteredData = res.data.data.filter(
-          (job) => job.jobStatus !== "Deleted"
-        );
-        setData(filteredData);
-        setFilteredData(filteredData);
+        // const filteredData = res.data.data.filter(
+        //   (job) => job.jobStatus !== "Deleted"
+        // );
+        setData(res.data.data);
+        setFilteredData(res.data.data);
         setToastProps({
           message: res.data.message,
           type: "success",
@@ -116,7 +116,7 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    const pendingJobs = data.filter((job) => job.jobStatus === "Pending");
+    const pendingJobs = data;
     setFilteredData(pendingJobs.slice(0, 10)); // Limit to 10 jobs
   }, [data]);
 
@@ -241,7 +241,7 @@ export default function Main() {
 
                 <div className="d-flex justify-content-start flex-column gap-3 align-items-start pt-5">
                   <div className="d-flex justify-content-between align-items-center w-100">
-                    <h5 className="user">Pending Job Post</h5>
+                    <h5 className="user">Recent Job Post</h5>
                     <Link to="/job-management">
                       <Button
                         variant="contained"

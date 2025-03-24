@@ -95,6 +95,24 @@ export default function JobDetail() {
                     <Chip key={index} label={tag} variant="outlined" />
                   ))}
                 </div>
+                <div className="mt-4">
+                  <h3>Uploaded Document</h3>
+                  <div className="row g-2 gy-3">
+                    {data.documents ? (
+                      data.documents.map((doc, index) => (
+                        <div className="col-lg-4" key={index}>
+                          <img
+                            src={doc}
+                            alt="document"
+                            className="w-100 h-100 px-1"
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <p>No document uploaded</p>
+                    )}
+                  </div>
+                </div>
                 {/* <ul className="list-unstyled d-flex flex-column gap-2">
                   {data.requirements?.map((req, index) => (
                     <li key={index}>

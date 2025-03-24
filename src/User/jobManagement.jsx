@@ -265,7 +265,7 @@ export default function JobManagement() {
                         ))}
                       </tbody>
                     </Table>
-                    <Pagination className="justify-content-center">
+                    <Pagination className="justify-content-center pagination-custom">
                       {[...Array(totalPages)].map((_, index) => (
                         <Pagination.Item
                           key={index + 1}

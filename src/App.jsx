@@ -50,6 +50,7 @@ import ServicesProvider from "./User/services-provider";
 import AdminChat from "./Chat/admin-chat";
 import { getProviderUser } from "./Slices/userSlice";
 import { useDispatch } from "react-redux";
+// import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
   return !!(
     localStorage.getItem("hunterToken") || localStorage.getItem("ProviderToken")
@@ -68,195 +69,197 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<UnProtectedRoute element={<Home />} />} />
-        <Route
-          path="/search"
-          element={<UnProtectedRoute element={<Search />} />}
-        />
-        <Route
-          path="/welcome"
-          element={<UnProtectedRoute element={<Welcome />} />}
-        />
+      {/* <NotificationProvider> */}
+        <Routes>
+          <Route path="/" element={<UnProtectedRoute element={<Home />} />} />
+          <Route
+            path="/search"
+            element={<UnProtectedRoute element={<Search />} />}
+          />
+          <Route
+            path="/welcome"
+            element={<UnProtectedRoute element={<Welcome />} />}
+          />
 
-        <Route
-          path="/contact-us"
-          element={<UnProtectedRoute element={<Contact />} />}
-        />
-        <Route
-          path="/login"
-          element={<UnProtectedRoute element={<Login />} />}
-        />
-        <Route
-          path="/signup"
-          element={<UnProtectedRoute element={<SignUp />} />}
-        />
-        <Route
-          path="/forgot-password"
-          element={<UnProtectedRoute element={<ForgetPassword />} />}
-        />
-        <Route path="/otp" element={<UnProtectedRoute element={<Otp />} />} />
-        <Route
-          path="/reset-password"
-          element={<UnProtectedRoute element={<ResetPassword />} />}
-        />
+          <Route
+            path="/contact-us"
+            element={<UnProtectedRoute element={<Contact />} />}
+          />
+          <Route
+            path="/login"
+            element={<UnProtectedRoute element={<Login />} />}
+          />
+          <Route
+            path="/signup"
+            element={<UnProtectedRoute element={<SignUp />} />}
+          />
+          <Route
+            path="/forgot-password"
+            element={<UnProtectedRoute element={<ForgetPassword />} />}
+          />
+          <Route path="/otp" element={<UnProtectedRoute element={<Otp />} />} />
+          <Route
+            path="/reset-password"
+            element={<UnProtectedRoute element={<ResetPassword />} />}
+          />
 
-        <Route path="/home" element={<ProtectedRoute element={<Main />} />} />
-        <Route
-          path="/job-listing"
-          element={<UnProtectedRoute element={<JobListing />} />}
-        />
-        <Route
-          path="/featured-jobs"
-          element={<UnProtectedRoute element={<FeaturedJobs />} />}
-        />
-        <Route
-          path="/latest-jobs"
-          element={<UnProtectedRoute element={<LatestJobs />} />}
-        />
-        <Route path="/:section" element={<About />} />
-        <Route
-          path="/post-new-job"
-          element={<ProtectedRoute element={<NewJob />} />}
-        />
-        <Route
-          path="/job-management"
-          element={<ProtectedRoute element={<JobManagement />} />}
-        />
-        <Route
-          path="/job-detail/:id"
-          element={<ProtectedRoute element={<JobDetail />} />}
-        />
-        <Route
-          path="/service-provider"
-          element={<ProtectedRoute element={<ServiceProvider />} />}
-        />
-        <Route
-          path="/support/chat/:id"
-          element={<ProtectedRoute element={<AdminChat />} />}
-        />
-        <Route
-          path="/service-profile/:id"
-          element={<ProtectedRoute element={<ServiceProviderProfile />} />}
-        />
-        <Route
-          path="/message"
-          element={<ProtectedRoute element={<Message />} />}
-        />
-        <Route
-          path="/notification"
-          element={<ProtectedRoute element={<Notification />} />}
-        />
-        <Route
-          path="/change-radius"
-          element={<ProtectedRoute element={<ChangeRadius />} />}
-        />
-        <Route
-          path="/myprofile"
-          element={<ProtectedRoute element={<MyProfile />} />}
-        />
-        <Route
-          path="/changePassword/:id"
-          element={<ProtectedRoute element={<ChangePassword />} />}
-        />
-        <Route
-          path="/editProfile"
-          element={<ProtectedRoute element={<EditProfile />} />}
-        />
-        <Route
-          path="/services-provider"
-          element={<ProtectedRoute element={<ServicesProvider />} />}
-        />
+          <Route path="/home" element={<ProtectedRoute element={<Main />} />} />
+          <Route
+            path="/job-listing"
+            element={<UnProtectedRoute element={<JobListing />} />}
+          />
+          <Route
+            path="/featured-jobs"
+            element={<UnProtectedRoute element={<FeaturedJobs />} />}
+          />
+          <Route
+            path="/latest-jobs"
+            element={<UnProtectedRoute element={<LatestJobs />} />}
+          />
+          <Route path="/:section" element={<About />} />
+          <Route
+            path="/post-new-job"
+            element={<ProtectedRoute element={<NewJob />} />}
+          />
+          <Route
+            path="/job-management"
+            element={<ProtectedRoute element={<JobManagement />} />}
+          />
+          <Route
+            path="/job-detail/:id"
+            element={<ProtectedRoute element={<JobDetail />} />}
+          />
+          <Route
+            path="/service-provider"
+            element={<ProtectedRoute element={<ServiceProvider />} />}
+          />
+          <Route
+            path="/support/chat/:id"
+            element={<ProtectedRoute element={<AdminChat />} />}
+          />
+          <Route
+            path="/service-profile/:id"
+            element={<ProtectedRoute element={<ServiceProviderProfile />} />}
+          />
+          <Route
+            path="/message"
+            element={<ProtectedRoute element={<Message />} />}
+          />
+          <Route
+            path="/notification"
+            element={<ProtectedRoute element={<Notification />} />}
+          />
+          <Route
+            path="/change-radius"
+            element={<ProtectedRoute element={<ChangeRadius />} />}
+          />
+          <Route
+            path="/myprofile"
+            element={<ProtectedRoute element={<MyProfile />} />}
+          />
+          <Route
+            path="/changePassword/:id"
+            element={<ProtectedRoute element={<ChangePassword />} />}
+          />
+          <Route
+            path="/editProfile"
+            element={<ProtectedRoute element={<EditProfile />} />}
+          />
+          <Route
+            path="/services-provider"
+            element={<ProtectedRoute element={<ServicesProvider />} />}
+          />
 
-        {/* provider */}
-        <Route
-          path="/provider/login"
-          element={<UnProtectedRoute element={<LoginProvider />} />}
-        />
-        <Route
-          path="/provider/signup"
-          element={<UnProtectedRoute element={<SignUpProvider />} />}
-        />
-        <Route
-          path="/provider/upload"
-          element={<ProtectedRoute element={<Upload />} />}
-        />
-        <Route
-          path="/provider/reset"
-          element={<UnProtectedRoute element={<ResetPassword />} />}
-        />
-        <Route path="/provider/otp" element={<Otp />} />
-        <Route
-          path="/provider/job-history"
-          element={<ProtectedRoute element={<JobManagement />} />}
-        />
-        <Route
-          path="/provider/job-history/:id"
-          element={<ProtectedRoute element={<JobDetail />} />}
-        />
-        <Route
-          path="/provider/message"
-          element={<ProtectedRoute element={<Message />} />}
-        />
-        <Route
-          path="/provider/reset-password"
-          element={<ProtectedRoute element={<ResetPassword />} />}
-        />
-        <Route
-          path="/provider/changePassword/:id"
-          element={<ProtectedRoute element={<ChangePassword />} />}
-        />
-        <Route
-          path="/provider/chat/:id"
-          element={<ProtectedRoute element={<Chat />} />}
-        />
-        <Route
-          path="/provider/admin/chat/"
-          element={<ProtectedRoute element={<AdminChat />} />}
-        />
-        <Route
-          path="/provider/editProfile"
-          element={<ProtectedRoute element={<EditProfile />} />}
-        />
-        <Route
-          path="/provider/forgetpassword"
-          element={<ProtectedRoute element={<ForgetPassword />} />}
-        />
-        <Route
-          path="/provider/pricing"
-          element={<ProtectedRoute element={<MainProvider />} />}
-        />
-        <Route
-          path="/provider/pricing-detail/:id"
-          element={<ProtectedRoute element={<PricingProvider />} />}
-        />
-        <Route
-          path="/provider/payment"
-          element={<ProtectedRoute element={<Payment />} />}
-        />
-        <Route
-          path="/provider/paymentdetail/:id"
-          element={<ProtectedRoute element={<PaymentDetail />} />}
-        />
-        <Route
-          path="/provider/home"
-          element={<ProtectedRoute element={<HomeProvider />} />}
-        />
-        <Route
-          path="/provider/jobspecification/:id"
-          element={<ProtectedRoute element={<JobSpecification />} />}
-        />
-        <Route
-          path="/provider/myprofile"
-          element={<ProtectedRoute element={<MyProfile />} />}
-        />
-        <Route
-          path="/provider/edit/upload"
-          element={<ProtectedRoute element={<Upload />} />}
-        />
-        <Route path="/error" element={<Error />} />
-        <Route path="*" element={<Error />} />
-      </Routes>
+          {/* provider */}
+          <Route
+            path="/provider/login"
+            element={<UnProtectedRoute element={<LoginProvider />} />}
+          />
+          <Route
+            path="/provider/signup"
+            element={<UnProtectedRoute element={<SignUpProvider />} />}
+          />
+          <Route
+            path="/provider/upload"
+            element={<ProtectedRoute element={<Upload />} />}
+          />
+          <Route
+            path="/provider/reset"
+            element={<UnProtectedRoute element={<ResetPassword />} />}
+          />
+          <Route path="/provider/otp" element={<Otp />} />
+          <Route
+            path="/provider/job-history"
+            element={<ProtectedRoute element={<JobManagement />} />}
+          />
+          <Route
+            path="/provider/job-history/:id"
+            element={<ProtectedRoute element={<JobDetail />} />}
+          />
+          <Route
+            path="/provider/message"
+            element={<ProtectedRoute element={<Message />} />}
+          />
+          <Route
+            path="/provider/reset-password"
+            element={<ProtectedRoute element={<ResetPassword />} />}
+          />
+          <Route
+            path="/provider/changePassword/:id"
+            element={<ProtectedRoute element={<ChangePassword />} />}
+          />
+          <Route
+            path="/provider/chat/:id"
+            element={<ProtectedRoute element={<Chat />} />}
+          />
+          <Route
+            path="/provider/admin/chat/"
+            element={<ProtectedRoute element={<AdminChat />} />}
+          />
+          <Route
+            path="/provider/editProfile"
+            element={<ProtectedRoute element={<EditProfile />} />}
+          />
+          <Route
+            path="/provider/forgetpassword"
+            element={<ProtectedRoute element={<ForgetPassword />} />}
+          />
+          <Route
+            path="/provider/pricing"
+            element={<ProtectedRoute element={<MainProvider />} />}
+          />
+          <Route
+            path="/provider/pricing-detail/:id"
+            element={<ProtectedRoute element={<PricingProvider />} />}
+          />
+          <Route
+            path="/provider/payment"
+            element={<ProtectedRoute element={<Payment />} />}
+          />
+          <Route
+            path="/provider/paymentdetail/:id"
+            element={<ProtectedRoute element={<PaymentDetail />} />}
+          />
+          <Route
+            path="/provider/home"
+            element={<ProtectedRoute element={<HomeProvider />} />}
+          />
+          <Route
+            path="/provider/jobspecification/:id"
+            element={<ProtectedRoute element={<JobSpecification />} />}
+          />
+          <Route
+            path="/provider/myprofile"
+            element={<ProtectedRoute element={<MyProfile />} />}
+          />
+          <Route
+            path="/provider/edit/upload"
+            element={<ProtectedRoute element={<Upload />} />}
+          />
+          <Route path="/error" element={<Error />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
+      {/* </NotificationProvider> */}
     </BrowserRouter>
   );
 }
