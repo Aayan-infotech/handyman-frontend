@@ -115,8 +115,12 @@ export default function NewJob() {
 
     // Append each selected file correctly
     // documents.forEach((file) => {
-    //   formData.append("documents", file);
+    //   formData.append("documents[]", file);
     // });
+
+    Array.from(documents).forEach((file) => {
+      formData.append("file", file);
+    });
 
     console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
 
@@ -145,7 +149,7 @@ export default function NewJob() {
       }
     } catch (error) {
       setToastProps({
-        message: error?.response?.data?.error,
+        message: error?.response?.data?.error || error.response?.data?.message,
         type: "error",
         toastKey: Date.now(),
       });

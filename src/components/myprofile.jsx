@@ -10,7 +10,7 @@ import profilePicture from "../assets/profilePicture.png";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaLock } from "react-icons/fa";
+import { FaLock, FaPen } from "react-icons/fa";
 import { PiCircleHalfFill } from "react-icons/pi";
 import Button from "react-bootstrap/Button";
 import { FiEdit } from "react-icons/fi";
@@ -197,9 +197,9 @@ export default function MyProfile() {
             <div className="container">
               <div className="image-shadow">
                 <img src={serviceProviderImage} alt="image" />
-                {/* <div className="exper">
-                  <h5 className="fs-5 fw-medium">2 YEARS</h5>
-                </div> */}
+                <div className="exper">
+                  <FaPen className="text-dark" style={{ cursor: "pointer" }} />
+                </div>
               </div>
               <div className="row gy-4 gx-lg-3">
                 <div className="col-lg-3">

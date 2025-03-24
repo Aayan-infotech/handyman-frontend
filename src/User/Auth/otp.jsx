@@ -15,7 +15,11 @@ export default function Otp({ length = 6 }) {
   const [loading, setLoading] = useState(false);
 
   const location = useLocation();
-  const [toastProps, setToastProps] = useState({ message: "", type: "", toastKey: 0 });
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   const [otpValue, setOtpValue] = useState("");
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
@@ -83,7 +87,11 @@ export default function Otp({ length = 6 }) {
         }
       );
       if (response.status === 200 || response.status === 201) {
-        setToastProps({ message: response?.data?.message, type: "success", toastKey: Date.now() });
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
 
         setOtp(Array(length).fill(""));
         if (ProviderParams) {
@@ -103,14 +111,11 @@ export default function Otp({ length = 6 }) {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error", toastKey: Date.now() });
-      if (error?.response?.data?.message && !error?.response?.data?.error) {
-        setToastProps({
-          message: error?.response?.data?.message,
-          type: "error",
-          toastKey: Date.now()
-        });
-      }
+      setToastProps({
+        message: error?.response?.data?.error || error.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
     }
   };
 
@@ -126,7 +131,11 @@ export default function Otp({ length = 6 }) {
         }
       );
       if (response.status === 200 || response.status === 201) {
-        setToastProps({ message: response?.data?.message, type: "success", toastKey: Date.now() });
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
         setLoading(false);
         setOtp(Array(length).fill(""));
 
@@ -145,14 +154,11 @@ export default function Otp({ length = 6 }) {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setToastProps({ message: error?.response?.data?.error, type: "error", toastKey: Date.now() });
-      if (error?.response?.data?.message && !error?.response?.data?.error) {
-        setToastProps({
-          message: error?.response?.data?.message,
-          type: "error",
-          toastKey: Date.now()
-        });
-      }
+      setToastProps({
+        message: error?.response?.data?.error || error.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
     }
   };
 
@@ -170,12 +176,9 @@ export default function Otp({ length = 6 }) {
               ) : null}
               <div className="card shadow">
                 <div className="card-body">
-                  <h2 className="text-center fw-bold fs-1">
-                  Verify OTP
-                  </h2>
+                  <h2 className="text-center fw-bold fs-1">Verify OTP</h2>
                   <p className="text-center mt-5 mb-4">
-                    Please enter OTP to{" "}
-                    verify your account
+                    Please enter OTP to verify your account
                   </p>
 
                   <Row className="justify-content-center">
@@ -232,7 +235,11 @@ export default function Otp({ length = 6 }) {
         </div>
       )}
 
-      <Toaster message={toastProps.message} type={toastProps.type} toastKey={toastProps.toastKey} />
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }

@@ -158,8 +158,9 @@ export default function SignUp() {
         }, 2000);
       }
     } catch (error) {
+      console.log(error)
       setToastProps({
-        message: error.response?.data?.error,
+        message: error.response?.data?.error || error.response?.data?.message,
         type: "error",
         toastKey: Date.now(),
       });

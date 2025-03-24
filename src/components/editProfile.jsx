@@ -158,11 +158,11 @@ export default function EditProfile() {
 
     // formData.append("businessName", businessName);
 
-    // if (images && images instanceof FileList && images.length > 0) {
-    //   formData.append("images", images[0]);
-    // } else if (typeof images === "string") {
-    //   formData.append("images", images);
-    // }
+    if (images && images instanceof FileList && images.length > 0) {
+      formData.append("images", images[0]);
+    } else if (typeof images === "string") {
+      formData.append("images", images);
+    }
 
     // businessType.forEach((type) => {
     //   formData.append("businessType[]", type);
