@@ -29,6 +29,11 @@ import notFound from "./assets/noprofile.png";
 export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const [backgroundImg, setBackgroundImg] = useState("");// new
+
+  const userId = localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");//new
+  const userType = localStorage.getItem("hunterToken") ? "Hunter" : "Provider";// new
+
   const [email, setEmail] = useState("");
   const [address, setAdress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,6 +53,46 @@ export default function MyProfile() {
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
+
+// new
+  useEffect(() => {
+    if (userId) {
+      fetchBackgroundImage();
+    }
+  }, [userId]);
+
+
+
+
+  const fetchBackgroundImage = async () => {
+    try {
+      const response = await axios.get(`http://3.223.253.106:7777/api/backgroundImg/${userId}`);
+      setBackgroundImg(response.data.data[0].backgroundImg);
+    } catch (error) {
+      console.error("Error fetching background image:", error);
+    }
+  };
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    console.log(file,'.....file')
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("backgroundImg", file);
+    formData.append("userType", userType);
+    formData.append("userId", userId);
+
+    try {
+      
+      const response = await axios.post("http://3.223.253.106:7777/api/backgroundImg/upload", formData);
+      console.log(response,'response')
+      fetchBackgroundImage(); // Refresh image after upload
+    } catch (error) {
+      console.error("Error uploading background image:", error);
+    }
+  };
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -195,12 +240,40 @@ export default function MyProfile() {
           </div>
           <div className="bg-second pb-3">
             <div className="container">
-              <div className="image-shadow">
+              {/* <div className="image-shadow">
                 <img src={serviceProviderImage} alt="image" />
                 <div className="exper">
                   <FaPen className="text-dark" style={{ cursor: "pointer" }} />
                 </div>
-              </div>
+              </div> */}
+
+
+
+
+<div className="profile-container">
+      <div className="image-shadow">
+        <img className="w-100 "  src={backgroundImg || "default-image.jpg"} alt="background" />
+        <div className="exper">
+          <FaPen
+            className="text-dark"
+            style={{ cursor: "pointer" }}
+            onClick={() => document.getElementById("fileInput").click()}
+          />
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: "none" }}
+            onChange={handleImageUpload}
+            accept="image/*"
+          />
+        </div>
+      </div>
+    </div> 
+
+
+
+
+
               <div className="row gy-4 gx-lg-3">
                 <div className="col-lg-3">
                   <div className="position-relative ">
