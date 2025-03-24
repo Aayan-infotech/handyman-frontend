@@ -172,7 +172,7 @@ export default function Message() {
 
   console.log(
     "messageData[item.chatId]?.receiver?.name",
-    messageData["67d1308e4081444fc023f371_chat_67d15adf2d910cb3dcfcb0c3"]
+    messageData["67d1308e4081444fc023f371_chat_67d167d4a30bfff27ce92f11"]
   );
 
   return (
