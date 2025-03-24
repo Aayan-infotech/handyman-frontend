@@ -25,11 +25,14 @@ import Loader from "../Loader";
 import axios from "axios";
 import Toaster from "../Toaster";
 import notFound from "./assets/noprofile.png";
-
+import { Modal } from "react-bootstrap";
 export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
-  const [backgroundImg, setBackgroundImg] = useState("");// new
+  const [backgroundImg, setBackgroundImg] = useState("");
+  const [showModal, setShowModal] = useState(false);//NEW
+  const [description, setDescription] = useState("");//NEW
+  const [aboutText, setAboutText] = useState(""); // Store "about" text after saving
 
   const userId = localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");//new
   const userType = localStorage.getItem("hunterToken") ? "Hunter" : "Provider";// new
@@ -91,6 +94,33 @@ export default function MyProfile() {
     } catch (error) {
       console.error("Error uploading background image:", error);
     }
+  };
+
+
+  useEffect(() => {
+    axios
+      .get(`http://3.223.253.106:7777/api/provider/about/${userId}`)
+      .then((response) => {
+        if (response.data.data.length > 0) {
+          setAboutText(response.data.data[0].about);
+        }
+      })
+      .catch((error) => console.error("Error fetching about data:", error));
+  }, []);
+
+  // Function to handle save (POST request)
+  const handleSave = () => {
+    axios
+      .post(`http://3.223.253.106:7777/api/provider/about/${userId}`, {
+        about: description,
+      })
+      .then((response) => {
+        if (response.data.success) {
+          setAboutText(response.data.data[0].about); // Set new about text
+          setShowModal(false); // Close modal
+        }
+      })
+      .catch((error) => console.error("Error updating about:", error));
   };
 
 
@@ -240,15 +270,7 @@ export default function MyProfile() {
           </div>
           <div className="bg-second pb-3">
             <div className="container">
-              {/* <div className="image-shadow">
-                <img src={serviceProviderImage} alt="image" />
-                <div className="exper">
-                  <FaPen className="text-dark" style={{ cursor: "pointer" }} />
-                </div>
-              </div> */}
-
-
-
+         
 
 <div className="profile-container">
       <div className="image-shadow">
@@ -287,17 +309,51 @@ export default function MyProfile() {
                   </div>
                 </div>
 
-                <div className="col-lg-6">
-                  <div className="  mt-5 mt-lg-0 text-center text-lg-start">
-                    <h3 className="fw-bold fs-1">{name}</h3>
-                    <h5
-                      className="text-muted"
-                      style={{ textTransform: "capitalize" }}
-                    >
-                      {user?.userType}
-                    </h5>
-                  </div>
-                </div>
+            
+
+
+
+<div className="col-lg-6">
+      <div className="mt-5 mt-lg-0 text-center text-lg-start">
+        <h3 className="fw-bold fs-1">{name}</h3>
+        <h5 className="text-muted" style={{ textTransform: "capitalize" }}>
+          {user?.userType}
+        </h5>
+
+        {aboutText ? (
+          <p className="mt-3">{aboutText}</p> // Show updated "about" text
+        ) : (
+          <button className="btn btn-primary mt-3" onClick={() => setShowModal(true)}>
+            Added Description
+          </button>
+        )}
+      </div>
+
+      {/* Modal Component */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Description</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <textarea
+            className="form-control"
+            rows="3"
+            placeholder="Enter your description..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleSave}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+
 
                 <div className="col-lg-3">
                   <div className="w-100 ">
