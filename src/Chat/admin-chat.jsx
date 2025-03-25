@@ -9,6 +9,41 @@ import { IoSendSharp } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { realtimeDb } from "./lib/firestore";
 import { ref, push, set, onValue, update } from "firebase/database";
+import Avatar from "@mui/material/Avatar";
+const sendMessage = async (
+  msgType,
+  msg,
+  chatId,
+  receiverId,
+  senderId,
+  setMessages
+) => {
+  console.log("function working");
+  if (!chatId) {
+    console.error("Chat ID is missing");
+    return;
+  }
+  const time = Date.now();
+  try {
+    const chat = {
+      msg,
+      timeStamp: time,
+      type: msgType,
+      receiverId,
+      senderId,
+    };
+
+    const newMessageRef = push(
+      ref(realtimeDb, `chatsAdmin/${chatId}/messages`)
+    );
+    await set(newMessageRef, chat);
+
+    // Remove this manual state update to avoid duplication
+    // setMessages((prevMessages) => [...prevMessages, chat]); ❌ REMOVE THIS
+  } catch (error) {
+    console.error("Firebase Error:", error.message);
+  }
+};
 
 export default function AdminChat() {
   const location = useLocation();
@@ -56,48 +91,6 @@ export default function AdminChat() {
     localStorage.setItem("chatId", newChatId); // Store chat ID for persistence
   }, [currentUser, receiverId]);
 
-  // Handle visibility toggle
-  const sendMessage = async (
-    msgType,
-    msg,
-    chatId,
-    receiverId,
-    senderId,
-    isReceiverOnline,
-    setMessages
-  ) => {
-    if (!chatId) {
-      generateChatId();
-      console.error("Chat ID is missing");
-      return;
-    }
-    const time = Date.now();
-    try {
-      const chat = {
-        msg,
-        timeStamp: time,
-        type: msgType,
-        receiverId,
-        senderId,
-      };
-
-      const newMessageRef = push(
-        ref(realtimeDb, `chatsAdmin/${chatId}/messages`)
-      );
-      await set(newMessageRef, chat);
-
-      setMessages((prevMessages) => [...prevMessages, chat]);
-
-      // Step 3: Update job status in chat
-      await set(ref(realtimeDb, `chatsAdmin/${chatId}/jobStatus`), {
-        status: "Pending",
-        acceptedBy: "",
-      });
-    } catch (error) {
-      console.error("Firebase Error:", error.message);
-    }
-  };
-
   const handleProvider = () => {
     if (
       location.pathname.includes("provider") ||
@@ -105,6 +98,30 @@ export default function AdminChat() {
     ) {
       setShow(!show);
     }
+  };
+
+  const handleSend = async () => {
+    // if (messages.trim() === "" || !chatId || !currentUser) return;
+    if (text.trim() === "" || !chatId || !currentUser) return;
+
+    // await sendMessage(
+    //   "text",
+    //   messages,
+    //   chatId,
+    //   receiverId,
+    //   currentUser,
+    //   setMessages
+    // );
+    // setMessages("");
+    await sendMessage(
+      "text",
+      text,
+      chatId,
+      receiverId,
+      currentUser,
+      setMessages
+    );
+    setText("");
   };
 
   useEffect(() => {
@@ -120,10 +137,15 @@ export default function AdminChat() {
         <div className="card-body p-2">
           <div className="d-flex flex-row gap-2 align-items-center justify-content-between">
             <div className="d-flex flex-row align-items-center gap-2 profile-icon">
-              <img src={user1} alt="user1" height={60} width={60} />
+              <Avatar
+                alt="Image"
+                className="w-100"
+                style={{ height: "82px", width: "82px" }}
+              >
+                A
+              </Avatar>
               <div className="d-flex flex-column gap-1">
-                <h5 className="mb-0 fw-medium fs-5 text-dark">John Doe</h5>
-                {!show ? <span className="text-muted fs-6">2m ago</span> : null}
+                <h5 className="mb-0 fw-medium fs-5 text-dark">Admin</h5>
               </div>
             </div>
             <div className="d-flex flex-row gap-2 align-items-center">
@@ -147,10 +169,10 @@ export default function AdminChat() {
                     : "msg-recieved mb-1"
                 }
               >
-                {msg.text}
+                {msg.msg}
               </p>
               <span className="text-muted time-status">
-                {new Date(msg.createdAt).toLocaleTimeString()}
+                {new Date(msg.timeStamp).toLocaleTimeString()}
               </span>
             </div>
           ))}
@@ -165,7 +187,7 @@ export default function AdminChat() {
               onChange={(e) => setText(e.target.value)}
             />
             <IoSendSharp
-              onClick={() => sendMessage()}
+              onClick={() => handleSend()}
               style={{ cursor: "pointer" }}
             />
           </div>

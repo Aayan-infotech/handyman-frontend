@@ -83,6 +83,10 @@ export default function LoginProvider() {
         }, 2000);
         localStorage.setItem("ProviderToken", response?.data?.data?.token);
         localStorage.setItem(
+          "ProviderRefreshToken",
+          response?.data?.data?.user?.refreshToken
+        );
+        localStorage.setItem(
           "ProviderEmail",
           response?.data?.data?.user?.email
         );
