@@ -33,6 +33,7 @@ export default function MyProfile() {
   const [showModal, setShowModal] = useState(false); //NEW
   const [description, setDescription] = useState(""); //NEW
   const [aboutText, setAboutText] = useState(""); // Store "about" text after saving
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const userId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId"); //new
@@ -78,6 +79,7 @@ export default function MyProfile() {
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
+
     console.log(file, ".....file");
     if (!file) return;
 
@@ -87,6 +89,7 @@ export default function MyProfile() {
     formData.append("userId", userId);
 
     try {
+
       const response = await axios.post(
         "http://3.223.253.106:7777/api/backgroundImg/upload",
         formData
@@ -122,6 +125,36 @@ export default function MyProfile() {
         }
       })
       .catch((error) => console.error("Error updating about:", error));
+  };
+
+ const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]); // Sirf ek file select karega
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("files", selectedFile);
+    formData.append("userId",providerId); // Replace with actual userId
+
+    try {
+      const response = await axios.post(
+        "http://3.223.253.106:7777/api/providerPhoto/upload",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      alert("Upload Successful!");
+      console.log(response.data);
+    } catch (error) {
+      console.error("Upload Failed:", error);
+      alert("Upload Failed!");
+    }
   };
 
   useEffect(() => {
@@ -214,8 +247,7 @@ export default function MyProfile() {
       }
 
       const response = await axios.delete(
-        `http://3.223.253.106:7777/api/DeleteAccount/${
-          providerId ? "provider" : "delete"
+        `http://3.223.253.106:7777/api/DeleteAccount/${providerId ? "provider" : "delete"
         }/${providerId || hunterId}`
       );
 
@@ -286,6 +318,7 @@ export default function MyProfile() {
                       onClick={() =>
                         document.getElementById("fileInput").click()
                       }
+
                     />
                     <input
                       type="file"
@@ -441,6 +474,11 @@ export default function MyProfile() {
                 </div>
               </div>
 
+
+
+
+
+
               {Location.pathname.includes("provider") ? (
                 <div className="d-flex flex-row flex-wrap justify-content-lg-start justify-content-center gap-1 gap-lg-2 align-items-center profile my-4">
                   {businessType.map((type, index) => (
@@ -455,24 +493,54 @@ export default function MyProfile() {
               ) : (
                 ""
               )}
+
+          
+<div className="card border-0 rounded-5">
+      <div className="card-body py-4 px-lg-4 d-flex align-items-center justify-content-between">
+        <h4 className="mb-0">Added your work gallery here</h4>
+        <input type="file" onChange={handleFileChange} />
+        <Button
+          variant="contained"
+          color="success"
+          className="rounded-0 custom-green bg-green-custom text-light rounded-3"
+          onClick={handleUpload}
+        >
+          ADD
+        </Button>
+      </div>
+    </div>
+
+              {/* <div className="card border-0 rounded-5 ">
+                <div className="card-body py-4 px-lg-4 d-flex align-items-center justify-content-between">
+                  <h4 className="mb-0">Added your work gallery here</h4>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="rounded-0 custom-green bg-green-custom text-light rounded-3"
+                  >
+                    ADD
+                  </Button>
+                </div>
+              </div> */}
+
+
+
               <div className="row gy-4 my-4">
                 <div
-                  className={` ${
-                    Location.pathname.includes("provider")
+                  className={` ${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   {hunterToken ? (
                     <Link to={`/changePassword/${id}`}>
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${
-                              Location.pathname.includes("provider")
+                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                                 ? "flex-column"
                                 : "flex-row"
-                            }`}
+                              }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -496,12 +564,13 @@ export default function MyProfile() {
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${
-                              Location.pathname.includes("provider")
+                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                                 ? "flex-column"
                                 : "flex-row"
-                            }`}
+                              }`}
                           >
+
+
                             <div className="circle-container">
                               <div className="progress-circle">
                                 <div className="lock-icon">
@@ -509,6 +578,11 @@ export default function MyProfile() {
                                 </div>
                               </div>
                             </div>
+
+
+
+
+
 
                             <div className="d-flex flex-row gap-3 align-items-center">
                               <span className="text-success text-center">
@@ -522,21 +596,19 @@ export default function MyProfile() {
                   )}
                 </div>
                 <div
-                  className={` ${
-                    Location.pathname.includes("provider")
+                  className={` ${Location.pathname.includes("provider")
                       ? "d-none"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   <Link to="/change-radius">
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${
-                            Location.pathname.includes("provider")
+                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                               ? "flex-column"
                               : "flex-row"
-                          }`}
+                            }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -557,20 +629,18 @@ export default function MyProfile() {
                   </Link>
                 </div>
                 <div
-                  className={` ${
-                    Location.pathname.includes("provider")
+                  className={` ${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${
-                          Location.pathname.includes("provider")
+                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                             ? "flex-column"
                             : "flex-row"
-                        }`}
+                          }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
@@ -591,27 +661,24 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${
-                    Location.pathname.includes("provider")
+                  className={`${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   <Link
-                    to={`${
-                      Location.pathname.includes("provider")
+                    to={`${Location.pathname.includes("provider")
                         ? "/provider/job-history"
                         : "/home"
-                    }`}
+                      }`}
                   >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${
-                            Location.pathname.includes("provider")
+                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                               ? "flex-column"
                               : "flex-row"
-                          }`}
+                            }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -635,20 +702,18 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${
-                    Location.pathname.includes("provider")
+                  className={`${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "d-none"
-                  }`}
+                    }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${
-                          Location.pathname.includes("provider")
+                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                             ? "flex-column"
                             : "flex-row"
-                        }`}
+                          }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
