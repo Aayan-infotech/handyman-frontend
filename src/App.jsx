@@ -53,6 +53,8 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import Loader from "./Loader";
 import BlogDetail from "./components/blogsDetails";
+import AllBlogs from "./components/allBlogs";
+
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
   return !!(
@@ -115,7 +117,6 @@ const ProtectedRoute = ({ element }) => {
 
   return element;
 };
-
 const UnProtectedRoute = ({ element }) => {
   return !useAuth() ? element : <Error />;
 };
@@ -123,6 +124,7 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+
 
       {/* <NotificationProvider> */}
       <Routes>
@@ -135,6 +137,14 @@ function App() {
           path="/welcome"
           element={<UnProtectedRoute element={<Welcome />} />}
         />
+<Route exact path="/allblogs" 
+  element={<UnProtectedRoute element={<AllBlogs />} />}
+/>
+
+
+<Route exact path="/blog-detail/:id" 
+  element={<UnProtectedRoute element={<BlogDetail />} />}
+/>
 
         <Route
           path="/contact-us"
