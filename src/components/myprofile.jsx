@@ -33,6 +33,13 @@ export default function MyProfile() {
   const [showModal, setShowModal] = useState(false); //NEW
   const [description, setDescription] = useState(""); //NEW
   const [aboutText, setAboutText] = useState(""); // Store "about" text after saving
+  // const [selectedFile, setSelectedFile] = useState(null);
+  // new
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [gallery, setGallery] = useState([]);
+
+  const [openModal, setOpenModal] = useState(false); // State to control modal visibility
 
   const userId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId"); //new
@@ -78,6 +85,7 @@ export default function MyProfile() {
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
+
     console.log(file, ".....file");
     if (!file) return;
 
@@ -124,6 +132,51 @@ export default function MyProfile() {
       .catch((error) => console.error("Error updating about:", error));
   };
 
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]); // Sirf ek file select karega
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("files", selectedFile);
+    formData.append("userId", providerId); // Replace with actual userId
+
+    try {
+      const response = await axios.post(
+        "http://3.223.253.106:7777/api/providerPhoto/upload",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      alert("Upload Successful!");
+      console.log(response.data);
+    } catch (error) {
+      console.error("Upload Failed:", error);
+      alert("Upload Failed!");
+    }
+  };
+
+  const fetchGallery = async () => {
+    try {
+      const response = await axios.get(
+        `http://3.223.253.106:7777/api/providerPhoto/${providerId}`
+      );
+      console.log(response?.data?.data?.files);
+      setGallery(response?.data?.data?.files);
+    } catch (error) {
+      console.error("Failed to fetch gallery:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGallery();
+  }, []);
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -272,21 +325,28 @@ export default function MyProfile() {
           </div>
           <div className="bg-second pb-3">
             <div className="container">
-              <div className="profile-container">
+              <div className="profile-container position-relative">
                 <div className="image-shadow">
                   <img
-                    className="w-100 "
+                    className="w-100 rounded-4"
                     src={backgroundImg || "default-image.jpg"}
                     alt="background"
                   />
-                  <div className="exper">
-                    <FaPen
-                      className="text-dark"
-                      style={{ cursor: "pointer" }}
+                  <div className="exper position-absolute bottom-0 end-0 m-3">
+                    <button
+                      className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                      style={{
+                        backgroundColor: "#32de84",
+                        color: "#fff",
+                        border: "none",
+                      }}
                       onClick={() =>
                         document.getElementById("fileInput").click()
                       }
-                    />
+                    >
+                      <FaPen />
+                      <span>Change Cover</span>
+                    </button>
                     <input
                       type="file"
                       id="fileInput"
@@ -297,7 +357,6 @@ export default function MyProfile() {
                   </div>
                 </div>
               </div>
-
               <div className="row gy-4 gx-lg-3">
                 <div className="col-lg-3">
                   <div className="position-relative ">
@@ -325,10 +384,15 @@ export default function MyProfile() {
                       <p className="mt-3">{aboutText}</p> // Show updated "about" text
                     ) : (
                       <button
-                        className="btn btn-primary mt-3"
+                        className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                        style={{
+                          backgroundColor: "#32de84",
+                          color: "#fff",
+                          border: "none",
+                        }}
                         onClick={() => setShowModal(true)}
                       >
-                        Added Description
+                        Add Description
                       </button>
                     )}
                   </div>
@@ -455,6 +519,41 @@ export default function MyProfile() {
               ) : (
                 ""
               )}
+
+              <div className="card border-0 rounded-5">
+                <div className="card-body py-4 px-lg-4">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h4 className="mb-0">Added your work gallery here</h4>
+                    <input type="file" onChange={handleFileChange} />
+                    <button
+                      className="btn btn-success rounded-3"
+                      onClick={handleUpload}
+                    >
+                      ADD
+                    </button>
+                  </div>
+                  {/* Gallery Images */}
+                  <div className="row mt-4">
+                    {gallery.length > 0 ? (
+                      gallery.map((image, index) => (
+                        <div key={index} className="col-md-4 mb-3">
+                          <div className="card">
+                            <img
+                              src={image}
+                              alt="Gallery Item"
+                              className="card-img-top"
+                            />
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center mt-3">
+                        No images uploaded yet.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
               <div className="row gy-4 my-4">
                 <div
                   className={` ${

@@ -26,19 +26,28 @@ import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
 import Autocomplete from "react-google-autocomplete";
 import { useNavigate } from "react-router-dom";
+import Grid from "@mui/material/Grid";
+
 import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { Row, Col, Form } from "react-bootstrap";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import CardActionArea from "@mui/material/CardActionArea";
+
 import {
   FaFacebook,
-  FaInstagram,
   FaTwitter,
-  FaLinkedin,
+  FaInstagram,
   FaDribbble,
+  FaLinkedin,
 } from "react-icons/fa";
 import axios from "axios";
+
 function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
@@ -50,6 +59,7 @@ function Home() {
     type: "",
     toastKey: 0,
   });
+  const [blogs, setBlogs] = useState([]);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const navigate = useNavigate();
@@ -59,6 +69,17 @@ function Home() {
       .then((res) => {
         const limitedData = res?.data?.data?.slice(0, 8) || []; // Ensure only 8 items
         setBusinessData(limitedData);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://3.223.253.106:7777/api/blog/getAll")
+      .then((response) => {
+        setBlogs(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching blogs:", error);
       });
   }, []);
 
@@ -206,13 +227,6 @@ function Home() {
                           defaultValue={address}
                         />
                       </div>
-                      {/* <Button
-                        variant="contained"
-                        color="success"
-                        className="custom-green px-3 py-2 w-100 rounded-0 bg-green-custom"
-                      >
-                        Search 
-                      </Button> */}
 
                       <Button
                         variant="contained"
@@ -605,6 +619,63 @@ function Home() {
         </div>
       </div>
 
+      {/* Blogs Section */}
+
+      <Container className="py-5">
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+        
+        >
+          <h2>
+            Our <span style={{ color: "#1976D2" }}>Blogs</span>
+          </h2>
+
+          <Link
+            to="/allblogs"
+            className="text-decoration-none custom-text-success d-block "
+          >
+            Show all blogs <GoArrowRight className="fs-4 ms-1" />
+          </Link>
+        </Grid>
+        <Grid container spacing={4}>
+          {blogs.map((blog) => (
+            <Grid item xs={12} sm={6} md={3} key={blog.id}>
+              <Card sx={{ maxWidth: 400 }}>
+                <CardActionArea
+                  component={Link}
+                  to={`/blog-detail/${blog._id}`}
+                >
+                  <CardMedia
+                    component="img"
+                    height="180"
+                    image={blog.image}
+                    alt={blog.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                      {blog.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {blog.description}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      color="text.secondary"
+                      mt={1}
+                    >
+                      {blog.date}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
       <footer className="footer text-light">
         <Container>
           <Row>
@@ -633,6 +704,11 @@ function Home() {
                         Pricing
                       </a>
                     </li> */}
+                    <li>
+                      <a href="allblogs" className="text-light">
+                        Blogs
+                      </a>
+                    </li>
                     <li>
                       <a href="terms" className="text-light">
                         Terms
