@@ -54,6 +54,7 @@ function Home() {
     type: "",
     toastKey: 0,
   });
+  const [blogs, setBlogs] = useState([]);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const navigate = useNavigate();
@@ -65,36 +66,17 @@ function Home() {
         setBusinessData(limitedData);
       });
   }, []);
-  const blogs = [
-    {
-      id: 1,
-      title: 'Blog Title 1',
-      date: '2025-03-25',
-      image: 'https://media.istockphoto.com/id/2152960546/photo/young-woman-using-digital-tablet-at-home.jpg?s=1024x1024&w=is&k=20&c=27V7LRjvBh65_Zv0F5SNnHBh-_HAutLlkX-KXUgUmxk=',
-      description: 'This is a short description for Blog 1. It provides a preview of the content.'
-    },
-    {
-      id: 2,
-      title: 'Blog Title 2',
-      date: '2025-03-24',
-      image: 'https://media.istockphoto.com/id/656630294/photo/more-and-more-people-are-following-her-blog-each-day.jpg?s=1024x1024&w=is&k=20&c=bnKqk262BCIEkRvFHKJMhvtSOLZcFCmQObrKoHmTjxM=',
-      description: 'This is a short description for Blog 2. It gives an overview of the post\'s topic.'
-    },
-    {
-      id: 3,
-      title: 'Blog Title 3',
-      date: '2025-03-23',
-      image: 'https://media.istockphoto.com/id/656630294/photo/more-and-more-people-are-following-her-blog-each-day.jpg?s=1024x1024&w=is&k=20&c=bnKqk262BCIEkRvFHKJMhvtSOLZcFCmQObrKoHmTjxM=',
-      description: 'This is a short description for Blog 3. It gives a sneak peek into the blog content.'
-    },
-    {
-      id: 4,
-      title: 'Blog Title 4',
-      date: '2025-03-22',
-      image: 'https://media.istockphoto.com/id/1683003373/photo/woman-using-digital-tablet.jpg?s=1024x1024&w=is&k=20&c=G9IQtm2vJw1u2Yi6DcECyR18hOiept628VXgkbf1m_A=',
-      description: 'This is a short description for Blog 4. A preview of what readers can expect in the blog.'
-    }
-  ];
+
+  useEffect(() => {
+    axios.get('http://3.223.253.106:7777/api/blog/getAll')
+      .then(response => {
+        setBlogs(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching blogs:', error);
+      });
+  }, []);
+ 
   useEffect(() => {
     axios
       .get("http://3.223.253.106:7777/api/jobs/getRecentJobs")
@@ -240,13 +222,7 @@ function Home() {
                           defaultValue={address}
                         />
                       </div>
-                      {/* <Button
-                        variant="contained"
-                        color="success"
-                        className="custom-green px-3 py-2 w-100 rounded-0 bg-green-custom"
-                      >
-                        Search 
-                      </Button> */}
+                      
 
                       <Button
                         variant="contained"
@@ -645,17 +621,24 @@ function Home() {
 
 <Container>
       <Grid container justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" fontWeight="bold">Our Blogs</Typography>
-        <Button component={Link} to="/all-blogs" variant="contained" color="primary">Show All Blogs</Button>
+        <h2>
+          Our <span style={{ color: '#1976D2' }}>Blogs</span>
+        </h2>
+      
+
+
+<Link to="/allblogs" className="text-decoration-none custom-text-success d-block mt-3">
+                Show all blogs <GoArrowRight className="fs-4 ms-1" />
+              </Link>
       </Grid>
       <Grid container spacing={4}>
         {blogs.map((blog) => (
           <Grid item xs={12} sm={6} md={3} key={blog.id}>
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea component={Link} to={`/blog-detail/${blog.id}`}>
+            <Card sx={{ maxWidth: 400 }}>
+              <CardActionArea component={Link} to={`/blog-detail/${blog._id}`}>
                 <CardMedia
                   component="img"
-                  height="140"
+                  height="180"
                   image={blog.image}
                   alt={blog.title}
                 />
@@ -669,12 +652,6 @@ function Home() {
                   <Typography variant="caption" display="block" color="text.secondary" mt={1}>
                     {blog.date}
                   </Typography>
-                  <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
-                    <FaFacebook size={20} color="#1877F2" />
-                    <FaTwitter size={20} color="#1DA1F2" />
-                    <FaInstagram size={20} color="#E4405F" />
-                    <FaDribbble size={20} color="#EA4C89" />
-                  </div>
                 </CardContent>
               </CardActionArea>
             </Card>
@@ -682,7 +659,6 @@ function Home() {
         ))}
       </Grid>
     </Container>
-
 
 
       <footer className="footer text-light">
@@ -714,7 +690,7 @@ function Home() {
                       </a>
                     </li> */}
                        <li>
-                      <a href="terms" className="text-light">
+                      <a href="allblogs" className="text-light">
                         Blogs
                       </a>
                     </li>

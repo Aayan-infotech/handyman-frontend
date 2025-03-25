@@ -51,6 +51,7 @@ import AdminChat from "./Chat/admin-chat";
 import { getProviderUser } from "./Slices/userSlice";
 import { useDispatch } from "react-redux";
 import BlogDetail from "./components/blogsDetails";
+import AllBlogs from "./components/allBlogs";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -79,12 +80,16 @@ function App() {
             element={<UnProtectedRoute element={<Search />} />}
           />
 
+<Route exact path="/allblogs" 
+  element={<UnProtectedRoute element={<AllBlogs />} />}
+/>
+
+
 <Route exact path="/blog-detail/:id" 
   element={<UnProtectedRoute element={<BlogDetail />} />}
 />
 
 
-{/* <Route exact path="/blog-detail" component={BlogDetail} />      */}
      <Route
             path="/welcome"
             element={<UnProtectedRoute element={<Welcome />} />}
