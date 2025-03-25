@@ -64,11 +64,15 @@ export default function MainProvider() {
         { code: voucher, userId: providerId }
       );
       console.log(response);
+      setVoucher("");
       setToastProps({
         message: "Copon Applied Successfully",
         type: "success",
         toastKey: Date.now(),
       });
+      setTimeout(() => {
+        navigate("/provider/home");
+      }, 2000);
     } catch (error) {
       console.log(error);
       setToastProps({

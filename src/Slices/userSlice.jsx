@@ -4,12 +4,13 @@ import axios from "axios";
 export const getProviderUser = createAsyncThunk(
   "User/getProviderUser",
   async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("ProviderToken");
     try {
       const response = await axios.get(
         "http://3.223.253.106:7777/api/auth/getProviderProfile",
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

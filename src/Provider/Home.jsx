@@ -15,6 +15,7 @@ import Toaster from "../Toaster";
 import noData from "../assets/no_data_found.gif";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import axios from "axios";
 
 export default function HomeProvider() {
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,12 @@ export default function HomeProvider() {
   const [longitude, setLongitude] = useState(null);
   const [data, setData] = useState([]);
   const [radius, setRadius] = useState(null);
+  const hunterId = localStorage.getItem("hunterId");
+  const providerId = localStorage.getItem("ProviderId");
+  const userType = hunterId ? "hunter" : "provider";
+  const userId = hunterId || providerId;
+  const [notifications, setNotifications] = useState([]);
+  const [massNotifications, setMassNotifications] = useState([]);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -117,7 +124,64 @@ export default function HomeProvider() {
     if (businessType && latitude !== null && longitude !== null) {
       handleAllData();
     }
-  }, [businessType, latitude, longitude]); // Runs when state updates
+  }, [businessType, latitude, longitude]);
+
+  const fetchNotifications = async () => {
+    if (!userId) return;
+    try {
+      const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
+      const response = await axios.get(url);
+      const notifications = Array.isArray(response.data.data)
+        ? response.data.data
+        : [];
+
+      setNotifications(notifications);
+
+      // Show count in toaster
+      setToastProps({
+        message: `You have ${notifications.length} new notifications`,
+        type: "info",
+        toastKey: Date.now(),
+      });
+    } catch (error) {
+      setToastProps({
+        message: "Failed to fetch notifications",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
+  const fetchMassNotifications = async () => {
+    try {
+      const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
+      const response = await axios.get(url);
+      const massNotifications = Array.isArray(response.data)
+        ? response.data
+        : [];
+
+      setMassNotifications(massNotifications);
+
+      // Show count in toaster
+      setToastProps({
+        message: `You have ${massNotifications.length} mass notifications`,
+        type: "info",
+        toastKey: Date.now(),
+      });
+    } catch (error) {
+      setToastProps({
+        message: "Failed to fetch mass notifications",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
+  // Call these functions in useEffect to trigger notifications on page load
+  useEffect(() => {
+    fetchNotifications();
+    fetchMassNotifications();
+  }, []);
 
   return (
     <>

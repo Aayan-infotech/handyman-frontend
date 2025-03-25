@@ -86,6 +86,7 @@ export default function Login() {
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
+        localStorage.setItem("hunterRefreshToken", response?.data?.data?.user?.refreshToken);
         localStorage.removeItem("ProviderToken");
         localStorage.removeItem("ProviderEmail");
         localStorage.removeItem("ProviderName");
