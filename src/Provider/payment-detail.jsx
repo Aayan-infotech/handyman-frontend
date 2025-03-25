@@ -16,7 +16,7 @@ export default function PaymentDetail() {
   return (
     <>
       <LoggedHeader />
-      <Link to="/provider/chat/1">
+      <Link to="/provider/admin/chat/">
         <div className="admin-message">
           <MdOutlineSupportAgent />
         </div>

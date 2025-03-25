@@ -126,16 +126,7 @@ export default function PricingProvider() {
         <div>
           <LoggedHeader />
           <div className="h-100">
-            <Link to="/provider/chat/1">
-              <div className="admin-message">
-                <MdOutlineSupportAgent />
-              </div>
-            </Link>
-            <div className="message">
-              <Link to="/provider/message">
-                <MdMessage />
-              </Link>
-            </div>
+          
             <div className="bg-second fixed-curl">
               <div className="container">
                 <div className="top-section-main py-4 px-lg-5">

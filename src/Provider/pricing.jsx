@@ -6,12 +6,15 @@ import axios from "axios";
 import Loader from "../Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { getProviderUser } from "../Slices/userSlice";
-
+import Button from "@mui/material/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import Form from "react-bootstrap/Form";
+import Toaster from "../Toaster";
 export default function MainProvider() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
-
+  const [voucher, setVoucher] = useState("");
   const name = localStorage.getItem("ProviderName");
   const dispatch = useDispatch();
   const token = localStorage.getItem("ProviderToken");
@@ -19,7 +22,11 @@ export default function MainProvider() {
   const navigate = useNavigate();
   const location = useLocation();
   const providerId = localStorage.getItem("ProviderId");
-
+  const [toastProps, setToastProps] = useState({
+    message: "",
+    type: "",
+    toastKey: 0,
+  });
   useEffect(() => {
     if (location.pathname === "/provider/pricing") {
       const getUploadProfile = async () => {
@@ -50,6 +57,28 @@ export default function MainProvider() {
 
   console.log(subscriptionStatus);
 
+  const handleCoupon = async () => {
+    try {
+      const response = await axios.post(
+        "http://3.223.253.106:7777/api/voucher/apply",
+        { code: voucher, userId: providerId }
+      );
+      console.log(response);
+      setToastProps({
+        message: "Copon Applied Successfully",
+        type: "success",
+        toastKey: Date.now(),
+      });
+    } catch (error) {
+      console.log(error);
+      setToastProps({
+        message: error?.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
   useEffect(() => {
     if (subscriptionStatus === 0) {
       const getData = async () => {
@@ -77,21 +106,37 @@ export default function MainProvider() {
       ) : (
         <div>
           <LoggedHeader />
-          <Link to="/provider/chat/1">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
-          </Link>
-          <div className="message">
-            <Link to="/provider/message">
-              <MdMessage />
-            </Link>
-          </div>
+
           <div className="bg-second">
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">
-                <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
-                  <h5 className="user">Hello {name}</h5>
+                <div className="row ">
+                  <div className="col-lg-4">
+                    <h5 className="user d-flex justify-content-center justify-content-lg-start">
+                      Hello {name}
+                    </h5>
+                  </div>
+
+                  <div className="col-lg-4 ms-auto">
+                    <InputGroup>
+                      <Form.Control
+                        placeholder="Do you have any voucher?"
+                        aria-describedby="basic-addon1"
+                        className=" border-0"
+                        value={voucher}
+                        onChange={(e) => setVoucher(e.target.value)}
+                        style={{ borderRadius: "20px 0px 0px 20px" }}
+                      />
+                      <Button
+                        variant="contained"
+                        color="success"
+                        className=" custom-green bg-green-custom"
+                        onClick={() => handleCoupon()}
+                      >
+                        Apply
+                      </Button>
+                    </InputGroup>
+                  </div>
                 </div>
                 <div className="row py-3 gy-4 mt-lg-4">
                   {data?.map((item) => (
@@ -124,6 +169,12 @@ export default function MainProvider() {
           </div>
         </div>
       )}
+
+      <Toaster
+        message={toastProps.message}
+        type={toastProps.type}
+        toastKey={toastProps.toastKey}
+      />
     </>
   );
 }
