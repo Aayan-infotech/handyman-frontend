@@ -50,6 +50,8 @@ import ServicesProvider from "./User/services-provider";
 import AdminChat from "./Chat/admin-chat";
 import { getProviderUser } from "./Slices/userSlice";
 import { useDispatch } from "react-redux";
+import BlogDetail from "./components/blogsDetails";
+
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
   return !!(
@@ -76,7 +78,14 @@ function App() {
             path="/search"
             element={<UnProtectedRoute element={<Search />} />}
           />
-          <Route
+
+<Route exact path="/blog-detail/:id" 
+  element={<UnProtectedRoute element={<BlogDetail />} />}
+/>
+
+
+{/* <Route exact path="/blog-detail" component={BlogDetail} />      */}
+     <Route
             path="/welcome"
             element={<UnProtectedRoute element={<Welcome />} />}
           />

@@ -26,19 +26,23 @@ import company6 from "./assets/company/company6.png";
 import company7 from "./assets/company/company7.png";
 import Autocomplete from "react-google-autocomplete";
 import { useNavigate } from "react-router-dom";
+import Grid from '@mui/material/Grid';
+
 import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { Row, Col, Form } from "react-bootstrap";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaLinkedin,
-  FaDribbble,
-} from "react-icons/fa";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import CardActionArea from '@mui/material/CardActionArea';
+
+import { FaFacebook, FaTwitter, FaInstagram ,FaDribbble,FaLinkedin  } from 'react-icons/fa';
 import axios from "axios";
+
+
 function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
@@ -61,7 +65,36 @@ function Home() {
         setBusinessData(limitedData);
       });
   }, []);
-
+  const blogs = [
+    {
+      id: 1,
+      title: 'Blog Title 1',
+      date: '2025-03-25',
+      image: 'https://media.istockphoto.com/id/2152960546/photo/young-woman-using-digital-tablet-at-home.jpg?s=1024x1024&w=is&k=20&c=27V7LRjvBh65_Zv0F5SNnHBh-_HAutLlkX-KXUgUmxk=',
+      description: 'This is a short description for Blog 1. It provides a preview of the content.'
+    },
+    {
+      id: 2,
+      title: 'Blog Title 2',
+      date: '2025-03-24',
+      image: 'https://media.istockphoto.com/id/656630294/photo/more-and-more-people-are-following-her-blog-each-day.jpg?s=1024x1024&w=is&k=20&c=bnKqk262BCIEkRvFHKJMhvtSOLZcFCmQObrKoHmTjxM=',
+      description: 'This is a short description for Blog 2. It gives an overview of the post\'s topic.'
+    },
+    {
+      id: 3,
+      title: 'Blog Title 3',
+      date: '2025-03-23',
+      image: 'https://media.istockphoto.com/id/656630294/photo/more-and-more-people-are-following-her-blog-each-day.jpg?s=1024x1024&w=is&k=20&c=bnKqk262BCIEkRvFHKJMhvtSOLZcFCmQObrKoHmTjxM=',
+      description: 'This is a short description for Blog 3. It gives a sneak peek into the blog content.'
+    },
+    {
+      id: 4,
+      title: 'Blog Title 4',
+      date: '2025-03-22',
+      image: 'https://media.istockphoto.com/id/1683003373/photo/woman-using-digital-tablet.jpg?s=1024x1024&w=is&k=20&c=G9IQtm2vJw1u2Yi6DcECyR18hOiept628VXgkbf1m_A=',
+      description: 'This is a short description for Blog 4. A preview of what readers can expect in the blog.'
+    }
+  ];
   useEffect(() => {
     axios
       .get("http://3.223.253.106:7777/api/jobs/getRecentJobs")
@@ -75,6 +108,7 @@ function Home() {
   const handleChange = (event) => {
     setAge(event.target.value);
   };
+
 
   const handleClickForSignup = () => {
     navigate("/provider/login"); // Navigate to /login route
@@ -605,6 +639,52 @@ function Home() {
         </div>
       </div>
 
+
+
+{/* Blogs Section */}
+
+<Container>
+      <Grid container justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h5" fontWeight="bold">Our Blogs</Typography>
+        <Button component={Link} to="/all-blogs" variant="contained" color="primary">Show All Blogs</Button>
+      </Grid>
+      <Grid container spacing={4}>
+        {blogs.map((blog) => (
+          <Grid item xs={12} sm={6} md={3} key={blog.id}>
+            <Card sx={{ maxWidth: 345 }}>
+              <CardActionArea component={Link} to={`/blog-detail/${blog.id}`}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={blog.image}
+                  alt={blog.title}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="div">
+                    {blog.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {blog.description}
+                  </Typography>
+                  <Typography variant="caption" display="block" color="text.secondary" mt={1}>
+                    {blog.date}
+                  </Typography>
+                  <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
+                    <FaFacebook size={20} color="#1877F2" />
+                    <FaTwitter size={20} color="#1DA1F2" />
+                    <FaInstagram size={20} color="#E4405F" />
+                    <FaDribbble size={20} color="#EA4C89" />
+                  </div>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+
+
+
       <footer className="footer text-light">
         <Container>
           <Row>
@@ -633,6 +713,11 @@ function Home() {
                         Pricing
                       </a>
                     </li> */}
+                       <li>
+                      <a href="terms" className="text-light">
+                        Blogs
+                      </a>
+                    </li>
                     <li>
                       <a href="terms" className="text-light">
                         Terms
