@@ -22,7 +22,7 @@ import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { MdOutlineSupportAgent } from "react-icons/md";
-
+import OutlinedInput from "@mui/material/OutlinedInput";
 function getStyles(name, personName, theme) {
   return {
     fontWeight: personName.includes(name)
@@ -235,12 +235,14 @@ export default function NewJob() {
                   <div className="col-lg-4">
                     <FormControl className="w-100 ">
                       <Select
-                        labelId="demo-multiple-name-label"
                         className="input1 bg-white p-1"
                         id="demo-multiple-name"
                         multiple
+                        input={<OutlinedInput />}
                         value={businessType}
                         onChange={handleChange}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
                         // renderValue={(selected) =>
                         //   selected
                         //     .map(
@@ -250,8 +252,16 @@ export default function NewJob() {
                         //     )
                         //     .join(", ")
                         // }
-                        renderValue={(selected) => selected.join(", ")}
+                        renderValue={(selected) => {
+                          if (selected.length === 0) {
+                            return <span>Choose Business Type</span>;
+                          }
+                          return selected.join(", ");
+                        }}
                       >
+                        <MenuItem value="" disabled>
+                          Choose Business Type
+                        </MenuItem>
                         {businessData.map((data) => (
                           <MenuItem key={data._id} value={data?.name}>
                             {data?.name}

@@ -41,6 +41,7 @@ const sendMessage = async (
       receiverId,
       senderId,
       jobId,
+      chatId,
     };
 
     const users = {
@@ -107,6 +108,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [validMessageData, setValidMessageData] = useState(null);
   console.log("message data in chat", messages);
   console.log("chat id in chat", chatId);
+
   const chatMessage = selectedChat?.messages;
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -158,6 +160,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
     new URLSearchParams(location.search).get("jobId") ||
     messageData?.jobPost?._id ||
     selectedChat?.users?.jobId;
+
+  console.log("job id in chat", jobId);
   useEffect(() => {
     const storedUserId = location.pathname.includes("/provider")
       ? localStorage.getItem("ProviderId")
@@ -176,7 +180,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
         const allMessages = Object.values(snapshot.val());
         console.log("allMessages", allMessages);
         // Filter messages based on selected chatId
-        const filteredMessages = allMessages
+        const filteredMessages = [allMessages[0] || allMessages]
           .filter((chat) => chat.chatId === chatId) // Ensuring only relevant chat messages are selected
           .flatMap((chat) => Object.values(chat.messages))
           .sort((a, b) => a.timeStamp - b.timeStamp);
@@ -187,6 +191,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   }, [chatId]);
 
   console.log("messages1", messages);
+  console.log("messagesPeople", messagesPeople);
 
   useEffect(() => {
     console.log("currentUser", currentUser);
@@ -211,7 +216,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       currentUser,
       false,
       setMessagesPeople,
-      selectedChat?.users?.jobId
+      selectedChat?.users?.jobId || jobId
     );
     setMsg("");
   };
@@ -384,7 +389,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
               </>
             ) : (
               <>
-                {messages?.map((msg, index) => (
+                {[messages || messagesPeople]?.map((msg, index) => (
                   <div
                     key={index}
                     className={

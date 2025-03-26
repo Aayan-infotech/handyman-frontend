@@ -170,6 +170,13 @@ export default function Message() {
 
   if (loading) return <Loader />;
 
+  const filteredMessages = messages.filter((item) => {
+    const contactName = !userFinder
+      ? messageData[item.chatId]?.receiver?.contactName || messageData[item.chatId]?.receiver?.name
+      : messageData[item.chatId]?.sender?.contactName || messageData[item.chatId]?.sender?.name;
+    return contactName;
+  });
+
   console.log(
     "messageData[item.chatId]?.receiver?.name",
     messageData["67d1308e4081444fc023f371_chat_67d167d4a30bfff27ce92f11"]
@@ -205,7 +212,7 @@ export default function Message() {
                 className={open ? "col-lg-6 d-none d-lg-block" : "col-lg-12"}
               >
                 <div className="d-flex flex-column gap-3 message-box">
-                  {messages.length === 0 ? (
+                  {filteredMessages.length === 0 ? (
                     <div className="d-flex justify-content-center">
                       <img
                         src={noData}
@@ -239,7 +246,7 @@ export default function Message() {
                       </Stack>
                     </>
                   ) : (
-                    messages.map((item) => (
+                    filteredMessages.map((item) => (
                       <Link
                         className="text-decoration-none"
                         onClick={() => handleSendMessage(item)} // Pass chat data to handleSendMessage

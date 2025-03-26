@@ -39,9 +39,7 @@ export default function MyProfile() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [gallery, setGallery] = useState([]);
 
-  const [openModal, setOpenModal] = useState(false);  // State to control modal visibility
-
-
+  const [openModal, setOpenModal] = useState(false); // State to control modal visibility
 
   const userId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId"); //new
@@ -97,7 +95,6 @@ export default function MyProfile() {
     formData.append("userId", userId);
 
     try {
-
       const response = await axios.post(
         "http://3.223.253.106:7777/api/backgroundImg/upload",
         formData
@@ -165,14 +162,12 @@ export default function MyProfile() {
     }
   };
 
-
-
   const fetchGallery = async () => {
     try {
       const response = await axios.get(
         `http://3.223.253.106:7777/api/providerPhoto/${providerId}`
       );
-      console.log(response?.data?.data?.files)
+      console.log(response?.data?.data?.files);
       setGallery(response?.data?.data?.files);
     } catch (error) {
       console.error("Failed to fetch gallery:", error);
@@ -272,7 +267,8 @@ export default function MyProfile() {
       }
 
       const response = await axios.delete(
-        `http://3.223.253.106:7777/api/DeleteAccount/${providerId ? "provider" : "delete"
+        `http://3.223.253.106:7777/api/DeleteAccount/${
+          providerId ? "provider" : "delete"
         }/${providerId || hunterId}`
       );
 
@@ -329,29 +325,38 @@ export default function MyProfile() {
           </div>
           <div className="bg-second pb-3">
             <div className="container">
-
-<div className="profile-container position-relative">
-  <div className="image-shadow">
-    <img className="w-100 rounded-4" src={backgroundImg || "default-image.jpg"} alt="background" />
-    <div className="exper position-absolute bottom-0 end-0 m-3">
-      <button
-        className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
-        style={{ backgroundColor: "#32de84", color: "#fff", border: "none" }}
-        onClick={() => document.getElementById("fileInput").click()}
-      >
-        <FaPen />
-        <span>Change Cover</span>
-      </button>
-      <input
-        type="file"
-        id="fileInput"
-        style={{ display: "none" }}
-        onChange={handleImageUpload}
-        accept="image/*"
-      />
-    </div>
-  </div>
-</div>
+              <div className="profile-container position-relative">
+                <div className="image-shadow">
+                  <img
+                    className="w-100 rounded-4"
+                    src={backgroundImg || "default-image.jpg"}
+                    alt="background"
+                  />
+                  <div className="exper position-absolute bottom-0 end-0 m-3">
+                    <button
+                      className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                      style={{
+                        backgroundColor: "#32de84",
+                        color: "#fff",
+                        border: "none",
+                      }}
+                      onClick={() =>
+                        document.getElementById("fileInput").click()
+                      }
+                    >
+                      <FaPen />
+                      <span>Change Cover</span>
+                    </button>
+                    <input
+                      type="file"
+                      id="fileInput"
+                      style={{ display: "none" }}
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+              </div>
               <div className="row gy-4 gx-lg-3">
                 <div className="col-lg-3">
                   <div className="position-relative ">
@@ -379,10 +384,15 @@ export default function MyProfile() {
                       <p className="mt-3">{aboutText}</p> // Show updated "about" text
                     ) : (
                       <button
-                        className="btn btn-primary mt-3"
+                        className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                        style={{
+                          backgroundColor: "#32de84",
+                          color: "#fff",
+                          border: "none",
+                        }}
                         onClick={() => setShowModal(true)}
                       >
-                        Added Description
+                        Add Description
                       </button>
                     )}
                   </div>
@@ -495,11 +505,6 @@ export default function MyProfile() {
                 </div>
               </div>
 
-
-
-
-
-
               {Location.pathname.includes("provider") ? (
                 <div className="d-flex flex-row flex-wrap justify-content-lg-start justify-content-center gap-1 gap-lg-2 align-items-center profile my-4">
                   {businessType.map((type, index) => (
@@ -515,57 +520,58 @@ export default function MyProfile() {
                 ""
               )}
 
-
-             
-
-   <div className="card border-0 rounded-5">
-        <div className="card-body py-4 px-lg-4">
-          <div className="d-flex align-items-center justify-content-between">
-            <h4 className="mb-0">Added your work gallery here</h4>
-            <input type="file" onChange={handleFileChange} />
-            <button
-              className="btn btn-success rounded-3"
-              onClick={handleUpload}
-            >
-              ADD
-            </button>
-          </div>
-          {/* Gallery Images */}
-          <div className="row mt-4">
-            {gallery.length > 0 ? (
-              gallery.map((image, index) => (
-                <div key={index} className="col-md-4 mb-3">
-                  <div className="card">
-                    <img
-                      src={image}
-                      alt="Gallery Item"
-                      className="card-img-top"
-                    />
+              <div className="card border-0 rounded-5">
+                <div className="card-body py-4 px-lg-4">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h4 className="mb-0">Added your work gallery here</h4>
+                    <input type="file" onChange={handleFileChange} />
+                    <button
+                      className="btn btn-success rounded-3"
+                      onClick={handleUpload}
+                    >
+                      ADD
+                    </button>
+                  </div>
+                  {/* Gallery Images */}
+                  <div className="row mt-4">
+                    {gallery.length > 0 ? (
+                      gallery.map((image, index) => (
+                        <div key={index} className="col-md-4 mb-3">
+                          <div className="card">
+                            <img
+                              src={image}
+                              alt="Gallery Item"
+                              className="card-img-top"
+                            />
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center mt-3">
+                        No images uploaded yet.
+                      </p>
+                    )}
                   </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-center mt-3">No images uploaded yet.</p>
-            )}
-          </div>
-        </div>
-      </div>
+              </div>
               <div className="row gy-4 my-4">
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   {hunterToken ? (
                     <Link to={`/changePassword/${id}`}>
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
-                              }`}
+                            className={`d-flex gap-3 align-items-center justify-content-center ${
+                              Location.pathname.includes("provider")
+                                ? "flex-column"
+                                : "flex-row"
+                            }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -589,13 +595,12 @@ export default function MyProfile() {
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
-                              }`}
+                            className={`d-flex gap-3 align-items-center justify-content-center ${
+                              Location.pathname.includes("provider")
+                                ? "flex-column"
+                                : "flex-row"
+                            }`}
                           >
-
-
                             <div className="circle-container">
                               <div className="progress-circle">
                                 <div className="lock-icon">
@@ -603,11 +608,6 @@ export default function MyProfile() {
                                 </div>
                               </div>
                             </div>
-
-
-
-
-
 
                             <div className="d-flex flex-row gap-3 align-items-center">
                               <span className="text-success text-center">
@@ -621,19 +621,21 @@ export default function MyProfile() {
                   )}
                 </div>
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "d-none"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "d-none"
+                      : "col-lg-3"
+                  }`}
                 >
                   <Link to="/change-radius">
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                            }`}
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -654,18 +656,20 @@ export default function MyProfile() {
                   </Link>
                 </div>
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                          ? "flex-column"
-                          : "flex-row"
-                          }`}
+                        className={`d-flex gap-3 align-items-center justify-content-center ${
+                          Location.pathname.includes("provider")
+                            ? "flex-column"
+                            : "flex-row"
+                        }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
@@ -686,24 +690,27 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={`${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   <Link
-                    to={`${Location.pathname.includes("provider")
-                      ? "/provider/job-history"
-                      : "/home"
-                      }`}
+                    to={`${
+                      Location.pathname.includes("provider")
+                        ? "/provider/job-history"
+                        : "/home"
+                    }`}
                   >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                            }`}
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -727,18 +734,20 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "d-none"
-                    }`}
+                  className={`${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "d-none"
+                  }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                          ? "flex-column"
-                          : "flex-row"
-                          }`}
+                        className={`d-flex gap-3 align-items-center justify-content-center ${
+                          Location.pathname.includes("provider")
+                            ? "flex-column"
+                            : "flex-row"
+                        }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
