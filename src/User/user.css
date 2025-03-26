@@ -425,11 +425,9 @@
 
 .image-shadow {
   position: relative;
-
 }
 
-
-.image-shadow img{
+.image-shadow img {
   max-height: 300px;
   object-fit: contain;
   object-position: top;
@@ -730,6 +728,21 @@
 @media screen and (max-width: 768px) {
   .login .card {
     width: calc(100% - 8%);
+  }
+  .image-shadow .exper {
+    position: absolute;
+    left: 0;
+    right: 5px;
+    bottom: 0%;
+    /* width: 100%; */
+    /* margin: auto; */
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+    top: -10px !important;
+    align-items: start;
+    justify-content: center;
+    display: flex;
   }
 
   .login .hr {

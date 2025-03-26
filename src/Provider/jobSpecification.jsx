@@ -42,7 +42,7 @@ export default function JobSpecification() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/acceptCount/${ProviderId}`,
+        `http://3.223.253.106:7777/api/provider/acceptCount/${ProviderId}`
       );
       if (response.status === 200) {
         setShow(true);
@@ -164,23 +164,24 @@ export default function JobSpecification() {
                           <Chip label={item} variant="outlined" key={index} />
                         ))}
                       </div>
-                      <ul className="list-unstyled d-flex flex-column gap-2">
-                        <li>
-                          <FaRegCheckCircle /> Sed ut perspiciatis unde omnis
-                        </li>
-                        <li>
-                          <FaRegCheckCircle /> Doloremque laudantium
-                        </li>
-                        <li>
-                          <FaRegCheckCircle /> Ipsa quae ab illo inventore
-                        </li>
-                        <li>
-                          <FaRegCheckCircle /> Architecto beatae vitae dicta
-                        </li>
-                        <li>
-                          <FaRegCheckCircle /> Sunt explicabo
-                        </li>
-                      </ul>
+                      <div className="mt-4">
+                        <h3>Uploaded Document</h3>
+                        <div className="row g-2 gy-3">
+                          {data.documents ? (
+                            data.documents.map((doc, index) => (
+                              <div className="col-lg-4" key={index}>
+                                <img
+                                  src={doc}
+                                  alt="document"
+                                  className="w-100 h-100 px-1"
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <p>No document uploaded</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
 

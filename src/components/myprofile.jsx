@@ -781,8 +781,6 @@
 //   );
 // }
 
-
-
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./loggedNavbar";
 import {
@@ -797,7 +795,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaLock, FaPen } from "react-icons/fa";
 import { PiCircleHalfFill } from "react-icons/pi";
 import Button from "react-bootstrap/Button";
-import Button2 from '@mui/material/Button'; // Import Button as Button2
+import Button2 from "@mui/material/Button"; // Import Button as Button2
 
 import { FiEdit } from "react-icons/fi";
 import { CiLogout } from "react-icons/ci";
@@ -812,10 +810,7 @@ import axios from "axios";
 import Toaster from "../Toaster";
 import notFound from "./assets/noprofile.png";
 import { Modal } from "react-bootstrap";
-import { styled } from '@mui/material/styles';
-
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
+import { styled } from "@mui/material/styles";
 export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
@@ -825,22 +820,19 @@ export default function MyProfile() {
   const [aboutText, setAboutText] = useState(""); // Store "about" text after saving
   const [fileToUpload, setFileToUpload] = useState(null); // Renamed 'selectedFile' to 'fileToUpload'
 
-
-
-  const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
     height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
+    overflow: "hidden",
+    position: "absolute",
     bottom: 0,
     left: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
     width: 1,
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [gallery, setGallery] = useState([]);
-
 
   const [openModal, setOpenModal] = useState(false); // State to control modal visibility
 
@@ -939,10 +931,6 @@ export default function MyProfile() {
   //   setSelectedFile(event.target.files[0]); // Sirf ek file select karega
   // };
 
-
- 
-  
-
   // const handleFileChange = (event) => {
   //   const files = event.target.files;
   //   if (files && files.length > 0) {
@@ -952,7 +940,7 @@ export default function MyProfile() {
   //   }
   // };
 
-  console.log("selectedFile", selectedFile)
+  console.log("selectedFile", selectedFile);
   const handleUpload = async () => {
     if (!selectedFile) {
       alert("Please select a file first.");
@@ -981,10 +969,11 @@ export default function MyProfile() {
     }
   };
 
-
   const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Get the first selected file
-    setSelectedFile(file); // Update the selected file in state
+    const file = event.target.files;
+    if (file.length > 0) {
+      setSelectedFile(file[0]);
+    }
   };
 
   const fetchGallery = async () => {
@@ -1092,7 +1081,8 @@ export default function MyProfile() {
       }
 
       const response = await axios.delete(
-        `http://3.223.253.106:7777/api/DeleteAccount/${providerId ? "provider" : "delete"
+        `http://3.223.253.106:7777/api/DeleteAccount/${
+          providerId ? "provider" : "delete"
         }/${providerId || hunterId}`
       );
 
@@ -1204,12 +1194,10 @@ export default function MyProfile() {
                       {user?.userType}
                     </h5>
 
-
-
-
                     {aboutText ? (
-                      <div>
-                        <p className="mt-3">{aboutText}</p> {/* Show updated "about" text */}
+                      <div className="d-flex flex-column align-items-center align-items-lg-start gap-1 justify-content-center justify-content-lg-start">
+                        <p className="mt-3">{aboutText}</p>{" "}
+                        {/* Show updated "about" text */}
                         <button
                           className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
                           style={{
@@ -1235,7 +1223,6 @@ export default function MyProfile() {
                         Add Description
                       </button>
                     )}
-
                   </div>
 
                   {/* Modal Component */}
@@ -1360,25 +1347,32 @@ export default function MyProfile() {
               ) : (
                 ""
               )}
-
-              <div className="card border-0 rounded-5">
-                <div className="card-body py-4 px-lg-4">
-                  {userType === "Provider" && ( // Show only for Provider
+              {userType === "Provider" && (
+                <div className="card border-0 rounded-5">
+                  <div className="card-body py-4 px-lg-4">
                     <div>
-                      <div className="d-flex align-items-center justify-content-between">
-                        <h4 className="mb-0">Added your work gallery here</h4>
+                      <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
+                        <h4 className="mb-0 text-center text-lg-start">
+                          Added your work gallery here
+                        </h4>
 
                         <Button2
                           component="label"
                           role={undefined}
                           variant="contained"
                           tabIndex={-1}
+                          onClick={handleUpload}
+                          style={{
+                            backgroundColor: "#32de84",
+                            color: "#fff",
+                            border: "none",
+                          }}
                         >
                           Upload files
                           <VisuallyHiddenInput
                             type="file"
                             onChange={handleFileChange}
-                            onClick={() => handleUpload}
+                            // onClick={() => handleUpload}
                             multiple
                           />
                         </Button2>
@@ -1388,18 +1382,16 @@ export default function MyProfile() {
                         {gallery.length > 0 ? (
                           gallery.map((image, index) => (
                             <div key={index} className="col-md-3 mb-3">
-                              <div className="card">
-                                <img
-                                  src={image}
-                                  alt="Gallery Item"
-                                  className="card-img-top"
-                                  style={{
-                                    width: '100%',
-                                    height: '200px',
-                                    objectFit: 'cover',
-                                  }}
-                                />
-                              </div>
+                              <img
+                                src={image}
+                                alt="Gallery Item"
+                                className=" rounded-5"
+                                style={{
+                                  width: "100%",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                }}
+                              />
                             </div>
                           ))
                         ) : (
@@ -1409,27 +1401,27 @@ export default function MyProfile() {
                         )}
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
-
-
-              </div>
- <div className="row gy-4 my-4">
+              )}
+              <div className="row gy-4 my-4">
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   {hunterToken ? (
                     <Link to={`/changePassword/${id}`}>
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
-                              }`}
+                            className={`d-flex gap-3 align-items-center justify-content-center ${
+                              Location.pathname.includes("provider")
+                                ? "flex-column"
+                                : "flex-row"
+                            }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -1453,10 +1445,11 @@ export default function MyProfile() {
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
-                              }`}
+                            className={`d-flex gap-3 align-items-center justify-content-center ${
+                              Location.pathname.includes("provider")
+                                ? "flex-column"
+                                : "flex-row"
+                            }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -1478,19 +1471,21 @@ export default function MyProfile() {
                   )}
                 </div>
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "d-none"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "d-none"
+                      : "col-lg-3"
+                  }`}
                 >
                   <Link to="/change-radius">
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                            }`}
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -1511,18 +1506,20 @@ export default function MyProfile() {
                   </Link>
                 </div>
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                          ? "flex-column"
-                          : "flex-row"
-                          }`}
+                        className={`d-flex gap-3 align-items-center justify-content-center ${
+                          Location.pathname.includes("provider")
+                            ? "flex-column"
+                            : "flex-row"
+                        }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
@@ -1543,24 +1540,27 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={`${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   <Link
-                    to={`${Location.pathname.includes("provider")
-                      ? "/provider/job-history"
-                      : "/home"
-                      }`}
+                    to={`${
+                      Location.pathname.includes("provider")
+                        ? "/provider/job-history"
+                        : "/home"
+                    }`}
                   >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                            }`}
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -1584,18 +1584,20 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "d-none"
-                    }`}
+                  className={`${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "d-none"
+                  }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                          ? "flex-column"
-                          : "flex-row"
-                          }`}
+                        className={`d-flex gap-3 align-items-center justify-content-center ${
+                          Location.pathname.includes("provider")
+                            ? "flex-column"
+                            : "flex-row"
+                        }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
