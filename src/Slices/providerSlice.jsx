@@ -41,7 +41,7 @@ export const getProviderJobs = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/getJobs`,
+        `http://3.223.253.106:7777/api/provider/getNearbyJobs`,
         {
           businessType,
           longitude,

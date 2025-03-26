@@ -54,18 +54,20 @@ export default function Message() {
         );
 
         if (response.status === 200) {
-          return { chatId: message.chatId, data: response.data.data };
+          return {
+            chatId: message.chatId,
+            data: response.data.data,
+            jobData: response.data.data.job || {},
+          };
         }
         return null;
       });
 
       // Wait for all API calls to complete
       const results = await Promise.all(apiCalls);
-
-      // Store the results in messageData state
       const newMessageData = results.reduce((acc, result) => {
         if (result) {
-          acc[result.chatId] = result.data;
+          acc[result.chatId] = { ...result.data, jobData: result.data.jobPost };
         }
         return acc;
       }, {});
@@ -162,7 +164,7 @@ export default function Message() {
 
   // Updated handleSendMessage to accept chat data
   const handleSendMessage = (chat) => {
-    setSelectedChat(chat); // Set the selected chat
+    setSelectedChat({ ...chat, jobData: messageData[chat.chatId]?.jobData }); // Set the selected chat
     setOpen(!open); // Toggle the chat window
   };
 
@@ -170,11 +172,14 @@ export default function Message() {
 
   if (loading) return <Loader />;
 
-  const filteredMessages = messages.filter((item) => {
-    const contactName = !userFinder
-      ? messageData[item.chatId]?.receiver?.contactName || messageData[item.chatId]?.receiver?.name
-      : messageData[item.chatId]?.sender?.contactName || messageData[item.chatId]?.sender?.name;
-    return contactName;
+  const filteredMessages = messages.map((item) => {
+    const isSender = item.users.senderId === currentUser;
+    return {
+      ...item,
+      displayUser: isSender
+        ? messageData[item.chatId]?.receiver
+        : messageData[item.chatId]?.sender,
+    };
   });
 
   console.log(
@@ -263,31 +268,12 @@ export default function Message() {
                             >
                               <Avatar
                                 alt="Image"
-                                src={
-                                  !userFinder
-                                    ? messageData[item.chatId]?.receiver?.images
-                                    : messageData[item.chatId]?.sender?.images
-                                }
+                                src={item.displayUser?.images}
                                 className="w-100"
                                 style={{ height: "82px", width: "82px" }}
                               >
-                                {!userFinder
-                                  ? messageData[
-                                      item.chatId
-                                    ]?.receiver?.contactName
-                                      ?.toUpperCase()
-                                      ?.charAt(0) ||
-                                    messageData[item.chatId]?.receiver?.name
-                                      ?.toUpperCase()
-                                      ?.charAt(0)
-                                  : messageData[
-                                      item.chatId
-                                    ]?.sender?.contactName
-                                      ?.toUpperCase()
-                                      ?.charAt(0) ||
-                                    messageData[item.chatId]?.sender?.name
-                                      ?.toUpperCase()
-                                      ?.charAt(0)}
+                                {item.displayUser?.contactName?.[0] ||
+                                  item.displayUser?.name?.[0]}
                               </Avatar>
                             </div>
 
@@ -298,13 +284,8 @@ export default function Message() {
                             >
                               <div className="d-flex flex-column gap-1">
                                 <h5 className="mb-0 fw-bold fs-5 text-dark">
-                                  {!userFinder
-                                    ? messageData[item.chatId]?.receiver
-                                        ?.contactName ||
-                                      messageData[item.chatId]?.receiver?.name
-                                    : messageData[item.chatId]?.sender?.name ||
-                                      messageData[item.chatId]?.sender
-                                        ?.contactName}
+                                  {item.displayUser?.contactName ||
+                                    item.displayUser?.name}
                                 </h5>
                                 <p className="mb-0 fw-medium fs-6 text-dark">
                                   {item?.messages?.msg}

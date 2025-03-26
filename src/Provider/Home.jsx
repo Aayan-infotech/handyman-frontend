@@ -19,7 +19,7 @@ import axios from "axios";
 
 export default function HomeProvider() {
   const [loading, setLoading] = useState(false);
-  const [businessType, setBusinessType] = useState("");
+  const [businessType, setBusinessType] = useState([]);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [data, setData] = useState([]);
@@ -48,7 +48,7 @@ export default function HomeProvider() {
       const result = await dispatch(getProviderUser());
       if (result.payload?.status === 200) {
         const { businessType, address } = result.payload.data;
-        setBusinessType(businessType[0]);
+        setBusinessType(businessType);
         setLatitude(address?.location?.coordinates?.[1] || null);
         setLongitude(address?.location?.coordinates?.[0] || null);
         setRadius(address?.radius || null);
