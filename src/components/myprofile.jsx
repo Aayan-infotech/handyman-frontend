@@ -52,8 +52,6 @@ export default function MyProfile() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [gallery, setGallery] = useState([]);
 
-  const [openModal, setOpenModal] = useState(false); // State to control modal visibility
-
   const userId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId"); //new
   const userType = localStorage.getItem("hunterToken") ? "Hunter" : "Provider"; // new
@@ -95,6 +93,7 @@ export default function MyProfile() {
       console.error("Error fetching background image:", error);
     }
   };
+
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -144,8 +143,8 @@ export default function MyProfile() {
       })
       .catch((error) => console.error("Error updating about:", error));
   };
- // Handle file change and trigger upload
-   const handleFileChange = (event) => {
+  // Handle file change and trigger upload
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
@@ -180,17 +179,22 @@ export default function MyProfile() {
     }
   };
 
-  // Fetch the gallery images after upload
+
+
+
   const fetchGallery = async () => {
     try {
       const response = await axios.get(
         `http://3.223.253.106:7777/api/providerPhoto/${providerId}` // Adjust API endpoint
       );
-    
-      console.log(response.data.data.files,'....galllery')
+
       if (response.data && response.data.data.files) {
-        setGallery(response.data.data.files); // Set the gallery state to the 'files' array containing image URLs
-      
+        const files = response.data.data.files; // Extract 'files' array
+        const urls = files.map(file => file.url); // Extract URLs from files
+
+        console.log(urls, '....gallery URLs');
+        setGallery(urls); // Set the gallery state with URLs
+
       } else {
         console.error("No images found in the response.");
       }
@@ -198,6 +202,7 @@ export default function MyProfile() {
       console.error("Failed to fetch gallery:", error);
     }
   };
+
 
   useEffect(() => {
     fetchGallery(); // Fetch gallery images when the component mounts
@@ -593,50 +598,34 @@ export default function MyProfile() {
                       </div>
 
 
-{/* <div className="row mt-4">
-        {gallery.length > 0 ? (
-          gallery.map((image, index) => (
-            <div key={index} className="col-md-3 mb-3">
-              <img
-                src={image}
-                alt="Gallery Item"
-                className="rounded-5"
-                style={{
-                  width: "100%",
-                  height: "200px",
-                  objectFit: "cover",
-                }}
-              />
-            </div>
-          ))
-        ) : (
-          <p className="text-center mt-3">No images uploaded yet.</p>
-        )}
-      </div> */}
 
-<div className="row mt-4">
-        {gallery.length > 0 ? (
-          gallery.map((image, index) => {
-            console.log("Rendering image:", image);  // Log the image URLs
-            return (
-              <div key={index} className="col-md-3 mb-3">
-                <img
-                  src={image}  // Image URL from the 'files' array
-                  alt="Gallery Item"
-                  className="rounded-5"
-                  style={{
-                    width: "100%",
-                    height: "200px",
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-            );
-          })
-        ) : (
-          <p className="text-center mt-3">No images uploaded yet.</p>
-        )}
-      </div>
+                      <div className="row mt-4">
+                        {gallery.length > 0 ? (
+                          gallery.map((image, index) => {
+                            console.log("Rendering image:", image);  // Log the image URLs
+                            return (
+                              <div key={index} className="col-md-3 mb-3">
+                                <img
+                                  src={image}  // Image URL from the 'files' array
+                                  alt="Gallery Item"
+                                  className="rounded-5"
+                                  style={{
+                                    width: "100%",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <p className="text-center mt-3">No images uploaded yet.</p>
+                        )}
+                      </div>
+
+
+
+
                     </div>
                   </div>
                 </div>
@@ -645,8 +634,8 @@ export default function MyProfile() {
               <div className="row gy-4 my-4">
                 <div
                   className={` ${Location.pathname.includes("provider")
-                      ? "col-lg-2"
-                      : "col-lg-3"
+                    ? "col-lg-2"
+                    : "col-lg-3"
                     }`}
                 >
                   {hunterToken ? (
@@ -655,8 +644,8 @@ export default function MyProfile() {
                         <div className="card-body">
                           <div
                             className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                                ? "flex-column"
-                                : "flex-row"
+                              ? "flex-column"
+                              : "flex-row"
                               }`}
                           >
                             <div className="circle-container">
@@ -682,8 +671,8 @@ export default function MyProfile() {
                         <div className="card-body">
                           <div
                             className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                                ? "flex-column"
-                                : "flex-row"
+                              ? "flex-column"
+                              : "flex-row"
                               }`}
                           >
                             <div className="circle-container">
@@ -707,8 +696,8 @@ export default function MyProfile() {
                 </div>
                 <div
                   className={` ${Location.pathname.includes("provider")
-                      ? "d-none"
-                      : "col-lg-3"
+                    ? "d-none"
+                    : "col-lg-3"
                     }`}
                 >
                   <Link to="/change-radius">
@@ -716,8 +705,8 @@ export default function MyProfile() {
                       <div className="card-body">
                         <div
                           className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
+                            ? "flex-column"
+                            : "flex-row"
                             }`}
                         >
                           <div className="circle-container">
@@ -740,16 +729,16 @@ export default function MyProfile() {
                 </div>
                 <div
                   className={` ${Location.pathname.includes("provider")
-                      ? "col-lg-2"
-                      : "col-lg-3"
+                    ? "col-lg-2"
+                    : "col-lg-3"
                     }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
                         className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
+                          ? "flex-column"
+                          : "flex-row"
                           }`}
                       >
                         <div className="circle-container">
@@ -772,22 +761,22 @@ export default function MyProfile() {
 
                 <div
                   className={`${Location.pathname.includes("provider")
-                      ? "col-lg-2"
-                      : "col-lg-3"
+                    ? "col-lg-2"
+                    : "col-lg-3"
                     }`}
                 >
                   <Link
                     to={`${Location.pathname.includes("provider")
-                        ? "/provider/job-history"
-                        : "/home"
+                      ? "/provider/job-history"
+                      : "/home"
                       }`}
                   >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
                           className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
+                            ? "flex-column"
+                            : "flex-row"
                             }`}
                         >
                           <div className="circle-container">
@@ -813,16 +802,16 @@ export default function MyProfile() {
 
                 <div
                   className={`${Location.pathname.includes("provider")
-                      ? "col-lg-2"
-                      : "d-none"
+                    ? "col-lg-2"
+                    : "d-none"
                     }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
                         className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
+                          ? "flex-column"
+                          : "flex-row"
                           }`}
                       >
                         <div className="circle-container">
