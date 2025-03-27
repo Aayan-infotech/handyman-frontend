@@ -178,17 +178,22 @@ export default function Chat({ messageData, messages, selectedChat }) {
     onValue(chatMessagesRef, (snapshot) => {
       if (snapshot.exists()) {
         const allMessages = Object.values(snapshot.val());
-        console.log("allMessages", allMessages);
-        // Filter messages based on selected chatId
-        const filteredMessages = [allMessages[0] || allMessages]
-          .filter((chat) => chat.chatId === chatId) // Ensuring only relevant chat messages are selected
-          .flatMap((chat) => Object.values(chat.messages))
+
+        // Extract messages from all chat objects
+        const chatMessages = allMessages.flatMap((chat) =>
+          chat.messages ? Object.values(chat.messages) : []
+        );
+
+        // Filter messages based on chatId
+        const filteredMessages = chatMessages
+          .filter((msg) => msg.chatId === chatId)
           .sort((a, b) => a.timeStamp - b.timeStamp);
 
         setMessagesPeople(filteredMessages);
+        console.log("Filtered Messages:", filteredMessages);
       }
     });
-  }, [chatId]);
+  }, [chatId, jobId]);
 
   console.log("messages1", messages);
   console.log("messagesPeople", messagesPeople);
@@ -231,15 +236,12 @@ export default function Chat({ messageData, messages, selectedChat }) {
     }
   };
 
-  const handleJobAccept = async () => {
+  console.log("storedUserId", storedUserId);
+  const handleCompletedJob = async ({ id }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://3.223.253.106:7777/api/jobpost/changeJobStatus/${jobId}`,
-        {
-          jobStatus: "Assigned",
-          providerId: localStorage.getItem("ProviderId"),
-        },
+        `http://3.223.253.106:7777/api/provider/completedCount/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -263,11 +265,50 @@ export default function Chat({ messageData, messages, selectedChat }) {
       });
     }
   };
+  const handleJobAccept = async ({ id }) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `http://3.223.253.106:7777/api/jobpost/changeJobStatus/${jobId}`,
+        {
+          jobStatus: "Assigned",
+          providerId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setLoading(false);
+      console.log(response);
+      setToastProps({
+        message: response.message,
+        type: "success",
+        toastKey: Date.now(),
+      });
+      selectedChat.jobData.jobStatus = "Assigned";
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setToastProps({
+        message: error,
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
   useEffect(() => {
     handleProvider();
   }, [location]);
 
-  console.log("messageData in chat", messageData);
+  const dobFunction = ({ id }) => {
+    handleCompletedJob({ id });
+    handleJobAccept({ id });
+  };
+
+  console.log("messageData in chat", selectedChat);
 
   if (loading) return <Loader />;
 
@@ -280,19 +321,23 @@ export default function Chat({ messageData, messages, selectedChat }) {
               <div className="d-flex flex-row align-items-center gap-2 profile-icon">
                 <Avatar
                   alt="Image"
-                  src={messageData?.receiver?.images}
+                  src={selectedChat?.displayUser?.images}
                   style={{ height: "82px", width: "82px" }}
                 >
-                  {messageData?.receiver?.contactName
-                    ? messageData?.receiver?.contactName.toUpperCase().charAt(0)
-                    : messageData?.receiver?.name
-                    ? messageData?.receiver?.name.toUpperCase().charAt(0)
-                    : ""}
+                  {/* {selectedChat?.displayUser
+                    ? 
+                    : filteredMessage?.name
+                    ? filteredMessage?.name.toUpperCase().charAt(0)
+                    : ""} */}
+                  {selectedChat?.displayUser?.name?.toUpperCase().charAt(0) ||
+                    selectedChat?.displayUser?.contactName
+                      .toUpperCase()
+                      .charAt(0)}
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
                   <h5 className="mb-0 fw-medium fs-5 text-dark">
-                    {messageData?.receiver?.contactName ||
-                      messageData?.receiver?.name}
+                    {selectedChat?.displayUser?.name ||
+                      selectedChat?.displayUser?.contactName}
                   </h5>
                   {/* {!show ? (
                     <span className="text-muted fs-6">2m ago</span>
@@ -306,7 +351,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
             </div>
           </div>
         </div>
-        {hunterId && (
+        {hunterId && selectedChat?.jobData?.jobStatus === "Pending" && (
           <div className="container-fluid">
             <div className="row">
               <div className={`mw-condition mx-auto`}>
@@ -314,12 +359,16 @@ export default function Chat({ messageData, messages, selectedChat }) {
                   <div className="card-body px-4 py-3">
                     <span className="text-center d-flex justify-content-center">
                       Do you want to work with them for this job
-                      <br /> {selectedChat?.users?.jobId}
+                      <br /> {selectedChat?.jobData?.title}
                     </span>
                     <div className="d-flex justify-content-evenly mt-3">
                       <button
                         className="btn btn-primary px-5"
-                        onClick={handleJobAccept}
+                        onClick={() =>
+                          dobFunction({
+                            id: selectedChat?.displayUser?._id,
+                          })
+                        }
                       >
                         Yes
                       </button>
@@ -339,78 +388,74 @@ export default function Chat({ messageData, messages, selectedChat }) {
         >
           <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
             {messages?.length === 0 ? (
-              <>
-                <Stack spacing={1} className="d-block">
-                  <div className="fl-left ">
-                    <Skeleton
-                      variant="rounded"
-                      className="mb-3"
-                      animation="wave"
-                      width={210}
-                      height={20}
-                    />
-                    <Skeleton
-                      variant="rounded"
-                      className="mb-3"
-                      animation="wave"
-                      width={150}
-                      height={20}
-                    />
-                    <Skeleton
-                      variant="rounded"
-                      animation="wave"
-                      width={110}
-                      height={20}
-                    />
-                  </div>
-                  <div className="fl-right ">
-                    <Skeleton
-                      variant="rounded"
-                      className="mb-3"
-                      animation="wave"
-                      width={210}
-                      height={20}
-                    />
-                    <Skeleton
-                      variant="rounded"
-                      className="mb-3"
-                      animation="wave"
-                      width={150}
-                      height={20}
-                    />
-                    <Skeleton
-                      variant="rounded"
-                      animation="wave"
-                      width={110}
-                      height={20}
-                    />
-                  </div>
-                </Stack>
-              </>
+              <Stack spacing={1} className="d-block">
+                <div className="fl-left">
+                  <Skeleton
+                    variant="rounded"
+                    className="mb-3"
+                    animation="wave"
+                    width={210}
+                    height={20}
+                  />
+                  <Skeleton
+                    variant="rounded"
+                    className="mb-3"
+                    animation="wave"
+                    width={150}
+                    height={20}
+                  />
+                  <Skeleton
+                    variant="rounded"
+                    animation="wave"
+                    width={110}
+                    height={20}
+                  />
+                </div>
+                <div className="fl-right">
+                  <Skeleton
+                    variant="rounded"
+                    className="mb-3"
+                    animation="wave"
+                    width={210}
+                    height={20}
+                  />
+                  <Skeleton
+                    variant="rounded"
+                    className="mb-3"
+                    animation="wave"
+                    width={150}
+                    height={20}
+                  />
+                  <Skeleton
+                    variant="rounded"
+                    animation="wave"
+                    width={110}
+                    height={20}
+                  />
+                </div>
+              </Stack>
             ) : (
-              <>
-                {[messages || messagesPeople]?.map((msg, index) => (
-                  <div
-                    key={index}
+              messages?.map((msg, index) => (
+                <div
+                  key={index}
+                  className={
+                    msg.senderId === currentUser ? "fl-right" : "fl-left"
+                  }
+                >
+                  <p
                     className={
-                      msg.senderId === currentUser ? "fl-right" : "fl-left"
+                      msg.senderId === currentUser
+                        ? "msg-sent mb-1"
+                        : "msg-recieved mb-1"
                     }
                   >
-                    <p
-                      className={
-                        msg.senderId === currentUser
-                          ? "msg-sent mb-1"
-                          : "msg-recieved mb-1"
-                      }
-                    >
-                      {msg?.msg}
-                    </p>
-                    <span className="text-muted time-status">
-                      {new Date(msg.timeStamp).toLocaleTimeString()}
-                    </span>
-                  </div>
-                ))}
-              </>
+                    {msg?.msg}
+                  </p>
+                  <span className="text-muted time-status">
+                    {new Date(msg.timeStamp).toLocaleTimeString()}
+                  </span>
+                </div>
+              ))
             )}
           </div>
 

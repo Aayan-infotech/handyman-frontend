@@ -51,7 +51,7 @@ export default function AdminChat() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [chatId, setChatId] = useState(null);
-  const [receiverId] = useState("TWhwzZu1xCNFmqaq3r9KVrRiE0q1");
+  const [receiverId] = useState("YWF5YW5pbmZvdGVjaEBnbWFpbC5jb20=");
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   console.log("currentUseradmin", currentUser);
