@@ -36,8 +36,15 @@ export default function ChangeRadius() {
   });
   const [selectedRadius, setSelectedRadius] = useState(radiusOptions[0]); // Default value
 
+  // const handleChange = (event) => {
+  //   setSelectedRadius(parseInt(event.target.value, 10)); // Ensure number format
+  // };
+
+
   const handleChange = (event) => {
-    setSelectedRadius(parseInt(event.target.value, 10)); // Ensure number format
+    const newRadius = event.target.value;
+    console.log("Selected Radius:", newRadius); // Debugging purpose
+    setSelectedRadius(newRadius);
   };
 
   const handleChangeRadius = async () => {
@@ -104,7 +111,7 @@ export default function ChangeRadius() {
                     <InputLabel id="radius-select-label">
                       Select Radius
                     </InputLabel>
-                    <Select
+                    {/* <Select
                       labelId="radius-select-label"
                       id="radius-select"
                       value={selectedRadius} // Always controlled
@@ -113,11 +120,27 @@ export default function ChangeRadius() {
                       MenuProps={MenuProps}
                     >
                       {radiusOptions.map((radius) => (
-                        <MenuItem key={radius} value={parseInt(radius, 10)}>
+                        <MenuItem key={radius} value={parseInt(radius)}>
                           {radius}
                         </MenuItem>
                       ))}
-                    </Select>
+                    </Select> */}
+
+
+<Select
+  labelId="radius-select-label"
+  id="radius-select"
+  value={selectedRadius} // Always controlled
+  onChange={handleChange}
+  input={<OutlinedInput label="Select Radius" />}
+  MenuProps={MenuProps}
+>
+  {radiusOptions.map((radius) => (
+    <MenuItem key={radius} value={parseInt(radius, 10)}> 
+      {radius}
+    </MenuItem>
+  ))}
+</Select>
                   </FormControl>
                   <div className="d-flex justify-content-center align-items-center">
                     <Button
