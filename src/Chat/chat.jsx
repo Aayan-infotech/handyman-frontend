@@ -170,29 +170,39 @@ export default function Chat({ messageData, messages, selectedChat }) {
   }, [location]);
 
   useEffect(() => {
-    console.log("chat-chatId", chatId);
     if (!chatId) return;
-
-    const chatMessagesRef = ref(realtimeDb, `chats/${jobId}`);
-
-    onValue(chatMessagesRef, (snapshot) => {
+  
+    const chatMessagesRef = ref(realtimeDb, `chats/${jobId}/${chatId}/messages`);
+  
+    const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
       if (snapshot.exists()) {
-        const allMessages = Object.values(snapshot.val());
-
-        // Extract messages from all chat objects
-        const chatMessages = allMessages.flatMap((chat) =>
-          chat.messages ? Object.values(chat.messages) : []
-        );
-
-        // Filter messages based on chatId
-        const filteredMessages = chatMessages
-          .filter((msg) => msg.chatId === chatId)
+        const messagesData = snapshot.val();
+        
+        // Convert to array and sort
+        let messagesArray = Object.values(messagesData)
           .sort((a, b) => a.timeStamp - b.timeStamp);
-
-        setMessagesPeople(filteredMessages);
-        console.log("Filtered Messages:", filteredMessages);
+  
+        // Advanced deduplication
+        const uniqueMessages = [];
+        const seenKeys = new Set();
+  
+        messagesArray.forEach(message => {
+          // Create a unique key combining timestamp, message, and sender
+          const messageKey = `${message.timeStamp}_${message.msg}_${message.senderId}`;
+          
+          if (!seenKeys.has(messageKey)) {
+            seenKeys.add(messageKey);
+            uniqueMessages.push(message);
+          }
+        });
+  
+        setMessagesPeople(uniqueMessages);
+      } else {
+        setMessagesPeople([]);
       }
     });
+  
+    return () => unsubscribe();
   }, [chatId, jobId]);
 
   console.log("messages1", messages);
@@ -387,7 +397,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
           }`}
         >
           <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
-            {messages?.length === 0 ? (
+            {messagesPeople?.length === 0 ? (
               <Stack spacing={1} className="d-block">
                 <div className="fl-left">
                   <Skeleton
@@ -435,7 +445,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 </div>
               </Stack>
             ) : (
-              messages?.map((msg, index) => (
+              messagesPeople?.map((msg, index) => (
                 <div
                   key={index}
                   className={

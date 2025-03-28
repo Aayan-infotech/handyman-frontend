@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./loggedNavbar";
 import {
@@ -6,7 +5,6 @@ import {
   MdOutlineWork,
   MdOutlineSupportAgent,
 } from "react-icons/md";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -25,7 +23,6 @@ import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import { getAddress } from "../Slices/addressSlice";
 import Loader from "../Loader";
 import axios from "axios";
-
 
 import Toaster from "../Toaster";
 import notFound from "./assets/noprofile.png";
@@ -79,7 +76,6 @@ export default function MyProfile() {
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
 
-
   const handleClose = () => setIsModalVisible(false);
   const handleShow = () => setIsModalVisible(true);
   // new
@@ -99,7 +95,6 @@ export default function MyProfile() {
       console.error("Error fetching background image:", error);
     }
   };
-
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -185,9 +180,6 @@ export default function MyProfile() {
     }
   };
 
-
-
-
   const fetchGallery = async () => {
     try {
       const response = await axios.get(
@@ -196,11 +188,10 @@ export default function MyProfile() {
 
       if (response.data && response.data.data.files) {
         const files = response.data.data.files; // Extract 'files' array
-        const urls = files.map(file => file.url); // Extract URLs from files
+        const urls = files.map((file) => file.url); // Extract URLs from files
 
-        console.log(urls, '....gallery URLs');
+        console.log(urls, "....gallery URLs");
         setGallery(urls); // Set the gallery state with URLs
-
       } else {
         console.error("No images found in the response.");
       }
@@ -209,11 +200,9 @@ export default function MyProfile() {
     }
   };
 
-
   useEffect(() => {
     fetchGallery(); // Fetch gallery images when the component mounts
   }, []);
-
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -305,7 +294,8 @@ export default function MyProfile() {
       }
 
       const response = await axios.delete(
-        `http://3.223.253.106:7777/api/DeleteAccount/${providerId ? "provider" : "delete"
+        `http://3.223.253.106:7777/api/DeleteAccount/${
+          providerId ? "provider" : "delete"
         }/${providerId || hunterId}`
       );
 
@@ -357,7 +347,7 @@ export default function MyProfile() {
             </div>
           </Link>
           <div className="message">
-            <Link to="/message">
+            <Link to={`/${hunterToken ? "/message" : "provider/message"}`}>
               <MdMessage />
             </Link>
           </div>
@@ -367,7 +357,7 @@ export default function MyProfile() {
                 <div className="image-shadow">
                   <img
                     className="w-100 rounded-4"
-                    src={backgroundImg || "default-image.jpg"}
+                    src={backgroundImg || notFound}
                     alt="background"
                   />
                   <div className="exper position-absolute bottom-0 end-0 m-3">
@@ -409,7 +399,7 @@ export default function MyProfile() {
                 </div>
 
                 <div className="col-lg-6">
-                  {/* <div className="mt-5 mt-lg-0 text-center text-lg-start">
+                  <div className="mt-5 mt-lg-0 text-center text-lg-start">
                     <h3 className="fw-bold fs-1">{name}</h3>
                     <h5
                       className="text-muted"
@@ -418,67 +408,71 @@ export default function MyProfile() {
                       {user?.userType}
                     </h5>
 
-                    {aboutText ? (
-                      <div className="d-flex flex-column align-items-center align-items-lg-start gap-1 justify-content-center justify-content-lg-start">
-                        <p className="mt-3">{aboutText}</p>{" "}
-                        {/* Show updated "about" text */}
-                        <button
-                          className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
-                          style={{
-                            backgroundColor: "#32de84",
-                            color: "#fff",
-                            border: "none",
-                          }}
-                          onClick={() => setShowModal(true)} // Open the modal for editing
-                        >
-                          Edit About
-                        </button>
-                      {/* </div>
-                    ) : (
-                      <button
-                        className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
-                        style={{
-                          backgroundColor: "#32de84",
-                          color: "#fff",
-                          border: "none",
-                        }}
-                        onClick={() => setShowModal(true)} // Open the modal for adding about text
-                      >
-                        Add Description
-                      </button>
+                    {providerToken && (
+                      <>
+                        {" "}
+                        {aboutText ? (
+                          <div className="d-flex flex-column align-items-center align-items-lg-start gap-1 justify-content-center justify-content-lg-start">
+                            <p className="mt-3">{aboutText}</p>{" "}
+                            <button
+                              className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                              style={{
+                                backgroundColor: "#32de84",
+                                color: "#fff",
+                                border: "none",
+                              }}
+                              onClick={() => setShowModal(true)} // Open the modal for editing
+                            >
+                              Edit About
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                            style={{
+                              backgroundColor: "#32de84",
+                              color: "#fff",
+                              border: "none",
+                            }}
+                            onClick={() => setShowModal(true)} // Open the modal for adding about text
+                          >
+                            Add Description
+                          </button>
+                        )}
+                      </>
                     )}
-                  </div> */} 
 
-                  {/* Modal Component */}
-                  <Modal
-                    show={showModal}
-                    onHide={() => setShowModal(false)}
-                    centered
-                  >
-                    <Modal.Header closeButton>
-                      <Modal.Title>Add Description</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <textarea
-                        className="form-control"
-                        rows="3"
-                        placeholder="Enter your description..."
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      ></textarea>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button
-                        variant="secondary"
-                        onClick={() => setShowModal(false)}
-                      >
-                        Close
-                      </Button>
-                      <Button variant="primary" onClick={handleSave}>
-                        Save
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
+                    {/* Modal Component */}
+                    <Modal
+                      show={showModal}
+                      onHide={() => setShowModal(false)}
+                      centered
+                    >
+                      <Modal.Header closeButton>
+                        <Modal.Title>Add Description</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <textarea
+                          className="form-control"
+                          rows="3"
+                          placeholder="Enter your description..."
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                        ></textarea>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button
+                          variant="secondary"
+                          onClick={() => setShowModal(false)}
+                        >
+                          Close
+                        </Button>
+                        <Button variant="primary" onClick={handleSave}>
+                          Save
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </div>
                 </div>
 
                 <div className="col-lg-3">
@@ -524,34 +518,37 @@ export default function MyProfile() {
                         <CiLogout />
                         Logout
                       </Button>
-                    
 
+                      <Button
+                        variant="outline-danger"
+                        className="d-flex gap-2 align-items-center mw-20 justify-content-center"
+                        onClick={handleShow} // Open the modal on button click
+                      >
+                        Delete Account
+                      </Button>
 
-<Button
-        variant="outline-danger"
-        className="d-flex gap-2 align-items-center mw-20 justify-content-center"
-        onClick={handleShow} // Open the modal on button click
-      >
-        Delete Account
-      </Button>
-
-      {/* Modal for account deletion confirmation */}
-      <Modal 
-        show={isModalVisible} 
-        onHide={handleClose} 
-        centered // This ensures the modal is vertically centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Confirm Account Deletion
-            </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete your account? This action cannot be undone.</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-          <Button variant="danger" onClick={deleteAccount}>Delete Account</Button>
-        </Modal.Footer>
-      </Modal>
+                      {/* Modal for account deletion confirmation */}
+                      <Modal
+                        show={isModalVisible}
+                        onHide={handleClose}
+                        centered // This ensures the modal is vertically centered
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title>Confirm Account Deletion</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          Are you sure you want to delete your account? This
+                          action cannot be undone.
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Cancel
+                          </Button>
+                          <Button variant="danger" onClick={deleteAccount}>
+                            Delete Account
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
                     </div>
                   </div>
                 </div>
@@ -593,9 +590,6 @@ export default function MyProfile() {
                 ""
               )}
 
-
-
-
               {userType === "Provider" && (
                 <div className="card border-0 rounded-5">
                   <div className="card-body py-4 px-lg-4">
@@ -625,16 +619,14 @@ export default function MyProfile() {
                         </Button2>
                       </div>
 
-
-
                       <div className="row mt-4">
                         {gallery.length > 0 ? (
                           gallery.map((image, index) => {
-                            console.log("Rendering image:", image);  // Log the image URLs
+                            console.log("Rendering image:", image); // Log the image URLs
                             return (
                               <div key={index} className="col-md-3 mb-3">
                                 <img
-                                  src={image}  // Image URL from the 'files' array
+                                  src={image} // Image URL from the 'files' array
                                   alt="Gallery Item"
                                   className="rounded-5"
                                   style={{
@@ -647,11 +639,13 @@ export default function MyProfile() {
                             );
                           })
                         ) : (
-                          <p className="text-center mt-3">No images uploaded yet.</p>
+                          <p className="text-center mt-3">
+                            No images uploaded yet.
+                          </p>
                         )}
                       </div>
 
-{/* <div className="row mt-4">
+                      {/* <div className="row mt-4">
       {gallery.length > 0 ? (
         gallery.map((image, index) => (
           <div key={index} className="col-md-3 mb-3">
@@ -672,8 +666,6 @@ export default function MyProfile() {
         <p className="text-center mt-3">No images uploaded yet.</p>
       )}
     </div> */}
-
-
                     </div>
                   </div>
                 </div>
@@ -681,20 +673,22 @@ export default function MyProfile() {
 
               <div className="row gy-4 my-4">
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   {hunterToken ? (
                     <Link to={`/changePassword/${id}`}>
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
-                              }`}
+                            className={`d-flex gap-3 align-items-center justify-content-center ${
+                              Location.pathname.includes("provider")
+                                ? "flex-column"
+                                : "flex-row"
+                            }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -718,10 +712,11 @@ export default function MyProfile() {
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                              ? "flex-column"
-                              : "flex-row"
-                              }`}
+                            className={`d-flex gap-3 align-items-center justify-content-center ${
+                              Location.pathname.includes("provider")
+                                ? "flex-column"
+                                : "flex-row"
+                            }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -743,19 +738,21 @@ export default function MyProfile() {
                   )}
                 </div>
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "d-none"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "d-none"
+                      : "col-lg-3"
+                  }`}
                 >
                   <Link to="/change-radius">
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                            }`}
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -776,18 +773,20 @@ export default function MyProfile() {
                   </Link>
                 </div>
                 <div
-                  className={` ${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                          ? "flex-column"
-                          : "flex-row"
-                          }`}
+                        className={`d-flex gap-3 align-items-center justify-content-center ${
+                          Location.pathname.includes("provider")
+                            ? "flex-column"
+                            : "flex-row"
+                        }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
@@ -808,24 +807,27 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "col-lg-3"
-                    }`}
+                  className={`${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
                 >
                   <Link
-                    to={`${Location.pathname.includes("provider")
-                      ? "/provider/job-history"
-                      : "/home"
-                      }`}
+                    to={`${
+                      Location.pathname.includes("provider")
+                        ? "/provider/job-history"
+                        : "/home"
+                    }`}
                   >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                            }`}
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -849,18 +851,20 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${Location.pathname.includes("provider")
-                    ? "col-lg-2"
-                    : "d-none"
-                    }`}
+                  className={`${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "d-none"
+                  }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                          ? "flex-column"
-                          : "flex-row"
-                          }`}
+                        className={`d-flex gap-3 align-items-center justify-content-center ${
+                          Location.pathname.includes("provider")
+                            ? "flex-column"
+                            : "flex-row"
+                        }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">

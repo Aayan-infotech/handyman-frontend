@@ -12,7 +12,9 @@ import Select from "@mui/material/Select";
 import { useTheme } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-
+import LoggedHeader from "./loggedNavbar";
+import { getHunterUser, getProviderUser } from "../Slices/userSlice";
+import { useDispatch } from "react-redux";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -28,23 +30,41 @@ const radiusOptions = ["10", "20", "40", "80", "160"];
 
 export default function ChangeRadius() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [radius, setRadius] = useState("");
   const [loading, setLoading] = useState(false);
+  const hunterToken = localStorage.getItem("hunterToken");
+  const providerToken = localStorage.getItem("ProviderToken");
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        let fetchedUser = null;
+        if (hunterToken) {
+          const hunterResponse = await dispatch(getHunterUser());
+          fetchedUser = hunterResponse?.payload?.data;
+        } else if (!fetchedUser && providerToken) {
+          const providerResponse = await dispatch(getProviderUser());
+          fetchedUser = providerResponse?.payload?.data;
+        }
+
+        if (fetchedUser) {
+          setRadius(fetchedUser?.address?.radius);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUserData();
+  }, [dispatch]);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
-  const [selectedRadius, setSelectedRadius] = useState(radiusOptions[0]); // Default value
-
-  // const handleChange = (event) => {
-  //   setSelectedRadius(parseInt(event.target.value, 10)); // Ensure number format
-  // };
-
+  const [selectedRadius, setSelectedRadius] = useState();
 
   const handleChange = (event) => {
-    const newRadius = event.target.value;
-    console.log("Selected Radius:", newRadius); // Debugging purpose
-    setSelectedRadius(newRadius);
+    setSelectedRadius(parseInt(event.target.value, 10)); // Ensure number format
   };
 
   const handleChangeRadius = async () => {
@@ -100,7 +120,7 @@ export default function ChangeRadius() {
         <Loader />
       ) : (
         <div className="bg-signup h-100vh ">
-          <Header />
+          <LoggedHeader />
           <div className="container top-avatar login bg-center document">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1 bg-center">
               <div className="card shadow mb-4">
@@ -126,22 +146,26 @@ export default function ChangeRadius() {
                       ))}
                     </Select> */}
 
-
-<Select
-  labelId="radius-select-label"
-  id="radius-select"
-  value={selectedRadius} // Always controlled
-  onChange={handleChange}
-  input={<OutlinedInput label="Select Radius" />}
-  MenuProps={MenuProps}
->
-  {radiusOptions.map((radius) => (
-    <MenuItem key={radius} value={parseInt(radius, 10)}> 
-      {radius}
-    </MenuItem>
-  ))}
-</Select>
+                    <Select
+                      labelId="radius-select-label"
+                      id="radius-select"
+                      value={selectedRadius} // Always controlled
+                      onChange={handleChange}
+                      input={<OutlinedInput label="Select Radius" />}
+                      MenuProps={MenuProps}
+                    >
+                      {radiusOptions.map((radius) => (
+                        <MenuItem key={radius} value={parseInt(radius, 10)}>
+                          {radius}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
+                  <p>
+                    You have a radius of{" "}
+                    {selectedRadius ? selectedRadius : radius / 1000} km
+                  </p>
+
                   <div className="d-flex justify-content-center align-items-center">
                     <Button
                       size="large"
