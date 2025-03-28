@@ -25,6 +25,8 @@ import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import { getAddress } from "../Slices/addressSlice";
 import Loader from "../Loader";
 import axios from "axios";
+
+
 import Toaster from "../Toaster";
 import notFound from "./assets/noprofile.png";
 import { Modal } from "react-bootstrap";
@@ -55,6 +57,7 @@ export default function MyProfile() {
   const userId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId"); //new
   const userType = localStorage.getItem("hunterToken") ? "Hunter" : "Provider"; // new
+  const [isModalVisible, setIsModalVisible] = useState(false); // Renamed state
 
   const [email, setEmail] = useState("");
   const [address, setAdress] = useState("");
@@ -76,6 +79,9 @@ export default function MyProfile() {
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
 
+
+  const handleClose = () => setIsModalVisible(false);
+  const handleShow = () => setIsModalVisible(true);
   // new
   useEffect(() => {
     if (userId) {
@@ -326,6 +332,7 @@ export default function MyProfile() {
       }
     } catch (error) {
       console.log(error);
+      setIsModalVisible(false);
       setToastProps({
         message: error?.response?.data?.message || "Logout failed",
         type: "error",
@@ -517,13 +524,34 @@ export default function MyProfile() {
                         <CiLogout />
                         Logout
                       </Button>
-                      <Button
-                        variant="outline-danger"
-                        className="d-flex gap-2 align-items-center  mw-20 justify-content-center"
-                        onClick={deleteAccount}
-                      >
-                        Delete Account
-                      </Button>
+                    
+
+
+<Button
+        variant="outline-danger"
+        className="d-flex gap-2 align-items-center mw-20 justify-content-center"
+        onClick={handleShow} // Open the modal on button click
+      >
+        Delete Account
+      </Button>
+
+      {/* Modal for account deletion confirmation */}
+      <Modal 
+        show={isModalVisible} 
+        onHide={handleClose} 
+        centered // This ensures the modal is vertically centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Confirm Account Deletion
+            </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete your account? This action cannot be undone.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+          <Button variant="danger" onClick={deleteAccount}>Delete Account</Button>
+        </Modal.Footer>
+      </Modal>
                     </div>
                   </div>
                 </div>
