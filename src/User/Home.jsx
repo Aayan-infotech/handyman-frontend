@@ -34,67 +34,67 @@ export default function Main() {
     toastKey: 0,
   });
 
-  const handleJobDelete = async (id) => {
-    setLoading(true);
-    try {
-      await axios.delete(`http://3.223.253.106:7777/api/jobPost/${id}`, {
-        headers: { Authorization: `Bearer ${hunterToken}` },
-      });
+  // const handleJobDelete = async (id) => {
+  //   setLoading(true);
+  //   try {
+  //     await axios.delete(`http://3.223.253.106:7777/api/jobPost/${id}`, {
+  //       headers: { Authorization: `Bearer ${hunterToken}` },
+  //     });
 
-      setToastProps({
-        message: "Job deleted successfully!",
-        type: "success",
-        toastKey: Date.now(),
-      });
-      fetchJobs();
-    } catch (error) {
-      setToastProps({
-        message: "Failed to delete job",
-        type: "error",
-        toastKey: Date.now(),
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setToastProps({
+  //       message: "Job deleted successfully!",
+  //       type: "success",
+  //       toastKey: Date.now(),
+  //     });
+  //     fetchJobs();
+  //   } catch (error) {
+  //     setToastProps({
+  //       message: "Failed to delete job",
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const fetchJobs = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(
-        "http://3.223.253.106:7777/api/jobpost/getJobPostByUserId",
-        {
-          headers: {
-            Authorization: `Bearer ${ProviderToken || hunterToken}`,
-          },
-        }
-      );
-      if (res.status === 200) {
-        // const filteredData = res.data.data.filter(
-        //   (job) => job.jobStatus !== "Deleted"
-        // );
-        setData(res.data.data);
-        setFilteredData(res.data.data);
-        setToastProps({
-          message: res.data.message,
-          type: "success",
-          toastKey: Date.now(),
-        });
-      }
-    } catch (error) {
-      setToastProps({
-        message: error.message,
-        type: "error",
-        toastKey: Date.now(),
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchJobs = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.get(
+  //       "http://3.223.253.106:7777/api/jobpost/getJobPostByUserId",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${ProviderToken || hunterToken}`,
+  //         },
+  //       }
+  //     );
+  //     if (res.status === 200) {
+  //       // const filteredData = res.data.data.filter(
+  //       //   (job) => job.jobStatus !== "Deleted"
+  //       // );
+  //       setData(res.data.data);
+  //       setFilteredData(res.data.data);
+  //       setToastProps({
+  //         message: res.data.message,
+  //         type: "success",
+  //         toastKey: Date.now(),
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setToastProps({
+  //       message: error.message,
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  // useEffect(() => {
+  //   fetchJobs();
+  // }, []);
 
   useEffect(() => {
     const handleJobs = async () => {

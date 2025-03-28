@@ -138,10 +138,6 @@ export default function JobManagement() {
     fetchJobs(currentPage);
   }, [currentPage]);
 
-  useEffect(() => {
-    fetchJobs(currentPage);
-  }, [currentPage]);
-
   const handlePageChange = (page) => {
     queryParams.set("page", page.toString());
     navigate(`?${queryParams.toString()}`);
