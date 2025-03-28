@@ -42,11 +42,12 @@ export default function JobManagement() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const provider = location.pathname.includes("provider");
+
   const [jobStatus, setJobStatus] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
-  const hunterToken = localStorage.getItem("hunterToken");
   const ProviderToken = localStorage.getItem("ProviderToken");
   const queryParams = new URLSearchParams(location.search);
+  const hunterToken = localStorage.getItem("hunterToken");
   let currentPage = parseInt(queryParams.get("page")) || 1;
   const navigate = useNavigate();
   // Auto-update URL if `page` is missing
@@ -132,6 +133,7 @@ export default function JobManagement() {
     }
   };
 
+
   useEffect(() => {
     fetchJobs(currentPage);
   }, [currentPage]);
@@ -152,13 +154,15 @@ export default function JobManagement() {
       ) : (
         <>
           <LoggedHeader />
-          <Link to="/support/chat/1">
+          <Link
+            to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
+          >
             <div className="admin-message">
               <MdOutlineSupportAgent />
             </div>
           </Link>
           <div className="message">
-            <Link to="/message">
+            <Link to={`/${hunterToken ? "/message" : "provider/message"}`}>
               <MdMessage />
             </Link>
           </div>

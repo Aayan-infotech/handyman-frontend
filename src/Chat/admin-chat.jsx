@@ -16,6 +16,7 @@ const sendMessage = async (
   chatId,
   receiverId,
   senderId,
+  name,
   setMessages
 ) => {
   console.log("function working");
@@ -31,6 +32,7 @@ const sendMessage = async (
       type: msgType,
       receiverId,
       senderId,
+      name
     };
 
     const newMessageRef = push(
@@ -52,8 +54,12 @@ export default function AdminChat() {
   const [text, setText] = useState("");
   const [chatId, setChatId] = useState(null);
   const [receiverId] = useState("YWF5YW5pbmZvdGVjaEBnbWFpbC5jb20=");
+  const userType = localStorage.getItem("ProviderId") ? "Provider" : "Hunter"
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
+  const currentUserName =
+    localStorage.getItem("ProviderName") || localStorage.getItem("hunterName");
+  
   console.log("currentUseradmin", currentUser);
 
   // Fetch messages when chatId and currentUser are available
@@ -104,21 +110,13 @@ export default function AdminChat() {
     // if (messages.trim() === "" || !chatId || !currentUser) return;
     if (text.trim() === "" || !chatId || !currentUser) return;
 
-    // await sendMessage(
-    //   "text",
-    //   messages,
-    //   chatId,
-    //   receiverId,
-    //   currentUser,
-    //   setMessages
-    // );
-    // setMessages("");
     await sendMessage(
-      "text",
+      userType,
       text,
       chatId,
       receiverId,
       currentUser,
+      currentUserName,
       setMessages
     );
     setText("");

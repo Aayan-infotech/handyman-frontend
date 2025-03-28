@@ -125,7 +125,6 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
 
-
       {/* <NotificationProvider> */}
       <Routes>
         <Route path="/" element={<UnProtectedRoute element={<Home />} />} />
@@ -137,14 +136,17 @@ function App() {
           path="/welcome"
           element={<UnProtectedRoute element={<Welcome />} />}
         />
-<Route exact path="/allblogs" 
-  element={<UnProtectedRoute element={<AllBlogs />} />}
-/>
+        <Route
+          exact
+          path="/allblogs"
+          element={<UnProtectedRoute element={<AllBlogs />} />}
+        />
 
-
-<Route exact path="/blog-detail/:id" 
-  element={<UnProtectedRoute element={<BlogDetail />} />}
-/>
+        <Route
+          exact
+          path="/blog-detail/:id"
+          element={<UnProtectedRoute element={<BlogDetail />} />}
+        />
 
         <Route
           path="/contact-us"
@@ -272,11 +274,11 @@ function App() {
         />
         <Route
           path="/provider/reset-password"
-          element={<ProtectedRoute element={<ResetPassword />} />}
+          element={<UnProtectedRoute element={<ResetPassword />} />}
         />
         <Route
           path="/provider/changePassword/:id"
-          element={<ProtectedRoute element={<ChangePassword />} />}
+          element={<ChangePassword />}
         />
         <Route
           path="/provider/chat/:id"
@@ -292,7 +294,7 @@ function App() {
         />
         <Route
           path="/provider/forgetpassword"
-          element={<ProtectedRoute element={<ForgetPassword />} />}
+          element={<UnProtectedRoute element={<ForgetPassword />} />}
         />
         <Route
           path="/provider/pricing"

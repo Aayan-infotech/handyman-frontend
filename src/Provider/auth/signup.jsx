@@ -291,17 +291,18 @@ export default function SignUpProvider() {
                             multiple
                             value={businessType} // Should be an array of IDs
                             onChange={handleChange}
-                            renderValue={(selected) => selected.join(", ")}
-                            // renderValue={(selected) =>
-                            //   selected
-                            //     .map(
-                            //       (id) =>
-                            //         businessData.find((data) => data._id === id)
-                            //           ?.name
-                            //     )
-                            //     .join(", ")
-                            // }
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            renderValue={(selected) => {
+                              if (selected.length === 0) {
+                                return <span>Choose Business Type</span>;
+                              }
+                              return selected.join(", ");
+                            }}
                           >
+                            <MenuItem value="" disabled>
+                              Choose Business Type
+                            </MenuItem>
                             {businessData.map((data) => (
                               <MenuItem key={data._id} value={data?.name}>
                                 {data.name}

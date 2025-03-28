@@ -12,6 +12,7 @@ import LoggedHeader from "./auth/component/loggedNavbar";
 import { getProviderJobs, getGuestProviderJobs } from "../Slices/providerSlice";
 import { getProviderUser } from "../Slices/userSlice";
 import Toaster from "../Toaster";
+import { Alert, Stack } from "@mui/material";
 import noData from "../assets/no_data_found.gif";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -35,35 +36,33 @@ export default function HomeProvider() {
     type: "",
     toastKey: 0,
   });
-
-  console.log(businessType, ".....bussiness type");
-
+  const [alertMessages, setAlertMessages] = useState([]); // Store alerts
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
   const guestCondition = localStorage.getItem("Guest") === "true";
   const dispatch = useDispatch();
 
-  const getUser = async () => {
-    try {
-      const result = await dispatch(getProviderUser());
-      if (result.payload?.status === 200) {
-        const { businessType, address } = result.payload.data;
-        setBusinessType(businessType);
-        setLatitude(address?.location?.coordinates?.[1] || null);
-        setLongitude(address?.location?.coordinates?.[0] || null);
-        setRadius(address?.radius || null);
-      } else {
-        throw new Error("Failed to fetch user data.");
-      }
-    } catch (error) {
-      console.error("User error:", error);
-      setToastProps({
-        message: "Error fetching user data",
-        type: "error",
-        toastKey: Date.now(),
-      });
-    }
-  };
+  // const getUser = async () => {
+  //   try {
+  //     const result = await dispatch(getProviderUser());
+  //     if (result.payload?.status === 200) {
+  //       const { businessType, address } = result.payload.data;
+  //       setBusinessType(businessType);
+  //       setLatitude(address?.location?.coordinates?.[1] || null);
+  //       setLongitude(address?.location?.coordinates?.[0] || null);
+  //       setRadius(address?.radius || null);
+  //     } else {
+  //       throw new Error("Failed to fetch user data.");
+  //     }
+  //   } catch (error) {
+  //     console.error("User error:", error);
+  //     setToastProps({
+  //       message: "Error fetching user data",
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   }
+  // };
 
   const handleAllData = async () => {
     if (!businessType || latitude === null || longitude === null) return;
@@ -72,6 +71,7 @@ export default function HomeProvider() {
       const result = await dispatch(
         getProviderJobs({ businessType, latitude, longitude, radius })
       );
+
       if (getProviderJobs.fulfilled.match(result)) {
         setData(result.payload?.data || []);
         setToastProps({
@@ -126,66 +126,157 @@ export default function HomeProvider() {
     }
   }, [businessType, latitude, longitude]);
 
-  const fetchNotifications = async () => {
-    if (!userId) return;
+  // const fetchNotifications = async () => {
+  //   if (!userId) return;
+  //   try {
+  //     const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
+  //     const response = await axios.get(url);
+  //     const notifications = Array.isArray(response.data.data)
+  //       ? response.data.data
+  //       : [];
+
+  //     setNotifications(notifications);
+
+  //     // Show count in toaster
+  //     setToastProps({
+  //       message: `You have ${notifications.length} new notifications`,
+  //       type: "info",
+  //       toastKey: Date.now(),
+  //     });
+  //   } catch (error) {
+  //     setToastProps({
+  //       message: "Failed to fetch notifications",
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   }
+  // };
+
+  // const fetchMassNotifications = async () => {
+  //   try {
+  //     const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
+  //     const response = await axios.get(url);
+  //     const massNotifications = Array.isArray(response.data)
+  //       ? response.data
+  //       : [];
+
+  //     setMassNotifications(massNotifications);
+
+  //     // Show count in toaster
+  //     setToastProps({
+  //       message: `You have ${massNotifications.length} mass notifications`,
+  //       type: "info",
+  //       toastKey: Date.now(),
+  //     });
+  //   } catch (error) {
+  //     setToastProps({
+  //       message: "Failed to fetch mass notifications",
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   }
+  // };
+
+  // // Function to add an alert message
+  // const addAlert = (message, severity) => {
+  //   const id = Date.now();
+  //   setAlertMessages((prev) => [...prev, { message, severity, id }]);
+
+  //   // Remove alert after 5 seconds
+  //   setTimeout(() => {
+  //     setAlertMessages((prev) => prev.filter((alert) => alert.id !== id));
+  //   }, 5000);
+  // };
+
+  const getUser = async () => {
     try {
-      const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
-      const response = await axios.get(url);
-      const notifications = Array.isArray(response.data.data)
-        ? response.data.data
-        : [];
-
-      setNotifications(notifications);
-
-      // Show count in toaster
-      setToastProps({
-        message: `You have ${notifications.length} new notifications`,
-        type: "info",
-        toastKey: Date.now(),
-      });
+      const result = await dispatch(getProviderUser());
+      if (result.payload?.status === 200) {
+        const { businessType, address } = result.payload.data;
+        setBusinessType(businessType);
+        setLatitude(address?.location?.coordinates?.[1] || null);
+        setLongitude(address?.location?.coordinates?.[0] || null);
+        setRadius(address?.radius || null);
+      } else {
+        throw new Error("Failed to fetch user data.");
+      }
     } catch (error) {
-      setToastProps({
-        message: "Failed to fetch notifications",
-        type: "error",
-        toastKey: Date.now(),
-      });
+      console.error("User error:", error);
+      addAlert("Error fetching user data", "error");
     }
   };
 
-  const fetchMassNotifications = async () => {
-    try {
-      const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
-      const response = await axios.get(url);
-      const massNotifications = Array.isArray(response.data)
-        ? response.data
-        : [];
+  // const fetchNotifications = async () => {
+  //   if (!userId) return;
+  //   try {
+  //     const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
+  //     const response = await axios.get(url);
+  //     const newNotifications = Array.isArray(response.data.data)
+  //       ? response.data.data
+  //       : [];
 
-      setMassNotifications(massNotifications);
+  //     setNotifications(newNotifications);
+  //     addAlert(`You have ${newNotifications.length} new notifications`, "info");
+  //   } catch (error) {
+  //     addAlert("Failed to fetch notifications", "error");
+  //   }
+  // };
 
-      // Show count in toaster
-      setToastProps({
-        message: `You have ${massNotifications.length} mass notifications`,
-        type: "info",
-        toastKey: Date.now(),
-      });
-    } catch (error) {
-      setToastProps({
-        message: "Failed to fetch mass notifications",
-        type: "error",
-        toastKey: Date.now(),
-      });
-    }
-  };
+  // const fetchMassNotifications = async () => {
+  //   try {
+  //     const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
+  //     const response = await axios.get(url);
+  //     const newMassNotifications = Array.isArray(response.data)
+  //       ? response.data
+  //       : [];
 
-  // Call these functions in useEffect to trigger notifications on page load
-  useEffect(() => {
-    fetchNotifications();
-    fetchMassNotifications();
-  }, []);
+  //     setMassNotifications(newMassNotifications);
+  //     addAlert(
+  //       `You have ${newMassNotifications.length} mass notifications`,
+  //       "info"
+  //     );
+  //   } catch (error) {
+  //     addAlert("Failed to fetch mass notifications", "error");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchNotifications();
+  //   setTimeout(fetchMassNotifications, 5000);
+  // }, []);
+
+  // // Call these functions in useEffect to trigger notifications on page load
+  // useEffect(() => {
+  //   fetchNotifications();
+  //   fetchMassNotifications();
+  // }, []);
 
   return (
     <>
+      <div></div>
       <LoggedHeader />
+      <Stack
+        sx={{
+          position: "fixed",
+          top: 20,
+          right: 20,
+          zIndex: 1000,
+          width: "300px", // Adjust width to keep it compact
+        }}
+        spacing={2}
+      >
+        {alertMessages.map((alert) => (
+          <Alert
+            key={alert.id}
+            variant="outlined"
+            severity={alert.severity}
+            sx={{ boxShadow: 3, borderRadius: 2 }} // Adds shadow and rounded corners
+          >
+            {alert.message}
+          </Alert>
+        ))}
+      </Stack>
+
       <Link to="/provider/admin/chat/" className="admin-message">
         <MdOutlineSupportAgent />
       </Link>
@@ -194,6 +285,7 @@ export default function HomeProvider() {
           <MdMessage />
         </Link>
       </div>
+
       <div className="bg-second py-3">
         <div className="container top-section-main">
           <div className="d-flex justify-content-between align-items-center pb-3">
@@ -256,7 +348,6 @@ export default function HomeProvider() {
                             </div>
                           </div>
                         )}
-
                         <div className="col-lg-7">
                           <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
                             <div className="d-flex flex-row gap-2 align-items-center">
@@ -290,6 +381,7 @@ export default function HomeProvider() {
           </div>
         </div>
       </div>
+
       <Toaster
         message={toastProps.message}
         type={toastProps.type}

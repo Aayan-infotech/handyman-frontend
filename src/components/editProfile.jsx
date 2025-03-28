@@ -32,6 +32,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { realtimeDb } from "../Chat/lib/firestore";
+
 export default function EditProfile() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -84,6 +85,7 @@ export default function EditProfile() {
     };
     handleAllData();
   }, []);
+
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -132,6 +134,7 @@ export default function EditProfile() {
       setBusinessType(validBusinessTypes);
     }
   }, [businessData]);
+
   console.log(businessType);
 
   const handleSubmit = async (e) => {
@@ -142,12 +145,17 @@ export default function EditProfile() {
     formData.append("name", name);
     formData.append("phoneNo", number);
     formData.append("email", email);
-    // formData.append("addressLine", address);
-    // formData.append("latitude", latitude);
-    // formData.append("longitude", longitude);
-    // formData.append("ABN_Number", registrationNumber);
+    formData.append("addressLine", address);
+    formData.append("latitude", latitude);
+    formData.append("longitude", longitude);
+    formData.append("ABN_Number", registrationNumber);
+    
+    // Append each business type separately
+    businessType.forEach((type) => {
+      formData.append("businessType[]", type);
+    });
 
-    // formData.append("businessName", businessName);
+    formData.append("businessName", businessName);
 
     if (images && images instanceof FileList && images.length > 0) {
       formData.append("images", images[0]);
@@ -155,14 +163,11 @@ export default function EditProfile() {
       formData.append("images", images);
     }
 
-    // businessType.forEach((type) => {
-    //   formData.append("businessType[]", type);
-    // });
-
     try {
       const response = await axios.put(
-        `http://3.223.253.106:7777/api/${providerId ? "Prvdr" : "hunter"
-        }/updateById/${providerId ? providerId : hunterId}`,
+        `http://3.223.253.106:7777/api/${providerId ? "Prvdr" : "hunter"}/updateById/${
+          providerId ? providerId : hunterId
+        }`,
         formData,
         {
           headers: {
@@ -173,14 +178,12 @@ export default function EditProfile() {
       );
 
       if (response.status === 200 || response.status === 201) {
-        const userUId = providerUid || hunterUid;
         setLoading(false);
         setToastProps({
           message: response?.data?.message,
           type: "success",
           toastKey: Date.now(),
         });
-        setTimeout
         navigate(providerToken ? `/provider/myprofile` : `/myprofile`);
       }
     } catch (error) {
@@ -206,11 +209,12 @@ export default function EditProfile() {
       setPreviewImage(URL.createObjectURL(file)); // Create a preview URL
     }
   };
+
   console.log(images);
 
   return (
     <>
-      {loading === true ? (
+      {loading ? (
         <Loader />
       ) : (
         <div className="bg-signup">
@@ -237,25 +241,25 @@ export default function EditProfile() {
                       </div>
                     </>
                   ) : (
-                    <div className=" mt-3 profile d-flex align-items-center justify-content-center flex-column">
+                    <div className="mt-3 profile d-flex align-items-center justify-content-center flex-column">
                       <div className="position-relative">
                         <img
                           src={previewImage}
                           alt="profile"
-                          className="profile-image rounded-5 "
+                          className="profile-image rounded-5"
                         />
-                        <div className="position-absolute end-0 bottom-0 ">
+                        <div className="position-absolute end-0 bottom-0">
                           <Form.Control
                             className="pos-image-selector"
                             type="file"
                             onChange={handleImageChange}
                           />
-                          <FaPen className="" />
+                          <FaPen />
                         </div>
                       </div>
                     </div>
                   )}
-                  <Form className="py-3">
+                  <Form className="py-3" onSubmit={handleSubmit}>
                     <Form.Group
                       as={Row}
                       className="mb-3"
@@ -288,9 +292,6 @@ export default function EditProfile() {
                         />
                       </Col>
                     </Form.Group>
-
-
-
                     <Form.Group
                       as={Row}
                       className="mb-3"
@@ -300,14 +301,9 @@ export default function EditProfile() {
                         Email Address
                       </Form.Label>
                       <Col sm="8">
-                        <Form.Control
-                          type="email"
-                          value={email}
-                          disabled
-                        />
+                        <Form.Control type="email" value={email} disabled />
                       </Col>
                     </Form.Group>
-
                     <Form.Group
                       as={Row}
                       className="mb-3"
@@ -336,32 +332,6 @@ export default function EditProfile() {
                         />
                       </Col>
                     </Form.Group>
-                    {providerToken && (
-                      <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">
-                          Business Industry
-                        </Form.Label>
-                        <Col sm="8">
-                          <FormControl className="w-100 select-ion">
-                            <Select
-                              labelId="demo-multiple-name-label"
-                              id="demo-multiple-name"
-                              multiple
-                              value={businessType} // Should be an array of IDs
-                              onChange={handleChange}
-                              renderValue={(selected) => selected.join(", ")}
-
-                            >
-                              {businessData.map((data) => (
-                                <MenuItem key={data._id} value={data?.name}>
-                                  {data.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Col>
-                      </Form.Group>
-                    )}
                     {providerToken && (
                       <Form.Group
                         as={Row}
@@ -400,7 +370,6 @@ export default function EditProfile() {
                         </Col>
                       </Form.Group>
                     )}
-
                     {providerToken && (
                       <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm="4">
@@ -412,7 +381,7 @@ export default function EditProfile() {
                               labelId="demo-multiple-name-label"
                               id="demo-multiple-name"
                               multiple
-                              value={businessType} // Bind selected values
+                              value={businessType}
                               onChange={handleChange}
                               renderValue={(selected) => selected.join(", ")}
                             >
@@ -426,28 +395,25 @@ export default function EditProfile() {
                         </Col>
                       </Form.Group>
                     )}
-
-                    <div  >
-
-
-                      {providerToken && businessType.length > 0 && (
-                        <div className="business-type-cards mt-3">
-                          <h5>Selected Business Types:</h5>
-                          <div className="d-flex flex-wrap gap-2">
-                            {businessType.map((type, index) => (
-
-                              <div key={index} className="rounded-5 custom-green bg-green-custom" style={{ color: "white" }}>
-                                {type}
-                              </div>
-                            ))}
-                          </div>
+                    {providerToken && businessType.length > 0 && (
+                      <div className="business-type-cards mt-3">
+                        <h5>Selected Business Types:</h5>
+                        <div className="d-flex flex-wrap gap-2">
+                          {businessType.map((type, index) => (
+                            <div
+                              key={index}
+                              className="rounded-5 custom-green bg-green-custom"
+                              style={{ color: "white" }}
+                            >
+                              {type}
+                            </div>
+                          ))}
                         </div>
-                      )}
-                    </div>
-
+                      </div>
+                    )}
                     <div className="d-flex justify-content-center align-items-center py-3">
                       <Button
-                        onClick={handleSubmit}
+                        type="submit"
                         variant="contained"
                         color="success"
                         className="rounded-0 custom-green bg-green-custom w-100"
@@ -462,7 +428,6 @@ export default function EditProfile() {
           </div>
         </div>
       )}
-
       <Toaster
         message={toastProps.message}
         type={toastProps.type}
@@ -471,3 +436,4 @@ export default function EditProfile() {
     </>
   );
 }
+
