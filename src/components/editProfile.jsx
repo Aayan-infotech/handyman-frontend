@@ -142,12 +142,13 @@ export default function EditProfile() {
     formData.append("name", name);
     formData.append("phoneNo", number);
     formData.append("email", email);
-    // formData.append("addressLine", address);
-    // formData.append("latitude", latitude);
-    // formData.append("longitude", longitude);
-    // formData.append("ABN_Number", registrationNumber);
-
-    // formData.append("businessName", businessName);
+    formData.append("addressLine", address);
+    formData.append("latitude", latitude);
+    formData.append("longitude", longitude);
+    formData.append("ABN_Number", registrationNumber);
+formData.append ('Bussiness Type',businessType)
+    formData.append("businessName", businessName);
+    
 
     if (images && images instanceof FileList && images.length > 0) {
       formData.append("images", images[0]);
@@ -336,7 +337,7 @@ export default function EditProfile() {
                         />
                       </Col>
                     </Form.Group>
-                    {providerToken && (
+                    {/* {providerToken && (
                       <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm="4">
                           Business Industry
@@ -361,7 +362,7 @@ export default function EditProfile() {
                           </FormControl>
                         </Col>
                       </Form.Group>
-                    )}
+                    )} */}
                     {providerToken && (
                       <Form.Group
                         as={Row}
