@@ -402,7 +402,7 @@ export default function MyProfile() {
                 </div>
 
                 <div className="col-lg-6">
-                  <div className="mt-5 mt-lg-0 text-center text-lg-start">
+                  {/* <div className="mt-5 mt-lg-0 text-center text-lg-start">
                     <h3 className="fw-bold fs-1">{name}</h3>
                     <h5
                       className="text-muted"
@@ -426,7 +426,7 @@ export default function MyProfile() {
                         >
                           Edit About
                         </button>
-                      </div>
+                      {/* </div>
                     ) : (
                       <button
                         className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
@@ -440,7 +440,7 @@ export default function MyProfile() {
                         Add Description
                       </button>
                     )}
-                  </div>
+                  </div> */} 
 
                   {/* Modal Component */}
                   <Modal
@@ -623,7 +623,27 @@ export default function MyProfile() {
                         )}
                       </div>
 
-
+{/* <div className="row mt-4">
+      {gallery.length > 0 ? (
+        gallery.map((image, index) => (
+          <div key={index} className="col-md-3 mb-3">
+            <ImageZoom
+              src={image}
+              alt="Gallery Item"
+              className="rounded-5"
+              style={{
+                width: "100%",
+                height: "200px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+            />
+          </div>
+        ))
+      ) : (
+        <p className="text-center mt-3">No images uploaded yet.</p>
+      )}
+    </div> */}
 
 
                     </div>

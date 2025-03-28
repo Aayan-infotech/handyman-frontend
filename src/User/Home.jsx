@@ -239,7 +239,7 @@ export default function Main() {
                   </div>
                 </div>
 
-                <div className="d-flex justify-content-start flex-column gap-3 align-items-start pt-5">
+                {/* <div className="d-flex justify-content-start flex-column gap-3 align-items-start pt-5">
                   <div className="d-flex justify-content-between align-items-center w-100">
                     <h5 className="user">Recent Job Post</h5>
                     <Link to="/job-management">
@@ -312,7 +312,7 @@ export default function Main() {
                       </tbody>
                     </Table>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
