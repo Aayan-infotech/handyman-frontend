@@ -281,6 +281,13 @@ export default function MyProfile() {
         localStorage.removeItem("ProviderEmail");
         localStorage.removeItem("ProviderName");
         localStorage.removeItem("ProviderId");
+        localStorage.removeItem("ProviderUId");
+        localStorage.removeItem("Guest");
+        localStorage.removeItem("hunterUId");
+        localStorage.removeItem("ProviderRefreshToken");
+        localStorage.removeItem("chatId");
+        localStorage.removeItem("hunterRefreshToken");
+        localStorage.removeItem("verifyEmailOtp");
         navigate("/welcome");
       }
     } catch (error) {
