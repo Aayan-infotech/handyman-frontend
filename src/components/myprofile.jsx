@@ -888,31 +888,33 @@ export default function MyProfile() {
                       : "d-none"
                   }`}
                 >
-                  <div className="card border-0 rounded-5 h-100">
-                    <div className="card-body">
-                      <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${
-                          Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                        }`}
-                      >
-                        <div className="circle-container">
-                          <div className="progress-circle">
-                            <div className="lock-icon">
-                              <CiBadgeDollar />
+                  <Link to="/provider/managesubscription">
+                    <div className="card border-0 rounded-5 h-100">
+                      <div className="card-body">
+                        <div
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
+                        >
+                          <div className="circle-container">
+                            <div className="progress-circle">
+                              <div className="lock-icon">
+                                <CiBadgeDollar />
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="d-flex flex-row gap-3 align-items-center">
-                          <span className="text-success text-center">
-                            Manange Subscription
-                          </span>
+                          <div className="d-flex flex-row gap-3 align-items-center">
+                            <span className="text-success text-center">
+                              Manange Subscription
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
