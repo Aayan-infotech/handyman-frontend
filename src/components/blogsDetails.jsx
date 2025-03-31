@@ -28,7 +28,7 @@ export default function BlogDetail() {
     axios
       .get(`http://3.223.253.106:7777/api/blog/getAll`)
       .then((response) => {
-        const allBlogs = response.data;
+        const allBlogs = response?.data?.blog;
         const currentBlog = allBlogs.find((b) => b._id.toString() === id);
         setBlog(currentBlog);
         setRelatedBlogs(

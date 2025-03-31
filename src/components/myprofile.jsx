@@ -574,21 +574,23 @@ export default function MyProfile() {
                         onHide={handleClose}
                         centered // This ensures the modal is vertically centered
                       >
-                        <Modal.Header closeButton>
+                        <Modal.Header className="border-0" closeButton>
                           <Modal.Title>Confirm Account Deletion</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                          Are you sure you want to delete your account? This
-                          action cannot be undone.
+                          <h5 className="fw-normal text-center">
+                            Are you sure you want to delete your account? This
+                            action cannot be undone.
+                          </h5>
+                          <div className="d-flex justify-content-center align-items-center flex-row gap-3 mt-4">
+                            <Button variant="success" onClick={handleClose}>
+                              Cancel
+                            </Button>
+                            <Button variant="danger" onClick={deleteAccount}>
+                              Delete Account
+                            </Button>
+                          </div>
                         </Modal.Body>
-                        <Modal.Footer>
-                          <Button variant="secondary" onClick={handleClose}>
-                            Cancel
-                          </Button>
-                          <Button variant="danger" onClick={deleteAccount}>
-                            Delete Account
-                          </Button>
-                        </Modal.Footer>
                       </Modal>
                     </div>
                   </div>
