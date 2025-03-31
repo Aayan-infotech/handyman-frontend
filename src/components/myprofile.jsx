@@ -842,7 +842,7 @@ export default function MyProfile() {
                     to={`${
                       Location.pathname.includes("provider")
                         ? "/provider/job-history"
-                        : "/home"
+                        : "/privacy"
                     }`}
                   >
                     <div className="card border-0 rounded-5 h-100">
