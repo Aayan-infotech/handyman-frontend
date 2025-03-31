@@ -45,7 +45,10 @@ export default function LoggedHeader() {
         expand="lg"
         className="position-relative z-1 loggedheader hwtwrfe"
       >
-        <Container fluid>
+        <Container
+          className="d-flex justify-content-between flex-row align-items-center flex-nowrap"
+          fluid
+        >
           <Link
             to={`${providerToken ? "/provider/home" : "/home"}`}
             className="py-1"
@@ -58,7 +61,7 @@ export default function LoggedHeader() {
             <></>
           )}
 
-          <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
+          <div className="d-flex justify-content-between align-items-center gap-5">
             {Location.pathname === "/post-new-job" ||
             Location.pathname === "/home" ? (
               <>
@@ -71,7 +74,7 @@ export default function LoggedHeader() {
               <></>
             )}
 
-            <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
+            <div className=" d-flex justify-content-between align-items-center gap-4">
               <Link className="notification" to="/notification">
                 <IoMdNotificationsOutline className="fs-4" />
               </Link>

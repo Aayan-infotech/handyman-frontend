@@ -191,10 +191,10 @@ export default function JobSpecification() {
                     <hr />
                     <div className="d-flex flex-column gap-3 align-items-start more-info">
                       <div className="row gy-4 w-100">
-                        <div className="col-lg-2">
+                        <div className=" col-3 col-lg-2">
                           <BiCoinStack />
                         </div>
-                        <div className="col-lg-10">
+                        <div className="col-9 col-lg-10">
                           <div className="d-flex flex-column gap-2 align-items-start">
                             <span className="text-muted">Estimated budget</span>
                             <b className="fw-medium fs-5">
@@ -204,10 +204,10 @@ export default function JobSpecification() {
                         </div>
                       </div>
                       <div className="row gy-4 w-100">
-                        <div className="col-lg-2">
+                        <div className=" col-3 col-lg-2">
                           <PiBag />
                         </div>
-                        <div className="col-lg-10">
+                        <div className="col-9 col-lg-10">
                           <div className="d-flex flex-column gap-2 align-items-start">
                             <span className="text-muted">Location</span>
                             <b className="fw-medium fs-5">
@@ -219,7 +219,7 @@ export default function JobSpecification() {
                     </div>
                     <hr />
                     {!guestCondition ? (
-                      <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-75">
+                      <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-100">
                         {/* <Button
                           variant="contained"
                           className="custom-green bg-red-outline rounded-5 py-3 w-50"

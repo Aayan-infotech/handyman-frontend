@@ -80,14 +80,15 @@ export default function ServiceProviderProfile() {
           </div>
           <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row ">
             <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
-              <h3 className="fw-bold fs-1">{data.contactName}</h3>
-              <h6>{data.businessName}</h6>
-              <p className="mb-0">{data.businessType}</p>
+              <h3 className="fw-bold fs-1">{data?.contactName}</h3>
+              <h6>{data?.businessName}</h6>
+              <h6>{data?.about}</h6>
+              <p className="mb-0">{data?.businessType}</p>
             </div>
             <div className="position-relative order-1 order-lg-2">
-              <div className="pos-profile">
+              <div className="pos-profile service-profile ">
                 <img
-                  src={data.images || notFound}
+                  src={data?.images || notFound}
                   alt="profile"
                   className=" profile-img"
                 />

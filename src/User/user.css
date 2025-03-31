@@ -729,9 +729,18 @@
   .login .card {
     width: calc(100% - 8%);
   }
+  .service-profile {
+    position: absolute;
+    top: -75px !important;
+    left: 125px !important;
+    right: 0;
+    width: 145px;
+    /* height: 100%; */
+    z-index: 999;
+}
   .image-shadow .exper {
     position: absolute;
-    left: 0;
+    left: -18px;
     right: 5px;
     bottom: 0%;
     /* width: 100%; */
@@ -739,7 +748,7 @@
     text-align: center;
     color: #fff;
     z-index: 1;
-    top: -10px !important;
+    top: 4px !important;
     align-items: start;
     justify-content: center;
     display: flex;
@@ -800,7 +809,7 @@
 
   .pos-profile {
     position: absolute;
-    top: -80px;
+    top: -60px;
     left: 94px;
     right: 0;
     width: 145px;

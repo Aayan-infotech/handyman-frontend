@@ -415,7 +415,7 @@ export default function MyProfile() {
                           <div className="d-flex flex-column align-items-center align-items-lg-start gap-1 justify-content-center justify-content-lg-start">
                             <p className="mt-3">{aboutText}</p>{" "}
                             <button
-                              className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                              className=" px-3 py-2 rounded-pill shadow"
                               style={{
                                 backgroundColor: "#32de84",
                                 color: "#fff",
@@ -428,7 +428,7 @@ export default function MyProfile() {
                           </div>
                         ) : (
                           <button
-                            className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow"
+                            className="px-3 py-2 rounded-pill shadow"
                             style={{
                               backgroundColor: "#32de84",
                               color: "#fff",
@@ -528,7 +528,9 @@ export default function MyProfile() {
                           <Modal.Title></Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                          <h3 className="text-center">Do you really want to logout?</h3>
+                          <h3 className="text-center">
+                            Do you really want to logout?
+                          </h3>
                           <div className="d-flex justify-content-center flex-row align-items-center gap-2 mt-3">
                             <Button
                               variant="success"
@@ -537,7 +539,11 @@ export default function MyProfile() {
                             >
                               Close
                             </Button>
-                            <Button variant="danger" className="px-5" onClick={signOut}>
+                            <Button
+                              variant="danger"
+                              className="px-5"
+                              onClick={signOut}
+                            >
                               Yes
                             </Button>
                           </div>

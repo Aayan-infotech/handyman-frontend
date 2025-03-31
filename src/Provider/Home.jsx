@@ -74,11 +74,11 @@ export default function HomeProvider() {
 
       if (getProviderJobs.fulfilled.match(result)) {
         setData(result.payload?.data || []);
-        setToastProps({
-          message: "Nearby Jobs Fetched Successfully",
-          type: "success",
-          toastKey: Date.now(),
-        });
+        // setToastProps({
+        //   message: "Nearby Jobs Fetched Successfully",
+        //   type: "success",
+        //   toastKey: Date.now(),
+        // });
       } else {
         throw new Error(result.payload?.message || "Error fetching jobs.");
       }
@@ -102,11 +102,11 @@ export default function HomeProvider() {
         .then((response) => {
           if (getGuestProviderJobs.fulfilled.match(response)) {
             setData(response.payload?.data || []);
-            setToastProps({
-              message: "Nearby Jobs Fetched Successfully",
-              type: "success",
-              toastKey: Date.now(),
-            });
+            // setToastProps({
+            //   message: "Nearby Jobs Fetched Successfully",
+            //   type: "success",
+            //   toastKey: Date.now(),
+            // });
           }
         })
         .catch((error) => {
@@ -202,7 +202,7 @@ export default function HomeProvider() {
       }
     } catch (error) {
       console.error("User error:", error);
-      addAlert("Error fetching user data", "error");
+      // addAlert("Error fetching user data", "error");
     }
   };
 
@@ -303,7 +303,7 @@ export default function HomeProvider() {
               />
             </div>
           </div>
-          <div className="row mt-4 gy-4 management">
+          <div className="row mt-4 gy-4 ">
             {loading ? (
               [...Array(2)].map((_, index) => (
                 <Skeleton
@@ -318,7 +318,7 @@ export default function HomeProvider() {
               </div>
             ) : (
               data.map((job) => (
-                <div className="col-lg-12" key={job._id}>
+                <div className="col-lg-12 management" key={job._id}>
                   <Link
                     to={`/provider/jobspecification/${job._id}`}
                     className="card border-0 rounded-3 px-4"
