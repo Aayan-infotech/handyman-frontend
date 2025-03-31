@@ -1,18 +1,20 @@
+
+
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { handleChangePassword } from "../Slices/userSlice";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Header from "./Navbar";
-import LoggedHeader from "./loggedNavbar";
 import Button from "@mui/material/Button";
-import logo from "../assets/logo.png";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../User/user.css";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing the eye icons
+
+import Header from "./Navbar";
+ import LoggedHeader from "./loggedNavbar";
 
 export default function ChangePassword() {
   const [toastProps, setToastProps] = useState({
@@ -29,6 +31,8 @@ export default function ChangePassword() {
     localStorage.getItem("ProviderToken");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false); // state to toggle old password visibility
+  const [showNewPassword, setShowNewPassword] = useState(false); // state to toggle new password visibility
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,7 +122,7 @@ export default function ChangePassword() {
         <Loader />
       ) : (
         <div className="bg-welcome">
-          {!token ? <Header /> : <LoggedHeader />}
+          {!token ? <Header /> : <LoggedHeader />}  {/* Using the correct imported components */}
 
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
@@ -129,44 +133,52 @@ export default function ChangePassword() {
                     Please enter new password to change password
                   </p>
                   <Form className="py-3" onSubmit={handleSubmit}>
-                    {" "}
-                    {/* Add onSubmit handler */}
-                    <Form.Group
-                      as={Row}
-                      className="mb-3"
-                      controlId="oldPassword"
-                    >
+                    <Form.Group as={Row} className="mb-3" controlId="oldPassword">
                       <Form.Label column sm="5" className="px-lg-0">
                         Enter Old Password
                       </Form.Label>
                       <Col sm="7">
-                        <Form.Control
-                          type="password"
-                          placeholder="Enter Old Password"
-                          value={oldPassword}
-                          onChange={(e) => setOldPassword(e.target.value)}
-                          required // Add required attribute for validation
-                        />
+                        <div className="input-container">
+                          <Form.Control
+                            type={showOldPassword ? "text" : "password"}
+                            placeholder="Enter Old Password"
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                            required
+                          />
+                          <span
+                            className="eye-icon"
+                            onClick={() => setShowOldPassword(!showOldPassword)}
+                          >
+                            {showOldPassword ? <FaEyeSlash /> : <FaEye />}
+                          </span>
+                        </div>
                       </Col>
                     </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      className="mb-3"
-                      controlId="newPassword"
-                    >
+
+                    <Form.Group as={Row} className="mb-3" controlId="newPassword">
                       <Form.Label column sm="5" className="px-lg-0">
                         Enter New Password
                       </Form.Label>
                       <Col sm="7">
-                        <Form.Control
-                          type="password"
-                          placeholder="Enter New Password"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          required // Add required attribute for validation
-                        />
+                        <div className="input-container">
+                          <Form.Control
+                            type={showNewPassword ? "text" : "password"}
+                            placeholder="Enter New Password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                          />
+                          <span
+                            className="eye-icon"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                          >
+                            {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                          </span>
+                        </div>
                       </Col>
                     </Form.Group>
+
                     <div className="d-flex justify-content-center align-items-center py-1">
                       <Button
                         variant="contained"
@@ -179,7 +191,7 @@ export default function ChangePassword() {
                     </div>
                   </Form>
 
-                  <span className="my-3 justify-content-center d-flex w-100">
+                  {/* <span className="my-3 justify-content-center d-flex w-100">
                     Go back to login page?{" "}
                     <Link
                       to="/login"
@@ -187,7 +199,7 @@ export default function ChangePassword() {
                     >
                       Sign in
                     </Link>
-                  </span>
+                  </span> */}
                 </div>
               </div>
             </div>
