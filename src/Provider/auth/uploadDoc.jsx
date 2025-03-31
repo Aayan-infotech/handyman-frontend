@@ -12,6 +12,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { getProviderUser } from "../../Slices/userSlice";
 import { useDispatch } from "react-redux";
+import LoggedHeader from "./component/loggedNavbar";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -197,7 +198,8 @@ export default function Upload() {
         <Loader />
       ) : (
         <div className="bg-signup h-100vh">
-          <Header />
+          {providerId ? <LoggedHeader /> : <Header />}
+
           <div className="container top-avatar login bg-center document">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1 bg-center">
               <div className="card shadow mb-4">

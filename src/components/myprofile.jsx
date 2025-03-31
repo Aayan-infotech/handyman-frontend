@@ -12,7 +12,7 @@ import { FaLock, FaPen } from "react-icons/fa";
 import { PiCircleHalfFill } from "react-icons/pi";
 import Button from "react-bootstrap/Button";
 import Button2 from "@mui/material/Button"; // Import Button as Button2
-
+import { FaTrash } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { CiLogout } from "react-icons/ci";
 import { IoCallSharp, IoLocationSharp } from "react-icons/io5";
@@ -188,11 +188,8 @@ export default function MyProfile() {
       );
 
       if (response.data && response.data.data.files) {
-        const files = response.data.data.files; // Extract 'files' array
-        const urls = files.map((file) => file.url); // Extract URLs from files
-
-        console.log(urls, "....gallery URLs");
-        setGallery(urls); // Set the gallery state with URLs
+        const files = response.data.data.files;
+        setGallery(files); // Set the gallery state with URLs
       } else {
         console.error("No images found in the response.");
       }
@@ -204,6 +201,18 @@ export default function MyProfile() {
   useEffect(() => {
     fetchGallery(); // Fetch gallery images when the component mounts
   }, []);
+
+  const handleDeleteGallery = async (imageId) => {
+    try {
+      await axios.delete(
+        `http://3.223.253.106:7777/api/providerPhoto/${imageId}`
+      );
+
+      fetchGallery(); // Fetch the gallery after successful deletion
+    } catch (error) {
+      console.error("Failed to delete image:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -330,6 +339,7 @@ export default function MyProfile() {
       });
     }
   };
+  console.log("dgrd", gallery);
 
   const Location = useLocation();
   return (
@@ -627,7 +637,7 @@ export default function MyProfile() {
                     <div>
                       <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
                         <h4 className="mb-0 text-center text-lg-start">
-                          Added your work gallery here
+                          Add your work gallery here
                         </h4>
 
                         <Button2
@@ -653,11 +663,23 @@ export default function MyProfile() {
                       <div className="row mt-4">
                         {gallery.length > 0 ? (
                           gallery.map((image, index) => {
-                            console.log("Rendering image:", image); // Log the image URLs
                             return (
-                              <div key={index} className="col-md-3 mb-3">
+                              <div
+                                key={index}
+                                className="col-md-3 mb-3 position-relative"
+                              >
+                                <div className="position-absolute top-0 end-0 me-4 mt-3">
+                                  <button
+                                    className="btn btn-danger"
+                                    onClick={() =>
+                                      handleDeleteGallery(image._id)
+                                    }
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                </div>
                                 <img
-                                  src={image} // Image URL from the 'files' array
+                                  src={image?.url}
                                   alt="Gallery Item"
                                   className="rounded-5"
                                   style={{
@@ -675,28 +697,6 @@ export default function MyProfile() {
                           </p>
                         )}
                       </div>
-
-                      {/* <div className="row mt-4">
-      {gallery.length > 0 ? (
-        gallery.map((image, index) => (
-          <div key={index} className="col-md-3 mb-3">
-            <ImageZoom
-              src={image}
-              alt="Gallery Item"
-              className="rounded-5"
-              style={{
-                width: "100%",
-                height: "200px",
-                objectFit: "cover",
-                cursor: "pointer",
-              }}
-            />
-          </div>
-        ))
-      ) : (
-        <p className="text-center mt-3">No images uploaded yet.</p>
-      )}
-    </div> */}
                     </div>
                   </div>
                 </div>
