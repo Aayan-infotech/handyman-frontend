@@ -54,6 +54,7 @@ import axios from "axios";
 import Loader from "./Loader";
 import BlogDetail from "./components/blogsDetails";
 import AllBlogs from "./components/allBlogs";
+import ManageSubscription from "./Provider/manageSubscription";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -196,6 +197,7 @@ function App() {
           path="/job-detail/:id"
           element={<ProtectedRoute element={<JobDetail />} />}
         />
+
         <Route
           path="/service-provider"
           element={<ProtectedRoute element={<ServiceProvider />} />}
@@ -245,6 +247,10 @@ function App() {
         <Route
           path="/provider/signup"
           element={<UnProtectedRoute element={<SignUpProvider />} />}
+        />
+        <Route
+          path="/provider/managesubscription"
+          element={<ProtectedRoute element={<ManageSubscription />} />}
         />
         <Route
           path="/provider/upload"
