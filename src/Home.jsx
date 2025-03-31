@@ -76,7 +76,8 @@ function Home() {
     axios
       .get("http://3.223.253.106:7777/api/blog/getAll")
       .then((response) => {
-        setBlogs(response.data);
+        console.log(response?.data);
+        setBlogs(response?.data?.blog);
       })
       .catch((error) => {
         console.error("Error fetching blogs:", error);
@@ -622,12 +623,7 @@ function Home() {
       {/* Blogs Section */}
 
       <Container className="py-5">
-        <Grid
-          container
-          justifyContent="space-between"
-          alignItems="center"
-        
-        >
+        <Grid container justifyContent="space-between" alignItems="center">
           <h2>
             Our <span style={{ color: "#1976D2" }}>Blogs</span>
           </h2>
@@ -639,26 +635,26 @@ function Home() {
             Show all blogs <GoArrowRight className="fs-4 ms-1" />
           </Link>
         </Grid>
-        <Grid container spacing={4}>
-          {blogs.map((blog) => (
-            <Grid item xs={12} sm={6} md={3} key={blog.id}>
+        <Grid container spacing={4} className="mt-2">
+          {blogs?.map((blog) => (
+            <Grid item xs={12} sm={6} md={3} key={blog?._id}>
               <Card sx={{ maxWidth: 400 }}>
                 <CardActionArea
                   component={Link}
-                  to={`/blog-detail/${blog._id}`}
+                  to={`/blog-detail/${blog?._id}`}
                 >
                   <CardMedia
                     component="img"
                     height="180"
-                    image={blog.image}
-                    alt={blog.title}
+                    image={blog?.image}
+                    alt={blog?.title}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                      {blog.title}
+                      {blog?.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {blog.description}
+                      {blog?.description}
                     </Typography>
                     <Typography
                       variant="caption"
@@ -666,7 +662,7 @@ function Home() {
                       color="text.secondary"
                       mt={1}
                     >
-                      {blog.date}
+                      {blog?.date}
                     </Typography>
                   </CardContent>
                 </CardActionArea>

@@ -46,7 +46,7 @@ export default function Login() {
       return;
     }
     setLoading(true);
-
+if(ProviderToken)
     try {
       const response = await axios.post(
         "http://3.223.253.106:7777/api/auth/login",
