@@ -73,7 +73,7 @@ export default function LoggedHeader() {
             <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
           )}
 
-          <div className="ms-auto d-flex justify-content-between align-items-center gap-5">
+          <div className=" d-flex justify-content-between align-items-center gap-5">
             {(location.pathname === "/post-new-job" ||
               location.pathname === "/home") && (
               <div className="position-relative icon">
@@ -82,7 +82,7 @@ export default function LoggedHeader() {
               </div>
             )}
 
-            <div className="ms-auto d-flex justify-content-between align-items-center gap-4">
+            <div className="d-flex justify-content-between align-items-center gap-4">
               <Link className="notification" to="/notification">
                 <IoMdNotificationsOutline className="fs-4" />
               </Link>
