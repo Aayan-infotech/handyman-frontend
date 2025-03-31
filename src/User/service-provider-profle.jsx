@@ -18,10 +18,11 @@ import reviewImg2 from "./assets/reviewimg2.png";
 import reviewImg3 from "./assets/reviewimg3.png";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import notFound from "./assets/noprofile.png"
+import notFound from "./assets/noprofile.png";
 
 export default function ServiceProviderProfile() {
   const { id } = useParams();
+  const [backgroundImg, setBackgroundImg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const handleProviderProfile = async () => {
@@ -38,8 +39,20 @@ export default function ServiceProviderProfile() {
     }
   };
 
+  const fetchBackgroundImage = async () => {
+    try {
+      const response = await axios.get(
+        `http://3.223.253.106:7777/api/backgroundImg/${id}`
+      );
+      setBackgroundImg(response.data.data[0].backgroundImg);
+    } catch (error) {
+      console.error("Error fetching background image:", error);
+    }
+  };
+
   useEffect(() => {
     handleProviderProfile();
+    fetchBackgroundImage();
   }, [id]);
 
   console.log(data);
@@ -60,7 +73,7 @@ export default function ServiceProviderProfile() {
       <div className="bg-second pb-3">
         <div className="container">
           <div className="image-shadow">
-            <img src={serviceProviderImage} alt="image" />
+            <img src={backgroundImg || notFound} alt="image" className="w-100"/>
             {/* <div className="cost">
               <h5>$500 - $1,000/monthly</h5>
             </div> */}
@@ -73,7 +86,11 @@ export default function ServiceProviderProfile() {
             </div>
             <div className="position-relative order-1 order-lg-2">
               <div className="pos-profile">
-                <img src={data.images || notFound} alt="profile" className=" profile-img"/>
+                <img
+                  src={data.images || notFound}
+                  alt="profile"
+                  className=" profile-img"
+                />
               </div>
             </div>
 
