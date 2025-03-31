@@ -821,3 +821,16 @@
     width: fit-content;
   }
 }
+.input-container {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px;  /* Adjust based on your design */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 1.2rem;
+}
