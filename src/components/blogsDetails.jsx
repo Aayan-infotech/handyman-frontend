@@ -32,8 +32,8 @@ export default function BlogDetail() {
         const currentBlog = allBlogs.find((b) => b._id.toString() === id);
         setBlog(currentBlog);
         setRelatedBlogs(
-          allBlogs.filter((b) => b._id !== currentBlog?._id).slice(0, 3)
-        ); // Get 3 related blogs
+          allBlogs.filter((b) => b._id !== currentBlog?._id)
+        ); 
       })
       .catch((error) => {
         console.error("Error fetching blog details:", error);
@@ -91,7 +91,9 @@ export default function BlogDetail() {
                 }}
               />
               <h2 className=" mb-3">{blog.title}</h2>
-              <p className="text-muted">Published on {blog.date}</p>
+              <p className="text-muted">
+                Published on {new Date(blog.createdAt).toLocaleDateString()}.
+              </p>
               <div
                 className="content"
                 dangerouslySetInnerHTML={{ __html: blog.content }}

@@ -113,8 +113,7 @@ export default function MyProfile() {
         "http://3.223.253.106:7777/api/backgroundImg/upload",
         formData
       );
-      console.log(response, "response");
-      fetchBackgroundImage(); // Refresh image after upload
+      setBackgroundImg(response.data.data[0].backgroundImg);
     } catch (error) {
       console.error("Error uploading background image:", error);
     }
