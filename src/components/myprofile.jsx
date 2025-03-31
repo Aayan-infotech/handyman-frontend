@@ -32,10 +32,11 @@ export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [backgroundImg, setBackgroundImg] = useState("");
-  const [showModal, setShowModal] = useState(false); //NEW
-  const [description, setDescription] = useState(""); //NEW
-  const [aboutText, setAboutText] = useState(""); // Store "about" text after saving
-  const [fileToUpload, setFileToUpload] = useState(null); // Renamed 'selectedFile' to 'fileToUpload'
+  const [showModal, setShowModal] = useState(false);
+  const [description, setDescription] = useState("");
+  const [logoutModal, setLogoutModal] = useState(false);
+  const [aboutText, setAboutText] = useState("");
+  const [fileToUpload, setFileToUpload] = useState(null);
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -272,8 +273,7 @@ export default function MyProfile() {
         localStorage.removeItem("ProviderEmail");
         localStorage.removeItem("ProviderName");
         localStorage.removeItem("ProviderId");
-
-        setTimeout(() => navigate("/welcome"), 2000);
+        navigate("/welcome");
       }
     } catch (error) {
       console.log(error);
@@ -513,11 +513,36 @@ export default function MyProfile() {
                       <Button
                         variant="danger"
                         className="d-flex gap-2 align-items-center  mw-20 justify-content-center"
-                        onClick={signOut}
+                        onClick={() => setLogoutModal(true)}
                       >
                         <CiLogout />
                         Logout
                       </Button>
+
+                      <Modal
+                        show={logoutModal}
+                        onHide={() => setLogoutModal(false)}
+                        centered
+                      >
+                        <Modal.Header className="border-0" closeButton>
+                          <Modal.Title></Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <h3 className="text-center">Do you really want to logout?</h3>
+                          <div className="d-flex justify-content-center flex-row align-items-center gap-2 mt-3">
+                            <Button
+                              variant="success"
+                              className="px-3"
+                              onClick={() => setLogoutModal(false)}
+                            >
+                              Close
+                            </Button>
+                            <Button variant="danger" className="px-5" onClick={signOut}>
+                              Yes
+                            </Button>
+                          </div>
+                        </Modal.Body>
+                      </Modal>
 
                       <Button
                         variant="outline-danger"
