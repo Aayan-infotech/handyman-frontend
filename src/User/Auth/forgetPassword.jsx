@@ -1,8 +1,6 @@
-import react, { useState } from "react";
-import Container from "react-bootstrap/Container";
+import React, { useState } from "react";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
-import logo from "../../assets/logo.png";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -11,8 +9,7 @@ import "../user.css";
 import Toaster from "../../Toaster";
 import axios from "axios";
 import Loader from "../../Loader";
-import facebook from "../assets/logo/facebook.png";
-import google from "../assets/logo/iconGoogle.png";
+
 export default function ForgetPassword() {
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -123,14 +120,7 @@ export default function ForgetPassword() {
                   </div>
                 </div>
               </div>
-              <span className="my-3">
-                <Link
-                  to="/login"
-                  className="highlighted-text text-decoration-none"
-                >
-                  Sign in
-                </Link>
-              </span>
+            
             </div>
           </div>
         </div>
