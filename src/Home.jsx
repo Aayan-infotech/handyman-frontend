@@ -51,6 +51,7 @@ import axios from "axios";
 function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
+  const [allBusinessData, setAllBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
   const [address, setAddress] = useState("");
@@ -69,6 +70,7 @@ function Home() {
       .then((res) => {
         const limitedData = res?.data?.data?.slice(0, 8) || []; // Ensure only 8 items
         setBusinessData(limitedData);
+        setAllBusinessData(res?.data?.data)
       });
   }, []);
 
@@ -196,8 +198,8 @@ function Home() {
                           }}
                         >
                           {/* Map over the businessData array to display business names */}
-                          {businessData && businessData.length > 0 ? (
-                            businessData.map((business, index) => (
+                          {allBusinessData && allBusinessData.length > 0 ? (
+                            allBusinessData.map((business, index) => (
                               <MenuItem key={index} value={business.name}>
                                 {business.name}
                               </MenuItem>

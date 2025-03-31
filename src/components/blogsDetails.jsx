@@ -76,8 +76,8 @@ export default function BlogDetail() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <div className="container my-5">
-        <div className="row">
+      <div className="container my-lg-5 mt-3 mb-4">
+        <div className="row gy-4">
           <div className="col-lg-8">
             <div className="card shadow-lg p-4 border-0 rounded-3">
               <img
