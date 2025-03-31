@@ -158,7 +158,7 @@ export default function JobManagement() {
             </div>
           </Link>
           <div className="message">
-            <Link to={`/${hunterToken ? "/message" : "provider/message"}`}>
+            <Link to={`${hunterToken ? "/message" : "/provider/message"}`}>
               <MdMessage />
             </Link>
           </div>

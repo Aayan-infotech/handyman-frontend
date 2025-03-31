@@ -397,7 +397,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
           }`}
         >
           <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
-            {messagesPeople?.length === 0 ? (
+            {messages?.length === 0 ? (
               <Stack spacing={1} className="d-block">
                 <div className="fl-left">
                   <Skeleton
@@ -445,7 +445,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 </div>
               </Stack>
             ) : (
-              messagesPeople?.map((msg, index) => (
+              messages?.map((msg, index) => (
                 <div
                   key={index}
                   className={

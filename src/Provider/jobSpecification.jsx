@@ -41,14 +41,35 @@ export default function JobSpecification() {
   const handleJobStatus = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/acceptCount/${ProviderId}`
+      const response = await axios.put(
+        `http://3.223.253.106:7777/api/jobPost/job/accept/${id}`
       );
+
       if (response.status === 200) {
         setShow(true);
         setToastProps({
           message: response.message,
           type: "success",
+          toastKey: Date.now(),
+        });
+        setLoading(false);
+      }
+      try {
+        const response = await axios.post(
+          `http://3.223.253.106:7777/api/provider/acceptCount/${ProviderId}`
+        );
+        if (response.status === 200) {
+          setShow(true);
+          setToastProps({
+            message: response.message,
+            type: "success",
+            toastKey: Date.now(),
+          });
+        }
+      } catch (error) {
+        setToastProps({
+          message: error?.response?.data?.message,
+          type: "error",
           toastKey: Date.now(),
         });
         setLoading(false);
@@ -59,6 +80,7 @@ export default function JobSpecification() {
         type: "error",
         toastKey: Date.now(),
       });
+    } finally {
       setLoading(false);
     }
   };
