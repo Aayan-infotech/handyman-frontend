@@ -240,10 +240,11 @@ export default function JobSpecification() {
                         </div>
                         <div className="col-9 col-lg-10">
                           <div className="d-flex flex-column gap-2 align-items-start">
-                            <span className="text-muted">Location</span>
-                            <b className="fw-medium fs-5">
-                              {data?.jobLocation?.jobAddressLine}
-                            </b>
+                          <span className="text-muted">Location</span>
+<b className="fw-medium fs-5">
+  {data?.jobLocation?.jobAddressLine?.replace(/^[^,]+, /, '') || 'Location not available'}
+</b>
+
                           </div>
                         </div>
                       </div>
