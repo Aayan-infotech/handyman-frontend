@@ -46,8 +46,11 @@ export default function ServiceProvider() {
   });
   const [filteredData, setFilteredData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
+  const [providerRadius, setProviderRadius] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const [search, setSearch] = useState("");
+
   const token = localStorage.getItem("hunterToken");
   const handleChange = (event) => {
     setBusinessType(event.target.value);
@@ -106,6 +109,8 @@ export default function ServiceProvider() {
       if (response.status === 200) {
         setLoading(false);
         setData(response?.data?.data || []);
+        setSearch("");
+        setProviderRadius([]);
         setToastProps({
           message: response?.data?.message,
           type: "success",
@@ -132,21 +137,23 @@ export default function ServiceProvider() {
     }
   };
 
-  const filterData = () => {
-    if (businessType.length === 0) {
-      setFilteredData(data);
-    } else {
-      setFilteredData(
-        data.filter((provider) =>
-          provider.businessType.some((type) => businessType.includes(type))
-        )
+  useEffect(() => {
+    let filtered = data;
+
+    if (businessType.length > 0) {
+      filtered = filtered.filter((provider) =>
+        provider.businessType?.some((type) => businessType.includes(type))
       );
     }
-  };
 
-  useEffect(() => {
-    filterData();
-  }, [businessType, data]);
+    if (search) {
+      filtered = filtered.filter((provider) =>
+        provider.businessName?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    setFilteredData(filtered);
+  }, [search, businessType, data]);
 
   console.log(data);
 
@@ -175,37 +182,75 @@ export default function ServiceProvider() {
                     <div className="position-relative icon">
                       <IoIosSearch className="mt-1" />
                       <Form.Control
-                        placeholder="search for something"
+                        placeholder="search for Name"
                         className="search"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                       />
                     </div>
-                    <FormControl className="sort-input" sx={{ m: 1 }}>
-                      <InputLabel id="radius-select-label">
-                        Select BusinessType
-                      </InputLabel>
-                      <Select
-                        labelId="business-type-select-label"
-                        id="business-type-select"
-                        multiple
-                        value={businessType}
-                        onChange={handleChange}
-                        input={<OutlinedInput label="Select Business Type" />}
-                        renderValue={(selected) => selected.join(", ")}
-                        MenuProps={MenuProps}
-                        placeholder="Select Business Type"
-                      >
-                        {Array.from(
-                          new Set(
-                            data.flatMap((provider) => provider.businessType)
-                          )
-                        ).map((type, index) => (
-                          <MenuItem key={index} value={type}>
-                            <Checkbox checked={businessType.includes(type)} />
-                            <ListItemText primary={type} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <div className="d-flex w-100 justify-content-end flex-row gap-2">
+                      <FormControl className="sort-input w-100">
+                        <InputLabel id="radius-select-label">
+                          Select Provider Radius
+                        </InputLabel>
+                        <Select
+                          labelId="business-type-select-label"
+                          id="business-type-select"
+                          multiple
+                          value={providerRadius}
+                          onChange={(event) =>
+                            setProviderRadius(event.target.value)
+                          }
+                          input={
+                            <OutlinedInput label="Select Provider Radius" />
+                          }
+                          renderValue={(selected) => selected.join(", ")}
+                          MenuProps={MenuProps}
+                          placeholder="Select Provider Radius"
+                        >
+                          {Array.from(
+                            new Set(
+                              data.flatMap(
+                                (provider) => provider.address.radius
+                              )
+                            )
+                          ).map((type, index) => (
+                            <MenuItem key={index} value={`${type / 1000} km`}>
+                              <Checkbox checked={businessType.includes(type)} />
+                              <ListItemText primary={`${type / 1000} km`} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <FormControl className="sort-input w-100">
+                        <InputLabel id="radius-select-label">
+                          Select BusinessType
+                        </InputLabel>
+                        <Select
+                          labelId="business-type-select-label"
+                          id="business-type-select"
+                          multiple
+                          value={businessType}
+                          onChange={handleChange}
+                          input={<OutlinedInput label="Select Business Type" />}
+                          renderValue={(selected) => selected.join(", ")}
+                          MenuProps={MenuProps}
+                          placeholder="Select Business Type"
+                        >
+                          {Array.from(
+                            new Set(
+                              data.flatMap((provider) => provider.businessType)
+                            )
+                          ).map((type, index) => (
+                            <MenuItem key={index} value={type}>
+                              <Checkbox checked={businessType.includes(type)} />
+                              <ListItemText primary={type} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </div>
+
                     {/* {data?.map((provider, index) => (
                           <div key={provider._id} className="col-lg-12">
                             <FormControlLabel
@@ -269,7 +314,7 @@ export default function ServiceProvider() {
                   ))} */}
                       <div className="card shadow border-0 rounded-5 p-lg-3">
                         <div className="card-body">
-                          <Table responsive hover >
+                          <Table responsive hover>
                             <thead className="">
                               <tr className="">
                                 <th className="green-card-important py-3 text-center">

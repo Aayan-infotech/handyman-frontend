@@ -60,18 +60,6 @@ export default function LoggedHeader() {
             )}
 
             <div className="   d-flex justify-content-between align-items-center gap-5">
-              {Location.pathname === "/post-new-job" ||
-              Location.pathname === "/home" ? (
-                <>
-                  <div className="position-relative icon d-none d-lg-block">
-                    <IoIosSearch />
-                    <Form.Control placeholder="search" className="w-100" />
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
-
               <div className=" d-flex justify-content-between align-items-center gap-4">
                 <Link className="notification" to="/notification">
                   <IoMdNotificationsOutline className="fs-4" />

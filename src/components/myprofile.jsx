@@ -372,7 +372,7 @@ export default function MyProfile() {
               <div className="profile-container position-relative">
                 <div className="image-shadow">
                   <img
-                    className="w-100 rounded-4"
+                    className="w-100 rounded-4 object-fit-cover"
                     src={backgroundImg || notFound}
                     alt="background"
                   />

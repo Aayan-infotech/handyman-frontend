@@ -319,6 +319,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   };
 
   console.log("messageData in chat", selectedChat);
+  
 
   if (loading) return <Loader />;
 

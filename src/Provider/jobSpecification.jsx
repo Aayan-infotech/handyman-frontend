@@ -261,9 +261,11 @@ export default function JobSpecification() {
                           variant="contained"
                           onClick={handleJobStatus}
                           disabled={hasAcceptedJob}
-                          className="custom-green bg-green-custom rounded-5 py-3 w-100 text-light"
+                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
                         >
-                          Accept
+                          {hasAcceptedJob
+                            ? "You have accept this job"
+                            : "Accept"}
                         </Button>
                         {hasAcceptedJob && (
                           <Button
