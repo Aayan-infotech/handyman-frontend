@@ -429,8 +429,8 @@
 
 .image-shadow img {
   max-height: 300px;
-  object-fit: contain;
-  object-position: top;
+  object-fit: cover;
+  object-position: inherit;
 }
 
 .image-shadow::after {

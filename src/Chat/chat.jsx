@@ -154,8 +154,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
   console.log("Filtered messageData:", validMessageData);
   const hunterId = localStorage.getItem("hunterId");
   const receiverId = id || chatMessage?.senderId;
+  const senderId = id || chatMessage?.recieverId;
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
+  const [chatData, setChatData] = useState([]);
   const jobId =
     new URLSearchParams(location.search).get("jobId") ||
     messageData?.jobPost?._id ||
@@ -171,42 +173,68 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   useEffect(() => {
     if (!chatId) return;
-  
-    const chatMessagesRef = ref(realtimeDb, `chats/${jobId}/${chatId}/messages`);
-  
+
+    const chatMessagesRef = ref(
+      realtimeDb,
+      `chats/${jobId}/${chatId}/messages`
+    );
+
     const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
       if (snapshot.exists()) {
         const messagesData = snapshot.val();
-        
+
         // Convert to array and sort
-        let messagesArray = Object.values(messagesData)
-          .sort((a, b) => a.timeStamp - b.timeStamp);
-  
+        let messagesArray = Object.values(messagesData).sort(
+          (a, b) => a.timeStamp - b.timeStamp
+        );
+
         // Advanced deduplication
         const uniqueMessages = [];
         const seenKeys = new Set();
-  
-        messagesArray.forEach(message => {
+        console.log("messagesArray", messagesArray);
+        messagesArray.forEach((message) => {
           // Create a unique key combining timestamp, message, and sender
-          const messageKey = `${message.timeStamp}_${message.msg}_${message.senderId}`;
-          
+          const messageKey = `${message.timeStamp}-${message.msg}-${message.senderId}-${message.receiverId}`;
+
           if (!seenKeys.has(messageKey)) {
             seenKeys.add(messageKey);
             uniqueMessages.push(message);
           }
         });
-  
+
         setMessagesPeople(uniqueMessages);
       } else {
         setMessagesPeople([]);
       }
     });
-  
+
     return () => unsubscribe();
   }, [chatId, jobId]);
 
   console.log("messages1", messages);
   console.log("messagesPeople", messagesPeople);
+
+  const handleData = async () => {
+    try {
+      const response = await axios.post(
+        "http://3.223.253.106:7777/api/match/getMatchedData",
+        { jobPostId: jobId, senderId, receiverId }
+      );
+      console.log(response);
+      setChatData(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleData();
+  }, []);
+
+  const userChat =
+    chatData?.receiver?._id === id ? chatData?.sender : chatData?.receiver;
+
+  console.log("userChat", userChat);
 
   useEffect(() => {
     console.log("currentUser", currentUser);
@@ -320,6 +348,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   console.log("messageData in chat", selectedChat);
 
+  const messages1 = messages || messagesPeople || [];
+
   if (loading) return <Loader />;
 
   return (
@@ -331,7 +361,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
               <div className="d-flex flex-row align-items-center gap-2 profile-icon">
                 <Avatar
                   alt="Image"
-                  src={selectedChat?.displayUser?.images}
+                  src={selectedChat?.displayUser?.images || userChat?.images}
                   style={{ height: "82px", width: "82px" }}
                 >
                   {/* {selectedChat?.displayUser
@@ -342,12 +372,16 @@ export default function Chat({ messageData, messages, selectedChat }) {
                   {selectedChat?.displayUser?.name?.toUpperCase().charAt(0) ||
                     selectedChat?.displayUser?.contactName
                       .toUpperCase()
-                      .charAt(0)}
+                      .charAt(0) ||
+                    userChat?.name?.toUpperCase().charAt(0) ||
+                    userChat?.contectName?.toUpperCase().charAt(0)}
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
                   <h5 className="mb-0 fw-medium fs-5 text-dark">
                     {selectedChat?.displayUser?.name ||
-                      selectedChat?.displayUser?.contactName}
+                      selectedChat?.displayUser?.contactName ||
+                      userChat?.name ||
+                      userChat?.contectName}
                   </h5>
                   {/* {!show ? (
                     <span className="text-muted fs-6">2m ago</span>
@@ -397,7 +431,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
           }`}
         >
           <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
-            {messages?.length === 0 ? (
+            {messages1?.length === 0 ? (
               <Stack spacing={1} className="d-block">
                 <div className="fl-left">
                   <Skeleton
@@ -445,7 +479,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 </div>
               </Stack>
             ) : (
-              messages?.map((msg, index) => (
+              messages1?.map((msg, index) => (
                 <div
                   key={index}
                   className={

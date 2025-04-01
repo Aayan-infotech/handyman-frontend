@@ -33,6 +33,7 @@ const MenuProps = {
 export default function JobManagement() {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [search, setSearch] = useState("");
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -63,12 +64,17 @@ export default function JobManagement() {
   };
 
   useEffect(() => {
-    if (jobStatus.length === 0) {
-      setFilteredData(data);
-    } else {
-      setFilteredData(data.filter((job) => jobStatus.includes(job.jobStatus)));
+    let filtered = data;
+    if (jobStatus.length > 0) {
+      filtered = filtered.filter((job) => jobStatus.includes(job.jobStatus));
     }
-  }, [jobStatus, data]);
+    if (search) {
+      filtered = filtered.filter((job) =>
+        job.title.toLowerCase().includes(search)
+      );
+    }
+    setFilteredData(filtered);
+  }, [search, jobStatus, data]);
 
   const fetchJobs = async () => {
     setLoading(true);
@@ -87,6 +93,7 @@ export default function JobManagement() {
         );
         setData(res.data.data);
         setFilteredData(res.data.data);
+        setSearch('');
         setTotalPages(res.data.pagination.totalPages);
         setToastProps({
           message: res.data.message,
@@ -133,7 +140,6 @@ export default function JobManagement() {
     }
   };
 
-
   useEffect(() => {
     fetchJobs(currentPage);
   }, [currentPage]);
@@ -168,8 +174,10 @@ export default function JobManagement() {
                 <div className="position-relative icon ">
                   <IoIosSearch className="mt-1" />
                   <Form.Control
-                    placeholder="search for something"
+                    placeholder="search for Name"
                     className="search"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
                 <FormControl className="sort-input" sx={{ m: 1 }}>

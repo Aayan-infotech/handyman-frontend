@@ -5,6 +5,10 @@ import Chip from "@mui/material/Chip";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
+import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
 import { IoIosStar } from "react-icons/io";
 import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
@@ -14,11 +18,18 @@ import noData from "../assets/no_data_found.gif";
 export default function JobDetail() {
   const [data, setData] = useState(null);
   const [user, setUser] = useState("");
+  const [value, setValue] = useState(2);
+  const [review, setReview] = useState("");
+
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const [loading, setLoading] = useState(false);
   const [providerName, setProviderName] = useState("");
   const name = localStorage.getItem("hunterName");
@@ -27,39 +38,6 @@ export default function JobDetail() {
   const ProviderToken = localStorage.getItem("ProviderToken");
   const { id } = useParams();
   const [receiverId, setRecieverId] = useState(null);
-  const handleProvider = async () => {
-    try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/match/getMatchedData",
-        { jobPostId: id, senderId: user, receiverId }
-      );
-
-      const responseData = response.data.data;
-
-      if (responseData.sender && responseData.receiver) {
-        // Check if the logged-in user's name matches sender or receiver
-        if (responseData.sender.name === name) {
-          setProviderName(
-            responseData.receiver.contactName || responseData.sender.name
-          );
-        } else if (
-          responseData.sender.name === name ||
-          responseData.receiver.contactName === name
-        ) {
-          setProviderName(responseData.sender.name);
-        } else {
-          // If name does not match either, set any of them as provider name
-          setProviderName(
-            responseData.receiver.contactName || responseData.sender.name
-          );
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log("providerName", providerName);
 
   const handleProviderJobs = async () => {
     setLoading(true);
@@ -93,13 +71,103 @@ export default function JobDetail() {
     }
   };
 
+  const handleProvider = async () => {
+    try {
+      const response = await axios.post(
+        "http://3.223.253.106:7777/api/match/getMatchedData",
+        { jobPostId: id, senderId: user, receiverId }
+      );
+
+      const responseData = response.data.data;
+
+      if (responseData.sender && responseData.receiver) {
+        // Check if the logged-in user's name matches sender or receiver
+        if (responseData.sender.name === name) {
+          setProviderName(
+            responseData.receiver.contactName || responseData.sender.name
+          );
+        } else if (
+          responseData.sender.name === name ||
+          responseData.receiver.contactName === name
+        ) {
+          setProviderName(responseData.sender.name);
+        } else {
+          // If name does not match either, set any of them as provider name
+          setProviderName(
+            responseData.receiver.contactName || responseData.sender.name
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleReview = async () => {
+    try {
+      const reponse = await axios.post(
+        `http://3.223.253.106:7777/api/rating/giveRating/${user}`,
+        {
+          rating: value,
+          review,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken || hunterToken}`,
+          },
+        }
+      );
+      console.log(reponse);
+      setShow(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleJobStatus = async () => {
+    try {
+      const reponse = await axios.post(
+        `http://3.223.253.106:7777/api/jobPost/changeToComplete/${id}`,
+        {
+          providerId: receiverId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken || hunterToken}`,
+          },
+        }
+      );
+      console.log(reponse);
+      setShow(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const doubleFunction = () => {
+    handleReview();
+    handleJobStatus();
+    fetchData();
+  };
+
+  console.log("user", user);
+
+  const fetchData = async () => {
+    setLoading(true);
+    await handleProviderJobs();
+    if (user && receiverId) {
+      await handleProvider();
+    }
+    setLoading(false);
+  };
   useEffect(() => {
-    handleProviderJobs();
-    handleProvider();
-  }, [id]);
+    fetchData();
+  }, [id, user, receiverId]);
 
   if (loading) return <Loader />;
   if (!data) return <noData />;
+
+  console.log("data", data);
 
   return (
     <>
@@ -194,19 +262,32 @@ export default function JobDetail() {
                   </div>
                 </div>
                 {receiverId && (
-                  <div className="row gy-4 gx-4 w-100 align-items-center">
-                    <div className="col-2">
-                      <CiUser />
-                    </div>
-                    <div className="col-10 ps-lg-4 ps-5">
-                      <div className="d-flex flex-column align-items-start">
-                        <span className="text-muted">
-                          You have Assigned job to
-                        </span>
-                        <b className="fw-medium fs-5">{providerName}</b>
+                  <>
+                    <div className="row gy-4 gx-4 w-100 align-items-center">
+                      <div className="col-2">
+                        <CiUser />
+                      </div>
+                      <div className="col-10 ps-lg-4 ps-5">
+                        <div className="d-flex flex-column align-items-start">
+                          <span className="text-muted">
+                            You have Assigned job to
+                          </span>
+                          <b className="fw-medium fs-5">{providerName}</b>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+                      onClick={handleShow}
+                      disabled={data.jobStatus === "Completed"}
+                    >
+                      {data.jobStatus === "Completed"
+                        ? "This job has been Completed"
+                        : " Mark As Complete"}
+                    </Button>
+                  </>
                 )}
               </div>
               <hr />
@@ -223,6 +304,38 @@ export default function JobDetail() {
                   </div>
                 </div>
               </div> */}
+              <Modal show={show} onHide={handleClose} centered>
+                <Modal.Header className="border-0" closeButton>
+                  <Modal.Title>Add Your Review</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <Rating
+                      name="simple-controlled"
+                      value={value}
+                      className="fs-2"
+                      onChange={(event, newValue) => {
+                        setValue(newValue);
+                      }}
+                    />
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Leave a comment here"
+                      style={{ height: "150px" }}
+                      value={review}
+                      onChange={(e) => setReview(e.target.value)}
+                    />
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+                      onClick={doubleFunction}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </Modal.Body>
+              </Modal>
             </div>
           </div>
         </div>

@@ -22,7 +22,19 @@ import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { MdOutlineSupportAgent } from "react-icons/md";
+import InputLabel from "@mui/material/InputLabel";
+
 import OutlinedInput from "@mui/material/OutlinedInput";
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 function getStyles(name, personName, theme) {
   return {
     fontWeight: personName.includes(name)
@@ -59,6 +71,13 @@ export default function NewJob() {
     type: "",
     toastKey: 0,
   });
+  const [selectedRadius, setSelectedRadius] = useState();
+
+  const handleChangeRadius = (event) => {
+    setSelectedRadius(event.target.value);
+  };
+  const radiusOptions = ["10", "20", "40", "80", "160"];
+
   const [businessType, setBusinessType] = useState([]);
   const [requirements, setRequirements] = useState("");
   const [documents, setDocuments] = useState([]);
@@ -224,16 +243,44 @@ export default function NewJob() {
                     />
                   </div>
                   <div className="col-lg-4">
-                    <Form.Control
-                      type="Number"
-                      placeholder="Radius for Provider"
-                      className="input1"
-                      value={radius}
-                      onChange={(e) => setRadius(e.target.value)}
-                    />
+                    <FormControl className="w-100 mt-lg-2">
+                      <Select
+                        className="input1 bg-white p-1"
+                        id="demo-multiple-radius"
+                        input={<OutlinedInput />}
+                        value={selectedRadius}
+                        onChange={handleChangeRadius}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        // renderValue={(selected) =>
+                        //   selected
+                        //     .map(
+                        //       (id) =>
+                        //         businessData.find((data) => data._id === id)
+                        //           ?.name
+                        //     )
+                        //     .join(", ")
+                        // }
+                        renderValue={(selected) => {
+                          if (!selected) {
+                            return <span>Choose Provider Radius</span>;
+                          }
+                          return selected;
+                        }}
+                      >
+                        <MenuItem value="" disabled>
+                          Choose Provider Radius
+                        </MenuItem>
+                        {radiusOptions.map((data, index) => (
+                          <MenuItem key={index} value={data}>
+                            {data}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </div>
                   <div className="col-lg-4">
-                    <FormControl className="w-100 ">
+                    <FormControl className="w-100 mt-lg-2">
                       <Select
                         className="input1 bg-white p-1"
                         id="demo-multiple-name"

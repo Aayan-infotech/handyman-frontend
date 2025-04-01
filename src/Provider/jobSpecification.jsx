@@ -240,10 +240,11 @@ export default function JobSpecification() {
                         </div>
                         <div className="col-9 col-lg-10">
                           <div className="d-flex flex-column gap-2 align-items-start">
-                            <span className="text-muted">Location</span>
-                            <b className="fw-medium fs-5">
-                              {data?.jobLocation?.jobAddressLine}
-                            </b>
+                          <span className="text-muted">Location</span>
+<b className="fw-medium fs-5">
+  {data?.jobLocation?.jobAddressLine?.replace(/^[^,]+, /, '') || 'Location not available'}
+</b>
+
                           </div>
                         </div>
                       </div>
@@ -261,9 +262,11 @@ export default function JobSpecification() {
                           variant="contained"
                           onClick={handleJobStatus}
                           disabled={hasAcceptedJob}
-                          className="custom-green bg-green-custom rounded-5 py-3 w-100 text-light"
+                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
                         >
-                          Accept
+                          {hasAcceptedJob
+                            ? "You have accept this job"
+                            : "Accept"}
                         </Button>
                         {hasAcceptedJob && (
                           <Button
