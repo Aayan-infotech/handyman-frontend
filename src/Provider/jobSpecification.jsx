@@ -42,7 +42,10 @@ export default function JobSpecification() {
     setLoading(true);
     try {
       const response = await axios.put(
-        `http://3.223.253.106:7777/api/jobPost/job/accept/${id}`
+        `http://3.223.253.106:7777/api/jobPost/job/accept/${id}`,
+        {
+          providerId: ProviderId,
+        }
       );
 
       if (response.status === 200) {
@@ -123,6 +126,12 @@ export default function JobSpecification() {
       setLoading(false);
     }
   };
+
+  const providerIdToMatch = ProviderId;
+
+  const hasAcceptedJob = data?.jobAcceptCount?.some(
+    (job) => job.providerId === providerIdToMatch
+  );
 
   const handleChat = () => {
     navigate(`/provider/chat/${data.user}?jobId=${data?._id}`);
@@ -251,10 +260,20 @@ export default function JobSpecification() {
                         <Button
                           variant="contained"
                           onClick={handleJobStatus}
-                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                          disabled={hasAcceptedJob}
+                          className="custom-green bg-green-custom rounded-5 py-3 w-100 text-light"
                         >
                           Accept
                         </Button>
+                        {hasAcceptedJob && (
+                          <Button
+                            variant="contained"
+                            onClick={() => setShow(true)}
+                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                          >
+                            Quick Message
+                          </Button>
+                        )}
                       </div>
                     ) : null}
                   </div>
