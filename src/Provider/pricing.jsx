@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
+
+import { Select, MenuItem, FormControl,  InputLabel } from '@mui/material';
+
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Loader from "../Loader";
@@ -15,6 +18,7 @@ export default function MainProvider() {
   const [loading, setLoading] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const [voucher, setVoucher] = useState("");
+  const [voucherOptions, setVoucherOptions] = useState([]);
   const name = localStorage.getItem("ProviderName");
   const dispatch = useDispatch();
   const token = localStorage.getItem("ProviderToken");
@@ -83,6 +87,23 @@ export default function MainProvider() {
     }
   };
 
+
+
+    // Fetch voucher options from the API
+    useEffect(() => {
+      const fetchVouchers = async () => {
+        setLoading(true);
+        try {
+          const response = await axios.get('http://3.223.253.106:7777/api/voucher');
+          setVoucherOptions(response.data.data || []);  // Assuming the data comes in a 'data' property
+        } catch (error) {
+          console.error("Error fetching vouchers:", error);
+        }
+        setLoading(false);
+      };
+  
+      fetchVouchers();
+    }, []);
   useEffect(() => {
     if (subscriptionStatus === 0) {
       const getData = async () => {
@@ -122,7 +143,7 @@ export default function MainProvider() {
                   </div>
 
                   <div className="col-lg-4 ms-auto">
-                    <InputGroup>
+                    {/* <InputGroup>
                       <Form.Control
                         placeholder="Do you have any voucher?"
                         aria-describedby="basic-addon1"
@@ -139,7 +160,41 @@ export default function MainProvider() {
                       >
                         Apply
                       </Button>
-                    </InputGroup>
+                    </InputGroup> */}
+
+<FormControl fullWidth variant="standard" style={{ borderRadius: "20px 0px 0px 20px" }}>
+        <InputLabel id="voucher-select-label">Do you have any voucher?</InputLabel>
+        <Select
+          labelId="voucher-select-label"
+          id="voucher-select"
+          value={voucher}
+          onChange={(e) => setVoucher(e.target.value)}
+          label="Voucher"
+          className="border-0"
+        >
+          {loading ? (
+            <MenuItem disabled>Loading...</MenuItem>
+          ) : voucherOptions.length > 0 ? (
+            voucherOptions.map((voucherOption) => (
+              <MenuItem key={voucherOption._id} value={voucherOption.code}>
+                {voucherOption.code} - {voucherOption.description}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem disabled>No vouchers available</MenuItem>
+          )}
+        </Select>
+      </FormControl>
+      <Button
+        variant="contained"
+        color="success"
+        className="custom-green bg-green-custom"
+        onClick={handleCoupon}
+        style={{ marginTop: '10px' }}
+      >
+        Apply
+      </Button>
+
                   </div>
                 </div>
                 <div className="row py-3 gy-4 mt-lg-4">

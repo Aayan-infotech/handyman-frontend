@@ -146,12 +146,19 @@ export default function ServiceProvider() {
       );
     }
 
+    // if (search) {
+    //   filtered = filtered.filter((provider) =>
+    //     provider.businessName?.toLowerCase().includes(search.toLowerCase())
+    //   );
+    // }
+
+
     if (search) {
       filtered = filtered.filter((provider) =>
-        provider.businessName?.toLowerCase().includes(search.toLowerCase())
+        provider.address?.addressLine?.toLowerCase().includes(search.toLowerCase())
       );
     }
-
+    
     setFilteredData(filtered);
   }, [search, businessType, data]);
 
@@ -182,7 +189,7 @@ export default function ServiceProvider() {
                     <div className="position-relative icon">
                       <IoIosSearch className="mt-1" />
                       <Form.Control
-                        placeholder="search for Name"
+                        placeholder="search for Address"
                         className="search"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
