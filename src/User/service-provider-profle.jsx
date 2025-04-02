@@ -26,6 +26,7 @@ export default function ServiceProviderProfile() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [rating, setRating] = useState([]);
+  const [gallery, setGallery] = useState([]);
   const handleProviderProfile = async () => {
     setLoading(true);
     try {
@@ -62,12 +63,28 @@ export default function ServiceProviderProfile() {
     }
   };
 
+  const getWorkGallery = async () => {
+    try {
+      const response = await axios.get(
+        `http://3.223.253.106:7777/api/providerPhoto/${id}`
+      );
+      setGallery(response?.data?.data?.files);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     try {
-      handleProviderProfile();
-      fetchBackgroundImage();
-      getRating();
+      const getAllData = async () => {
+        await handleProviderProfile();
+        await fetchBackgroundImage();
+        await getRating();
+        await getWorkGallery();
+        setLoading(false);
+      };
+      getAllData();
     } catch (error) {
       console.log(error);
     } finally {
@@ -102,12 +119,11 @@ export default function ServiceProviderProfile() {
               <h5>$500 - $1,000/monthly</h5>
             </div> */}
           </div>
-          <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row ">
+          <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row pb-lg-3">
             <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
               <h3 className="fw-bold fs-1">{data?.contactName}</h3>
               <h6>{data?.businessName}</h6>
               <h6>{data?.about}</h6>
-              <p className="mb-0">{data?.businessType}</p>
             </div>
             <div className="position-relative order-1 order-lg-2">
               <div className="pos-profile service-profile ">
@@ -125,7 +141,9 @@ export default function ServiceProviderProfile() {
                   <div className="d-flex justify-content-between align-items-center ">
                     <div className="d-flex flex-column gap-3">
                       <h5 className="mb-0">Available</h5>
-                      <p className="mb-0">Served 0+ Clients</p>
+                      <p className="mb-0">
+                        Served {data?.jobCompleteCount}+ Clients
+                      </p>
                     </div>
                     <div className="">
                       <BsThreeDotsVertical />
@@ -134,6 +152,16 @@ export default function ServiceProviderProfile() {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="d-flex flex-row flex-wrap justify-content-center gap-1 gap-lg-2 mt-lg-5 align-items-center profile my-4">
+            {data?.businessType?.map((type, index) => (
+              <div
+                className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
+                key={index}
+              >
+                <span className="fs-6">{type}</span>
+              </div>
+            ))}
           </div>
           <div className="d-flex justify-content-between align-items-center mt-3  flex-column flex-lg-row gap-3">
             <div className="d-flex flex-row gap-4 align-items-center">
@@ -161,66 +189,113 @@ export default function ServiceProviderProfile() {
               </div>
             </div>
           </div>
-          <div className="">
-            <h4 className="text-muted mt-4">Previous Rating</h4>
-            <Swiper
-              navigation={true}
-              spaceBetween={50}
-              modules={[Autoplay, Pagination, Navigation]}
-              autoplay={{
-                delay: 4500,
-                disableOnInteraction: false,
-              }}
-              pagination={true}
-              F
-              className="swiper-review-people swiper-services mb-5"
-              breakpoints={{
-                640: {
-                  slidesPerView: 1,
-                  spaceBetween: 10,
-                },
-                768: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                1024: {
-                  slidesPerView: 3,
-                  spaceBetween: 30,
-                },
-                1200: {
-                  slidesPerView: 4,
-                  spaceBetween: 40,
-                },
-              }}
-            >
-              {rating.map((item) => (
-                <>
-                  <SwiperSlide key={item._id}>
-                    <div className="card border-0 rounded-4">
-                      <div className="card-body">
-                        <div className="d-flex flex-row justify-content-between align-items-center">
-                          <img
-                            src={item?.userId?.images}
-                            alt="image"
-                            className="object-fit-cover"
-                            style={{ width: "100px", height: "100px" }}
-                          />
-                          <div className="d-flex flex-row gap-1 align-items-center">
-                            <p className="m-0">{item?.rating}</p>
-                            <IoIosStar size={30} />
-                          </div>
-                        </div>
-                        <b className="mb-0 pt-2 ms-2">
-                          Name: {item?.userId?.contactName}
-                        </b>
-                        <p className="fw-bold text-start mx-2">{item?.review}</p>
-                      </div>
+          {gallery.length > 0 && (
+            <>
+              <div className="card border-0 rounded-5 mt-lg-4">
+                <div className="card-body py-4 px-lg-4">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
+                      <h4 className="mb-0 text-center text-lg-start">
+                        Provider Work Gallery
+                      </h4>
                     </div>
-                  </SwiperSlide>
-                </>
-              ))}
-            </Swiper>
-          </div>
+
+                    <div className="row mt-4">
+                      {gallery.length > 0 ? (
+                        gallery.map((image, index) => {
+                          return (
+                            <div
+                              key={index}
+                              className="col-md-3 mb-3 position-relative"
+                            >
+                              <img
+                                src={image?.url}
+                                alt="Gallery Item"
+                                className="rounded-5"
+                                style={{
+                                  width: "100%",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <p className="text-center mt-3">
+                          No images uploaded yet.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+          {rating.length > 0 && (
+            <div className="">
+              <h4 className="text-muted mt-4">Previous Rating</h4>
+              <Swiper
+                navigation={true}
+                spaceBetween={50}
+                modules={[Autoplay, Pagination, Navigation]}
+                autoplay={{
+                  delay: 4500,
+                  disableOnInteraction: false,
+                }}
+                pagination={true}
+                F
+                className="swiper-review-people swiper-services mb-5"
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                  },
+                  1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                  },
+                  1200: {
+                    slidesPerView: 4,
+                    spaceBetween: 40,
+                  },
+                }}
+              >
+                {rating.map((item) => (
+                  <>
+                    <SwiperSlide key={item._id}>
+                      <div className="card border-0 rounded-4">
+                        <div className="card-body">
+                          <div className="d-flex flex-row justify-content-between align-items-center">
+                            <img
+                              src={item?.userId?.images}
+                              alt="image"
+                              className="object-fit-cover"
+                              style={{ width: "100px", height: "100px" }}
+                            />
+                            <div className="d-flex flex-row gap-1 align-items-center">
+                              <p className="m-0">{item?.rating}</p>
+                              <IoIosStar size={30} />
+                            </div>
+                          </div>
+                          <b className="mb-0 pt-2 ms-2">
+                            Name: {item?.userId?.contactName}
+                          </b>
+                          <p className="fw-bold text-start mx-2">
+                            {item?.review}
+                          </p>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  </>
+                ))}
+              </Swiper>
+            </div>
+          )}
         </div>
       </div>
     </>
