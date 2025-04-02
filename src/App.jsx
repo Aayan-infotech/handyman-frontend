@@ -55,6 +55,7 @@ import Loader from "./Loader";
 import BlogDetail from "./components/blogsDetails";
 import AllBlogs from "./components/allBlogs";
 import ManageSubscription from "./Provider/manageSubscription";
+import Pricingwithtype from "./Provider/pricingwithtype";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -305,6 +306,13 @@ function App() {
         <Route
           path="/provider/pricing"
           element={<ProtectedRoute element={<MainProvider />} />}
+        />
+
+
+
+<Route
+          path="/provider/pricingtype/:id"
+          element={<ProtectedRoute element={<Pricingwithtype />} />}
         />
         <Route
           path="/provider/pricing-detail/:id"
