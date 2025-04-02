@@ -25,6 +25,7 @@ export default function ServiceProviderProfile() {
   const [backgroundImg, setBackgroundImg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [rating, setRating] = useState([]);
   const handleProviderProfile = async () => {
     setLoading(true);
     try {
@@ -50,12 +51,31 @@ export default function ServiceProviderProfile() {
     }
   };
 
+  const getRating = async () => {
+    try {
+      const response = await axios.get(
+        `http://3.223.253.106:7777/api/rating/getRatings/${id}`
+      );
+      setRating(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    handleProviderProfile();
-    fetchBackgroundImage();
+    setLoading(true);
+    try {
+      handleProviderProfile();
+      fetchBackgroundImage();
+      getRating();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
-  console.log(data);
+  console.log("rating", rating);
   return (
     <>
       {loading && <Loader />}
@@ -73,7 +93,11 @@ export default function ServiceProviderProfile() {
       <div className="bg-second pb-3">
         <div className="container">
           <div className="image-shadow">
-            <img src={backgroundImg || notFound} alt="image" className="w-100"/>
+            <img
+              src={backgroundImg || notFound}
+              alt="image"
+              className="w-100"
+            />
             {/* <div className="cost">
               <h5>$500 - $1,000/monthly</h5>
             </div> */}
@@ -169,118 +193,32 @@ export default function ServiceProviderProfile() {
                 },
               }}
             >
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
+              {rating.map((item) => (
+                <>
+                  <SwiperSlide key={item._id}>
+                    <div className="card border-0 rounded-4">
+                      <div className="card-body">
+                        <div className="d-flex flex-row justify-content-between align-items-center">
+                          <img
+                            src={item?.userId?.images}
+                            alt="image"
+                            className="object-fit-cover"
+                            style={{ width: "100px", height: "100px" }}
+                          />
+                          <div className="d-flex flex-row gap-1 align-items-center">
+                            <p className="m-0">{item?.rating}</p>
+                            <IoIosStar size={30} />
+                          </div>
+                        </div>
+                        <b className="mb-0 pt-2 ms-2">
+                          Name: {item?.userId?.contactName}
+                        </b>
+                        <p className="fw-bold text-start mx-2">{item?.review}</p>
                       </div>
                     </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg1} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
-                    </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg2} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
-                    </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg3} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
-                    </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
-                    </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
-                    </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="card border-0 rounded-4">
-                  <div className="card-body">
-                    <div className="d-flex flex-row justify-content-between align-items-center">
-                      <img src={reviewImg} alt="image" />
-                      <div className="d-flex flex-row gap-3 align-items-center">
-                        <span>3.4</span>
-                        <IoIosStar size={30} />
-                      </div>
-                    </div>
-                    <p className="fw-bold text-center">
-                      Got the best service in less time and pocket friendly
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
+                  </SwiperSlide>
+                </>
+              ))}
             </Swiper>
           </div>
         </div>

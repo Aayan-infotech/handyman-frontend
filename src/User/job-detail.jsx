@@ -127,8 +127,9 @@ export default function JobDetail() {
   const handleJobStatus = async () => {
     try {
       const reponse = await axios.post(
-        `http://3.223.253.106:7777/api/jobPost/changeToComplete/${id}`,
+        `http://3.223.253.106:7777/api/jobPost/changeJobStatus/${id}`,
         {
+          jobStatus: " Completed",
           providerId: receiverId,
         },
         {
