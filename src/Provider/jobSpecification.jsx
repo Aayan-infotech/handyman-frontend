@@ -218,24 +218,26 @@ export default function JobSpecification() {
                             <Chip label={item} variant="outlined" key={index} />
                           ))}
                         </div>
-                        <div className="mt-4">
-                          <h3>Uploaded Document</h3>
-                          <div className="row g-2 gy-3">
-                            {data.documents ? (
-                              data.documents.map((doc, index) => (
-                                <div className="col-lg-4" key={index}>
-                                  <img
-                                    src={doc}
-                                    alt="document"
-                                    className="w-100 h-100 px-1"
-                                  />
-                                </div>
-                              ))
-                            ) : (
-                              <p>No document uploaded</p>
-                            )}
+                        {data.documents?.length > 0 && (
+                          <div className="mt-4">
+                            <h3>Uploaded Document</h3>
+                            <div className="row g-2 gy-3">
+                              {data.documents ? (
+                                data.documents.map((doc, index) => (
+                                  <div className="col-lg-4" key={index}>
+                                    <img
+                                      src={doc}
+                                      alt="document"
+                                      className="w-100 h-100 px-1"
+                                    />
+                                  </div>
+                                ))
+                              ) : (
+                                <p>No document uploaded</p>
+                              )}
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
 
