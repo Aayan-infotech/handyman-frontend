@@ -26,6 +26,7 @@ export default function ServiceProviderProfile() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [rating, setRating] = useState([]);
+  const [gallery, setGallery] = useState([]);
   const handleProviderProfile = async () => {
     setLoading(true);
     try {
@@ -62,12 +63,28 @@ export default function ServiceProviderProfile() {
     }
   };
 
+  const getWorkGallery = async () => {
+    try {
+      const response = await axios.get(
+        `http://3.223.253.106:7777/api/providerPhoto/${id}`
+      );
+      setGallery(response?.data?.data?.files);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     try {
-      handleProviderProfile();
-      fetchBackgroundImage();
-      getRating();
+      const getAllData = async () => {
+        await handleProviderProfile();
+        await fetchBackgroundImage();
+        await getRating();
+        await getWorkGallery();
+        setLoading(false);
+      };
+      getAllData();
     } catch (error) {
       console.log(error);
     } finally {
@@ -124,7 +141,9 @@ export default function ServiceProviderProfile() {
                   <div className="d-flex justify-content-between align-items-center ">
                     <div className="d-flex flex-column gap-3">
                       <h5 className="mb-0">Available</h5>
-                      <p className="mb-0">Served 0+ Clients</p>
+                      <p className="mb-0">
+                        Served {data?.jobCompleteCount}+ Clients
+                      </p>
                     </div>
                     <div className="">
                       <BsThreeDotsVertical />
@@ -170,6 +189,49 @@ export default function ServiceProviderProfile() {
               </div>
             </div>
           </div>
+          {gallery.length > 0 && (
+            <>
+              <div className="card border-0 rounded-5 mt-lg-4">
+                <div className="card-body py-4 px-lg-4">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
+                      <h4 className="mb-0 text-center text-lg-start">
+                        Provider Work Gallery
+                      </h4>
+                    </div>
+
+                    <div className="row mt-4">
+                      {gallery.length > 0 ? (
+                        gallery.map((image, index) => {
+                          return (
+                            <div
+                              key={index}
+                              className="col-md-3 mb-3 position-relative"
+                            >
+                              <img
+                                src={image?.url}
+                                alt="Gallery Item"
+                                className="rounded-5"
+                                style={{
+                                  width: "100%",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <p className="text-center mt-3">
+                          No images uploaded yet.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
           {rating.length > 0 && (
             <div className="">
               <h4 className="text-muted mt-4">Previous Rating</h4>
