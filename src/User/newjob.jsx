@@ -119,7 +119,7 @@ export default function NewJob() {
     formData.append("title", title);
     formData.append("longitude", longitude);
     formData.append("latitude", latitude);
-    formData.append("jobRadius", radius);
+    formData.append("jobRadius", selectedRadius);
     formData.append("jobAddressLine", address);
     formData.append("estimatedBudget", budget);
     formData.append("city", city);
