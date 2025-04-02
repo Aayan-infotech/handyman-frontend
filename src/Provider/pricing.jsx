@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 
-import { Select, MenuItem, FormControl,  InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -89,28 +89,30 @@ export default function MainProvider() {
 
 
 
-    // Fetch voucher options from the API
-    useEffect(() => {
-      const fetchVouchers = async () => {
-        setLoading(true);
-        try {
-          const response = await axios.get('http://3.223.253.106:7777/api/voucher');
-          setVoucherOptions(response.data.data || []);  // Assuming the data comes in a 'data' property
-        } catch (error) {
-          console.error("Error fetching vouchers:", error);
-        }
-        setLoading(false);
-      };
-  
-      fetchVouchers();
-    }, []);
+  // Fetch voucher options from the API
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get('http://3.223.253.106:7777/api/voucher');
+        setVoucherOptions(response.data.data || []);  // Assuming the data comes in a 'data' property
+      } catch (error) {
+        console.error("Error fetching vouchers:", error);
+      }
+      setLoading(false);
+    };
+
+    fetchVouchers();
+  }, []);
+
+
   useEffect(() => {
     if (subscriptionStatus === 0) {
       const getData = async () => {
         setLoading(true);
         try {
           const res = await axios.get(
-            "http://3.223.253.106:7777/api/SubscriptionNew/subscription-plans"
+            "http://3.223.253.106:7777/api/SubscriptionNew/subscription-type"
           );
           if (res?.data?.status === 200) {
             setData(res?.data?.data);
@@ -142,87 +144,88 @@ export default function MainProvider() {
                     </h5>
                   </div>
 
+
                   <div className="col-lg-4 ms-auto">
-                    {/* <InputGroup>
-                      <Form.Control
-                        placeholder="Do you have any voucher?"
-                        aria-describedby="basic-addon1"
-                        className=" border-0"
-                        value={voucher}
-                        onChange={(e) => setVoucher(e.target.value)}
+                    <Box display="flex" alignItems="center" gap={2}>
+                      {/* Voucher Dropdown */}
+                      <FormControl
+                        fullWidth
+                        variant="standard"
                         style={{ borderRadius: "20px 0px 0px 20px" }}
-                      />
+                      >
+                        <InputLabel id="voucher-select-label">Do you have any voucher?</InputLabel>
+                        <Select
+                          labelId="voucher-select-label"
+                          id="voucher-select"
+                          value={voucher}
+                          onChange={(e) => setVoucher(e.target.value)}
+                          label="Voucher"
+                          className="border-0"
+                        >
+                          {loading ? (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          ) : voucherOptions.length > 0 ? (
+                            voucherOptions.map((voucherOption) => (
+                              <MenuItem key={voucherOption._id} value={voucherOption.code}>
+                                {voucherOption.code} - {voucherOption.description}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem disabled>No vouchers available</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+
+                      {/* Apply Button */}
                       <Button
                         variant="contained"
                         color="success"
-                        className=" custom-green bg-green-custom"
-                        onClick={() => handleCoupon()}
+                        className="custom-green bg-green-custom"
+                        onClick={handleCoupon}
+                        style={{ marginTop: '10px' }}
                       >
                         Apply
                       </Button>
-                    </InputGroup> */}
-
-<FormControl fullWidth variant="standard" style={{ borderRadius: "20px 0px 0px 20px" }}>
-        <InputLabel id="voucher-select-label">Do you have any voucher?</InputLabel>
-        <Select
-          labelId="voucher-select-label"
-          id="voucher-select"
-          value={voucher}
-          onChange={(e) => setVoucher(e.target.value)}
-          label="Voucher"
-          className="border-0"
-        >
-          {loading ? (
-            <MenuItem disabled>Loading...</MenuItem>
-          ) : voucherOptions.length > 0 ? (
-            voucherOptions.map((voucherOption) => (
-              <MenuItem key={voucherOption._id} value={voucherOption.code}>
-                {voucherOption.code} - {voucherOption.description}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem disabled>No vouchers available</MenuItem>
-          )}
-        </Select>
-      </FormControl>
-      <Button
-        variant="contained"
-        color="success"
-        className="custom-green bg-green-custom"
-        onClick={handleCoupon}
-        style={{ marginTop: '10px' }}
-      >
-        Apply
-      </Button>
-
+                    </Box>
                   </div>
+
+
+
+
                 </div>
-                <div className="row py-3 gy-4 mt-lg-4">
-                  {data?.map((item) => (
-                    <div className="col-lg-4 col-md-6" key={item._id}>
-                      <Link
-                        to={`/provider/pricing-detail/${item._id}`}
-                        className="d-flex h-100"
-                      >
-                        <div className="h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
-                          <div className="card-body d-flex flex-column gap-3 align-items-center">
-                            <h3 className="mt-3 text-center">
-                              {item.planName}
-                            </h3>
-                            <h5 className="mt-3">${item.amount}</h5>
-                            <h4>KM Radius: {item.kmRadius}</h4>
-                            <span className="line-white"></span>
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: item.description,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
+              
+
+<div className="container">
+  <div className="top-section-main py-4 px-lg-5">
+    <div className="row">
+      {/* Add Heading here */}
+      <div className="col-12">
+        <h2 className="text-center">Choose Your Plan Type</h2>
+      </div>
+    </div>
+
+    <div className="row py-3 gy-4 mt-lg-4">
+      {data?.map((item) => (
+        <div className="col-lg-4 col-md-6" key={item._id}>
+          <Link
+            to={`/provider/pricingtype/${item._id}`}
+            className="d-flex h-100 w-100"
+          >
+            <div className="h-100 w-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-15">
+              <div className="card-body d-flex flex-column gap-3 align-items-center">
+                <h3 className="mt-3 text-center">
+                  {item.type}
+                </h3>
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+
               </div>
             </div>
           </div>

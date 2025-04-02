@@ -20,6 +20,7 @@ import Loader from "../Loader";
 import Toaster from "../Toaster";
 import { useDispatch, useSelector } from "react-redux";
 import { getGuestProviderJobId } from "../Slices/providerSlice";
+import { acceptJobNotification } from "../Slices/notificationSlice";
 
 export default function JobSpecification() {
   const [show, setShow] = useState(false);
@@ -38,6 +39,45 @@ export default function JobSpecification() {
   const { id } = useParams();
   const guestCondition = localStorage.getItem("Guest") === "true";
 
+  const noficationFunctionality = async () => {
+    setLoading(true);
+    try {
+      const response = dispatch(
+        acceptJobNotification({
+          receiverId: data?.user,
+        })
+      );
+      if (acceptJobNotification.fulfilled.match(response)) {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error Getting Nearby Jobs:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleJob = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://3.223.253.106:7777/api/jobpost/jobpost-details/${id}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+          },
+        }
+      );
+      console.log("data", response?.data?.data);
+      if (response.status === 200) {
+        setData(response?.data?.data);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleJobStatus = async () => {
     setLoading(true);
     try {
@@ -50,6 +90,8 @@ export default function JobSpecification() {
 
       if (response.status === 200) {
         setShow(true);
+        noficationFunctionality();
+        handleJob();
         setToastProps({
           message: response.message,
           type: "success",
@@ -85,27 +127,6 @@ export default function JobSpecification() {
       });
     } finally {
       setLoading(false);
-    }
-  };
-  const handleJob = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/jobpost/jobpost-details/${id}`,
-
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
-          },
-        }
-      );
-      console.log("data", response?.data?.data);
-      if (response.status === 200) {
-        setData(response?.data?.data);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -147,33 +168,35 @@ export default function JobSpecification() {
 
   return (
     <>
-      {loading && <Loader />}
-      <div className="">
-        <LoggedHeader />
-        <Link to="/provider/admin/chat/">
-          <div className="admin-message">
-            <MdOutlineSupportAgent />
-          </div>
-        </Link>
-        <div className="message">
-          <Link to="/provider/message">
-            <MdMessage />
+      {loading === true ? (
+        <Loader />
+      ) : (
+        <div className="">
+          <LoggedHeader />
+          <Link to="/provider/admin/chat/">
+            <div className="admin-message">
+              <MdOutlineSupportAgent />
+            </div>
           </Link>
-        </div>
-        <div className="bg-second py-5">
-          <div className="container">
-            <div className="row gy-4 gx-lg-2 management">
-              {data && Object.keys(data).length > 0 ? (
-                <>
-                  <div className="col-lg-6">
-                    <div className="d-flex flex-column gap-4 align-items-start">
-                      <div className="d-flex flex-row gap-2 align-items-center">
-                        <div className="d-flex flex-column align-items-start gap-1">
-                          <h3 className="mb-0">{data?.title}</h3>
-                          <h6>24/01/24</h6>
+          <div className="message">
+            <Link to="/provider/message">
+              <MdMessage />
+            </Link>
+          </div>
+          <div className="bg-second py-5">
+            <div className="container">
+              <div className="row gy-4 gx-lg-2 management">
+                {data && Object.keys(data).length > 0 ? (
+                  <>
+                    <div className="col-lg-6">
+                      <div className="d-flex flex-column gap-4 align-items-start">
+                        <div className="d-flex flex-row gap-2 align-items-center">
+                          <div className="d-flex flex-column align-items-start gap-1">
+                            <h3 className="mb-0">{data?.title}</h3>
+                            <h6>24/01/24</h6>
+                          </div>
                         </div>
-                      </div>
-                      {/* <div className="d-flex flex-row gap-4 align-items-center pb-3 pt-2">
+                        {/* <div className="d-flex flex-row gap-4 align-items-center pb-3 pt-2">
                         <div className="contact">
                           <a href="/provider/home">
                             <MdMessage />
@@ -190,127 +213,132 @@ export default function JobSpecification() {
                           </a>
                         </div>
                       </div> */}
-                      <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
-                        {data.businessType?.map((item, index) => (
-                          <Chip label={item} variant="outlined" key={index} />
-                        ))}
-                      </div>
-                      <div className="mt-4">
-                        <h3>Uploaded Document</h3>
-                        <div className="row g-2 gy-3">
-                          {data.documents ? (
-                            data.documents.map((doc, index) => (
-                              <div className="col-lg-4" key={index}>
-                                <img
-                                  src={doc}
-                                  alt="document"
-                                  className="w-100 h-100 px-1"
-                                />
-                              </div>
-                            ))
-                          ) : (
-                            <p>No document uploaded</p>
-                          )}
+                        <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
+                          {data.businessType?.map((item, index) => (
+                            <Chip label={item} variant="outlined" key={index} />
+                          ))}
                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-6">
-                    <h3 className="fw-bold">Job Description</h3>
-                    <p>{data?.requirements}</p>
-                    <hr />
-                    <div className="d-flex flex-column gap-3 align-items-start more-info">
-                      <div className="row gy-4 w-100">
-                        <div className=" col-3 col-lg-2">
-                          <BiCoinStack />
-                        </div>
-                        <div className="col-9 col-lg-10">
-                          <div className="d-flex flex-column gap-2 align-items-start">
-                            <span className="text-muted">Estimated budget</span>
-                            <b className="fw-medium fs-5">
-                              ${data?.estimatedBudget}
-                            </b>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row gy-4 w-100">
-                        <div className=" col-3 col-lg-2">
-                          <PiBag />
-                        </div>
-                        <div className="col-9 col-lg-10">
-                          <div className="d-flex flex-column gap-2 align-items-start">
-                          <span className="text-muted">Location</span>
-<b className="fw-medium fs-5">
-  {data?.jobLocation?.jobAddressLine?.replace(/^[^,]+, /, '') || 'Location not available'}
-</b>
-
+                        <div className="mt-4">
+                          <h3>Uploaded Document</h3>
+                          <div className="row g-2 gy-3">
+                            {data.documents ? (
+                              data.documents.map((doc, index) => (
+                                <div className="col-lg-4" key={index}>
+                                  <img
+                                    src={doc}
+                                    alt="document"
+                                    className="w-100 h-100 px-1"
+                                  />
+                                </div>
+                              ))
+                            ) : (
+                              <p>No document uploaded</p>
+                            )}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <hr />
-                    {!guestCondition ? (
-                      <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-100">
-                        {/* <Button
+
+                    <div className="col-lg-6">
+                      <h3 className="fw-bold">Job Description</h3>
+                      <p>{data?.requirements}</p>
+                      <hr />
+                      <div className="d-flex flex-column gap-3 align-items-start more-info">
+                        <div className="row gy-4 w-100">
+                          <div className=" col-3 col-lg-2">
+                            <BiCoinStack />
+                          </div>
+                          <div className="col-9 col-lg-10">
+                            <div className="d-flex flex-column gap-2 align-items-start">
+                              <span className="text-muted">
+                                Estimated budget
+                              </span>
+                              <b className="fw-medium fs-5">
+                                ${data?.estimatedBudget}
+                              </b>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row gy-4 w-100">
+                          <div className=" col-3 col-lg-2">
+                            <PiBag />
+                          </div>
+                          <div className="col-9 col-lg-10">
+                            <div className="d-flex flex-column gap-2 align-items-start">
+                              <span className="text-muted">Location</span>
+                              <b className="fw-medium fs-5">
+                                {data?.jobLocation?.jobAddressLine?.replace(
+                                  /^[^,]+, /,
+                                  ""
+                                ) || "Location not available"}
+                              </b>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <hr />
+                      {!guestCondition ? (
+                        <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-100">
+                          {/* <Button
                           variant="contained"
                           className="custom-green bg-red-outline rounded-5 py-3 w-50"
                         >
                           Reject
                         </Button> */}
-                        <Button
-                          variant="contained"
-                          onClick={handleJobStatus}
-                          disabled={hasAcceptedJob}
-                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                        >
-                          {hasAcceptedJob
-                            ? "You have accept this job"
-                            : "Accept"}
-                        </Button>
-                        {hasAcceptedJob && (
                           <Button
                             variant="contained"
-                            onClick={() => setShow(true)}
+                            onClick={handleJobStatus}
+                            disabled={hasAcceptedJob}
                             className="custom-green bg-green-custom rounded-5 py-3 w-100"
                           >
-                            Quick Message
+                            {hasAcceptedJob
+                              ? "You have accept this job"
+                              : "Accept"}
                           </Button>
-                        )}
-                      </div>
-                    ) : null}
-                  </div>
-                </>
-              ) : (
-                <p>No job details found.</p>
-              )}
+                          {hasAcceptedJob && (
+                            <Button
+                              variant="contained"
+                              onClick={() => setShow(true)}
+                              className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            >
+                              Quick Message
+                            </Button>
+                          )}
+                        </div>
+                      ) : null}
+                    </div>
+                  </>
+                ) : (
+                  <p>No job details found.</p>
+                )}
+              </div>
             </div>
           </div>
+
+          <Modal show={show} onHide={handleClose} centered>
+            <Modal.Header closeButton className="border-0">
+              <Modal.Title>Job Request</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <h3 className="text-center">
+                Job Request <br /> Accepted
+              </h3>
+            </Modal.Body>
+            {/* <Link to="/provider/chat/1234" className=""> */}
+            <div className="mx-auto w-75">
+              <Button
+                variant="contained"
+                className="custom-green bg-green-custom rounded-5 py-3 w-100 mb-4"
+                onClick={handleChat}
+              >
+                Message
+              </Button>
+            </div>
+
+            {/* </Link> */}
+          </Modal>
         </div>
-
-        <Modal show={show} onHide={handleClose} centered>
-          <Modal.Header closeButton className="border-0">
-            <Modal.Title>Job Request</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <h3 className="text-center">
-              Job Request <br /> Accepted
-            </h3>
-          </Modal.Body>
-          {/* <Link to="/provider/chat/1234" className=""> */}
-          <div className="mx-auto w-75">
-            <Button
-              variant="contained"
-              className="custom-green bg-green-custom rounded-5 py-3 w-100 mb-4"
-              onClick={handleChat}
-            >
-              Message
-            </Button>
-          </div>
-
-          {/* </Link> */}
-        </Modal>
-      </div>
+      )}
 
       <Toaster
         message={toastProps.message}

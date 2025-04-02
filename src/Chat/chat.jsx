@@ -155,6 +155,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const hunterId = localStorage.getItem("hunterId");
   const receiverId = id || chatMessage?.senderId;
   const senderId = id || chatMessage?.recieverId;
+  const [jobShow , setJobShow] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
   const [chatData, setChatData] = useState([]);
@@ -395,7 +396,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
             </div>
           </div>
         </div>
-        {hunterId && selectedChat?.jobData?.jobStatus === "Pending" && (
+        {hunterId && selectedChat?.jobData?.jobStatus === "Pending" && !jobShow && (
           <div className="container-fluid">
             <div className="row">
               <div className={`mw-condition mx-auto`}>
@@ -416,7 +417,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                       >
                         Yes
                       </button>
-                      <button className="btn btn-danger px-5">No</button>
+                      <button className="btn btn-danger px-5" onClick={() => setJobShow(true)}>No</button>
                     </div>
                   </div>
                 </div>
