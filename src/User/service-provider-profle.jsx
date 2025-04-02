@@ -1,101 +1,144 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage, MdEmail, MdOutlineSupportAgent } from "react-icons/md";
-import serviceProviderImage from "./assets/service-provider-image.png";
-import profilePicture from "./assets/profilePicture.png";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoIosStar } from "react-icons/io";
 import { IoCall } from "react-icons/io5";
 import { RiMessage2Fill } from "react-icons/ri";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import Loader from "../Loader";
 import { Pagination, Autoplay, Navigation } from "swiper/modules";
-import reviewImg from "./assets/reviewimg.png";
-import reviewImg1 from "./assets/reviewimg1.png";
-import reviewImg2 from "./assets/reviewimg2.png";
-import reviewImg3 from "./assets/reviewimg3.png";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import Loader from "../Loader";
 import notFound from "./assets/noprofile.png";
+import "swiper/css";
+import "swiper/css/navigation";
+
+const API_BASE_URL = "http://3.223.253.106:7777/api";
 
 export default function ServiceProviderProfile() {
   const { id } = useParams();
-  const [backgroundImg, setBackgroundImg] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [rating, setRating] = useState([]);
   const [gallery, setGallery] = useState([]);
-  const handleProviderProfile = async () => {
+  const [backgroundImg, setBackgroundImg] = useState(null);
+
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/provider/${id}`
-      );
-      setData(response?.data?.data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+      const [profileRes, bgRes, ratingRes, galleryRes] = await Promise.all([
+        axios.get(`${API_BASE_URL}/provider/${id}`),
+        axios.get(`${API_BASE_URL}/backgroundImg/${id}`),
+        axios.get(`${API_BASE_URL}/rating/getRatings/${id}`),
+        axios.get(`${API_BASE_URL}/providerPhoto/${id}`),
+      ]);
 
-  const fetchBackgroundImage = async () => {
-    try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/backgroundImg/${id}`
-      );
-      setBackgroundImg(response.data.data[0].backgroundImg);
+      setData(profileRes?.data?.data || {});
+      setBackgroundImg(bgRes?.data?.data[0]?.backgroundImg || null);
+      setRating(ratingRes?.data?.data || []);
+      setGallery(galleryRes?.data?.data?.files || []);
     } catch (error) {
-      console.error("Error fetching background image:", error);
-    }
-  };
-
-  const getRating = async () => {
-    try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/rating/getRatings/${id}`
-      );
-      setRating(response?.data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getWorkGallery = async () => {
-    try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/providerPhoto/${id}`
-      );
-      setGallery(response?.data?.data?.files);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    setLoading(true);
-    try {
-      const getAllData = async () => {
-        await handleProviderProfile();
-        await fetchBackgroundImage();
-        await getRating();
-        await getWorkGallery();
-        setLoading(false);
-      };
-      getAllData();
-    } catch (error) {
-      console.log(error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
   }, [id]);
 
-  console.log("rating", rating);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const renderGallery = () => {
+    if (gallery.length === 0) return null;
+
+    return (
+      <div className="card border-0 rounded-5 mt-4">
+        <div className="card-body py-4 px-lg-4">
+          <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
+            <h4 className="mb-0 text-center text-lg-start">
+              Provider Work Gallery
+            </h4>
+          </div>
+          <div className="row mt-4">
+            {gallery.map((image, index) => (
+              <div
+                key={index}
+                className="col-md-3 col-6 mb-3 position-relative"
+              >
+                <img
+                  src={image?.url}
+                  alt="Gallery Item"
+                  className="rounded-5"
+                  style={{
+                    width: "100%",
+                    height: "200px",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderRatings = () => {
+    if (rating.length === 0) return null;
+
+    return (
+      <>
+        <h4 className="text-muted mt-4">Previous Rating</h4>
+        <Swiper
+          navigation
+          spaceBetween={50}
+          modules={[Autoplay, Pagination, Navigation]}
+          autoplay={{
+            delay: 4500,
+            disableOnInteraction: false,
+          }}
+          pagination
+          className="swiper-review-people swiper-services mb-5"
+          breakpoints={{
+            640: { slidesPerView: 1, spaceBetween: 10 },
+            768: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 30 },
+            1200: { slidesPerView: 4, spaceBetween: 40 },
+          }}
+        >
+          {rating.map((item) => (
+            <SwiperSlide key={item._id}>
+              <div className="card border-0 rounded-4">
+                <div className="card-body">
+                  <div className="d-flex flex-row justify-content-between align-items-center">
+                    <img
+                      src={item?.userId?.images}
+                      alt="profile"
+                      className="object-fit-cover"
+                      style={{ width: "100px", height: "100px" }}
+                    />
+                    <div className="d-flex flex-row gap-1 align-items-center">
+                      <p className="m-0">{item?.rating}</p>
+                      <IoIosStar size={30} />
+                    </div>
+                  </div>
+                  <b className="mb-0 pt-2 ms-2">
+                    Name: {item?.userId?.contactName}
+                  </b>
+                  <p className="fw-bold text-start mx-2">{item?.review}</p>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </>
+    );
+  };
+
   return (
     <>
-      {loading && <Loader />}
+      {loading === true && <Loader />}
       <LoggedHeader />
       <Link to="/support/chat/1">
         <div className="admin-message">
@@ -112,25 +155,24 @@ export default function ServiceProviderProfile() {
           <div className="image-shadow">
             <img
               src={backgroundImg || notFound}
-              alt="image"
+              alt="background"
               className="w-100"
             />
-            {/* <div className="cost">
-              <h5>$500 - $1,000/monthly</h5>
-            </div> */}
           </div>
+
           <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row pb-lg-3">
             <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
               <h3 className="fw-bold fs-1">{data?.contactName}</h3>
               <h6>{data?.businessName}</h6>
               <h6>{data?.about}</h6>
             </div>
+
             <div className="position-relative order-1 order-lg-2">
-              <div className="pos-profile service-profile ">
+              <div className="pos-profile service-profile">
                 <img
                   src={data?.images || notFound}
                   alt="profile"
-                  className=" profile-img"
+                  className="profile-img"
                 />
               </div>
             </div>
@@ -138,21 +180,20 @@ export default function ServiceProviderProfile() {
             <div className="mw-40 w-100 order-3">
               <div className="card green-card border-0 rounded-4 w-100">
                 <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center ">
+                  <div className="d-flex justify-content-between align-items-center">
                     <div className="d-flex flex-column gap-3">
                       <h5 className="mb-0">Available</h5>
                       <p className="mb-0">
                         Served {data?.jobCompleteCount}+ Clients
                       </p>
                     </div>
-                    <div className="">
-                      <BsThreeDotsVertical />
-                    </div>
+                    <BsThreeDotsVertical />
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
           <div className="d-flex flex-row flex-wrap justify-content-center gap-1 gap-lg-2 mt-lg-5 align-items-center profile my-4">
             {data?.businessType?.map((type, index) => (
               <div
@@ -163,7 +204,8 @@ export default function ServiceProviderProfile() {
               </div>
             ))}
           </div>
-          <div className="d-flex justify-content-between align-items-center mt-3  flex-column flex-lg-row gap-3">
+
+          <div className="d-flex justify-content-between align-items-center mt-3 flex-column flex-lg-row gap-3">
             <div className="d-flex flex-row gap-4 align-items-center">
               <div className="d-flex flex-row gap-3 align-items-center">
                 <div className="circle-km"></div>
@@ -178,9 +220,7 @@ export default function ServiceProviderProfile() {
                 </a>
               </div>
               <div className="contact">
-                {/* <a href={`mailto:${data.email}`}> */}
                 <RiMessage2Fill />
-                {/* </a> */}
               </div>
               <div className="contact">
                 <a href={`tel:${data.phoneNo}`}>
@@ -189,113 +229,9 @@ export default function ServiceProviderProfile() {
               </div>
             </div>
           </div>
-          {gallery.length > 0 && (
-            <>
-              <div className="card border-0 rounded-5 mt-lg-4">
-                <div className="card-body py-4 px-lg-4">
-                  <div>
-                    <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
-                      <h4 className="mb-0 text-center text-lg-start">
-                        Provider Work Gallery
-                      </h4>
-                    </div>
 
-                    <div className="row mt-4">
-                      {gallery.length > 0 ? (
-                        gallery.map((image, index) => {
-                          return (
-                            <div
-                              key={index}
-                              className="col-md-3 mb-3 position-relative"
-                            >
-                              <img
-                                src={image?.url}
-                                alt="Gallery Item"
-                                className="rounded-5"
-                                style={{
-                                  width: "100%",
-                                  height: "200px",
-                                  objectFit: "cover",
-                                }}
-                              />
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <p className="text-center mt-3">
-                          No images uploaded yet.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-          {rating.length > 0 && (
-            <div className="">
-              <h4 className="text-muted mt-4">Previous Rating</h4>
-              <Swiper
-                navigation={true}
-                spaceBetween={50}
-                modules={[Autoplay, Pagination, Navigation]}
-                autoplay={{
-                  delay: 4500,
-                  disableOnInteraction: false,
-                }}
-                pagination={true}
-                F
-                className="swiper-review-people swiper-services mb-5"
-                breakpoints={{
-                  640: {
-                    slidesPerView: 1,
-                    spaceBetween: 10,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                  },
-                  1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                  },
-                  1200: {
-                    slidesPerView: 4,
-                    spaceBetween: 40,
-                  },
-                }}
-              >
-                {rating.map((item) => (
-                  <>
-                    <SwiperSlide key={item._id}>
-                      <div className="card border-0 rounded-4">
-                        <div className="card-body">
-                          <div className="d-flex flex-row justify-content-between align-items-center">
-                            <img
-                              src={item?.userId?.images}
-                              alt="image"
-                              className="object-fit-cover"
-                              style={{ width: "100px", height: "100px" }}
-                            />
-                            <div className="d-flex flex-row gap-1 align-items-center">
-                              <p className="m-0">{item?.rating}</p>
-                              <IoIosStar size={30} />
-                            </div>
-                          </div>
-                          <b className="mb-0 pt-2 ms-2">
-                            Name: {item?.userId?.contactName}
-                          </b>
-                          <p className="fw-bold text-start mx-2">
-                            {item?.review}
-                          </p>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                  </>
-                ))}
-              </Swiper>
-            </div>
-          )}
+          {renderGallery()}
+          {renderRatings()}
         </div>
       </div>
     </>
