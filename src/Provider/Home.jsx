@@ -17,6 +17,23 @@ import noData from "../assets/no_data_found.gif";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
+import Select from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import FormControl from "@mui/material/FormControl";
+const ITEM_HEIGHT = 40;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 150,
+    },
+  },
+};
 
 export default function HomeProvider() {
   const [loading, setLoading] = useState(false);
@@ -29,18 +46,25 @@ export default function HomeProvider() {
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
+  const [toastMessage, setToastMessage] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [massNotifications, setMassNotifications] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
+  const [jobStatus, setJobStatus] = useState([]);
   const [alertMessages, setAlertMessages] = useState([]); // Store alerts
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
   const guestCondition = localStorage.getItem("Guest") === "true";
   const dispatch = useDispatch();
+
+  const handleChange = (event) => {
+    setJobStatus(event.target.value);
+  };
 
   // const getUser = async () => {
   //   try {
@@ -102,6 +126,7 @@ export default function HomeProvider() {
         .then((response) => {
           if (getGuestProviderJobs.fulfilled.match(response)) {
             setData(response.payload?.data || []);
+            setFilteredData(response.payload?.data || []);
             // setToastProps({
             //   message: "Nearby Jobs Fetched Successfully",
             //   type: "success",
@@ -121,72 +146,25 @@ export default function HomeProvider() {
   }, [providerToken]);
 
   useEffect(() => {
+    let filtered = data;
+
+    // Only apply filtering if jobStatus has values selected
+    if (jobStatus.length > 0) {
+      filtered = filtered.filter(
+        (job) =>
+          job.businessType &&
+          job.businessType.some((type) => jobStatus.includes(type))
+      );
+    }
+
+    setFilteredData(filtered);
+  }, [jobStatus, data]);
+
+  useEffect(() => {
     if (businessType && latitude !== null && longitude !== null) {
       handleAllData();
     }
   }, [businessType, latitude, longitude]);
-
-  // const fetchNotifications = async () => {
-  //   if (!userId) return;
-  //   try {
-  //     const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
-  //     const response = await axios.get(url);
-  //     const notifications = Array.isArray(response.data.data)
-  //       ? response.data.data
-  //       : [];
-
-  //     setNotifications(notifications);
-
-  //     // Show count in toaster
-  //     setToastProps({
-  //       message: `You have ${notifications.length} new notifications`,
-  //       type: "info",
-  //       toastKey: Date.now(),
-  //     });
-  //   } catch (error) {
-  //     setToastProps({
-  //       message: "Failed to fetch notifications",
-  //       type: "error",
-  //       toastKey: Date.now(),
-  //     });
-  //   }
-  // };
-
-  // const fetchMassNotifications = async () => {
-  //   try {
-  //     const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
-  //     const response = await axios.get(url);
-  //     const massNotifications = Array.isArray(response.data)
-  //       ? response.data
-  //       : [];
-
-  //     setMassNotifications(massNotifications);
-
-  //     // Show count in toaster
-  //     setToastProps({
-  //       message: `You have ${massNotifications.length} mass notifications`,
-  //       type: "info",
-  //       toastKey: Date.now(),
-  //     });
-  //   } catch (error) {
-  //     setToastProps({
-  //       message: "Failed to fetch mass notifications",
-  //       type: "error",
-  //       toastKey: Date.now(),
-  //     });
-  //   }
-  // };
-
-  // // Function to add an alert message
-  // const addAlert = (message, severity) => {
-  //   const id = Date.now();
-  //   setAlertMessages((prev) => [...prev, { message, severity, id }]);
-
-  //   // Remove alert after 5 seconds
-  //   setTimeout(() => {
-  //     setAlertMessages((prev) => prev.filter((alert) => alert.id !== id));
-  //   }, 5000);
-  // };
 
   const getUser = async () => {
     try {
@@ -205,51 +183,6 @@ export default function HomeProvider() {
       // addAlert("Error fetching user data", "error");
     }
   };
-
-  // const fetchNotifications = async () => {
-  //   if (!userId) return;
-  //   try {
-  //     const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
-  //     const response = await axios.get(url);
-  //     const newNotifications = Array.isArray(response.data.data)
-  //       ? response.data.data
-  //       : [];
-
-  //     setNotifications(newNotifications);
-  //     addAlert(`You have ${newNotifications.length} new notifications`, "info");
-  //   } catch (error) {
-  //     addAlert("Failed to fetch notifications", "error");
-  //   }
-  // };
-
-  // const fetchMassNotifications = async () => {
-  //   try {
-  //     const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
-  //     const response = await axios.get(url);
-  //     const newMassNotifications = Array.isArray(response.data)
-  //       ? response.data
-  //       : [];
-
-  //     setMassNotifications(newMassNotifications);
-  //     addAlert(
-  //       `You have ${newMassNotifications.length} mass notifications`,
-  //       "info"
-  //     );
-  //   } catch (error) {
-  //     addAlert("Failed to fetch mass notifications", "error");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchNotifications();
-  //   setTimeout(fetchMassNotifications, 5000);
-  // }, []);
-
-  // // Call these functions in useEffect to trigger notifications on page load
-  // useEffect(() => {
-  //   fetchNotifications();
-  //   fetchMassNotifications();
-  // }, []);
 
   return (
     <>
@@ -291,33 +224,49 @@ export default function HomeProvider() {
           <div className="d-flex justify-content-between align-items-center pb-3">
             <h5 className="user">Hello {name}</h5>
           </div>
-          <div className="d-flex justify-content-between align-items-center mb-4 mt-3">
+          <div className="d-flex justify-content-between flex-column flex-lg-row align-items-center mb-4 mt-3">
             <h2 className="fw-normal">Job Requests</h2>
-          </div>
-          <div className="d-flex justify-content-start align-items-center">
-            <div className="position-relative icon">
-              <IoIosSearch className="mt-1" />
-              <Form.Control
-                placeholder="Search for something"
-                className="search"
-              />
-            </div>
+            <FormControl className="sort-input" sx={{ m: 1 }}>
+              <InputLabel id="radius-select-label">
+                Select Business Type
+              </InputLabel>
+              <Select
+                labelId="business-type-select-label"
+                id="business-type-select"
+                multiple
+                value={jobStatus}
+                onChange={handleChange}
+                input={<OutlinedInput label="Select Business Type" />}
+                renderValue={(selected) => selected.join(", ")}
+                MenuProps={MenuProps}
+                placeholder="Select Business Type"
+              >
+                {Array.from(
+                  new Set(data.flatMap((provider) => provider.businessType))
+                ).map((type, index) => (
+                  <MenuItem key={index} value={type}>
+                    <Checkbox checked={jobStatus.includes(type)} />
+                    <ListItemText primary={type} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
           <div className="row mt-4 gy-4 ">
             {loading ? (
-              [...Array(2)].map((_, index) => (
+              [...Array(4)].map((_, index) => (
                 <Skeleton
                   key={index}
                   sx={{ height: 100, width: "100%" }}
                   animation="wave"
                 />
               ))
-            ) : data.length === 0 ? (
+            ) : filteredData.length === 0 ? (
               <div className="d-flex justify-content-center">
                 <img src={noData} alt="No Data Found" className="w-nodata" />
               </div>
             ) : (
-              data.map((job) => (
+              filteredData.map((job) => (
                 <div className="col-lg-12 management" key={job._id}>
                   <Link
                     to={`/provider/jobspecification/${job._id}`}

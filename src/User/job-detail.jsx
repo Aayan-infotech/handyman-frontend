@@ -106,7 +106,7 @@ export default function JobDetail() {
   const handleReview = async () => {
     try {
       const reponse = await axios.post(
-        `http://3.223.253.106:7777/api/rating/giveRating/${user}`,
+        `http://3.223.253.106:7777/api/rating/giveRating/${receiverId}`,
         {
           rating: value,
           review,
