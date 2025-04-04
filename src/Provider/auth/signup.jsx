@@ -61,7 +61,7 @@ export default function SignUpProvider() {
   const theme = useTheme();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const guestVerify = searchParams.get("type");
+  const guestVerify = searchParams.get("type") === "Guest" ? true : false;
 
   // const handleChange = (event) => {
   //   const { value } = event.target;
@@ -130,7 +130,7 @@ export default function SignUpProvider() {
     formData.append("radius", "10000");
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
-    if (!guestVerify) {
+    if (guestVerify) {
       formData.append("isGuestMode", true);
     }
 

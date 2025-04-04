@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 
-import { Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -87,15 +87,15 @@ export default function MainProvider() {
     }
   };
 
-
-
   // Fetch voucher options from the API
   useEffect(() => {
     const fetchVouchers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://3.223.253.106:7777/api/voucher');
-        setVoucherOptions(response.data.data || []);  // Assuming the data comes in a 'data' property
+        const response = await axios.get(
+          "http://3.223.253.106:7777/api/voucher"
+        );
+        setVoucherOptions(response.data.data || []); // Assuming the data comes in a 'data' property
       } catch (error) {
         console.error("Error fetching vouchers:", error);
       }
@@ -105,9 +105,8 @@ export default function MainProvider() {
     fetchVouchers();
   }, []);
 
-
   useEffect(() => {
-    if (subscriptionStatus === 0) {
+    if (subscriptionStatus === 1) {
       const getData = async () => {
         setLoading(true);
         try {
@@ -144,7 +143,6 @@ export default function MainProvider() {
                     </h5>
                   </div>
 
-
                   <div className="col-lg-4 ms-auto">
                     <Box display="flex" alignItems="center" gap={2}>
                       {/* Voucher Dropdown */}
@@ -153,7 +151,9 @@ export default function MainProvider() {
                         variant="standard"
                         style={{ borderRadius: "20px 0px 0px 20px" }}
                       >
-                        <InputLabel id="voucher-select-label">Do you have any voucher?</InputLabel>
+                        <InputLabel id="voucher-select-label">
+                          Do you have any voucher?
+                        </InputLabel>
                         <Select
                           labelId="voucher-select-label"
                           id="voucher-select"
@@ -166,8 +166,12 @@ export default function MainProvider() {
                             <MenuItem disabled>Loading...</MenuItem>
                           ) : voucherOptions.length > 0 ? (
                             voucherOptions.map((voucherOption) => (
-                              <MenuItem key={voucherOption._id} value={voucherOption.code}>
-                                {voucherOption.code} - {voucherOption.description}
+                              <MenuItem
+                                key={voucherOption._id}
+                                value={voucherOption.code}
+                              >
+                                {voucherOption.code} -{" "}
+                                {voucherOption.description}
                               </MenuItem>
                             ))
                           ) : (
@@ -182,50 +186,40 @@ export default function MainProvider() {
                         color="success"
                         className="custom-green bg-green-custom"
                         onClick={handleCoupon}
-                        style={{ marginTop: '10px' }}
+                        style={{ marginTop: "10px" }}
                       >
                         Apply
                       </Button>
                     </Box>
                   </div>
-
-
-
-
                 </div>
-              
-
-<div className="container">
-  <div className="top-section-main py-4 px-lg-5">
-    <div className="row">
-      {/* Add Heading here */}
-      <div className="col-12">
-        <h2 className="text-center">Choose Your Plan Type</h2>
-      </div>
-    </div>
-
-    <div className="row py-3 gy-4 mt-lg-4">
-      {data?.map((item) => (
-        <div className="col-lg-4 col-md-6" key={item._id}>
-          <Link
-            to={`/provider/pricingtype/${item._id}`}
-            className="d-flex h-100 w-100"
-          >
-            <div className="h-100 w-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-15">
-              <div className="card-body d-flex flex-column gap-3 align-items-center">
-                <h3 className="mt-3 text-center">
-                  {item.type}
-                </h3>
               </div>
             </div>
-          </Link>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
+            <div className="container-fluid">
+              <div className="top-section-main py-4 px-lg-5">
+                <div className="row">
+                  {/* Add Heading here */}
+                  <div className="col-12">
+                    <h2 className="text-center">Choose Your Plan Type</h2>
+                  </div>
+                </div>
 
-
+                <div className="row py-3 gy-4">
+                  {data?.map((item) => (
+                    <div className="col-lg-4 col-md-6" key={item._id}>
+                      <Link
+                        to={`/provider/pricingtype/${item._id}`}
+                        className="d-flex h-100 w-100"
+                      >
+                        <div className="h-100 w-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-15">
+                          <div className="card-body d-flex flex-column gap-3 align-items-center">
+                            <h3 className="mt-3 text-center">{item.type}</h3>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

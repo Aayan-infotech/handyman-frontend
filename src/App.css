@@ -4,12 +4,16 @@
   aspect-ratio: 1;
   border-radius: 50%;
   background: rgba(50, 222, 132, 1);
-  -webkit-mask: repeating-conic-gradient(#0000 0deg,
+  -webkit-mask: repeating-conic-gradient(
+      #0000 0deg,
       #000 1deg 70deg,
-      #0000 71deg 90deg),
-    radial-gradient(farthest-side,
+      #0000 71deg 90deg
+    ),
+    radial-gradient(
+      farthest-side,
       #0000 calc(100% - var(--b) - 1px),
-      #000 calc(100% - var(--b)));
+      #000 calc(100% - var(--b))
+    );
   -webkit-mask-composite: destination-in;
   mask-composite: intersect;
   animation: l5 1s infinite;
@@ -413,9 +417,11 @@
   position: absolute;
   content: "";
   background: rgb(50, 222, 132);
-  background: linear-gradient(90deg,
-      rgba(50, 222, 132, 1) 0%,
-      rgba(50, 205, 222, 1) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(50, 222, 132, 1) 0%,
+    rgba(50, 205, 222, 1) 100%
+  );
   height: 100%;
   width: 100%;
   border-radius: 60%;
@@ -436,9 +442,11 @@
 
 .price-card {
   background: rgb(50, 222, 132);
-  background: linear-gradient(90deg,
-      rgba(50, 222, 132, 1) 0%,
-      rgba(50, 205, 222, 1) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(50, 222, 132, 1) 0%,
+    rgba(50, 205, 222, 1) 100%
+  );
   color: #fff !important;
 }
 
@@ -493,25 +501,31 @@
 
 .debit-card {
   background: rgb(253, 14, 14);
-  background: linear-gradient(90deg,
-      rgba(253, 14, 14, 1) 0%,
-      rgba(70, 209, 218, 1) 88%);
+  background: linear-gradient(
+    90deg,
+    rgba(253, 14, 14, 1) 0%,
+    rgba(70, 209, 218, 1) 88%
+  );
   color: #fff !important;
 }
 
 .credit-card {
   background: rgb(253, 14, 14);
-  background: linear-gradient(90deg,
-      rgba(253, 14, 14, 1) 0%,
-      rgba(112, 60, 109, 1) 88%);
+  background: linear-gradient(
+    90deg,
+    rgba(253, 14, 14, 1) 0%,
+    rgba(112, 60, 109, 1) 88%
+  );
   color: #fff !important;
 }
 
 .selected-card {
   background: rgb(10, 57, 126);
-  background: linear-gradient(90deg,
-      rgba(10, 57, 126, 1) 0%,
-      rgba(112, 60, 109, 1) 88%);
+  background: linear-gradient(
+    90deg,
+    rgba(10, 57, 126, 1) 0%,
+    rgba(112, 60, 109, 1) 88%
+  );
   color: #fff !important;
 }
 
@@ -526,13 +540,11 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: conic-gradient(#00c853 0deg,
-      /* Green Progress */
-      #00c853 270deg,
-      /* Full progress at 50% */
-      #e0e0e0 90deg
-      /* Remaining is light gray */
-    );
+  background: conic-gradient(
+    #00c853 0deg,
+    /* Green Progress */ #00c853 270deg,
+    /* Full progress at 50% */ #e0e0e0 90deg /* Remaining is light gray */
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -570,6 +582,12 @@
 .mw-20 {
   max-width: 200px;
   width: 100%;
+}
+.edit-profile {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .lock-icon svg {
@@ -626,7 +644,8 @@
   border: 0 !important;
 }
 
-.sort-input .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
+.sort-input
+  .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
 .sort-input .css-mp9f0v {
   padding: 9.5px 14px !important;
 }
