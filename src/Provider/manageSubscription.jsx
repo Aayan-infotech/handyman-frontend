@@ -7,6 +7,8 @@ import Loader from "../Loader";
 import Toaster from "../Toaster";
 export default function ManageSubscription() {
   const [data, setData] = useState();
+  const [voucher, setVoucher] = useState();
+
   const [loading, setLoading] = useState(false);
   const name = localStorage.getItem("ProviderName");
   const providerId = localStorage.getItem("ProviderId");
@@ -19,36 +21,50 @@ export default function ManageSubscription() {
     const getData = async () => {
       setLoading(true);
       try {
-        const providerToken = localStorage.getItem("ProviderToken");
-        const headers = { Authorization: `Bearer ${providerToken}` };
+        const res = await axios.get(
+          `http://3.223.253.106:7777/api/demoTransaction/subscription/getById`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+            },
+          }
+        );
 
-        const [subscriptionRes, voucherRes] = await Promise.all([
-          axios.get(
-            `http://3.223.253.106:7777/api/demoTransaction/subscription/getById`,
-            { headers }
-          ),
-          axios.get(
-            `http://3.223.253.106:7777/api/voucher/getVoucherUsers/${providerId}`,
-            { headers }
-          ),
-        ]);
-
-        if (
-          subscriptionRes?.data?.status === 200 ||
-          voucherRes?.data?.status === 200
-        ) {
-          setData(subscriptionRes?.data?.data);
+        if (res?.data?.status === 200) {
+          setData(res?.data?.data);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.log(error);
       }
       setLoading(false);
     };
 
+    const getVoucherData = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `http://3.223.253.106:7777/api/voucher/getVoucherUsers/${providerId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+            },
+          }
+        );
+        console.log(res);
+
+        if (res?.data?.status === 200) {
+          setVoucher(res?.data?.data[0]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    };
     getData();
+    getVoucherData();
   }, []);
 
-  console.log(data);
+  console.log(voucher);
 
   return (
     <>
@@ -70,6 +86,35 @@ export default function ManageSubscription() {
                 </div>
                 <div className="row py-3 gy-4 mt-lg-4">
                   <h3 className="text-center text-lg-start">Your Plan</h3>
+
+                  <div className="col-lg-12">
+                    <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
+                      <div className="card-body d-flex flex-column gap-3 align-items-center">
+                        <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
+                          <h6>
+                            Start Date:{" "}
+                            {new Date(voucher?.startDate).toLocaleDateString()}
+                          </h6>
+                          <h6>
+                            End Date:{" "}
+                            {new Date(voucher?.endDate).toLocaleDateString()}
+                          </h6>
+                        </div>
+                        <h3 className="mt-3 text-center">
+                          Voucher Id:{voucher?.voucherId}
+                        </h3>
+
+                        <h5 className="mt-3 text-center">
+                          {" "}
+                          Voucher Code
+                          <br />
+                          <span className="text-center">{voucher?.code}</span>
+                        </h5>
+                        <h4>Radius: {voucher?.kmRadius} KM</h4>
+                      </div>
+                    </div>
+                  </div>
+
                   {data?.map((item) => (
                     <div className="col-lg-12" key={item._id}>
                       <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">

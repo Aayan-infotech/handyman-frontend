@@ -6,15 +6,18 @@ import Loader from "../Loader";
 import Toaster from "../Toaster";
 import "./user.css";
 import noData from "../assets/no_data_found.gif";
-import { data } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export default function Notification() {
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
+  const token =
+    localStorage.getItem("ProviderToken") ||
+    localStorage.getItem("hunterToken");
+
   const [notifications, setNotifications] = useState([]);
-  const [massNotifications, setMassNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -25,12 +28,11 @@ export default function Notification() {
   const fetchNotifications = async () => {
     if (!userId) return;
     try {
-      const url = `http://3.223.253.106:7777/api/notification/getAll/${userType}/${userId}`;
-      const response = await axios.get(url);
-
-      setNotifications(
-        Array.isArray(response.data.data) ? response.data.data : []
-      );
+      const url = `http://3.223.253.106:7777/api/pushNotification/get-notification/${userType}`;
+      const response = await axios.get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setNotifications(response.data.data || []);
     } catch (error) {
       setToastProps({
         message: "Failed to fetch notifications",
@@ -38,32 +40,29 @@ export default function Notification() {
         toastKey: Date.now(),
       });
     }
+    setLoading(false);
   };
 
-  const fetchMassNotifications = async () => {
+  const handleMarkAsRead = async (notificationId, type) => {
     try {
-      const url = `http://3.223.253.106:7777/api/massNotification/?userType=${userType}`;
-      const response = await axios.get(url);
-      setMassNotifications(Array.isArray(response.data) ? response.data : []);
+      await axios.get(
+        `http://3.223.253.106:7777/api/pushNotification/Read-notification/${notificationId}/${type}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setNotifications(
+        notifications.filter((notif) => notif._id !== notificationId)
+      );
+      fetchNotifications();
     } catch (error) {
-      setToastProps({
-        message: "Failed to fetch mass notifications",
-        type: "error",
-        toastKey: Date.now(),
-      });
+      console.log("Error marking notification as read:", error);
     }
   };
 
   useEffect(() => {
-    (async () => {
-      await fetchMassNotifications();
-      await fetchNotifications();
-      setLoading(false);
-    })();
-  }, []);
-
-  const allData = [...massNotifications, ...notifications];
-
+    fetchNotifications();
+  }, [userType]);
 
   return (
     <>
@@ -75,63 +74,76 @@ export default function Notification() {
           <div className="bg-second">
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">
-                <h1>Notification</h1>
-                {allData.length > 0 ? null : (
+                <div className="d-flex justify-content-between align-items-center">
+                  <h3 className="mb-0">Notifications</h3>
+                  {/* <Button
+                    variant="contained"
+                    className="custom-green bg-green-custom rounded-5 px-3"
+                    onClick={fetchNotifications}
+                  >
+                    Mark As All Read
+                  </Button> */}
+                </div>
+                {notifications.length === 0 ? (
                   <div className="text-center">
                     <img
                       src={noData}
-                      alt="No data found"
+                      alt="No notifications"
                       className="img-fluid"
                     />
                   </div>
+                ) : (
+                  <div className="d-flex flex-column gap-3 mt-4">
+                    {notifications.map((notification) => (
+                      <div
+                        key={notification._id}
+                        className={`card ${
+                          notification.isRead === false
+                            ? "notification-card"
+                            : "notification-read-card"
+                        } border-0 rounded-4`}
+                      >
+                        <div className="card-body px-3">
+                          <div className="d-flex flex-wrap justify-content-center flex-column flex-lg-row justify-content-lg-between align-items-center">
+                            <h5 className="mb-0">{notification.title}</h5>
+                            <div>
+                              <FaRegClock className="me-1" />
+                              <span>
+                                {new Date(notification.createdAt).toUTCString()}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div
+                              className={
+                                notification.isRead === false && `col-lg-9`
+                              }
+                            >
+                              <p className="mt-3 mb-0">{notification.body}</p>
+                            </div>
+                            {notification.isRead === false && (
+                              <div className="col-lg-3 d-flex justify-content-end">
+                                <Button
+                                  variant="outlined"
+                                  color="success"
+                                  className="custom-green bg-green-custom rounded-5 px-3 text-light border-light"
+                                  onClick={() =>
+                                    handleMarkAsRead(
+                                      notification._id,
+                                      notification?.type
+                                    )
+                                  }
+                                >
+                                  Mark as Read
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
-                <div className="d-flex flex-column gap-3 mt-4">
-                  {notifications.map((notification, index) => (
-                    <div
-                      key={index}
-                      className="card notification-card border-0 rounded-4"
-                    >
-                      <div className="card-body px-3">
-                        <div className="d-flex flex-wrap flex-lg-row flex-column justify-content-between align-items-center">
-                          <h5 className="mb-0">{notification.type}</h5>
-                          <div>
-                            <span className="ms-3 me-1">
-                              <FaRegClock />
-                            </span>
-                            <span>
-                              {" "}
-                              {new Date(notification.createdAt).toUTCString()}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="mt-3 mb-0">{notification.text}</p>
-                      </div>
-                    </div>
-                  ))}
-                  {massNotifications.map((massNotification, index) => (
-                    <div
-                      key={index}
-                      className="card notification-read-card border-0 rounded-4"
-                    >
-                      <div className="card-body px-3">
-                        <div className="d-flex flex-wrap flex-lg-row flex-column justify-content-between align-items-center">
-                          <h5 className="mb-0">{massNotification.subject}</h5>
-                          <div>
-                            <span className="ms-3 me-1">
-                              <FaRegClock />
-                            </span>
-                            <span>
-                              {new Date(
-                                massNotification.createdAt
-                              ).toUTCString()}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="mt-3 mb-0"> {massNotification.message}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </div>

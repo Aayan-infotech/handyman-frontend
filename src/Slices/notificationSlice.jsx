@@ -19,7 +19,7 @@ const createNotificationThunk = (name, defaultTitle, defaultBody) =>
             headers: {
               Authorization: `Bearer ${
                 localStorage.getItem("hunterToken") ||
-                localStorage.getItem("providerToken")
+                localStorage.getItem("ProviderToken")
               }`,
             },
           }
@@ -34,7 +34,7 @@ const createNotificationThunk = (name, defaultTitle, defaultBody) =>
 export const acceptJobNotification = createNotificationThunk(
   "jobAcceptedNotification",
   "Provider have accepted your job",
-  "Hi your job has been accepted"
+  `Hi your job has been accepted`
 );
 
 export const assignedJobNotification = createNotificationThunk(
