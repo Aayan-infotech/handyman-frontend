@@ -106,7 +106,7 @@ export default function MainProvider() {
   }, []);
 
   useEffect(() => {
-    if (subscriptionStatus === 1) {
+    if (subscriptionStatus === 0) {
       const getData = async () => {
         setLoading(true);
         try {

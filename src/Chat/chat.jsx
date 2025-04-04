@@ -155,7 +155,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const hunterId = localStorage.getItem("hunterId");
   const receiverId = id || chatMessage?.senderId;
   const senderId = id || chatMessage?.recieverId;
-  const [jobShow , setJobShow] = useState(false);
+  const [jobShow, setJobShow] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
   const [chatData, setChatData] = useState([]);
@@ -396,35 +396,42 @@ export default function Chat({ messageData, messages, selectedChat }) {
             </div>
           </div>
         </div>
-        {hunterId && selectedChat?.jobData?.jobStatus === "Pending" && !jobShow && (
-          <div className="container-fluid">
-            <div className="row">
-              <div className={`mw-condition mx-auto`}>
-                <div className="card rounded-5 border-0 shadow">
-                  <div className="card-body px-4 py-3">
-                    <span className="text-center d-flex justify-content-center">
-                      Do you want to work with them for this job
-                      <br /> {selectedChat?.jobData?.title}
-                    </span>
-                    <div className="d-flex justify-content-evenly mt-3">
-                      <button
-                        className="btn btn-primary px-5"
-                        onClick={() =>
-                          dobFunction({
-                            id: selectedChat?.displayUser?._id,
-                          })
-                        }
-                      >
-                        Yes
-                      </button>
-                      <button className="btn btn-danger px-5" onClick={() => setJobShow(true)}>No</button>
+        {hunterId &&
+          selectedChat?.jobData?.jobStatus === "Pending" &&
+          !jobShow && (
+            <div className="container-fluid">
+              <div className="row">
+                <div className={`mw-condition mx-auto`}>
+                  <div className="card rounded-5 border-0 shadow">
+                    <div className="card-body px-4 py-3">
+                      <span className="text-center d-flex justify-content-center">
+                        Do you want to work with them for this job
+                        <br /> {selectedChat?.jobData?.title}
+                      </span>
+                      <div className="d-flex justify-content-evenly mt-3">
+                        <button
+                          className="btn btn-primary px-5"
+                          onClick={() =>
+                            dobFunction({
+                              id: selectedChat?.displayUser?._id,
+                            })
+                          }
+                        >
+                          Yes
+                        </button>
+                        <button
+                          className="btn btn-danger px-5"
+                          onClick={() => setJobShow(true)}
+                        >
+                          No
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         <div
           className={`position-relative container${
@@ -433,52 +440,58 @@ export default function Chat({ messageData, messages, selectedChat }) {
         >
           <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
             {messages1?.length === 0 ? (
-              <Stack spacing={1} className="d-block">
-                <div className="fl-left">
-                  <Skeleton
-                    variant="rounded"
-                    className="mb-3"
-                    animation="wave"
-                    width={210}
-                    height={20}
-                  />
-                  <Skeleton
-                    variant="rounded"
-                    className="mb-3"
-                    animation="wave"
-                    width={150}
-                    height={20}
-                  />
-                  <Skeleton
-                    variant="rounded"
-                    animation="wave"
-                    width={110}
-                    height={20}
-                  />
-                </div>
-                <div className="fl-right">
-                  <Skeleton
-                    variant="rounded"
-                    className="mb-3"
-                    animation="wave"
-                    width={210}
-                    height={20}
-                  />
-                  <Skeleton
-                    variant="rounded"
-                    className="mb-3"
-                    animation="wave"
-                    width={150}
-                    height={20}
-                  />
-                  <Skeleton
-                    variant="rounded"
-                    animation="wave"
-                    width={110}
-                    height={20}
-                  />
-                </div>
-              </Stack>
+              <>
+                {show ? null : (
+                  <>
+                    <Stack spacing={1} className="d-block">
+                      <div className="fl-left">
+                        <Skeleton
+                          variant="rounded"
+                          className="mb-3"
+                          animation="wave"
+                          width={210}
+                          height={20}
+                        />
+                        <Skeleton
+                          variant="rounded"
+                          className="mb-3"
+                          animation="wave"
+                          width={150}
+                          height={20}
+                        />
+                        <Skeleton
+                          variant="rounded"
+                          animation="wave"
+                          width={110}
+                          height={20}
+                        />
+                      </div>
+                      <div className="fl-right">
+                        <Skeleton
+                          variant="rounded"
+                          className="mb-3"
+                          animation="wave"
+                          width={210}
+                          height={20}
+                        />
+                        <Skeleton
+                          variant="rounded"
+                          className="mb-3"
+                          animation="wave"
+                          width={150}
+                          height={20}
+                        />
+                        <Skeleton
+                          variant="rounded"
+                          animation="wave"
+                          width={110}
+                          height={20}
+                        />
+                      </div>
+                    </Stack>
+                  </>
+                )}
+              </>
             ) : (
               messages1?.map((msg, index) => (
                 <div

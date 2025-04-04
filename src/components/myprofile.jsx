@@ -378,7 +378,7 @@ export default function MyProfile() {
             </div>
           </Link>
           <div className="message">
-            <Link to={`/${hunterToken ? "/message" : "provider/message"}`}>
+            <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
               <MdMessage />
             </Link>
           </div>

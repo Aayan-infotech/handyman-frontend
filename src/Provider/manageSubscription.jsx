@@ -19,23 +19,32 @@ export default function ManageSubscription() {
     const getData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `http://3.223.253.106:7777/api/demoTransaction/subscription/getById`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
-            },
-          }
-        );
+        const providerToken = localStorage.getItem("ProviderToken");
+        const headers = { Authorization: `Bearer ${providerToken}` };
 
-        if (res?.data?.status === 200) {
-          setData(res?.data?.data);
+        const [subscriptionRes, voucherRes] = await Promise.all([
+          axios.get(
+            `http://3.223.253.106:7777/api/demoTransaction/subscription/getById`,
+            { headers }
+          ),
+          axios.get(
+            `http://3.223.253.106:7777/api/voucher/getVoucherUsers/${providerId}`,
+            { headers }
+          ),
+        ]);
+
+        if (
+          subscriptionRes?.data?.status === 200 ||
+          voucherRes?.data?.status === 200
+        ) {
+          setData(subscriptionRes?.data?.data);
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching data:", error);
       }
       setLoading(false);
     };
+
     getData();
   }, []);
 
@@ -60,9 +69,7 @@ export default function ManageSubscription() {
                   </div>
                 </div>
                 <div className="row py-3 gy-4 mt-lg-4">
-                  <h1 className="text-center text-lg-start">
-                    Your Subscription Plan
-                  </h1>
+                  <h3 className="text-center text-lg-start">Your Plan</h3>
                   {data?.map((item) => (
                     <div className="col-lg-12" key={item._id}>
                       <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">

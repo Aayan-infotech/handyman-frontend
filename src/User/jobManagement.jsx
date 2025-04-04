@@ -122,10 +122,6 @@ export default function JobManagement() {
     }
   };
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
-
   const handleJobDelete = async (id) => {
     setLoading(true);
     try {
@@ -161,7 +157,7 @@ export default function JobManagement() {
 
   return (
     <>
-      {loading ? (
+      {loading === true ? (
         <Loader />
       ) : (
         <>
