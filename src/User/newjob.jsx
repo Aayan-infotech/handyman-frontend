@@ -74,7 +74,7 @@ export default function NewJob() {
   const [selectedRadius, setSelectedRadius] = useState();
 
   const handleChangeRadius = (event) => {
-    setSelectedRadius(event.target.value);
+    setSelectedRadius(event.target.value * 1000);
   };
   const radiusOptions = ["10", "20", "40", "80", "160"];
 
