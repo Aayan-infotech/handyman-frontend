@@ -96,7 +96,7 @@ export default function JobManagement() {
         setFilteredData(res.data.data);
         setSearch("");
         setTotalPages(res.data.pagination.totalPages);
-        if (data.length === 0) {
+        if (res.data.data.length === 0) {
           setToastProps({
             message: "No jobs posted yet",
             type: "info",

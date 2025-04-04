@@ -152,13 +152,14 @@ export default function ServiceProvider() {
     //   );
     // }
 
-
     if (search) {
       filtered = filtered.filter((provider) =>
-        provider.address?.addressLine?.toLowerCase().includes(search.toLowerCase())
+        provider.address?.addressLine
+          ?.toLowerCase()
+          .includes(search.toLowerCase())
       );
     }
-    
+
     setFilteredData(filtered);
   }, [search, businessType, data]);
 
@@ -201,17 +202,16 @@ export default function ServiceProvider() {
                           Select Provider Radius
                         </InputLabel>
                         <Select
-                          labelId="business-type-select-label"
-                          id="business-type-select"
-                          multiple
+                          labelId="radius-select-label"
+                          id="radius-select"
                           value={providerRadius}
-                          onChange={(event) =>
-                            setProviderRadius(event.target.value)
-                          }
+                          onChange={(event) => {
+                            setProviderRadius(event.target.value); // Single value, not an array
+                          }}
                           input={
                             <OutlinedInput label="Select Provider Radius" />
                           }
-                          renderValue={(selected) => selected.join(", ")}
+                          renderValue={(selected) => selected} // Remove .join(", ") since it's now a single string
                           MenuProps={MenuProps}
                           placeholder="Select Provider Radius"
                         >
@@ -221,14 +221,20 @@ export default function ServiceProvider() {
                                 (provider) => provider.address.radius
                               )
                             )
-                          ).map((type, index) => (
-                            <MenuItem key={index} value={`${type / 1000} km`}>
-                              <Checkbox checked={businessType.includes(type)} />
-                              <ListItemText primary={`${type / 1000} km`} />
-                            </MenuItem>
-                          ))}
+                          )
+                            .map((type) => `${type / 1000} km`) // Ensure value format matches
+                            .map((formattedType, index) => (
+                              <MenuItem key={index} value={formattedType}>
+                                <Checkbox
+                                  checked={providerRadius === formattedType}
+                                />{" "}
+                                {/* Adjusted for single selection */}
+                                <ListItemText primary={formattedType} />
+                              </MenuItem>
+                            ))}
                         </Select>
                       </FormControl>
+
                       <FormControl className="sort-input w-100">
                         <InputLabel id="radius-select-label">
                           Select BusinessType
