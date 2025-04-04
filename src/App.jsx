@@ -119,9 +119,21 @@ const ProtectedRoute = ({ element }) => {
 
   return element;
 };
+
 const UnProtectedRoute = ({ element }) => {
-  return !useAuth() ? element : <Error />;
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (useAuth()) {
+      const userType = localStorage.getItem("hunterToken")
+        ? "hunter"
+        : "provider";
+      navigate(userType === "hunter" ? "/home" : "/provider/home");
+    }
+  }, []);
+
+  return !useAuth() ? element : null;
 };
+
 function App() {
   return (
     <BrowserRouter>
@@ -308,9 +320,7 @@ function App() {
           element={<ProtectedRoute element={<MainProvider />} />}
         />
 
-
-
-<Route
+        <Route
           path="/provider/pricingtype/:id"
           element={<ProtectedRoute element={<Pricingwithtype />} />}
         />

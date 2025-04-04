@@ -50,6 +50,7 @@ export default function ServiceProvider() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
+  const radiusOptions = ["10", "20", "40", "80", "160"];
 
   const token = localStorage.getItem("hunterToken");
   const handleChange = (event) => {
@@ -146,11 +147,12 @@ export default function ServiceProvider() {
       );
     }
 
-    // if (search) {
-    //   filtered = filtered.filter((provider) =>
-    //     provider.businessName?.toLowerCase().includes(search.toLowerCase())
-    //   );
-    // }
+    if (providerRadius && providerRadius.length > 0) {
+      const selectedRadius = parseInt(providerRadius.replace(" km", ""), 10); // Ensure it's a number
+      filtered = filtered.filter(
+        (provider) => provider.address.radius / 1000 <= selectedRadius // Convert meters to km before comparison
+      );
+    }
 
     if (search) {
       filtered = filtered.filter((provider) =>
@@ -161,9 +163,11 @@ export default function ServiceProvider() {
     }
 
     setFilteredData(filtered);
-  }, [search, businessType, data]);
+  }, [search, businessType, data, providerRadius]);
 
   console.log(data);
+
+  console.log("providerRadius", providerRadius);
 
   return (
     <>
@@ -217,12 +221,10 @@ export default function ServiceProvider() {
                         >
                           {Array.from(
                             new Set(
-                              data.flatMap(
-                                (provider) => provider.address.radius
-                              )
+                              radiusOptions.flatMap((provider) => provider)
                             )
                           )
-                            .map((type) => `${type / 1000} km`) // Ensure value format matches
+                            .map((type) => `${type} km`) // Ensure value format matches
                             .map((formattedType, index) => (
                               <MenuItem key={index} value={formattedType}>
                                 <Checkbox

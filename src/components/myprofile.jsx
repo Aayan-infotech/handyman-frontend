@@ -98,6 +98,11 @@ export default function MyProfile() {
   };
 
   const handleImageUpload = async (event) => {
+    setToastProps({
+      message: "Image uploading",
+      type: "info",
+      toastKey: Date.now(),
+    });
     const file = event.target.files[0];
 
     console.log(file, ".....file");
@@ -114,8 +119,18 @@ export default function MyProfile() {
         formData
       );
       setBackgroundImg(response.data.data[0].backgroundImg);
+      setToastProps({
+        message: "Image Update Successfully",
+        type: "success",
+        toastKey: Date.now(),
+      });
     } catch (error) {
       console.error("Error uploading background image:", error);
+      setToastProps({
+        message: "Image not Updated Successfully",
+        type: "danger",
+        toastKey: Date.now(),
+      });
     }
   };
 

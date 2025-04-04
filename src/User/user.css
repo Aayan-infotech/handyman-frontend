@@ -440,6 +440,7 @@
   height: 100%;
   width: 100%;
   left: 0;
+  border-radius: 15px;
 }
 
 .image-shadow .cost {
@@ -737,7 +738,7 @@
     width: 145px;
     /* height: 100%; */
     z-index: 999;
-}
+  }
   .image-shadow .exper {
     position: absolute;
     left: -18px;
@@ -827,7 +828,7 @@
 
 .eye-icon {
   position: absolute;
-  right: 10px;  /* Adjust based on your design */
+  right: 10px; /* Adjust based on your design */
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
