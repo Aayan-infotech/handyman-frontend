@@ -319,7 +319,7 @@ function Home() {
             </div>
           </div>
         </div>
-        <div className="jobs">
+        {/* <div className="jobs">
           <div className="d-flex justify-content-start justify-content-lg-between align-items-start flex-column flex-md-row gap-3">
             <h2 className="mb-0">
               Featured <span className="text-primary">Businesses</span>
@@ -567,7 +567,7 @@ function Home() {
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="latest-job">
         <div className="container position-relative z-1">

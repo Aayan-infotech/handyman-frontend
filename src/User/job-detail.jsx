@@ -305,7 +305,7 @@ export default function JobDetail() {
                   </div>
                 </div>
               </div> */}
-              <Modal show={show} onHide={handleClose} centered>
+              {/* <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header className="border-0" closeButton>
                   <Modal.Title>Add Your Review</Modal.Title>
                 </Modal.Header>
@@ -336,7 +336,48 @@ export default function JobDetail() {
                     </Button>
                   </div>
                 </Modal.Body>
-              </Modal>
+              </Modal> */}
+
+<Modal show={show} onHide={handleClose} centered>
+  <Modal.Header className="border-0" closeButton>
+    <Modal.Title>Add Your Review</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <div className="d-flex flex-column align-items-center justify-content-center gap-2">
+      <Rating
+        name="simple-controlled"
+        value={value}
+        className="fs-2"
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+      />
+      <Form.Control
+        as="textarea"
+        placeholder="Leave a comment here"
+        style={{ height: "150px" }}
+        value={review}
+        onChange={(e) => setReview(e.target.value)}
+      />
+      <Button
+        variant="contained"
+        color="success"
+        className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+        onClick={() => {
+          if (!review.trim()) {
+            // If the review field is empty, show an alert message
+            alert('Please fill in the comment field before submitting!');
+          } else {
+            doubleFunction();
+          }
+        }}
+      >
+        Submit
+      </Button>
+    </div>
+  </Modal.Body>
+</Modal>
+
             </div>
           </div>
         </div>

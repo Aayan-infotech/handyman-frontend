@@ -32,6 +32,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { realtimeDb } from "../Chat/lib/firestore";
+import notFound from "./assets/noprofile.png";
 
 export default function EditProfile() {
   const dispatch = useDispatch();
@@ -149,7 +150,7 @@ export default function EditProfile() {
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
     formData.append("ABN_Number", registrationNumber);
-    
+
     // Append each business type separately
     businessType.forEach((type) => {
       formData.append("businessType[]", type);
@@ -165,9 +166,9 @@ export default function EditProfile() {
 
     try {
       const response = await axios.put(
-        `http://3.223.253.106:7777/api/${providerId ? "Prvdr" : "hunter"}/updateById/${
-          providerId ? providerId : hunterId
-        }`,
+        `http://3.223.253.106:7777/api/${
+          providerId ? "Prvdr" : "hunter"
+        }/updateById/${providerId ? providerId : hunterId}`,
         formData,
         {
           headers: {
@@ -244,9 +245,9 @@ export default function EditProfile() {
                     <div className="mt-3 profile d-flex align-items-center justify-content-center flex-column">
                       <div className="position-relative">
                         <img
-                          src={previewImage}
+                          src={previewImage || notFound}
                           alt="profile"
-                          className="profile-image rounded-5"
+                          className="profile-image edit-profile"
                         />
                         <div className="position-absolute end-0 bottom-0">
                           <Form.Control
@@ -436,4 +437,3 @@ export default function EditProfile() {
     </>
   );
 }
-

@@ -91,10 +91,19 @@ export default function JobManagement() {
         const filteredData = res.data.data.filter(
           (job) => job.jobStatus !== "Deleted"
         );
+
         setData(res.data.data);
         setFilteredData(res.data.data);
-        setSearch('');
+        setSearch("");
         setTotalPages(res.data.pagination.totalPages);
+        if (data.length === 0) {
+          setToastProps({
+            message: "No jobs posted yet",
+            type: "info",
+            toastKey: Date.now(),
+          });
+          return;
+        }
         setToastProps({
           message: res.data.message,
           type: "success",
@@ -112,9 +121,9 @@ export default function JobManagement() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchJobs();
-  // }, []);
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   const handleJobDelete = async (id) => {
     setLoading(true);
