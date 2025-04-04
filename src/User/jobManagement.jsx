@@ -64,19 +64,6 @@ export default function JobManagement() {
     setJobStatus(event.target.value);
   };
 
-  useEffect(() => {
-    let filtered = data;
-    if (jobStatus.length > 0) {
-      filtered = filtered.filter((job) => jobStatus.includes(job.jobStatus));
-    }
-    if (search) {
-      filtered = filtered.filter((job) =>
-        job.title.toLowerCase().includes(search)
-      );
-    }
-    setFilteredData(filtered);
-  }, [search, jobStatus, data]);
-
   const fetchJobs = async () => {
     setLoading(true);
     try {
@@ -157,18 +144,15 @@ export default function JobManagement() {
           },
         }
       );
+      console.log(res);
       if (res.status === 200) {
-        const filteredData = res.data.data.filter(
-          (job) => job.jobStatus !== "Deleted"
-        );
-
-        setData(res.data.data);
-        setFilteredData(res.data.data);
+        setData(res?.data?.jobs);
+        setFilteredData(res?.data?.jobs);
         setSearch("");
-        setTotalPages(res.data.pagination.totalPages);
-        if (res.data.data.length === 0) {
+        setTotalPages(res.data.jobs.totalPages);
+        if (res.data.jobs.length === 0) {
           setToastProps({
-            message: "No jobs posted yet",
+            message: "No jobs history yet",
             type: "info",
             toastKey: Date.now(),
           });
@@ -179,6 +163,7 @@ export default function JobManagement() {
           type: "success",
           toastKey: Date.now(),
         });
+        console.log("res.data", res.data);
       }
     } catch (error) {
       setToastProps({
@@ -192,9 +177,9 @@ export default function JobManagement() {
   };
 
   useEffect(() => {
-    if(location.pathname.includes("job-history")){
+    if (location.pathname.includes("job-history")) {
       fetchJobsHistory();
-      return
+      return;
     }
     fetchJobs(currentPage);
   }, [currentPage]);
@@ -204,6 +189,7 @@ export default function JobManagement() {
     navigate(`?${queryParams.toString()}`);
   };
 
+  console.log("filteredData", data);
   return (
     <>
       {loading === true ? (
@@ -235,29 +221,31 @@ export default function JobManagement() {
                     onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
-                <FormControl className="sort-input" sx={{ m: 1 }}>
-                  <InputLabel id="radius-select-label">Job status</InputLabel>
-                  <Select
-                    labelId="business-type-select-label"
-                    id="business-type-select"
-                    multiple
-                    value={jobStatus}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="Select Business Type" />}
-                    renderValue={(selected) => selected.join(", ")}
-                    MenuProps={MenuProps}
-                    placeholder="Select Business Type"
-                  >
-                    {Array.from(
-                      new Set(data.flatMap((provider) => provider.jobStatus))
-                    ).map((type, index) => (
-                      <MenuItem key={index} value={type}>
-                        <Checkbox checked={jobStatus.includes(type)} />
-                        <ListItemText primary={type} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                {!location.pathname.includes("job-history") && (
+                  <FormControl className="sort-input" sx={{ m: 1 }}>
+                    <InputLabel id="radius-select-label">Job status</InputLabel>
+                    <Select
+                      labelId="business-type-select-label"
+                      id="business-type-select"
+                      multiple
+                      value={jobStatus}
+                      onChange={handleChange}
+                      input={<OutlinedInput label="Select Business Type" />}
+                      renderValue={(selected) => selected.join(", ")}
+                      MenuProps={MenuProps}
+                      placeholder="Select Business Type"
+                    >
+                      {Array.from(
+                        new Set(data.flatMap((provider) => provider.jobStatus))
+                      ).map((type, index) => (
+                        <MenuItem key={index} value={type}>
+                          <Checkbox checked={jobStatus.includes(type)} />
+                          <ListItemText primary={type} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
               </div>
               <div className="row mt-4 gy-4 management">
                 {data.length === 0 && (
@@ -317,11 +305,15 @@ export default function JobManagement() {
                                 <Link to={`/job-detail/${provider._id}`}>
                                   <IoEyeSharp height={10} />
                                 </Link>
-                                <IoTrashOutline
-                                  onClick={() => handleJobDelete(provider._id)}
-                                  style={{ cursor: "pointer" }}
-                                  height={10}
-                                />
+                                {!location.pathname.includes("job-history") && (
+                                  <IoTrashOutline
+                                    onClick={() =>
+                                      handleJobDelete(provider._id)
+                                    }
+                                    style={{ cursor: "pointer" }}
+                                    height={10}
+                                  />
+                                )}
                               </span>
                             </td>
                           </tr>

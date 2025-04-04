@@ -36,7 +36,7 @@ export default function ServiceProviderProfile() {
 
       setData(profileRes?.data?.data || {});
       setBackgroundImg(bgRes?.data?.data[0]?.backgroundImg || null);
-      setRating(ratingRes?.data?.data || []);
+      setRating(ratingRes?.data?.providerRatings || []);
       setGallery(galleryRes?.data?.data?.files || []);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -113,7 +113,7 @@ export default function ServiceProviderProfile() {
                 <div className="card-body">
                   <div className="d-flex flex-row justify-content-between align-items-center">
                     <img
-                      src={item?.userId?.images}
+                      src={item?.userId?.images || notFound}
                       alt="profile"
                       className="object-fit-cover"
                       style={{ width: "100px", height: "100px" }}
@@ -124,7 +124,7 @@ export default function ServiceProviderProfile() {
                     </div>
                   </div>
                   <b className="mb-0 pt-2 ms-2">
-                    Name: {item?.userId?.contactName}
+                    Name: {item?.providerId?.contactName || item?.userId?.name}
                   </b>
                   <p className="fw-bold text-start mx-2">{item?.review}</p>
                 </div>
