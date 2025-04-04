@@ -76,7 +76,53 @@ export default function JobManagement() {
     setFilteredData(filtered);
   }, [search, jobStatus, data]);
 
-  const fetchJobs = async () => {
+  // const fetchJobs = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.get(
+  //       `http://3.223.253.106:7777/api/jobpost/getJobPostByUserId?page=${currentPage}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${ProviderToken || hunterToken}`,
+  //         },
+  //       }
+  //     );
+  //     if (res.status === 200) {
+  //       const filteredData = res.data.data.filter(
+  //         (job) => job.jobStatus !== "Deleted"
+  //       );
+
+  //       setData(res.data.data);
+  //       setFilteredData(res.data.data);
+  //       setSearch('');
+  //       setTotalPages(res.data.pagination.totalPages);
+  //       setToastProps({
+  //         message: res.data.message,
+  //         type: "success",
+  //         toastKey: Date.now(),
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setToastProps({
+  //       message: error.message,
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchJobs();
+  // }, []);
+
+ 
+  
+  
+  
+
+const fetchJobs = async () => {
     setLoading(true);
     try {
       const res = await axios.get(
@@ -87,10 +133,13 @@ export default function JobManagement() {
           },
         }
       );
+  
+      // If status is 200, handle successful response
       if (res.status === 200) {
         const filteredData = res.data.data.filter(
           (job) => job.jobStatus !== "Deleted"
         );
+  
         setData(res.data.data);
         setFilteredData(res.data.data);
         setSearch('');
@@ -100,11 +149,18 @@ export default function JobManagement() {
           type: "success",
           toastKey: Date.now(),
         });
+      } else if (res.status === 404) {
+        // If status is 404, show the custom message
+        setToastProps({
+          // message: res.message,
+          type: "success",
+          toastKey: Date.now()
+        });
       }
     } catch (error) {
       setToastProps({
-        message: error.message,
-        type: "error",
+        message: "no jobPosts by hunter", // Custom message for 400 error
+        type: "success",
         toastKey: Date.now(),
       });
     } finally {
@@ -112,9 +168,16 @@ export default function JobManagement() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchJobs();
-  // }, []);
+
+
+
+  
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+  
+  
+
 
   const handleJobDelete = async (id) => {
     setLoading(true);
