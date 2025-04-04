@@ -30,6 +30,7 @@ const MenuProps = {
     },
   },
 };
+
 export default function JobManagement() {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
