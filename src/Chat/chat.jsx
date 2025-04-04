@@ -15,6 +15,9 @@ import axios from "axios";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import { assignedJobNotification } from "../Slices/notificationSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const sendMessage = async (
   msgType,
   msg,
@@ -106,6 +109,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [loading, setLoading] = useState(false);
   const [chatId, setChatId] = useState(selectedChat?.chatId);
   const [validMessageData, setValidMessageData] = useState(null);
+  const dispatch = useDispatch();
   console.log("message data in chat", messages);
   console.log("chat id in chat", chatId);
 
@@ -164,7 +168,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     messageData?.jobPost?._id ||
     selectedChat?.users?.jobId;
 
-  console.log("job id in chat", jobId);
+  console.log("job id in chat", receiverId);
   useEffect(() => {
     const storedUserId = location.pathname.includes("/provider")
       ? localStorage.getItem("ProviderId")
@@ -342,9 +346,29 @@ export default function Chat({ messageData, messages, selectedChat }) {
     handleProvider();
   }, [location]);
 
+
+   const noficationFunctionality = async () => {
+      setLoading(true);
+      try {
+        const response = dispatch(
+          assignedJobNotification({
+            receiverId: receiverId,
+          })
+        );
+        if (assignedJobNotification.fulfilled.match(response)) {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+
   const dobFunction = ({ id }) => {
     handleCompletedJob({ id });
     handleJobAccept({ id });
+    noficationFunctionality()
   };
 
   console.log("messageData in chat", selectedChat);

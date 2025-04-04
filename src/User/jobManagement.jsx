@@ -146,7 +146,56 @@ export default function JobManagement() {
     }
   };
 
+  const fetchJobsHistory = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `http://3.223.253.106:7777/api/jobpost/myAcceptedJobs?page=${currentPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken || hunterToken}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        const filteredData = res.data.data.filter(
+          (job) => job.jobStatus !== "Deleted"
+        );
+
+        setData(res.data.data);
+        setFilteredData(res.data.data);
+        setSearch("");
+        setTotalPages(res.data.pagination.totalPages);
+        if (res.data.data.length === 0) {
+          setToastProps({
+            message: "No jobs posted yet",
+            type: "info",
+            toastKey: Date.now(),
+          });
+          return;
+        }
+        setToastProps({
+          message: res.data.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
+      }
+    } catch (error) {
+      setToastProps({
+        message: error.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
+    if(location.pathname.includes("job-history")){
+      fetchJobsHistory();
+      return
+    }
     fetchJobs(currentPage);
   }, [currentPage]);
 

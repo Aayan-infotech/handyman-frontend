@@ -15,12 +15,18 @@ import axios from "axios";
 import { CiUser } from "react-icons/ci";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  completedJobNotification,
+  reviewJobNotification,
+} from "../Slices/notificationSlice";
+
 export default function JobDetail() {
   const [data, setData] = useState(null);
   const [user, setUser] = useState("");
   const [value, setValue] = useState(2);
   const [review, setReview] = useState("");
-
+  const dispatch = useDispatch();
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -66,6 +72,45 @@ export default function JobDetail() {
         type: "error",
         toastKey: Date.now(),
       });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // const noficationFunctionality = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = dispatch(
+  //       completedJobNotification({
+  //         receiverId: receiverId,
+  //       })
+  //     );
+  //     if (completedJobNotification.fulfilled.match(response)) {
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error Getting Nearby Jobs:", error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const noficationFunctionality = async () => {
+    setLoading(true);
+    try {
+      const response1 = await dispatch(
+        completedJobNotification({ receiverId })
+      );
+
+      const response2 = await dispatch(reviewJobNotification({ receiverId }));
+
+      if (
+        completedJobNotification.fulfilled.match(response1) &&
+        reviewJobNotification.fulfilled.match(response2)
+      ) {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error Sending Notifications:", error);
     } finally {
       setLoading(false);
     }
@@ -149,6 +194,7 @@ export default function JobDetail() {
     handleReview();
     handleJobStatus();
     fetchData();
+    noficationFunctionality();
   };
 
   console.log("user", user);
@@ -338,46 +384,47 @@ export default function JobDetail() {
                 </Modal.Body>
               </Modal> */}
 
-<Modal show={show} onHide={handleClose} centered>
-  <Modal.Header className="border-0" closeButton>
-    <Modal.Title>Add Your Review</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <div className="d-flex flex-column align-items-center justify-content-center gap-2">
-      <Rating
-        name="simple-controlled"
-        value={value}
-        className="fs-2"
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-      />
-      <Form.Control
-        as="textarea"
-        placeholder="Leave a comment here"
-        style={{ height: "150px" }}
-        value={review}
-        onChange={(e) => setReview(e.target.value)}
-      />
-      <Button
-        variant="contained"
-        color="success"
-        className="custom-green py-3 w-100 rounded-5 bg-green-custom"
-        onClick={() => {
-          if (!review.trim()) {
-            // If the review field is empty, show an alert message
-            alert('Please fill in the comment field before submitting!');
-          } else {
-            doubleFunction();
-          }
-        }}
-      >
-        Submit
-      </Button>
-    </div>
-  </Modal.Body>
-</Modal>
-
+              <Modal show={show} onHide={handleClose} centered>
+                <Modal.Header className="border-0" closeButton>
+                  <Modal.Title>Add Your Review</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <Rating
+                      name="simple-controlled"
+                      value={value}
+                      className="fs-2"
+                      onChange={(event, newValue) => {
+                        setValue(newValue);
+                      }}
+                    />
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Leave a comment here"
+                      style={{ height: "150px" }}
+                      value={review}
+                      onChange={(e) => setReview(e.target.value)}
+                    />
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+                      onClick={() => {
+                        if (!review.trim()) {
+                          // If the review field is empty, show an alert message
+                          alert(
+                            "Please fill in the comment field before submitting!"
+                          );
+                        } else {
+                          doubleFunction();
+                        }
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </Modal.Body>
+              </Modal>
             </div>
           </div>
         </div>

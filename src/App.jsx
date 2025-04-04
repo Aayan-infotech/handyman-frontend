@@ -283,10 +283,7 @@ function App() {
           path="/blog-detail/:id"
           element={<UnProtectedRoute element={<BlogDetail />} />}
         />
-        <Route
-          path="/provider/job-history/:id"
-          element={<ProtectedRoute element={<JobDetail />} />}
-        />
+      
         <Route
           path="/provider/message"
           element={<ProtectedRoute element={<Message />} />}
