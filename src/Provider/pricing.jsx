@@ -33,10 +33,11 @@ export default function MainProvider() {
   });
   useEffect(() => {
     if (location.pathname === "/provider/pricing") {
+      setLoading(true);
       const getUploadProfile = async () => {
         try {
           if (providerId) {
-            setLoading(true);
+          
             const result = await dispatch(getProviderUser());
             if (result.payload?.status === 200) {
               const subscriptionStatus = result.payload.data.subscriptionStatus;
@@ -127,7 +128,7 @@ export default function MainProvider() {
 
   return (
     <>
-      {loading ? (
+      {loading  === true ? (
         <Loader />
       ) : (
         <div>

@@ -70,7 +70,7 @@ function Home() {
       .then((res) => {
         const limitedData = res?.data?.data?.slice(0, 8) || []; // Ensure only 8 items
         setBusinessData(limitedData);
-        setAllBusinessData(res?.data?.data)
+        setAllBusinessData(res?.data?.data);
       });
   }, []);
 
@@ -179,40 +179,39 @@ function Home() {
                         <CiSearch className="fs-4 mt-3" />
 
                         <TextField
-  id="standard-basic"
-  label="Businesses"
-  variant="standard"
-  className="w-100"
-  select
-  fullWidth
-  value={selectedBusiness} // Bind the selected value to TextField
-  onChange={handleBusinessChange} // Update state when selection changes
-  SelectProps={{
-    MenuProps: {
-      PaperProps: {
-        style: {
-          maxHeight: 200, // Limit dropdown height
-        },
-      },
-    },
-  }}
->
-  {/* Map over the businessData array to display business names */}
-  {allBusinessData && allBusinessData.length > 0 ? (
-    allBusinessData
-      .sort((a, b) => a.name.localeCompare(b.name)) // Sort business names alphabetically
-      .map((business, index) => (
-        <MenuItem key={index} value={business.name}>
-          {business.name}
-        </MenuItem>
-      ))
-  ) : (
-    <MenuItem disabled>
-      No recent jobs available.
-    </MenuItem>
-  )}
-</TextField>
-
+                          id="standard-basic"
+                          label="Businesses"
+                          variant="standard"
+                          className="w-100"
+                          select
+                          fullWidth
+                          value={selectedBusiness} // Bind the selected value to TextField
+                          onChange={handleBusinessChange} // Update state when selection changes
+                          SelectProps={{
+                            MenuProps: {
+                              PaperProps: {
+                                style: {
+                                  maxHeight: 200, // Limit dropdown height
+                                },
+                              },
+                            },
+                          }}
+                        >
+                          {/* Map over the businessData array to display business names */}
+                          {allBusinessData && allBusinessData.length > 0 ? (
+                            allBusinessData
+                              .sort((a, b) => a.name.localeCompare(b.name)) // Sort business names alphabetically
+                              .map((business, index) => (
+                                <MenuItem key={index} value={business.name}>
+                                  {business.name}
+                                </MenuItem>
+                              ))
+                          ) : (
+                            <MenuItem disabled>
+                              No recent jobs available.
+                            </MenuItem>
+                          )}
+                        </TextField>
                       </div>
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
                         <SlLocationPin className="fs-4 mt-3" />
@@ -246,7 +245,6 @@ function Home() {
                   </div>
                 </div>
               </div>
-           
             </div>
             <div className="col-lg-3 position-relative z-1">
               <img src={sidepic} alt="sidepic" className="w-100 h-100" />

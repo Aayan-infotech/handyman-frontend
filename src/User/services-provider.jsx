@@ -54,8 +54,14 @@ export default function ServicesProvider() {
     if (!latitude || !longitude || !radius || !businessType) return;
     try {
       const decodedBusinessType = decodeURIComponent(businessType);
-      const res = await axios.get(
-        `http://3.223.253.106:7777/api/provider/byBusinessType?lat=${latitude}&lng=${longitude}&radius=${radius}&businessType=${decodedBusinessType}`
+      const res = await axios.post(
+        `http://3.223.253.106:7777/api/provider/byBusinessType`,
+        {
+          businessType: [decodedBusinessType],
+          lat: latitude,
+          lng: longitude,
+          radius: radius,
+        }
       );
       if (res?.data?.status === 200) {
         setData(res?.data?.data);
