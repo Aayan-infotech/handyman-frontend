@@ -195,6 +195,7 @@ export default function JobDetail() {
     handleJobStatus();
     fetchData();
     noficationFunctionality();
+    handleProviderJobs()
   };
 
   console.log("user", user);
