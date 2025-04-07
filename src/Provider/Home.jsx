@@ -66,50 +66,9 @@ export default function HomeProvider() {
     setJobStatus(event.target.value);
   };
 
-  // const getUser = async () => {
-  //   try {
-  //     const result = await dispatch(getProviderUser());
-  //     if (result.payload?.status === 200) {
-  //       const { businessType, address } = result.payload.data;
-  //       setBusinessType(businessType);
-  //       setLatitude(address?.location?.coordinates?.[1] || null);
-  //       setLongitude(address?.location?.coordinates?.[0] || null);
-  //       setRadius(address?.radius || null);
-  //     } else {
-  //       throw new Error("Failed to fetch user data.");
-  //     }
-  //   } catch (error) {
-  //     console.error("User error:", error);
-  //     setToastProps({
-  //       message: "Error fetching user data",
-  //       type: "error",
-  //       toastKey: Date.now(),
-  //     });
-  //   }
-  // };
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-    try {
-    setLoading(true);
-    const userResult = await dispatch(getHunterUser());
-    if (userResult.payload) {
-    await handleAllData();
-    }
-    } catch (error) {
-    setToastProps({
-    message: error.message,
-    type: "error",
-    toastKey: Date.now(),
-    });
-    } finally {
-    setLoading(false);
-    }
-    };
-    fetchData();
-    }, [dispatch]);
 
     
   const handleAllData = async () => {
