@@ -88,6 +88,33 @@ export default function HomeProvider() {
   //   }
   // };
 
+
+
+
+
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       setLoading(true);
+//       const userResult = await dispatch(getHunterUser());
+//       if (userResult.payload) {
+//         await handleAllData();
+//       }
+//     } catch (error) {
+//       setToastProps({
+//         message: error.message,
+//         type: "error",
+//         toastKey: Date.now(),
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   fetchData();
+// }, [dispatch]);
+
+
   const handleAllData = async () => {
     if (!businessType || latitude === null || longitude === null) return;
     setLoading(true);
