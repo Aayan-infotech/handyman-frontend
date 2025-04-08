@@ -308,7 +308,8 @@ export default function Upload() {
                         variant="outlined"
                         size="large"
                         color="error"
-                        onClick={() => navigate("/provider/pricing")}
+                        // onClick={() => navigate("/provider/pricing")}
+                       onClick={() => navigate("/provider/home")}
                       >
                         Skip For Now
                       </Button>

@@ -324,8 +324,7 @@ export default function MyProfile() {
       }
 
       const response = await axios.delete(
-        `http://3.223.253.106:7777/api/DeleteAccount/${
-          providerId ? "provider" : "delete"
+        `http://3.223.253.106:7777/api/DeleteAccount/${providerId ? "provider" : "delete"
         }/${providerId || hunterId}`
       );
 
@@ -727,22 +726,20 @@ export default function MyProfile() {
 
               <div className="row gy-4 my-4">
                 <div
-                  className={` ${
-                    Location.pathname.includes("provider")
+                  className={` ${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   {hunterToken ? (
                     <Link to={`/changePassword/${id}`}>
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${
-                              Location.pathname.includes("provider")
+                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                                 ? "flex-column"
                                 : "flex-row"
-                            }`}
+                              }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -766,11 +763,10 @@ export default function MyProfile() {
                       <div className="card border-0 rounded-5 h-100">
                         <div className="card-body">
                           <div
-                            className={`d-flex gap-3 align-items-center justify-content-center ${
-                              Location.pathname.includes("provider")
+                            className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                                 ? "flex-column"
                                 : "flex-row"
-                            }`}
+                              }`}
                           >
                             <div className="circle-container">
                               <div className="progress-circle">
@@ -792,21 +788,19 @@ export default function MyProfile() {
                   )}
                 </div>
                 <div
-                  className={` ${
-                    Location.pathname.includes("provider")
+                  className={` ${Location.pathname.includes("provider")
                       ? "d-none"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   <Link to="/change-radius">
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${
-                            Location.pathname.includes("provider")
+                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                               ? "flex-column"
                               : "flex-row"
-                          }`}
+                            }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -826,21 +820,53 @@ export default function MyProfile() {
                     </div>
                   </Link>
                 </div>
+
                 <div
-                  className={` ${
-                    Location.pathname.includes("provider")
+                  className={` ${Location.pathname.includes("provider")
+                      ? "d-none"
+                      : "col-lg-3"
+                    }`}
+                >
+                  <Link to="/support">
+                    <div className="card border-0 rounded-5 h-100">
+                      <div className="card-body">
+                        <div
+                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                            }`}
+                        >
+                          <div className="circle-container">
+                            <div className="progress-circle">
+                              <div className="lock-icon">
+                                <PiCircleHalfFill />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="d-flex flex-row gap-3 align-items-center">
+                            <span className="text-success text-center">
+                              Support
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+                <div
+                  className={` ${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   <div className="card border-0 rounded-5 h-100">
                     <div className="card-body">
                       <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${
-                          Location.pathname.includes("provider")
+                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                             ? "flex-column"
                             : "flex-row"
-                        }`}
+                          }`}
                       >
                         <div className="circle-container">
                           <div className="progress-circle">
@@ -861,27 +887,24 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${
-                    Location.pathname.includes("provider")
+                  className={`${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "col-lg-3"
-                  }`}
+                    }`}
                 >
                   <Link
-                    to={`${
-                      Location.pathname.includes("provider")
+                    to={`${Location.pathname.includes("provider")
                         ? "/provider/job-history"
                         : "/privacy"
-                    }`}
+                      }`}
                   >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${
-                            Location.pathname.includes("provider")
+                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                               ? "flex-column"
                               : "flex-row"
-                          }`}
+                            }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">
@@ -905,21 +928,19 @@ export default function MyProfile() {
                 </div>
 
                 <div
-                  className={`${
-                    Location.pathname.includes("provider")
+                  className={`${Location.pathname.includes("provider")
                       ? "col-lg-2"
                       : "d-none"
-                  }`}
+                    }`}
                 >
                   <Link to="/provider/managesubscription">
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div
-                          className={`d-flex gap-3 align-items-center justify-content-center ${
-                            Location.pathname.includes("provider")
+                          className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
                               ? "flex-column"
                               : "flex-row"
-                          }`}
+                            }`}
                         >
                           <div className="circle-container">
                             <div className="progress-circle">

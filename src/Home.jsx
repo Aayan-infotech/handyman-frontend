@@ -163,7 +163,7 @@ function Home() {
                 <br />
                 <span className="text-muted">
                   Trade Hunters connects you with top service providers in
-                  Austrlia
+                  Australia
                   <br />{" "}
                   <span className="highlighted fs-4">fast and easy?</span>
                 </span>
@@ -179,39 +179,41 @@ function Home() {
                         <CiSearch className="fs-4 mt-3" />
 
                         <TextField
-                          id="standard-basic"
-                          label="Businesses"
-                          variant="standard"
-                          className="w-100"
-                          select
-                          fullWidth
-                          value={selectedBusiness} // Bind the selected value to TextField
-                          onChange={handleBusinessChange} // Update state when selection changes
-                          SelectProps={{
-                            MenuProps: {
-                              PaperProps: {
-                                style: {
-                                  maxHeight: 200, // Limit dropdown height
-                                },
-                              },
-                            },
-                          }}
-                        >
-                          {/* Map over the businessData array to display business names */}
-                          {allBusinessData && allBusinessData.length > 0 ? (
-                            allBusinessData
-                              .sort((a, b) => a.name.localeCompare(b.name)) // Sort business names alphabetically
-                              .map((business, index) => (
-                                <MenuItem key={index} value={business.name}>
-                                  {business.name}
-                                </MenuItem>
-                              ))
-                          ) : (
-                            <MenuItem disabled>
-                              No recent jobs available.
-                            </MenuItem>
-                          )}
-                        </TextField>
+  id="standard-basic"
+  label="Businessess"
+  variant="standard"
+  className="w-100"
+  select
+  fullWidth
+  value={selectedBusiness} // Bind the selected value to TextField
+  onChange={handleBusinessChange} // Update state when selection changes
+  SelectProps={{
+    MenuProps: {
+      PaperProps: {
+        style: {
+          maxHeight: 200, // Limit dropdown height
+        },
+      },
+    },
+  }}
+  // Make the TextField typeable directly in the TextField component.
+  type="text" // Allow typing in the TextField
+>
+  {/* Map over the businessData array to display business names */}
+  {allBusinessData && allBusinessData.length > 0 ? (
+    allBusinessData
+      .sort((a, b) => a.name.localeCompare(b.name)) // Sort business names alphabetically
+      .map((business, index) => (
+        <MenuItem key={index} value={business.name}>
+          {business.name}
+        </MenuItem>
+      ))
+  ) : (
+    <MenuItem disabled>
+      No recent jobs available.
+    </MenuItem>
+  )}
+</TextField>
                       </div>
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
                         <SlLocationPin className="fs-4 mt-3" />
@@ -756,7 +758,7 @@ function Home() {
           <Row className="mt-4">
             <Col lg={6}>
               <p className="text-start">
-                2025 @ TradeHunter. All rights reserved.
+                2025 @ TradeHunters. All rights reserved.
               </p>
             </Col>
             <Col lg={6}>

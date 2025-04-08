@@ -67,10 +67,6 @@ export default function HomeProvider() {
   };
 
 
-
-
-
-    
   const handleAllData = async () => {
     if (!businessType || latitude === null || longitude === null) return;
     setLoading(true);
@@ -252,7 +248,8 @@ export default function HomeProvider() {
               filteredData.map((job) => (
                 <div className="col-lg-12 management" key={job._id}>
                   <Link
-                    to={`/provider/jobspecification/${job._id}`}
+                    // to={`/provider/jobspecification/${job._id}`}
+                    to={`/provider/pricing`}
                     className="card border-0 rounded-3 px-4"
                   >
                     <div className="card-body">

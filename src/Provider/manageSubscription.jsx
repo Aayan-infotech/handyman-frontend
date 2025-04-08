@@ -86,34 +86,37 @@ export default function ManageSubscription() {
                 </div>
                 <div className="row py-3 gy-4 mt-lg-4">
                   <h3 className="text-center text-lg-start">Your Plan</h3>
+                  {voucher?.voucherId && (
+                    <div className="col-lg-12">
+                      <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
+                        <div className="card-body d-flex flex-column gap-3 align-items-center">
+                          <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
+                            <h6>
+                              Valid From:{" "}
+                              {new Date(
+                                voucher?.startDate
+                              ).toLocaleDateString()}
+                            </h6>
+                            <h6>
+                              Valid To:{" "}
+                              {new Date(voucher?.endDate).toLocaleDateString()}
+                            </h6>
+                          </div>
+                          {/* <h3 className="mt-3 text-center">
+                            Voucher Id:{voucher?.voucherId}
+                          </h3> */}
 
-                  <div className="col-lg-12">
-                    <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
-                      <div className="card-body d-flex flex-column gap-3 align-items-center">
-                        <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
-                          <h6>
-                            Start Date:{" "}
-                            {new Date(voucher?.startDate).toLocaleDateString()}
-                          </h6>
-                          <h6>
-                            End Date:{" "}
-                            {new Date(voucher?.endDate).toLocaleDateString()}
-                          </h6>
+                          {/* <h5 className="mt-3 text-center">
+                            {" "}
+                            Voucher Code
+                            <br />
+                            <span className="text-center">{voucher?.code}</span>
+                          </h5> */}
+                          <h4>Radius: {voucher?.kmRadius} KM</h4>
                         </div>
-                        <h3 className="mt-3 text-center">
-                          Voucher Id:{voucher?.voucherId}
-                        </h3>
-
-                        <h5 className="mt-3 text-center">
-                          {" "}
-                          Voucher Code
-                          <br />
-                          <span className="text-center">{voucher?.code}</span>
-                        </h5>
-                        <h4>Radius: {voucher?.kmRadius} KM</h4>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   {data?.map((item) => (
                     <div className="col-lg-12" key={item._id}>
