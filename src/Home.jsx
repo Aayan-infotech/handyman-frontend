@@ -163,7 +163,7 @@ function Home() {
                 <br />
                 <span className="text-muted">
                   Trade Hunters connects you with top service providers in
-                  Austrlia
+                  Australia
                   <br />{" "}
                   <span className="highlighted fs-4">fast and easy?</span>
                 </span>

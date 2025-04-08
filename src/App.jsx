@@ -57,6 +57,7 @@ import AllBlogs from "./components/allBlogs";
 import ManageSubscription from "./Provider/manageSubscription";
 import Pricingwithtype from "./Provider/pricingwithtype";
 import Support from "./support";
+import JobEdit from "./User/jobEdit";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -148,7 +149,7 @@ function App() {
           element={<UnProtectedRoute element={<Search />} />}
         />
 
-<Route
+        <Route
           path="/support"
           element={<ProtectedRoute element={<Support />} />}
         />
@@ -207,6 +208,10 @@ function App() {
         <Route
           path="/post-new-job"
           element={<ProtectedRoute element={<NewJob />} />}
+        />
+        <Route
+          path="/job-edit/:id"
+          element={<ProtectedRoute element={<JobEdit />} />}
         />
         <Route
           path="/job-management"
@@ -289,7 +294,7 @@ function App() {
           path="/blog-detail/:id"
           element={<UnProtectedRoute element={<BlogDetail />} />}
         />
-      
+
         <Route
           path="/provider/message"
           element={<ProtectedRoute element={<Message />} />}

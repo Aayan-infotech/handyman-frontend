@@ -10,7 +10,7 @@ import axios from "axios";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
-import { IoEyeSharp, IoTrashOutline } from "react-icons/io5";
+import { IoEyeSharp, IoTrashOutline, IoPencil } from "react-icons/io5";
 import Table from "react-bootstrap/Table";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -20,6 +20,7 @@ import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Pagination from "react-bootstrap/Pagination";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -189,6 +190,26 @@ export default function JobManagement() {
     navigate(`?${queryParams.toString()}`);
   };
 
+  useEffect(() => {
+    let filtered = data;
+
+    // Apply search filter if search term exists
+    if (search) {
+      filtered = filtered.filter((provider) =>
+        provider.title.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Apply job status filter if any statuses are selected
+    if (jobStatus.length > 0) {
+      filtered = filtered.filter((provider) =>
+        jobStatus.includes(provider.jobStatus)
+      );
+    }
+
+    setFilteredData(filtered);
+  }, [search, data, jobStatus]);
+
   console.log("filteredData", data);
   return (
     <>
@@ -291,7 +312,7 @@ export default function JobManagement() {
                             <td>{index + 1}</td>
                             <td> {provider.title}</td>
                             <td className={`text-start flex-wrap`}>
-                              ${provider.estimatedBudget}
+                              ${provider.estimatedBudget || "00"}
                             </td>
 
                             <td>{provider?.jobLocation?.jobAddressLine}</td>
@@ -300,21 +321,37 @@ export default function JobManagement() {
                               {new Date(provider?.date).toLocaleDateString()}
                             </td>
                             <td>{provider.jobStatus}</td>
-                            <td className="d-grid">
-                              <span>
-                                <Link to={`/job-detail/${provider._id}`}>
-                                  <IoEyeSharp height={10} />
-                                </Link>
-                                {!location.pathname.includes("job-history") && (
-                                  <IoTrashOutline
-                                    onClick={() =>
-                                      handleJobDelete(provider._id)
-                                    }
-                                    style={{ cursor: "pointer" }}
-                                    height={10}
-                                  />
-                                )}
-                              </span>
+                            <td>
+                              <tr>
+                                <td>
+                                  <Link to={`/job-edit/${provider._id}`}>
+                                    <HiOutlinePencilSquare
+                                      style={{ height: "30px" }}
+                                    />
+                                  </Link>
+                                </td>
+                                <td>
+                                  <Link to={`/job-detail/${provider._id}`}>
+                                    <IoEyeSharp style={{ height: "30px" }} />
+                                  </Link>
+                                </td>
+
+                                <td>
+                                  {!location.pathname.includes(
+                                    "job-history"
+                                  ) && (
+                                    <IoTrashOutline
+                                      onClick={() =>
+                                        handleJobDelete(provider._id)
+                                      }
+                                      style={{
+                                        cursor: "pointer",
+                                        height: "30px",
+                                      }}
+                                    />
+                                  )}
+                                </td>
+                              </tr>
                             </td>
                           </tr>
                         ))}
