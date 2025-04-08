@@ -313,8 +313,31 @@ export default function MyProfile() {
         toastKey: Date.now(),
       });
     }
-  };
+  }
+  
 
+  // const handleNotificationToggle = async () => {
+  //   try {
+  //     const response = await fetch(`http://3.223.253.106:7777/api/pushNotification/notification/${userId}`, {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ notificationEnable: false }), // Sending the required payload
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to update notification settings.');
+  //     }
+
+  //     const data = await response.json();
+  //     console.log('Notification settings updated:', data);
+  //     alert('Notification settings updated successfully!');
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     alert('Failed to update notification settings.');
+  //   }
+  // };
   const deleteAccount = async () => {
     try {
       const token = hunterToken || providerToken;
@@ -881,6 +904,16 @@ export default function MyProfile() {
                             Notification setting
                           </span>
                         </div>
+
+{/* <div className="d-flex flex-row gap-3 align-items-center">
+      <span
+        className="text-success text-center"
+        style={{ cursor: 'pointer' }}
+        onClick={handleNotificationToggle}
+      >
+        Notification Setting
+      </span>
+    </div> */}
                       </div>
                     </div>
                   </div>
