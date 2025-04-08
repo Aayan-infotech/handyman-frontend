@@ -56,6 +56,7 @@ import BlogDetail from "./components/blogsDetails";
 import AllBlogs from "./components/allBlogs";
 import ManageSubscription from "./Provider/manageSubscription";
 import Pricingwithtype from "./Provider/pricingwithtype";
+import Support from "./support";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -145,6 +146,11 @@ function App() {
         <Route
           path="/search"
           element={<UnProtectedRoute element={<Search />} />}
+        />
+
+<Route
+          path="/support"
+          element={<ProtectedRoute element={<Support />} />}
         />
         <Route
           path="/welcome"
