@@ -82,7 +82,7 @@ export default function Contact() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                   <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                    <Link href="#" style={{ fontWeight: "350" }}>
+                    <Link to="/about" style={{ fontWeight: "350" }}>
                       About Us
                     </Link>
                   </Nav>
