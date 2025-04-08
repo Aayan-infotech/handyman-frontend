@@ -223,7 +223,15 @@ export default function Chat({ messageData, messages, selectedChat }) {
     try {
       const response = await axios.post(
         "http://3.223.253.106:7777/api/match/getMatchedData",
-        { jobPostId: jobId, senderId, receiverId }
+        { jobPostId: jobId, senderId, receiverId },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ||
+              localStorage.getItem("ProviderToken")
+            }`,
+          },
+        }
       );
       console.log(response);
       setChatData(response?.data?.data);
@@ -346,29 +354,27 @@ export default function Chat({ messageData, messages, selectedChat }) {
     handleProvider();
   }, [location]);
 
-
-   const noficationFunctionality = async () => {
-      setLoading(true);
-      try {
-        const response = dispatch(
-          assignedJobNotification({
-            receiverId: receiverId,
-          })
-        );
-        if (assignedJobNotification.fulfilled.match(response)) {
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
+  const noficationFunctionality = async () => {
+    setLoading(true);
+    try {
+      const response = dispatch(
+        assignedJobNotification({
+          receiverId: receiverId,
+        })
+      );
+      if (assignedJobNotification.fulfilled.match(response)) {
         setLoading(false);
       }
-    };
-
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
 
   const dobFunction = ({ id }) => {
     handleCompletedJob({ id });
     handleJobAccept({ id });
-    noficationFunctionality()
+    noficationFunctionality();
   };
 
   console.log("messageData in chat", selectedChat);

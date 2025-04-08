@@ -47,6 +47,11 @@ export const getProviderJobs = createAsyncThunk(
           longitude,
           latitude,
           radius,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+          },
         }
       );
 
@@ -66,6 +71,11 @@ export const getGuestProviderJobs = createAsyncThunk(
         {
           latitude,
           longitude,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+          },
         }
       );
 
@@ -81,7 +91,12 @@ export const getGuestProviderJobId = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://3.223.253.106:7777/api/provider/getJobByIdForGuest/${id}`
+        `http://3.223.253.106:7777/api/provider/getJobByIdForGuest/${id}` , 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+          },
+        }
       );
 
       return response.data;

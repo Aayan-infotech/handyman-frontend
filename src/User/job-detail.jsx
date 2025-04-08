@@ -120,7 +120,12 @@ export default function JobDetail() {
     try {
       const response = await axios.post(
         "http://3.223.253.106:7777/api/match/getMatchedData",
-        { jobPostId: id, senderId: user, receiverId }
+        { jobPostId: id, senderId: user, receiverId },
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken || hunterToken}`,
+          },
+        }
       );
 
       const responseData = response.data.data;
@@ -195,7 +200,7 @@ export default function JobDetail() {
     handleJobStatus();
     fetchData();
     noficationFunctionality();
-    handleProviderJobs()
+    handleProviderJobs();
   };
 
   console.log("user", user);
@@ -211,6 +216,15 @@ export default function JobDetail() {
   useEffect(() => {
     fetchData();
   }, [id, user, receiverId]);
+
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
 
   if (loading) return <Loader />;
   if (!data) return <noData />;
@@ -304,7 +318,9 @@ export default function JobDetail() {
                     <div className="d-flex flex-column gap-2 align-items-start">
                       <span className="text-muted">Location</span>
                       <b className="fw-medium fs-5">
-                        {data.jobLocation.jobAddressLine || "N/A"}
+                        {filterAddressPatterns(
+                          data.jobLocation.jobAddressLine
+                        ) || "N/A"}
                       </b>
                     </div>
                   </div>

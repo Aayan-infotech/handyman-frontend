@@ -50,7 +50,15 @@ export default function Message() {
 
         const response = await axios.post(
           "http://3.223.253.106:7777/api/match/getMatchedData",
-          { jobPostId: jobId, senderId, receiverId }
+          { jobPostId: jobId, senderId, receiverId },
+          {
+            headers: {
+              Authorization: `Bearer ${
+                localStorage.getItem("hunterToken") ||
+                localStorage.getItem("ProviderToken")
+              }`,
+            },
+          }
         );
 
         if (response.status === 200) {

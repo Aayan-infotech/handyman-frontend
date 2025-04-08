@@ -38,6 +38,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
+import Select from "react-select";
 
 import {
   FaFacebook,
@@ -47,13 +48,18 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import axios from "axios";
-
+// const checkedIcon = <CheckBoxIcon fontSize="small" />;
 function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
   const [allBusinessData, setAllBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
-  const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
+  // const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
+
+  const [selectedBusiness, setSelectedBusiness] = useState(null); // Manage selected business
+
+  const [inputValue, setInputValue] = React.useState("");
+
   const [address, setAddress] = useState("");
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -93,9 +99,18 @@ function Home() {
         setRecentJob(res?.data?.data);
       });
   }, []);
-  const handleBusinessChange = (event) => {
-    setSelectedBusiness(event.target.value); // Update the selected business
+  // const handleBusinessChange = (event) => {
+  //   setSelectedBusiness(event.target.value); // Update the selected business
+  // };
+
+  const handleBusinessChange = (selectedOption) => {
+    console.log("Selected Business:", selectedOption);
+    setSelectedBusiness(selectedOption);
   };
+
+  const filteredBusinessData = allBusinessData.filter((business) =>
+    business.name.toLowerCase().includes(inputValue.toLowerCase())
+  );
   const handleChange = (event) => {
     setAge(event.target.value);
   };
@@ -115,8 +130,17 @@ function Home() {
     }
 
     navigate(
-      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`
+      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness.name}`
     );
+  };
+
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
   };
   return (
     <>
@@ -176,47 +200,24 @@ function Home() {
                       className="d-flex justify-content-center align-items-end gap-4 flex-column flex-lg-row"
                     >
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
-                        <CiSearch className="fs-4 mt-3" />
+                        <CiSearch className="fs-4" />
 
-                        <TextField
-  id="standard-basic"
-  label="Businessess"
-  variant="standard"
-  className="w-100"
-  select
-  fullWidth
-  value={selectedBusiness} // Bind the selected value to TextField
-  onChange={handleBusinessChange} // Update state when selection changes
-  SelectProps={{
-    MenuProps: {
-      PaperProps: {
-        style: {
-          maxHeight: 200, // Limit dropdown height
-        },
-      },
-    },
-  }}
-  // Make the TextField typeable directly in the TextField component.
-  type="text" // Allow typing in the TextField
->
-  {/* Map over the businessData array to display business names */}
-  {allBusinessData && allBusinessData.length > 0 ? (
-    allBusinessData
-      .sort((a, b) => a.name.localeCompare(b.name)) // Sort business names alphabetically
-      .map((business, index) => (
-        <MenuItem key={index} value={business.name}>
-          {business.name}
-        </MenuItem>
-      ))
-  ) : (
-    <MenuItem disabled>
-      No recent jobs available.
-    </MenuItem>
-  )}
-</TextField>
+                        <Select
+                          options={allBusinessData.sort((a, b) =>
+                            a.name.localeCompare(b.name)
+                          )} // Sorted Business Names
+                          getOptionLabel={(e) => e.name} // Display Business Name
+                          value={selectedBusiness} // Show selected business in input box
+                          onChange={handleBusinessChange} // Update state on selection
+                          isClearable
+                          isSearchable
+                          placeholder="Select or type a business"
+                          getOptionValue={(e) => e.name} // Option Value
+                          className="w-100 custom-design"
+                        />
                       </div>
-                      <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
-                        <SlLocationPin className="fs-4 mt-3" />
+                      <div className="d-flex justify-content-start justify-content-lg-center align-items-center  gap-3 w-100">
+                        <SlLocationPin className="fs-4" />
                         <Autocomplete
                           className="form-control address-landing ps-0"
                           apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
@@ -596,7 +597,9 @@ function Home() {
                         <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
                           <span className="text-muted">{item?.user?.name}</span>
                           <span className="text-muted">
-                            {item?.jobLocation?.jobAddressLine}
+                            {filterAddressPatterns(
+                              item?.jobLocation?.jobAddressLine
+                            )}
                           </span>
                         </div>
                         <Stack

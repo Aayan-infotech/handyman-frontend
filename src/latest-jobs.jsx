@@ -37,6 +37,15 @@ export default function LatestJobs() {
     handleResponse();
   }, []);
 
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
+  
   return (
     <>
       {loading === true ? (
@@ -98,7 +107,7 @@ export default function LatestJobs() {
                                   {item?.user?.name}
                                 </span>
                                 <span className="text-muted">
-                                  {item?.jobLocation?.jobAddressLine}
+                                  {filterAddressPatterns(item?.jobLocation?.jobAddressLine)}
                                 </span>
                               </div>
                               <Stack

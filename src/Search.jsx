@@ -78,6 +78,16 @@ function Search() {
     handleSearchJob();
   }, []);
 
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
+
+
   return (
     <>
       {loading === true ? (
@@ -155,7 +165,7 @@ function Search() {
                                 <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
                                   <PiBag />
                                   <h5 className="mb-0 text-trun">
-                                    {job.jobLocation.jobAddressLine}
+                                    {filterAddressPatterns(job.jobLocation.jobAddressLine)}
                                   </h5>
                                 </div>
                               </div>

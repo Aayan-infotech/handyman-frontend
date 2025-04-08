@@ -101,7 +101,12 @@ export default function JobEdit() {
 
         // Fetch business types
         const servicesResponse = await axios.get(
-          "http://3.223.253.106:7777/api/service/getAllServices"
+          "http://3.223.253.106:7777/api/service/getAllServices",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (servicesResponse.status === 200) {
           setBusinessData(servicesResponse?.data?.data);
@@ -184,7 +189,7 @@ export default function JobEdit() {
 
     try {
       const response = await axios.put(
-        `http://3.223.253.106:7777/api/jobs/${id}`,
+        `http://3.223.253.106:7777/api/jobpost/${id}`,
         formData,
         {
           headers: {
@@ -351,9 +356,9 @@ export default function JobEdit() {
                     {documents.length > 0 && (
                       <div className="mt-2">
                         <h6>Selected Files:</h6>
-                        <ul className="list-unstyled">
+                        <ul className="list-unstyled d-flex flex-row flex-wrap">
                           {documents.map((file, index) => (
-                            <li key={index}>
+                            <li className="" key={index}>
                               <img
                                 src={file}
                                 alt="file"

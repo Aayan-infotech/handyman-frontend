@@ -99,7 +99,12 @@ export default function NewJob() {
     const handleAllData = async () => {
       try {
         const response = await axios.get(
-          "http://3.223.253.106:7777/api/service/getAllServices"
+          "http://3.223.253.106:7777/api/service/getAllServices" , 
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+            },
+          }
         );
         if (response.status === 200) {
           setBusinessData(response?.data?.data);

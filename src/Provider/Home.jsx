@@ -66,7 +66,12 @@ export default function HomeProvider() {
     setJobStatus(event.target.value);
   };
 
-
+  const guesNavigation = () => {
+    if (localStorage.getItem("Guest") == "true") {
+      return "/provider/pricing";
+    }
+    return `/provider/jobspecification/${job._id}`;
+  };
   const handleAllData = async () => {
     if (!businessType || latitude === null || longitude === null) return;
     setLoading(true);
@@ -163,6 +168,16 @@ export default function HomeProvider() {
     }
   };
 
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
+
+
   return (
     <>
       <div></div>
@@ -248,35 +263,19 @@ export default function HomeProvider() {
               filteredData.map((job) => (
                 <div className="col-lg-12 management" key={job._id}>
                   <Link
-                    // to={`/provider/jobspecification/${job._id}`}
-                    to={`/provider/pricing`}
+                    to={`/provider/jobspecification/${job._id}`}
                     className="card border-0 rounded-3 px-4"
                   >
                     <div className="card-body">
                       <div className="row gy-4 gx-1 align-items-center">
-                        {guestCondition ? (
-                          <div className="col-lg-4">
-                            <div className="d-flex flex-row gap-3 align-items-center">
-                              <div className="d-flex flex-column align-items-start gap-1">
-                                <h3 className="mb-0">{job.title}</h3>
-                                <h6>
-                                  {new Date(job.createdAt).toDateString()}
-                                </h6>
-                              </div>
+                        <div className="col-lg-3">
+                          <div className="d-flex flex-row gap-3 align-items-center">
+                            <div className="d-flex flex-column align-items-start gap-1">
+                              <h3 className="mb-0">{job.title}</h3>
+                              <h6>{new Date(job.createdAt).toDateString()}</h6>
                             </div>
                           </div>
-                        ) : (
-                          <div className="col-lg-3">
-                            <div className="d-flex flex-row gap-3 align-items-center">
-                              <div className="d-flex flex-column align-items-start gap-1">
-                                <h3 className="mb-0">{job.title}</h3>
-                                <h6>
-                                  {new Date(job.createdAt).toDateString()}
-                                </h6>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                        </div>
                         <div className="col-lg-7">
                           <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
                             <div className="d-flex flex-row gap-2 align-items-center">
@@ -286,21 +285,25 @@ export default function HomeProvider() {
                             <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
                               <PiBag />
                               <h5 className="mb-0 text-trun">
-                                {job.jobLocation.jobAddressLine}
+                                {filterAddressPatterns(job.jobLocation.jobAddressLine)}
                               </h5>
                             </div>
                           </div>
                         </div>
-                        {!guestCondition ? (
-                          <div className="col-lg-2">
-                            <Button
-                              variant="contained"
-                              className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                            >
-                              Contact
-                            </Button>
-                          </div>
-                        ) : null}
+
+                        <div className="col-lg-2">
+                          <Button
+                            variant="contained"
+                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            onClick={
+                              localStorage.getItem("Guest") === "true"
+                                ? `/provider/pricing`
+                                : `/provider/jobspecification/${job._id}`
+                            }
+                          >
+                            Contact
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </Link>

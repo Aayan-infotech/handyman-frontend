@@ -85,6 +85,14 @@ export default function JobSpecification() {
         `http://3.223.253.106:7777/api/jobPost/job/accept/${id}`,
         {
           providerId: ProviderId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ||
+              localStorage.getItem("ProviderToken")
+            }`,
+          },
         }
       );
 
@@ -101,7 +109,7 @@ export default function JobSpecification() {
       }
       try {
         const response = await axios.post(
-          `http://3.223.253.106:7777/api/provider/acceptCount/${ProviderId}`
+          `http://3.223.253.106:7777/api/provider/acceptCount/${ProviderId}`,
         );
         if (response.status === 200) {
           setShow(true);
@@ -163,6 +171,15 @@ export default function JobSpecification() {
       handleGuestJob();
     } else handleJob();
   }, [id]);
+
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
 
   console.log(data);
 
@@ -269,9 +286,8 @@ export default function JobSpecification() {
                             <div className="d-flex flex-column gap-2 align-items-start">
                               <span className="text-muted">Location</span>
                               <b className="fw-medium fs-5">
-                                {data?.jobLocation?.jobAddressLine?.replace(
-                                  /^[^,]+, /,
-                                  ""
+                                {filterAddressPatterns(
+                                  data?.jobLocation?.jobAddressLine
                                 ) || "Location not available"}
                               </b>
                             </div>
