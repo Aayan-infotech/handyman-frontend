@@ -70,7 +70,7 @@ export default function About() {
 
 
               <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#" style={{ fontWeight: '350' }}>About Us</Link>
+                <Link to="/about" style={{ fontWeight: '350' }}>About Us</Link>
                 <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
               </Nav>
 
