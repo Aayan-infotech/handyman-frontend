@@ -211,6 +211,15 @@ export default function JobManagement() {
   }, [search, data, jobStatus]);
 
   console.log("filteredData", data);
+
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
   return (
     <>
       {loading === true ? (
@@ -315,7 +324,11 @@ export default function JobManagement() {
                               ${provider.estimatedBudget || "00"}
                             </td>
 
-                            <td>{provider?.jobLocation?.jobAddressLine}</td>
+                            <td>
+                              {filterAddressPatterns(
+                                provider?.jobLocation?.jobAddressLine
+                              )}
+                            </td>
                             <td>
                               {" "}
                               {new Date(provider?.date).toLocaleDateString()}

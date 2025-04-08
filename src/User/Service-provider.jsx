@@ -7,6 +7,8 @@ import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import FormGroup from "@mui/material/FormGroup";
+import Pagination from "react-bootstrap/Pagination";
+
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
@@ -16,7 +18,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
 import { GrMapLocation } from "react-icons/gr";
@@ -51,7 +53,11 @@ export default function ServiceProvider() {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const radiusOptions = ["10", "20", "40", "80", "160"];
+  const queryParams = new URLSearchParams(location.search);
+  const [totalPages, setTotalPages] = useState(0);
 
+  let currentPage = parseInt(queryParams.get("page")) || 1;
+  const navigate = useNavigate();
   const token = localStorage.getItem("hunterToken");
   const handleChange = (event) => {
     setBusinessType(event.target.value);
@@ -104,12 +110,19 @@ export default function ServiceProvider() {
     try {
       const response = await axios.post(
         "http://3.223.253.106:7777/api/hunter/getNearbyServiceProviders",
-        { latitude, longitude }
+
+        { latitude, longitude },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {
         setLoading(false);
         setData(response?.data?.data || []);
+        setTotalPages(response.data.pagination.totalPages);
         setSearch("");
         setProviderRadius([]);
         setToastProps({
@@ -136,6 +149,17 @@ export default function ServiceProvider() {
     } finally {
       setLoading(false);
     }
+  };
+  useEffect(() => {
+    if (!queryParams.get("page")) {
+      queryParams.set("page", "1");
+      navigate(`?${queryParams.toString()}`, { replace: true });
+    }
+  }, [location.search, navigate]);
+
+  const handlePageChange = (page) => {
+    queryParams.set("page", page.toString());
+    navigate(`?${queryParams.toString()}`);
   };
 
   useEffect(() => {
@@ -165,9 +189,14 @@ export default function ServiceProvider() {
     setFilteredData(filtered);
   }, [search, businessType, data, providerRadius]);
 
-  console.log(data);
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
 
-  console.log("providerRadius", providerRadius);
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
 
   return (
     <>
@@ -362,36 +391,51 @@ export default function ServiceProvider() {
                                       {provider.businessName}
                                     </Link>
                                   </td>
-                                  <td
-                                    className={`text-start flex-wrap ${
-                                      provider.businessType.length === 1
-                                        ? ""
-                                        : "d-flex"
-                                    }`}
-                                  >
-                                    {Array.isArray(provider?.businessType) &&
-                                    provider.businessType.length > 0
-                                      ? provider.businessType.map(
-                                          (type, index) => (
-                                            <>
-                                              <div key={index}>
-                                                {type}
-                                                {" ,  "}
-                                              </div>
-                                            </>
+                                  <td>
+                                    <tr
+                                      className={`text-start flex-wrap ${
+                                        provider.businessType.length === 1
+                                          ? ""
+                                          : "d-flex"
+                                      }`}
+                                    >
+                                      {Array.isArray(provider?.businessType) &&
+                                      provider.businessType.length > 0
+                                        ? provider.businessType.map(
+                                            (type, index) => (
+                                              <>
+                                                <td
+                                                  key={index}
+                                                >{`"${type}"`}</td>
+                                              </>
+                                            )
                                           )
-                                        )
-                                      : "No Category"}
+                                        : "No Category"}
+                                    </tr>
                                   </td>
-
                                   <td>
                                     {(provider.distance / 1000).toFixed(2)}
                                   </td>
-                                  <td>{provider.address.addressLine}</td>
+                                  <td>
+                                    {filterAddressPatterns(
+                                      provider.address.addressLine
+                                    )}
+                                  </td>
                                 </tr>
                               ))}
                             </tbody>
                           </Table>
+                          <Pagination className="justify-content-center pagination-custom">
+                            {[...Array(totalPages)].map((_, index) => (
+                              <Pagination.Item
+                                key={index + 1}
+                                active={index + 1 === currentPage}
+                                onClick={() => handlePageChange(index + 1)}
+                              >
+                                {index + 1}
+                              </Pagination.Item>
+                            ))}
+                          </Pagination>
                         </div>
                       </div>
                     </div>

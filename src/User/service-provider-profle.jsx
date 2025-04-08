@@ -28,10 +28,26 @@ export default function ServiceProviderProfile() {
     setLoading(true);
     try {
       const [profileRes, bgRes, ratingRes, galleryRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/provider/${id}`),
-        axios.get(`${API_BASE_URL}/backgroundImg/${id}`),
-        axios.get(`${API_BASE_URL}/rating/getRatings/${id}`),
-        axios.get(`${API_BASE_URL}/providerPhoto/${id}`),
+        axios.get(`${API_BASE_URL}/provider/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+          },
+        }),
+        axios.get(`${API_BASE_URL}/backgroundImg/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+          },
+        }),
+        axios.get(`${API_BASE_URL}/rating/getRatings/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+          },
+        }),
+        axios.get(`${API_BASE_URL}/providerPhoto/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+          },
+        }),
       ]);
 
       setData(profileRes?.data?.data || {});

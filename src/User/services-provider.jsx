@@ -56,11 +56,17 @@ export default function ServicesProvider() {
       const decodedBusinessType = decodeURIComponent(businessType);
       const res = await axios.post(
         `http://3.223.253.106:7777/api/provider/byBusinessType`,
+
         {
           businessType: [decodedBusinessType],
           lat: latitude,
           lng: longitude,
           radius: radius,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+          },
         }
       );
       if (res?.data?.status === 200) {
@@ -76,6 +82,15 @@ export default function ServicesProvider() {
   useEffect(() => {
     handleProviderNearby();
   }, [handleProviderNearby]);
+
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
+  };
 
   return (
     <>
@@ -120,7 +135,7 @@ export default function ServicesProvider() {
                             <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
                               <span>{text.contactName}</span>{" "}
                               <LuDot className="text-secondary fs-4" />
-                              <span>{text.address.addressLine}</span>{" "}
+                              <span>{filterAddressPatterns(text.address.addressLine)}</span>{" "}
                             </div>
                             <span className="text-secondary">
                               Email:{text.email}{" "}

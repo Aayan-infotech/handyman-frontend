@@ -601,7 +601,15 @@
   z-index: 1;
   position: relative;
 }
-
+.top-section .custom-design .css-13cymwt-control,
+.top-section .custom-design .css-t3ipsp-control {
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+  border-radius: 0 !important;
+  border-color: #212529 !important;
+  box-shadow: none !important;
+}
 .profile-img {
   width: 230px;
   height: 230px;

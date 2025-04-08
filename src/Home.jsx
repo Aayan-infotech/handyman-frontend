@@ -38,8 +38,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Select from 'react-select';
+import Select from "react-select";
 
 import {
   FaFacebook,
@@ -49,7 +48,6 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import axios from "axios";
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 // const checkedIcon = <CheckBoxIcon fontSize="small" />;
 function Home() {
   const [age, setAge] = useState("");
@@ -57,10 +55,10 @@ function Home() {
   const [allBusinessData, setAllBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
   // const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
-  
+
   const [selectedBusiness, setSelectedBusiness] = useState(null); // Manage selected business
 
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState("");
 
   const [address, setAddress] = useState("");
   const [toastProps, setToastProps] = useState({
@@ -106,10 +104,9 @@ function Home() {
   // };
 
   const handleBusinessChange = (selectedOption) => {
+    console.log("Selected Business:", selectedOption);
     setSelectedBusiness(selectedOption);
   };
-
-
 
   const filteredBusinessData = allBusinessData.filter((business) =>
     business.name.toLowerCase().includes(inputValue.toLowerCase())
@@ -133,8 +130,17 @@ function Home() {
     }
 
     navigate(
-      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness}`
+      `/search?lat=${latitude}&lng=${longitude}&businessType=${selectedBusiness.name}`
     );
+  };
+
+  const filterAddressPatterns = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match patterns like C-84, D-19, etc.
+    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+
+    return address.replace(pattern, "").trim();
   };
   return (
     <>
@@ -194,27 +200,24 @@ function Home() {
                       className="d-flex justify-content-center align-items-end gap-4 flex-column flex-lg-row"
                     >
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
-                        <CiSearch className="fs-4 mt-3" />
+                        <CiSearch className="fs-4" />
 
-           
-
-
-
-
-<Select
-    
-      options={allBusinessData.sort((a, b) => a.name.localeCompare(b.name))} // Sorted Business Names
-      getOptionLabel={(e) => e.name} // Display Business Name
-      value={selectedBusiness} // Show selected business in input box
-      onChange={handleBusinessChange} // Update state on selection
-      isClearable
-      isSearchable
-      placeholder="Select or type a business"
-      getOptionValue={(e) => e.name} // Option Value
-    />
-</div>
-                      <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
-                        <SlLocationPin className="fs-4 mt-3" />
+                        <Select
+                          options={allBusinessData.sort((a, b) =>
+                            a.name.localeCompare(b.name)
+                          )} // Sorted Business Names
+                          getOptionLabel={(e) => e.name} // Display Business Name
+                          value={selectedBusiness} // Show selected business in input box
+                          onChange={handleBusinessChange} // Update state on selection
+                          isClearable
+                          isSearchable
+                          placeholder="Select or type a business"
+                          getOptionValue={(e) => e.name} // Option Value
+                          className="w-100 custom-design"
+                        />
+                      </div>
+                      <div className="d-flex justify-content-start justify-content-lg-center align-items-center  gap-3 w-100">
+                        <SlLocationPin className="fs-4" />
                         <Autocomplete
                           className="form-control address-landing ps-0"
                           apiKey={import.meta.env.VITE_GOOGLE_ADDRESS_KEY}
@@ -594,7 +597,9 @@ function Home() {
                         <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
                           <span className="text-muted">{item?.user?.name}</span>
                           <span className="text-muted">
-                            {item?.jobLocation?.jobAddressLine}
+                            {filterAddressPatterns(
+                              item?.jobLocation?.jobAddressLine
+                            )}
                           </span>
                         </div>
                         <Stack

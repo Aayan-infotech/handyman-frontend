@@ -39,19 +39,19 @@ export const acceptJobNotification = createNotificationThunk(
 
 export const assignedJobNotification = createNotificationThunk(
   "jobAssignedNotification",
-  "Message from provider",
+  "Message from Hunter",
   "You have been assigned for this job"
 );
 
 export const completedJobNotification = createNotificationThunk(
   "jobCompletedNotification",
-  "Message from provider",
+  "Message from Hunter",
   "You have completed this job"
 );
 
 export const reviewJobNotification = createNotificationThunk(
   "reviewNotification",
-  "Message from provider",
+  "Message from Hunter",
   "You have received feedback from your Hunter"
 );
 
