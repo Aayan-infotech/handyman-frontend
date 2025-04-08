@@ -38,6 +38,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Select from 'react-select';
 
 import {
   FaFacebook,
@@ -47,13 +49,19 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import axios from "axios";
-
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+// const checkedIcon = <CheckBoxIcon fontSize="small" />;
 function Home() {
   const [age, setAge] = useState("");
   const [businessData, setBusinessData] = useState([]);
   const [allBusinessData, setAllBusinessData] = useState([]);
   const [recentJob, setRecentJob] = useState([]);
-  const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
+  // const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
+  
+  const [selectedBusiness, setSelectedBusiness] = useState(null); // Manage selected business
+
+  const [inputValue, setInputValue] = React.useState('');
+
   const [address, setAddress] = useState("");
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -93,9 +101,19 @@ function Home() {
         setRecentJob(res?.data?.data);
       });
   }, []);
-  const handleBusinessChange = (event) => {
-    setSelectedBusiness(event.target.value); // Update the selected business
+  // const handleBusinessChange = (event) => {
+  //   setSelectedBusiness(event.target.value); // Update the selected business
+  // };
+
+  const handleBusinessChange = (selectedOption) => {
+    setSelectedBusiness(selectedOption);
   };
+
+
+
+  const filteredBusinessData = allBusinessData.filter((business) =>
+    business.name.toLowerCase().includes(inputValue.toLowerCase())
+  );
   const handleChange = (event) => {
     setAge(event.target.value);
   };
@@ -178,43 +196,23 @@ function Home() {
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-center gap-3 w-100">
                         <CiSearch className="fs-4 mt-3" />
 
-                        <TextField
-  id="standard-basic"
-  label="Businessess"
-  variant="standard"
-  className="w-100"
-  select
-  fullWidth
-  value={selectedBusiness} // Bind the selected value to TextField
-  onChange={handleBusinessChange} // Update state when selection changes
-  SelectProps={{
-    MenuProps: {
-      PaperProps: {
-        style: {
-          maxHeight: 200, // Limit dropdown height
-        },
-      },
-    },
-  }}
-  // Make the TextField typeable directly in the TextField component.
-  type="text" // Allow typing in the TextField
->
-  {/* Map over the businessData array to display business names */}
-  {allBusinessData && allBusinessData.length > 0 ? (
-    allBusinessData
-      .sort((a, b) => a.name.localeCompare(b.name)) // Sort business names alphabetically
-      .map((business, index) => (
-        <MenuItem key={index} value={business.name}>
-          {business.name}
-        </MenuItem>
-      ))
-  ) : (
-    <MenuItem disabled>
-      No recent jobs available.
-    </MenuItem>
-  )}
-</TextField>
-                      </div>
+           
+
+
+
+
+<Select
+    
+      options={allBusinessData.sort((a, b) => a.name.localeCompare(b.name))} // Sorted Business Names
+      getOptionLabel={(e) => e.name} // Display Business Name
+      value={selectedBusiness} // Show selected business in input box
+      onChange={handleBusinessChange} // Update state on selection
+      isClearable
+      isSearchable
+      placeholder="Select or type a business"
+      getOptionValue={(e) => e.name} // Option Value
+    />
+</div>
                       <div className="d-flex justify-content-start justify-content-lg-center align-items-end  gap-3 w-100">
                         <SlLocationPin className="fs-4 mt-3" />
                         <Autocomplete
