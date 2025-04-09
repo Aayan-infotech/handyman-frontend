@@ -32,42 +32,37 @@ export default function MainProvider() {
     toastKey: 0,
   });
   useEffect(() => {
-    if (location.pathname === "/provider/pricing") {
+    const getUploadProfile = async () => {
       setLoading(true);
-      const getUploadProfile = async () => {
-        try {
-          if (providerId) {
-          
-            const result = await dispatch(getProviderUser());
-            if (result.payload?.status === 200) {
-              const subscriptionStatus = result.payload.data.subscriptionStatus;
-
-              setSubscriptionStatus(subscriptionStatus);
-              if (subscriptionStatus === 0) {
-                navigate("/provider/home");
-                setLoading(false);
-                return;
-              }
-              navigate("/provider/pricing");
-              setLoading(false);
+      try {
+        if (providerId) {
+          const result = await dispatch(getProviderUser());
+          if (result.payload?.status === 200) {
+            const subscriptionStatus = result.payload.data.subscriptionStatus;
+            setSubscriptionStatus(subscriptionStatus);
+            if (subscriptionStatus === 1) {
+              navigate("/provider/home");
+              return;
             }
           }
-        } catch (error) {
-          console.error("User error:", error);
         }
-      };
-      getUploadProfile();
-    }
-  }, [location.pathname]);
+      } catch (error) {
+        console.error("User error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getUploadProfile();
+  }, [location.pathname, providerId, dispatch, navigate]);
 
   console.log(subscriptionStatus);
 
   const handleCoupon = async () => {
     try {
-      const response = await axiosInstance.post(
-        "/voucher/apply",
-        { code: voucher, userId: providerId }
-      );
+      const response = await axiosInstance.post("/voucher/apply", {
+        code: voucher,
+        userId: providerId,
+      });
       console.log(response);
       setVoucher("");
       setToastProps({
@@ -93,9 +88,7 @@ export default function MainProvider() {
     const fetchVouchers = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get(
-          "/voucher"
-        );
+        const response = await axiosInstance.get("/voucher");
         setVoucherOptions(response.data.data || []); // Assuming the data comes in a 'data' property
       } catch (error) {
         console.error("Error fetching vouchers:", error);
@@ -107,7 +100,7 @@ export default function MainProvider() {
   }, []);
 
   useEffect(() => {
-    if (subscriptionStatus === 1) {
+    if (subscriptionStatus === 0) {
       const getData = async () => {
         setLoading(true);
         try {
@@ -128,7 +121,7 @@ export default function MainProvider() {
 
   return (
     <>
-      {loading  === true ? (
+      {loading === true ? (
         <Loader />
       ) : (
         <div>
