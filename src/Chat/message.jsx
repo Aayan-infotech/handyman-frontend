@@ -98,6 +98,7 @@ export default function Message() {
     const listener = onValue(chatListRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
+        console.log("chatList data", data);
         const formattedChatList = Object.keys(data).flatMap((receiverId) =>
           Object.keys(data[receiverId]).map((chatId) => ({
             chatId,
@@ -190,10 +191,6 @@ export default function Message() {
     };
   });
 
-  console.log(
-    "messageData[item.chatId]?.receiver?.name",
-    messageData["67d1308e4081444fc023f371_chat_67d167d4a30bfff27ce92f11"]
-  );
 
   return (
     <>
