@@ -147,11 +147,11 @@ export default function JobManagement() {
       );
       console.log(res);
       if (res.status === 200) {
-        setData(res?.data?.jobs);
-        setFilteredData(res?.data?.jobs);
+        setData(res?.data?.data);
+        setFilteredData(res?.data?.data);
         setSearch("");
-        setTotalPages(res.data.jobs.totalPages);
-        if (res.data.jobs.length === 0) {
+        setTotalPages(res?.data?.jobs?.totalPages);
+        if (res?.data?.length === 0) {
           setToastProps({
             message: "No jobs history yet",
             type: "info",
@@ -283,7 +283,7 @@ export default function JobManagement() {
                 )}
               </div>
               <div className="row mt-4 gy-4 management">
-                {data.length === 0 && (
+                {data?.length === 0 && (
                   <div className="d-flex justify-content-center align-items-center flex-column gap-3">
                     <img
                       src={noData}
@@ -292,7 +292,7 @@ export default function JobManagement() {
                     />
                   </div>
                 )}
-                {filteredData.length > 0 && (
+                {filteredData?.length > 0 && (
                   <>
                     <div className="card shadow border-0 rounded-5 p-lg-3">
                       <div className="card-body">
