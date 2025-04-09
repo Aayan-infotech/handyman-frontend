@@ -82,7 +82,7 @@ function Search() {
     if (!address) return address;
 
     // Regular expression to match patterns like C-84, D-19, etc.
-    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+    const pattern = /^.*?,\s*/;
 
     return address.replace(pattern, "").trim();
   };
