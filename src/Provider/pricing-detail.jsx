@@ -95,7 +95,7 @@ export default function PricingProvider() {
 
         setTimeout(() => {
           // navigate("/provider/home");
-          navigate(" /provider/payment")
+          navigate("/provider/payment")
          
         }, 2000);
       } else {
