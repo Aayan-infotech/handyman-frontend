@@ -94,7 +94,9 @@ export default function PricingProvider() {
         setLoading(false);
 
         setTimeout(() => {
-          navigate("/provider/home"); // ✅ Navigate to home
+          // navigate("/provider/home");
+          navigate(" /provider/payment")
+         
         }, 2000);
       } else {
         const errorMessage =

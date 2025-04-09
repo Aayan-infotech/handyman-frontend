@@ -190,7 +190,7 @@ export default function MyProfile() {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      alert("Upload Successful!");
+     
       console.log("Upload Response:", response.data);
       setToastProps({
         message: "Image uploaded successfully",
@@ -709,7 +709,7 @@ export default function MyProfile() {
                           <VisuallyHiddenInput
                             type="file"
                             onChange={handleFileChange}
-                            multiple
+                            
                           />
                         </Button2>
                       </div>
