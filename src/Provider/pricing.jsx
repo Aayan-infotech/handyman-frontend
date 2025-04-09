@@ -43,7 +43,7 @@ export default function MainProvider() {
               const subscriptionStatus = result.payload.data.subscriptionStatus;
 
               setSubscriptionStatus(subscriptionStatus);
-              if (subscriptionStatus === 1) {
+              if (subscriptionStatus === 0) {
                 navigate("/provider/home");
                 setLoading(false);
                 return;
@@ -107,7 +107,7 @@ export default function MainProvider() {
   }, []);
 
   useEffect(() => {
-    if (subscriptionStatus === 0) {
+    if (subscriptionStatus === 1) {
       const getData = async () => {
         setLoading(true);
         try {
