@@ -92,6 +92,7 @@ export default function PricingProvider() {
           toastKey: Date.now(),
         });
         setLoading(false);
+        localStorage.setItem("Guest", false);
 
         setTimeout(() => {
           // navigate("/provider/home");
