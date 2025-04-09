@@ -3,7 +3,7 @@ import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import Toaster from "../Toaster";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import { getHunterUser } from "../Slices/userSlice";
 import { useDispatch } from "react-redux";
 import Loader from "../Loader";
@@ -54,8 +54,8 @@ export default function ServicesProvider() {
     if (!latitude || !longitude || !radius || !businessType) return;
     try {
       const decodedBusinessType = decodeURIComponent(businessType);
-      const res = await axios.post(
-        `http://3.223.253.106:7777/api/provider/byBusinessType`,
+      const res = await axiosInstance.post(
+        `/provider/byBusinessType`,
 
         {
           businessType: [decodedBusinessType],
@@ -135,7 +135,11 @@ export default function ServicesProvider() {
                             <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
                               <span>{text.contactName}</span>{" "}
                               <LuDot className="text-secondary fs-4" />
-                              <span>{filterAddressPatterns(text.address.addressLine)}</span>{" "}
+                              <span>
+                                {filterAddressPatterns(
+                                  text.address.addressLine
+                                )}
+                              </span>{" "}
                             </div>
                             <span className="text-secondary">
                               Email:{text.email}{" "}

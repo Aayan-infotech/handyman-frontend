@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import "../user.css";
 import Loader from "../../Loader";
 import Toaster from "../../Toaster";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInstance";
 
 export default function Otp({ length = 6 }) {
   const [otp, setOtp] = useState(Array(length).fill(""));
@@ -78,14 +78,11 @@ export default function Otp({ length = 6 }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/verify-email",
-        {
-          email,
-          verificationOTP: otpValue,
-          userType: Provider || "hunter",
-        }
-      );
+      const response = await axiosInstance.post("/auth/verify-email", {
+        email,
+        verificationOTP: otpValue,
+        userType: Provider || "hunter",
+      });
       if (response.status === 200 || response.status === 201) {
         setToastProps({
           message: response?.data?.message,
@@ -123,13 +120,10 @@ export default function Otp({ length = 6 }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/verify-otp",
-        {
-          email,
-          verificationOTP: otpValue,
-        }
-      );
+      const response = await axiosInstance.post("/auth/verify-otp", {
+        email,
+        verificationOTP: otpValue,
+      });
       if (response.status === 200 || response.status === 201) {
         setToastProps({
           message: response?.data?.message,

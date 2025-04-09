@@ -47,7 +47,8 @@ import {
   FaDribbble,
   FaLinkedin,
 } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "./components/axiosInstance";
+
 // const checkedIcon = <CheckBoxIcon fontSize="small" />;
 function Home() {
   const [age, setAge] = useState("");
@@ -71,18 +72,16 @@ function Home() {
   const [longitude, setLongitude] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
-    axios
-      .get("http://3.223.253.106:7777/api/jobpost/business-type-count")
-      .then((res) => {
-        const limitedData = res?.data?.data?.slice(0, 8) || []; // Ensure only 8 items
-        setBusinessData(limitedData);
-        setAllBusinessData(res?.data?.data);
-      });
+    axiosInstance.get("/jobpost/business-type-count").then((res) => {
+      const limitedData = res?.data?.data?.slice(0, 8) || []; // Ensure only 8 items
+      setBusinessData(limitedData);
+      setAllBusinessData(res?.data?.data);
+    });
   }, []);
 
   useEffect(() => {
-    axios
-      .get("http://3.223.253.106:7777/api/blog/getAll")
+    axiosInstance
+      .get("/blog/getAll")
       .then((response) => {
         console.log(response?.data);
         setBlogs(response?.data?.blog);
@@ -93,8 +92,8 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get("http://3.223.253.106:7777/api/jobs/getRecentJobs")
+    axiosInstance
+      .get("/jobs/getRecentJobs")
       .then((res) => {
         setRecentJob(res?.data?.data);
       });

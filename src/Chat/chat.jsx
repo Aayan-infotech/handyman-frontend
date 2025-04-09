@@ -11,7 +11,7 @@ import { ref, push, set, onValue, update } from "firebase/database";
 import { realtimeDb, auth } from "./lib/firestore";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
@@ -221,8 +221,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   const handleData = async () => {
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/match/getMatchedData",
+      const response = await axiosInstance.post(
+        "/match/getMatchedData",
         { jobPostId: jobId, senderId, receiverId },
         {
           headers: {
@@ -291,8 +291,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const handleCompletedJob = async ({ id }) => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/completedCount/${id}`,
+      const response = await axiosInstance.post(
+        `/provider/completedCount/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -319,8 +319,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const handleJobAccept = async ({ id }) => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/jobpost/changeJobStatus/${jobId}`,
+      const response = await axiosInstance.post(
+        `/jobpost/changeJobStatus/${jobId}`,
         {
           jobStatus: "Assigned",
           providerId: id,

@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
-import axios from "axios";
+import axiosInstance from "./components/axiosInstance";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "./assets/logo.png";
 import { GoArrowRight } from "react-icons/go";
@@ -52,8 +52,8 @@ function Search() {
   const handleSearchJob = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://3.223.253.106:7777/api/jobPost/jobsByBusinessType/?lat=${latitude}&lng=${longitude}&businessType=${businessType}`
+      const res = await axiosInstance.get(
+        `/jobPost/jobsByBusinessType/?lat=${latitude}&lng=${longitude}&businessType=${businessType}`
       );
       if (res.data.status === 200) {
         setData(res.data.data);

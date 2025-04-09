@@ -11,7 +11,7 @@ import LoggedHeader from "./loggedNavbar";
 import { useDispatch } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import Loader from "../Loader";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -73,9 +73,7 @@ export default function EditProfile() {
   useEffect(() => {
     const handleAllData = async () => {
       try {
-        const response = await axios.get(
-          "http://3.223.253.106:7777/api/service/getAllServices"
-        );
+        const response = await axiosInstance.get("/service/getAllServices");
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
@@ -165,10 +163,10 @@ export default function EditProfile() {
     }
 
     try {
-      const response = await axios.put(
-        `http://3.223.253.106:7777/api/${
-          providerId ? "Prvdr" : "hunter"
-        }/updateById/${providerId ? providerId : hunterId}`,
+      const response = await axiosInstance.put(
+        `/${providerId ? "Prvdr" : "hunter"}/updateById/${
+          providerId ? providerId : hunterId
+        }`,
         formData,
         {
           headers: {

@@ -6,7 +6,6 @@ import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
@@ -21,6 +20,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Pagination from "react-bootstrap/Pagination";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
+import axiosInstance from "../components/axiosInstance";
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -68,8 +68,8 @@ export default function JobManagement() {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://3.223.253.106:7777/api/jobpost/getJobPostByUserId?page=${currentPage}`,
+      const res = await axiosInstance.get(
+        `/jobpost/getJobPostByUserId?page=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -113,7 +113,7 @@ export default function JobManagement() {
   const handleJobDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://3.223.253.106:7777/api/jobPost/${id}`, {
+      await axiosInstance.delete(`/jobPost/${id}`, {
         headers: { Authorization: `Bearer ${hunterToken}` },
       });
 
@@ -137,8 +137,8 @@ export default function JobManagement() {
   const fetchJobsHistory = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://3.223.253.106:7777/api/jobpost/myAcceptedJobs?page=${currentPage}`,
+      const res = await axiosInstance.get(
+        `/jobpost/myAcceptedJobs?page=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,

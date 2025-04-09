@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import { getAddress } from "../Slices/addressSlice";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
@@ -76,14 +76,11 @@ export default function ServiceProvider() {
   const handleGetData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://3.223.253.106:7777/api/address/addresses-by-id",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axiosInstance.get("/address/addresses-by-id", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(response?.data?.[0]?.location?.coordinates);
       if (response.status === 200) {
         setLongitude(response?.data?.[0]?.location?.coordinates[0]);
@@ -108,8 +105,8 @@ export default function ServiceProvider() {
   const handleAllData = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/hunter/getNearbyServiceProviders",
+      const response = await axiosInstance.post(
+        "/hunter/getNearbyServiceProviders",
 
         { latitude, longitude },
         {

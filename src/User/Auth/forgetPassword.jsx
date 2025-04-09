@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../user.css";
 import Toaster from "../../Toaster";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInstance";
 import Loader from "../../Loader";
 
 export default function ForgetPassword() {
@@ -26,8 +26,8 @@ export default function ForgetPassword() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/forgot-password",
+      const response = await axiosInstance.post(
+        "/auth/forgot-password",
         {
           email,
         },
@@ -120,7 +120,6 @@ export default function ForgetPassword() {
                   </div>
                 </div>
               </div>
-            
             </div>
           </div>
         </div>

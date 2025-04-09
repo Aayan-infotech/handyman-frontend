@@ -15,7 +15,7 @@ import {
   FaLinkedin,
   FaDribbble,
 } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "./components/axiosInstance";
 import Loader from "./Loader";
 
 export default function About() {
@@ -28,8 +28,8 @@ export default function About() {
     const handleResponse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `http://3.223.253.106:7777/api/StaticContent/${section}`
+        const response = await axiosInstance.get(
+          `/StaticContent/${section}`
         );
 
         if (response.status === 200 && response.data.content) {

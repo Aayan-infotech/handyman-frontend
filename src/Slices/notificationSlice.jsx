@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_BASE_URL =
-  "http://3.223.253.106:7777/api/pushNotification/sendNotification";
+import axiosInstance from "../components/axiosInstance";
+const API_BASE_URL = "/pushNotification/sendNotification";
 
 const createNotificationThunk = (name, defaultTitle, defaultBody) =>
   createAsyncThunk(
@@ -12,7 +10,7 @@ const createNotificationThunk = (name, defaultTitle, defaultBody) =>
       { rejectWithValue }
     ) => {
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           API_BASE_URL,
           { title, body, receiverId },
           {

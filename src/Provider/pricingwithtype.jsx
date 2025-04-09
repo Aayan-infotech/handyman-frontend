@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { getProviderUser } from "../Slices/userSlice";
@@ -36,8 +36,8 @@ export default function Pricingwithtype() {
     const getData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `http://3.223.253.106:7777/api/SubscriptionNew/subscriptionPlansByType/${id}`
+        const res = await axiosInstance.get(
+          `/SubscriptionNew/subscriptionPlansByType/${id}`
         );
         if (res?.data?.status === 200) {
           setData(res.data.data);

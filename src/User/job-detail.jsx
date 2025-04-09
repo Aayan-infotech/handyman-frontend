@@ -11,7 +11,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { IoIosStar } from "react-icons/io";
 import { Link, useLocation, useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import { CiUser } from "react-icons/ci";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
@@ -48,14 +48,11 @@ export default function JobDetail() {
   const handleProviderJobs = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://3.223.253.106:7777/api/jobpost/jobpost-details/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${ProviderToken || hunterToken}`,
-          },
-        }
-      );
+      const res = await axiosInstance.get(`/jobpost/jobpost-details/${id}`, {
+        headers: {
+          Authorization: `Bearer ${ProviderToken || hunterToken}`,
+        },
+      });
       if (res.status === 200) {
         setToastProps({
           message: res.data.message,
@@ -118,8 +115,8 @@ export default function JobDetail() {
 
   const handleProvider = async () => {
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/match/getMatchedData",
+      const response = await axiosInstance.post(
+        "/match/getMatchedData",
         { jobPostId: id, senderId: user, receiverId },
         {
           headers: {
@@ -155,8 +152,8 @@ export default function JobDetail() {
 
   const handleReview = async () => {
     try {
-      const reponse = await axios.post(
-        `http://3.223.253.106:7777/api/rating/giveRating/${receiverId}`,
+      const reponse = await axiosInstance.post(
+        `/rating/giveRating/${receiverId}`,
         {
           rating: value,
           review,
@@ -176,8 +173,8 @@ export default function JobDetail() {
 
   const handleJobStatus = async () => {
     try {
-      const reponse = await axios.post(
-        `http://3.223.253.106:7777/api/jobPost/changeJobStatus/${id}`,
+      const reponse = await axiosInstance.post(
+        `/jobPost/changeJobStatus/${id}`,
         {
           jobStatus: " Completed",
           providerId: receiverId,

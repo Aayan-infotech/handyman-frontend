@@ -22,8 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import { getAddress } from "../Slices/addressSlice";
 import Loader from "../Loader";
-import axios from "axios";
-
+import axiosInstance from "./axiosInstance";
 import Toaster from "../Toaster";
 import notFound from "./assets/noprofile.png";
 import { Modal } from "react-bootstrap";
@@ -88,8 +87,8 @@ export default function MyProfile() {
 
   const fetchBackgroundImage = async () => {
     try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/backgroundImg/${userId}`
+      const response = await axiosInstance.get(
+        `/backgroundImg/${userId}`
       );
       setBackgroundImg(response.data.data[0].backgroundImg);
     } catch (error) {
@@ -114,8 +113,8 @@ export default function MyProfile() {
     formData.append("userId", userId);
 
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/backgroundImg/upload",
+      const response = await axiosInstance.post(
+        "/backgroundImg/upload",
         formData
       );
       setBackgroundImg(response.data.data[0].backgroundImg);
@@ -135,8 +134,8 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    axios
-      .get(`http://3.223.253.106:7777/api/provider/about/${userId}`)
+    axiosInstance
+      .get(`/provider/about/${userId}`)
       .then((response) => {
         if (response.data.data.length > 0) {
           setAboutText(response.data.data[0].about);
@@ -147,8 +146,8 @@ export default function MyProfile() {
 
   // Function to handle save (POST request)
   const handleSave = () => {
-    axios
-      .post(`http://3.223.253.106:7777/api/provider/about/${userId}`, {
+    axiosInstance
+      .post(`/provider/about/${userId}`, {
         about: description,
       })
       .then((response) => {
@@ -179,8 +178,8 @@ export default function MyProfile() {
     formData.append("userId", providerId); // Replace with actual providerId
 
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/providerPhoto/upload", // Update the URL as required
+      const response = await axiosInstance.post(
+        "/providerPhoto/upload", // Update the URL as required
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -197,8 +196,8 @@ export default function MyProfile() {
 
   const fetchGallery = async () => {
     try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/providerPhoto/${providerId}` // Adjust API endpoint
+      const response = await axiosInstance.get(
+        `/providerPhoto/${providerId}` // Adjust API endpoint
       );
 
       if (response.data && response.data.data.files) {
@@ -218,8 +217,8 @@ export default function MyProfile() {
 
   const handleDeleteGallery = async (imageId) => {
     try {
-      await axios.delete(
-        `http://3.223.253.106:7777/api/providerPhoto/${imageId}`
+      await axiosInstance.delete(
+        `/providerPhoto/${imageId}`
       );
 
       fetchGallery(); // Fetch the gallery after successful deletion
@@ -270,8 +269,8 @@ export default function MyProfile() {
         return;
       }
 
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/logout",
+      const response = await axiosInstance.post(
+        "/auth/logout",
         {
           userType: hunterToken ? "hunter" : "provider",
         },
@@ -346,8 +345,8 @@ export default function MyProfile() {
         return;
       }
 
-      const response = await axios.delete(
-        `http://3.223.253.106:7777/api/DeleteAccount/${providerId ? "provider" : "delete"
+      const response = await axiosInstance.delete(
+        `/DeleteAccount/${providerId ? "provider" : "delete"
         }/${providerId || hunterId}`
       );
 

@@ -8,7 +8,7 @@ import Nav from "react-bootstrap/Nav";
 import { GoArrowRight } from "react-icons/go";
 import logoWhite from "./assets/logo-white.png";
 import { Row, Col, Form } from "react-bootstrap";
-import axios from "axios";
+import axiosInstance from "./components/axiosInstance";
 import Loader from "./Loader";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -27,7 +27,7 @@ export default function LatestJobs() {
   useEffect(() => {
     const handleResponse = async () => {
       setLoading(true);
-      const response = await axios.get("http://3.223.253.106:7777/api/jobs");
+      const response = await axiosInstance.get("/jobs");
       console.log(response);
       if (response.data.success === true || response.data.status === 200) {
         setLoading(false);

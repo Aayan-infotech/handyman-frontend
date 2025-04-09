@@ -1,19 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 
 export const getProviderUser = createAsyncThunk(
   "User/getProviderUser",
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("ProviderToken");
     try {
-      const response = await axios.get(
-        "http://3.223.253.106:7777/api/auth/getProviderProfile",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axiosInstance.get("/auth/getProviderProfile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       return response.data;
     } catch (error) {
@@ -26,14 +23,11 @@ export const getHunterUser = createAsyncThunk(
   "User/getHunterUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        "http://3.223.253.106:7777/api/auth/getHunterProfile",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
-          },
-        }
-      );
+      const response = await axiosInstance.get("/auth/getHunterProfile", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+        },
+      });
 
       return response.data;
     } catch (error) {
@@ -47,9 +41,9 @@ export const handleChangePassword = createAsyncThunk(
   async ({ id, oldPassword, newPassword }, { rejectWithValue }) => {
     // Destructure id and password from the argument
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         // Use POST request to send data in the body
-        `http://3.223.253.106:7777/api/auth/changePassword/${id}`,
+        `/auth/changePassword/${id}`,
         { oldPassword, newPassword }, // Send the password data in the request body
         {
           headers: {
@@ -73,9 +67,9 @@ export const handleEditProfile = createAsyncThunk(
   async ({ id, oldPassword, newPassword }, { rejectWithValue }) => {
     // Destructure id and password from the argument
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         // Use POST request to send data in the body
-        `http://3.223.253.106:7777/api/auth/changePassword/${id}`,
+        `/auth/changePassword/${id}`,
         { oldPassword, newPassword }, // Send the password data in the request body
         {
           headers: {

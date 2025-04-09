@@ -15,7 +15,7 @@ import { IoIosStar } from "react-icons/io";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Modal from "react-bootstrap/Modal";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,8 +59,8 @@ export default function JobSpecification() {
   const handleJob = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/jobpost/jobpost-details/${id}`,
+      const response = await axiosInstance.get(
+        `/jobpost/jobpost-details/${id}`,
 
         {
           headers: {
@@ -81,8 +81,8 @@ export default function JobSpecification() {
   const handleJobStatus = async () => {
     setLoading(true);
     try {
-      const response = await axios.put(
-        `http://3.223.253.106:7777/api/jobPost/job/accept/${id}`,
+      const response = await axiosInstance.put(
+        `/jobPost/job/accept/${id}`,
         {
           providerId: ProviderId,
         },
@@ -108,8 +108,8 @@ export default function JobSpecification() {
         setLoading(false);
       }
       try {
-        const response = await axios.post(
-          `http://3.223.253.106:7777/api/provider/acceptCount/${ProviderId}`,
+        const response = await axiosInstance.post(
+          `/provider/acceptCount/${ProviderId}`,
         );
         if (response.status === 200) {
           setShow(true);
