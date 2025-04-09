@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { IoIosSearch } from "react-icons/io";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
@@ -36,6 +36,7 @@ const MenuProps = {
 };
 
 export default function HomeProvider() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [businessType, setBusinessType] = useState([]);
   const [latitude, setLatitude] = useState(null);
@@ -177,6 +178,14 @@ export default function HomeProvider() {
     return address.replace(pattern, "").trim();
   };
 
+  const navTest = (id) => {
+    const isGuest = localStorage.getItem("Guest") === "true";
+    if (isGuest) {
+      navigate("/provider/pricing");
+      return;
+    }
+    navigate(`/provider/jobspecification/${id}`);
+  };
 
   return (
     <>
@@ -262,8 +271,8 @@ export default function HomeProvider() {
             ) : (
               filteredData.map((job) => (
                 <div className="col-lg-12 management" key={job._id}>
-                  <Link
-                    to={`/provider/jobspecification/${job._id}`}
+                  <div
+                    
                     className="card border-0 rounded-3 px-4"
                   >
                     <div className="card-body">
@@ -295,18 +304,14 @@ export default function HomeProvider() {
                           <Button
                             variant="contained"
                             className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                            onClick={
-                              localStorage.getItem("Guest") === "true"
-                                ? `/provider/pricing`
-                                : `/provider/jobspecification/${job._id}`
-                            }
+                            onClick={() => navTest(job._id)}
                           >
                             Contact
                           </Button>
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               ))
             )}
