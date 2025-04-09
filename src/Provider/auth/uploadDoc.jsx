@@ -100,6 +100,14 @@ export default function Upload() {
     setDocument(files.length > 0 ? files : null);
   };
 
+  const navTest = () => {
+    const isGuest = localStorage.getItem("Guest") === "true";
+    if (isGuest) {
+      navigate("/provider/home");
+      return;
+    }
+    navigate("/provider/pricing");
+  };
   const handleDelete = async (id) => {
     setLoading(true);
     try {
@@ -306,7 +314,7 @@ export default function Upload() {
                         variant="outlined"
                         size="large"
                         color="error"
-                        onClick={() => navigate("/provider/pricing")}
+                        onClick={() => navTest()}
                         // onClick={() => {
                         //   document.length > 0
                         //     ? navigate("/provider/home")
