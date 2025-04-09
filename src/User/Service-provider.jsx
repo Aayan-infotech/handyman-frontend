@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../components/axiosInstance";
 import { getAddress } from "../Slices/addressSlice";
@@ -41,6 +41,7 @@ export default function ServiceProvider() {
   const [data, setData] = useState([]);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [radius, setRadius] = useState([]);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -56,7 +57,9 @@ export default function ServiceProvider() {
   const queryParams = new URLSearchParams(location.search);
   const [totalPages, setTotalPages] = useState(0);
 
-  let currentPage = parseInt(queryParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(queryParams.get("page")) || 1
+  );
   const navigate = useNavigate();
   const token = localStorage.getItem("hunterToken");
   const handleChange = (event) => {
@@ -85,6 +88,7 @@ export default function ServiceProvider() {
       if (response.status === 200) {
         setLongitude(response?.data?.[0]?.location?.coordinates[0]);
         setLatitude(response?.data?.[0]?.location?.coordinates[1]);
+        setRadius(response?.data?.[0]?.radius || []);
         setLoading(false);
 
         setToastProps({
@@ -102,40 +106,35 @@ export default function ServiceProvider() {
     }
   };
 
-  const handleAllData = async () => {
+  const handleAllData = useCallback(async () => {
+    if (!latitude || !longitude) return;
+
     setLoading(true);
     try {
       const response = await axiosInstance.post(
-        "/hunter/getNearbyServiceProviders",
-
-        { latitude, longitude },
+        `/hunter/getNearbyServiceProviders?search=${search}&page=${currentPage}`,
+        {
+          latitude: latitude,
+          longitude: longitude,
+          page: currentPage,
+          radius,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log(response);
+
       if (response.status === 200) {
-        setLoading(false);
         setData(response?.data?.data || []);
-        setTotalPages(response.data.pagination.totalPages);
-        setSearch("");
-        setProviderRadius([]);
+        setFilteredData(response?.data?.data || []);
+        setTotalPages(response.data.pagination.totalPage);
         setToastProps({
           message: response?.data?.message,
           type: "success",
           toastKey: Date.now(),
         });
-      }
-      if (response.data.data.length === 0) {
-        setToastProps({
-          message: "No service provider available in your area",
-          type: "info",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-        setData([]);
       }
     } catch (error) {
       setToastProps({
@@ -146,18 +145,22 @@ export default function ServiceProvider() {
     } finally {
       setLoading(false);
     }
-  };
-  useEffect(() => {
-    if (!queryParams.get("page")) {
-      queryParams.set("page", "1");
-      navigate(`?${queryParams.toString()}`, { replace: true });
-    }
-  }, [location.search, navigate]);
+  }, [latitude, longitude, currentPage, radius, search]);
 
-  const handlePageChange = (page) => {
-    queryParams.set("page", page.toString());
-    navigate(`?${queryParams.toString()}`);
-  };
+  const handlePageChange = useCallback(
+    (page) => {
+      queryParams.set("page", page.toString());
+      navigate(`?${queryParams.toString()}`);
+      setCurrentPage(page);
+    },
+    [queryParams, navigate]
+  );
+
+  useEffect(() => {
+    if (latitude && longitude) {
+      handleAllData();
+    }
+  }, [latitude, longitude, currentPage]);
 
   useEffect(() => {
     let filtered = data;
@@ -175,21 +178,14 @@ export default function ServiceProvider() {
       );
     }
 
-    if (search) {
-      filtered = filtered.filter((provider) =>
-        provider.address?.addressLine
-          ?.toLowerCase()
-          .includes(search.toLowerCase())
-      );
-    }
-
     setFilteredData(filtered);
-  }, [search, businessType, data, providerRadius]);
+  }, [businessType, providerRadius, currentPage]);
+
+  console.log("filteredData", filteredData);
 
   const filterAddressPatterns = (address) => {
     if (!address) return address;
 
-    // Regular expression to match patterns like C-84, D-19, etc.
     const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
 
     return address.replace(pattern, "").trim();
@@ -218,13 +214,22 @@ export default function ServiceProvider() {
                 <div className="col-lg-12">
                   <div className="d-flex justify-content-lg-between flex-column flex-lg-row gap-4">
                     <div className="position-relative icon">
-                      <IoIosSearch className="mt-1" />
-                      <Form.Control
-                        placeholder="search for Address"
-                        className="search"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                      />
+                      <Form
+                        className="d-flex flex-row gap-2"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleAllData();
+                        }}
+                      >
+                        <IoIosSearch className="mt-1" />
+                        <Form.Control
+                          placeholder="search for Address"
+                          className="search"
+                          value={search}
+                          onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <button type="submit" className="btn btn-success">Search</button>
+                      </Form>
                     </div>
                     <div className="d-flex w-100 justify-content-end flex-row gap-2">
                       <FormControl className="sort-input w-100">
@@ -303,7 +308,7 @@ export default function ServiceProvider() {
                   </div>
                 </div>
                 <div className="col-lg-12">
-                  {data.length === 0 ? (
+                  {filteredData.length === 0 ? (
                     <div className="d-flex justify-content-center flex-column gap-1 align-items-center">
                       <img src={NoData} alt="noData" className="w-nodata" />
                     </div>
@@ -423,13 +428,16 @@ export default function ServiceProvider() {
                             </tbody>
                           </Table>
                           <Pagination className="justify-content-center pagination-custom">
-                            {[...Array(totalPages)].map((_, index) => (
+                            {Array.from(
+                              { length: totalPages },
+                              (_, i) => i + 1
+                            ).map((page) => (
                               <Pagination.Item
-                                key={index + 1}
-                                active={index + 1 === currentPage}
-                                onClick={() => handlePageChange(index + 1)}
+                                key={page}
+                                active={page === currentPage}
+                                onClick={() => handlePageChange(page)}
                               >
-                                {index + 1}
+                                {page}
                               </Pagination.Item>
                             ))}
                           </Pagination>

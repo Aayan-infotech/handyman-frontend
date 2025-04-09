@@ -160,6 +160,11 @@ export default function MyProfile() {
   };
   // Handle file change and trigger upload
   const handleFileChange = (event) => {
+    setToastProps({
+      message: "Image uploading",
+      type: "info",
+      toastKey: Date.now(),
+    });
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
@@ -186,7 +191,12 @@ export default function MyProfile() {
         }
       );
       alert("Upload Successful!");
-      console.log("Upload Response:", response.data); // Debugging the upload response
+      console.log("Upload Response:", response.data);
+      setToastProps({
+        message: "Image uploaded successfully",
+        type: "success",
+        toastKey: Date.now(),
+      });
       fetchGallery(); // Fetch the gallery after successful upload
     } catch (error) {
       console.error("Upload Failed:", error);
@@ -875,47 +885,6 @@ export default function MyProfile() {
                       </div>
                     </div>
                   </Link>
-                </div>
-                <div
-                  className={` ${Location.pathname.includes("provider")
-                      ? "col-lg-2"
-                      : "col-lg-3"
-                    }`}
-                >
-                  <div className="card border-0 rounded-5 h-100">
-                    <div className="card-body">
-                      <div
-                        className={`d-flex gap-3 align-items-center justify-content-center ${Location.pathname.includes("provider")
-                            ? "flex-column"
-                            : "flex-row"
-                          }`}
-                      >
-                        <div className="circle-container">
-                          <div className="progress-circle">
-                            <div className="lock-icon">
-                              <FaLock />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="d-flex flex-row gap-3 align-items-center">
-                          <span className="text-success text-center">
-                            Notification setting
-                          </span>
-                        </div>
-
-{/* <div className="d-flex flex-row gap-3 align-items-center">
-      <span
-        className="text-success text-center"
-        style={{ cursor: 'pointer' }}
-        onClick={handleNotificationToggle}
-      >
-        Notification Setting
-      </span>
-    </div> */}
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 <div
