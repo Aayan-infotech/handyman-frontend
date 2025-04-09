@@ -186,7 +186,7 @@ export default function ServiceProvider() {
   const filterAddressPatterns = (address) => {
     if (!address) return address;
 
-    const pattern = /^(?:[A-Za-z][\s-]?\d+|\d+\/\d+)[\s,]*/;
+    const pattern = /^.*?,\s*/;
 
     return address.replace(pattern, "").trim();
   };
