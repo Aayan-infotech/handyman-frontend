@@ -65,7 +65,7 @@ const sendMessage = async (
     );
     await set(newMessageRef, chat);
 
-    setMessages((prevMessages) => [...prevMessages, chat]);
+    setMessages((prevMessages) => [...prevMessages]);
 
     // Step 3: Update job status in chat
     await set(ref(realtimeDb, `chats/${jobId}/${chatId}/jobStatus`), {
@@ -74,10 +74,10 @@ const sendMessage = async (
     });
 
     // Step 4: Save chat details in chatList for both users
-    await set(
-      ref(realtimeDb, `chatList/${senderId}/${receiverId}/${chatId}`),
-      chatMap
-    );
+    // await set(
+    //   ref(realtimeDb, `chatList/${senderId}/${receiverId}/${chatId}`),
+    //   chatMap
+    // );
     await set(
       ref(realtimeDb, `chatList/${receiverId}/${senderId}/${chatId}`),
       chatMap
@@ -199,7 +199,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
         console.log("messagesArray", messagesArray);
         messagesArray.forEach((message) => {
           // Create a unique key combining timestamp, message, and sender
-          const messageKey = `${message.timeStamp}-${message.msg}-${message.senderId}-${message.receiverId}`;
+          const messageKey = `${message.timeStamp}`;
 
           if (!seenKeys.has(messageKey)) {
             seenKeys.add(messageKey);
