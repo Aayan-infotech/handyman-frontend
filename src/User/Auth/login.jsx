@@ -12,7 +12,7 @@ import "../user.css";
 import facebook from "../assets/logo/facebook.png";
 import google from "../assets/logo/iconGoogle.png";
 import Toaster from "../../Toaster";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInstance";
 import Loader from "../../Loader";
 import {
   createUserWithEmailAndPassword,
@@ -47,8 +47,8 @@ export default function Login() {
     }
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/login",
+      const response = await axiosInstance.post(
+        "/auth/login",
         {
           email: email,
           password: password,
@@ -85,7 +85,10 @@ export default function Login() {
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
-        localStorage.setItem("hunterRefreshToken", response?.data?.data?.user?.refreshToken);
+        localStorage.setItem(
+          "hunterRefreshToken",
+          response?.data?.data?.user?.refreshToken
+        );
         localStorage.removeItem("ProviderToken");
         localStorage.removeItem("ProviderEmail");
         localStorage.removeItem("ProviderName");

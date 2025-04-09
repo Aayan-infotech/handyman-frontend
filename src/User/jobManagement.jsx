@@ -6,7 +6,6 @@ import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
@@ -21,6 +20,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Pagination from "react-bootstrap/Pagination";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
+import axiosInstance from "../components/axiosInstance";
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -68,8 +68,8 @@ export default function JobManagement() {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://3.223.253.106:7777/api/jobpost/getJobPostByUserId?page=${currentPage}`,
+      const res = await axiosInstance.get(
+        `/jobpost/getJobPostByUserId?search=${search}&page=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -113,7 +113,7 @@ export default function JobManagement() {
   const handleJobDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://3.223.253.106:7777/api/jobPost/${id}`, {
+      await axiosInstance.delete(`/jobPost/${id}`, {
         headers: { Authorization: `Bearer ${hunterToken}` },
       });
 
@@ -137,8 +137,8 @@ export default function JobManagement() {
   const fetchJobsHistory = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://3.223.253.106:7777/api/jobpost/myAcceptedJobs?page=${currentPage}`,
+      const res = await axiosInstance.get(
+        `/jobpost/myAcceptedJobs?page=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -193,11 +193,8 @@ export default function JobManagement() {
   useEffect(() => {
     let filtered = data;
 
-    // Apply search filter if search term exists
     if (search) {
-      filtered = filtered.filter((provider) =>
-        provider.title.toLowerCase().includes(search.toLowerCase())
-      );
+      fetchJobs();
     }
 
     // Apply job status filter if any statuses are selected
@@ -208,7 +205,7 @@ export default function JobManagement() {
     }
 
     setFilteredData(filtered);
-  }, [search, data, jobStatus]);
+  }, [data, jobStatus, currentPage]);
 
   console.log("filteredData", data);
 
@@ -243,13 +240,21 @@ export default function JobManagement() {
             <div className="container">
               <div className="d-flex justify-content-lg-between flex-column flex-lg-row gap-4">
                 <div className="position-relative icon ">
-                  <IoIosSearch className="mt-1" />
-                  <Form.Control
-                    placeholder="search for Name"
-                    className="search"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
+                  <Form className="d-flex flex-row gap-2">
+                    <IoIosSearch className="mt-1" />
+                    <Form.Control
+                      placeholder="search for Address"
+                      className="search"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <button
+                      onClick={() => fetchJobs()}
+                      className="btn btn-success"
+                    >
+                      Search
+                    </button>
+                  </Form>
                 </div>
                 {!location.pathname.includes("job-history") && (
                   <FormControl className="sort-input" sx={{ m: 1 }}>
@@ -287,102 +292,111 @@ export default function JobManagement() {
                     />
                   </div>
                 )}
-                <div className="card shadow border-0 rounded-5 p-lg-3">
-                  <div className="card-body">
-                    <Table responsive hover>
-                      <thead className="">
-                        <tr className="">
-                          <th className="green-card-important py-3 text-center">
-                            #
-                          </th>
-                          <th className="green-card-important py-3 text-center">
-                            Title
-                          </th>
-                          <th className="green-card-important py-3 text-center">
-                            Price
-                          </th>
-                          <th className="green-card-important py-3 text-center">
-                            Address
-                          </th>
-                          <th className="green-card-important py-3 text-center">
-                            Date Posted
-                          </th>
-                          <th className="green-card-important py-3 text-center">
-                            job Status
-                          </th>
-                          <th className="green-card-important py-3 text-center">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredData?.map((provider, index) => (
-                          <tr key={provider._id} className="text-center">
-                            <td>{index + 1}</td>
-                            <td> {provider.title}</td>
-                            <td className={`text-start flex-wrap`}>
-                              ${provider.estimatedBudget || "00"}
-                            </td>
-
-                            <td>
-                              {filterAddressPatterns(
-                                provider?.jobLocation?.jobAddressLine
-                              )}
-                            </td>
-                            <td>
-                              {" "}
-                              {new Date(provider?.date).toLocaleDateString()}
-                            </td>
-                            <td>{provider.jobStatus}</td>
-                            <td>
-                              <tr>
-                                <td>
-                                  <Link to={`/job-edit/${provider._id}`}>
-                                    <HiOutlinePencilSquare
-                                      style={{ height: "30px" }}
-                                    />
-                                  </Link>
-                                </td>
-                                <td>
-                                  <Link to={`/job-detail/${provider._id}`}>
-                                    <IoEyeSharp style={{ height: "30px" }} />
-                                  </Link>
+                {filteredData.length > 0 && (
+                  <>
+                    <div className="card shadow border-0 rounded-5 p-lg-3">
+                      <div className="card-body">
+                        <Table responsive hover>
+                          <thead className="">
+                            <tr className="">
+                              <th className="green-card-important py-3 text-center">
+                                #
+                              </th>
+                              <th className="green-card-important py-3 text-center">
+                                Title
+                              </th>
+                              <th className="green-card-important py-3 text-center">
+                                Price
+                              </th>
+                              <th className="green-card-important py-3 text-center">
+                                Address
+                              </th>
+                              <th className="green-card-important py-3 text-center">
+                                Date Posted
+                              </th>
+                              <th className="green-card-important py-3 text-center">
+                                job Status
+                              </th>
+                              <th className="green-card-important py-3 text-center">
+                                Actions
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredData?.map((provider, index) => (
+                              <tr key={provider._id} className="text-center">
+                                <td>{index + 1}</td>
+                                <td> {provider.title}</td>
+                                <td className={`text-start flex-wrap`}>
+                                  ${provider.estimatedBudget || "00"}
                                 </td>
 
                                 <td>
-                                  {!location.pathname.includes(
-                                    "job-history"
-                                  ) && (
-                                    <IoTrashOutline
-                                      onClick={() =>
-                                        handleJobDelete(provider._id)
-                                      }
-                                      style={{
-                                        cursor: "pointer",
-                                        height: "30px",
-                                      }}
-                                    />
+                                  {filterAddressPatterns(
+                                    provider?.jobLocation?.jobAddressLine
                                   )}
                                 </td>
+                                <td>
+                                  {" "}
+                                  {new Date(
+                                    provider?.date
+                                  ).toLocaleDateString()}
+                                </td>
+                                <td>{provider.jobStatus}</td>
+                                <td>
+                                  <tr>
+                                    <td>
+                                      <Link to={`/job-edit/${provider._id}`}>
+                                        <HiOutlinePencilSquare
+                                          style={{ height: "30px" }}
+                                        />
+                                      </Link>
+                                    </td>
+                                    <td>
+                                      <Link to={`/job-detail/${provider._id}`}>
+                                        <IoEyeSharp
+                                          style={{ height: "30px" }}
+                                        />
+                                      </Link>
+                                    </td>
+
+                                    <td>
+                                      {!location.pathname.includes(
+                                        "job-history"
+                                      ) && (
+                                        <IoTrashOutline
+                                          onClick={() =>
+                                            handleJobDelete(provider._id)
+                                          }
+                                          style={{
+                                            cursor: "pointer",
+                                            height: "30px",
+                                          }}
+                                        />
+                                      )}
+                                    </td>
+                                  </tr>
+                                </td>
                               </tr>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                    <Pagination className="justify-content-center pagination-custom">
-                      {[...Array(totalPages)].map((_, index) => (
-                        <Pagination.Item
-                          key={index + 1}
-                          active={index + 1 === currentPage}
-                          onClick={() => handlePageChange(index + 1)}
-                        >
-                          {index + 1}
-                        </Pagination.Item>
-                      ))}
-                    </Pagination>
-                  </div>
-                </div>
+                            ))}
+                          </tbody>
+                        </Table>
+                        <Pagination className="justify-content-center pagination-custom">
+                          {[...Array(totalPages)].map((_, index) => (
+                            <Pagination.Item
+                              key={index + 1}
+                              active={index + 1 === currentPage}
+                              onClick={() => handlePageChange(index + 1)}
+                            >
+                              {index + 1}
+                            </Pagination.Item>
+                          ))}
+                        </Pagination>
+                      </div>
+                    </div>
+                  </>
+                )}
+
                 {/* {data.map((item) => (
                   <div className="col-lg-12" key={item._id}>
                     <div className="card border-0 rounded-3 px-4">

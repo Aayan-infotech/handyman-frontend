@@ -5,7 +5,7 @@ import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { getProviderUser } from "../Slices/userSlice";
@@ -64,8 +64,8 @@ export default function MainProvider() {
 
   const handleCoupon = async () => {
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/voucher/apply",
+      const response = await axiosInstance.post(
+        "/voucher/apply",
         { code: voucher, userId: providerId }
       );
       console.log(response);
@@ -93,8 +93,8 @@ export default function MainProvider() {
     const fetchVouchers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          "http://3.223.253.106:7777/api/voucher"
+        const response = await axiosInstance.get(
+          "/voucher"
         );
         setVoucherOptions(response.data.data || []); // Assuming the data comes in a 'data' property
       } catch (error) {
@@ -111,8 +111,8 @@ export default function MainProvider() {
       const getData = async () => {
         setLoading(true);
         try {
-          const res = await axios.get(
-            "http://3.223.253.106:7777/api/SubscriptionNew/subscription-type"
+          const res = await axiosInstance.get(
+            "/SubscriptionNew/subscription-type"
           );
           if (res?.data?.status === 200) {
             setData(res?.data?.data);

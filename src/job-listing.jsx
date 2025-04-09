@@ -23,7 +23,7 @@ import {
   FaLinkedin,
   FaDribbble,
 } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "./components/axiosInstance";
 import Loader from "./Loader";
 
 export default function JobListing() {
@@ -33,8 +33,8 @@ export default function JobListing() {
 useEffect(() => {
     const handleResponse = async () => {
       setLoading(true);
-      const response = await axios.get(
-        "http://3.223.253.106:7777/api/jobpost/business-type-count"
+      const response = await axiosInstance.get(
+        "/jobpost/business-type-count"
       );
       console.log(response);
       if (response.data.success === true  || response.data.status === 200) {

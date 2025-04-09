@@ -9,7 +9,7 @@ import { ref, onValue, off } from "firebase/database";
 import { realtimeDb } from "./lib/firestore";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
@@ -48,8 +48,8 @@ export default function Message() {
           return null;
         }
 
-        const response = await axios.post(
-          "http://3.223.253.106:7777/api/match/getMatchedData",
+        const response = await axiosInstance.post(
+          "/match/getMatchedData",
           { jobPostId: jobId, senderId, receiverId },
           {
             headers: {

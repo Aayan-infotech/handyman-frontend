@@ -12,7 +12,7 @@ import facebook from "../assets/logo/facebook.png";
 import google from "../assets/logo/iconGoogle.png";
 import Loader from "../../Loader";
 import Toaster from "../../Toaster";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInstance";
 import { Eye, EyeOff } from "lucide-react";
 
 import {
@@ -48,8 +48,8 @@ export default function LoginProvider() {
     }
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/login",
+      const response = await axiosInstance.post(
+        "/auth/login",
         {
           email: email,
           password: password,

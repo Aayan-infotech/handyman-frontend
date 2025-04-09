@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Navbar";
 import "../User/user.css";
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -82,8 +82,8 @@ export default function ChangeRadius() {
     }
 
     try {
-      const response = await axios.patch(
-        "http://3.223.253.106:7777/api/hunter/updateRadius",
+      const response = await axiosInstance.patch(
+        "/hunter/updateRadius",
         { radius: selectedRadius * 1000 }, // Send as a number
         {
           headers: {

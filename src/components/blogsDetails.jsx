@@ -3,7 +3,7 @@ import { Row, Col, Form } from "react-bootstrap";
 import logo from "./assets/logo.png";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import Container from "react-bootstrap/Container";
 import Button from "@mui/material/Button";
 import logoWhite from "../assets/logo-white.png";
@@ -25,8 +25,8 @@ export default function BlogDetail() {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`http://3.223.253.106:7777/api/blog/getAll`)
+    axiosInstance
+      .get(`/blog/getAll`)
       .then((response) => {
         const allBlogs = response?.data?.blog;
         const currentBlog = allBlogs.find((b) => b._id.toString() === id);

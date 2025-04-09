@@ -17,7 +17,7 @@ import {
   FaLinkedin,
   FaDribbble,
 } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "./components/axiosInstance";
 import Loader from "./Loader";
 import { useForm } from "react-hook-form"; // Importing React Hook Form
 import { toast, ToastContainer } from "react-toastify"; // Importing Toastify
@@ -46,8 +46,8 @@ export default function Contact() {
 
     setLoading(true);  // Set loading to true while waiting for the API response
 
-    axios
-      .post("http://3.223.253.106:7777/api/contact/send", contactUsData)  // Sending form data to the API
+    axiosInstance
+      .post("/contact/send", contactUsData)  // Sending form data to the API
       .then((response) => {
         console.log("Response from API:", response.data);
         setLoading(false);  // Reset loading state

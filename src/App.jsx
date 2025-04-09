@@ -85,31 +85,6 @@ const ProtectedRoute = ({ element }) => {
         navigate("/welcome");
         return;
       }
-
-      try {
-        const tokenData = JSON.parse(atob(token.split(".")[1]));
-        const expiryTime = tokenData.exp * 1000;
-        const currentTime = Date.now();
-        if (expiryTime - currentTime < 10000) {
-          if (refreshToken) {
-            const response = await axios.post(
-              "http://3.223.253.106:7777/api/auth/refreshtoken",
-              { refreshToken, userType }
-            );
-            console.log(response);
-            if (userType === "hunter") {
-              localStorage.setItem("hunterToken", response.data.accessToken);
-              return;
-            }
-            localStorage.setItem("ProviderToken", response.data.accessToken);
-          } else {
-            navigate("/welcome");
-          }
-        }
-      } catch (error) {
-        console.error("Auth Error:", error);
-        navigate("/welcome");
-      }
     };
 
     checkAuth();

@@ -8,13 +8,12 @@ import { RiMessage2Fill } from "react-icons/ri";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, Navigation } from "swiper/modules";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import notFound from "./assets/noprofile.png";
 import "swiper/css";
 import "swiper/css/navigation";
 
-const API_BASE_URL = "http://3.223.253.106:7777/api";
 
 export default function ServiceProviderProfile() {
   const { id } = useParams();
@@ -28,22 +27,22 @@ export default function ServiceProviderProfile() {
     setLoading(true);
     try {
       const [profileRes, bgRes, ratingRes, galleryRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/provider/${id}`, {
+        axiosInstance.get(`/provider/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
           },
         }),
-        axios.get(`${API_BASE_URL}/backgroundImg/${id}`, {
+        axiosInstance.get(`/backgroundImg/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
           },
         }),
-        axios.get(`${API_BASE_URL}/rating/getRatings/${id}`, {
+        axiosInstance.get(`/rating/getRatings/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
           },
         }),
-        axios.get(`${API_BASE_URL}/providerPhoto/${id}`, {
+        axiosInstance.get(`/providerPhoto/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
           },

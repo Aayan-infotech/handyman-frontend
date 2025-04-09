@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 
 export const getProviderNearbyJobs = createAsyncThunk(
   "/Provider/getProviderNearbyJobs",
@@ -8,8 +8,8 @@ export const getProviderNearbyJobs = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/getNearbyJobs`,
+      const response = await axiosInstance.post(
+        `/provider/getNearbyJobs`,
         {
           businessType,
           services,
@@ -40,8 +40,8 @@ export const getProviderJobs = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/getNearbyJobs`,
+      const response = await axiosInstance.post(
+        `/provider/getNearbyJobs`,
         {
           businessType,
           longitude,
@@ -66,8 +66,8 @@ export const getGuestProviderJobs = createAsyncThunk(
   "/Provider/getProviderJobs",
   async ({ latitude, longitude }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/getNearbyJobsForGuest`,
+      const response = await axiosInstance.post(
+        `/provider/getNearbyJobsForGuest`,
         {
           latitude,
           longitude,
@@ -90,8 +90,8 @@ export const getGuestProviderJobId = createAsyncThunk(
   "/Provider/getProviderJobs",
   async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `http://3.223.253.106:7777/api/provider/getJobByIdForGuest/${id}` , 
+      const response = await axiosInstance.get(
+        `/provider/getJobByIdForGuest/${id}` , 
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,

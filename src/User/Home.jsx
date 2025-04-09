@@ -14,7 +14,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 import Toaster from "../Toaster";
-import axios from "axios";
+// import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import Button from "@mui/material/Button";
 import Table from "react-bootstrap/Table";
@@ -100,8 +101,8 @@ export default function Main() {
     const handleJobs = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          "http://3.223.253.106:7777/api/jobpost/business-type-count"
+        const response = await axiosInstance.get(
+          "/jobpost/business-type-count"
         );
         if (response.status === 200) {
           setBusinessData(response.data.data);

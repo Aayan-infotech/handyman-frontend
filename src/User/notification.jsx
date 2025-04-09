@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { FaRegClock } from "react-icons/fa";
 import Loader from "../Loader";
@@ -28,8 +28,8 @@ export default function Notification() {
 
   const handleName = async (notification) => {
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/match/getMatchedDataNotification",
+      const response = await axiosInstance.post(
+        "/match/getMatchedDataNotification",
         {
           senderId: notification.userId,
           receiverId: notification.receiverId,
@@ -49,8 +49,8 @@ export default function Notification() {
     if (!userId) return;
     try {
       setLoading(true);
-      const url = `http://3.223.253.106:7777/api/pushNotification/get-notification/${userType}`;
-      const response = await axios.get(url, {
+      const url = `/pushNotification/get-notification/${userType}`;
+      const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -84,8 +84,8 @@ export default function Notification() {
   const handleMarkAsRead = async (notificationId, type) => {
     try {
       setMarkingAsRead(true);
-      await axios.get(
-        `http://3.223.253.106:7777/api/pushNotification/Read-notification/${notificationId}/${type}`,
+      await axiosInstance.get(
+        `/pushNotification/Read-notification/${notificationId}/${type}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -106,8 +106,8 @@ export default function Notification() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(
-        `http://3.223.253.106:7777/api/pushNotification/deleteNotification/${id}`,
+      const response = await axiosInstance.delete(
+        `/pushNotification/deleteNotification/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

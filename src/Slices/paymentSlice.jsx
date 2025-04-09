@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
+import axiosInstance from "../components/axiosInstance";
 // export const handlePayment = createAsyncThunk(
 //   "/Payment/createPayment",
 //   async (
@@ -86,14 +85,12 @@ import axios from "axios";
 //   }
 // );
 
-
-
 export const handlePayment = createAsyncThunk(
   "/Payment/createPayment",
   async (
     {
       transactionId,
-      userId,  // ✅ Added userId
+      userId, // ✅ Added userId
       subscriptionPlanId, // ✅ Added subscriptionPlanId
       amount, // ✅ Added amount
       paymentMethod, // ✅ Added paymentMethod
@@ -108,13 +105,13 @@ export const handlePayment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/demoTransaction/transaction`,
+      const response = await axiosInstance.post(
+        `/demoTransaction/transaction`,
         {
           transactionId,
-          userId, 
-          subscriptionPlanId, 
-          amount, 
+          userId,
+          subscriptionPlanId,
+          amount,
           paymentMethod,
           transactionDate,
           transactionStatus,

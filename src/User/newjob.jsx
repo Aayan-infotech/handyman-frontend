@@ -13,7 +13,7 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TextField, Stack } from "@mui/material";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Autocomplete from "react-google-autocomplete";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
@@ -98,14 +98,11 @@ export default function NewJob() {
   useEffect(() => {
     const handleAllData = async () => {
       try {
-        const response = await axios.get(
-          "http://3.223.253.106:7777/api/service/getAllServices" , 
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
-            },
-          }
-        );
+        const response = await axiosInstance.get("/service/getAllServices", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("hunterToken")}`,
+          },
+        });
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
@@ -149,16 +146,12 @@ export default function NewJob() {
     console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
 
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/jobpost/jobpost",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosInstance.post("/jobpost/jobpost", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status === 200 || response.status === 201) {
         setToastProps({

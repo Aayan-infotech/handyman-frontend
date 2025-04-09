@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { handlePayment } from "../Slices/paymentSlice";
 import Loader from "../Loader";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 import Toaster from "../Toaster";
 
 export default function PricingProvider() {
@@ -42,8 +42,8 @@ export default function PricingProvider() {
       setLoading(true);
       try {
         // Make API call to the new endpoint
-        const res = await axios.get(
-          `http://3.223.253.106:7777/api/SubscriptionNew/subscription-plan/${id}` // Send id to API
+        const res = await axiosInstance.get(
+          `/SubscriptionNew/subscription-plan/${id}` // Send id to API
         );
         // Set the response data into the state
         const subscriptionData = res?.data?.data;
@@ -126,7 +126,6 @@ export default function PricingProvider() {
         <div>
           <LoggedHeader />
           <div className="h-100">
-          
             <div className="bg-second fixed-curl">
               <div className="container">
                 <div className="top-section-main py-4 px-lg-5">

@@ -4,7 +4,7 @@ import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
 import "../../User/user.css";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInstance";
 import Toaster from "../../Toaster";
 import Loader from "../../Loader";
 import { styled } from "@mui/material/styles";
@@ -103,14 +103,11 @@ export default function Upload() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.delete(
-        `http://3.223.253.106:7777/api/provider/delete/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
-          },
-        }
-      );
+      const response = await axiosInstance.delete(`/provider/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+        },
+      });
       if (response.status === 200) {
         setLoading(false);
         setToastProps({
@@ -146,11 +143,12 @@ export default function Upload() {
     console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://3.223.253.106:7777/api/provider/upload/${providerId}`,
+      const response = await axiosInstance.post(
+        `/provider/upload/${providerId}`,
         formData,
         {
           headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -308,8 +306,12 @@ export default function Upload() {
                         variant="outlined"
                         size="large"
                         color="error"
-                        // onClick={() => navigate("/provider/pricing")}
-                       onClick={() => navigate("/provider/home")}
+                        onClick={() => navigate("/provider/pricing")}
+                        // onClick={() => {
+                        //   document.length > 0
+                        //     ? navigate("/provider/home")
+                        //     : navigate("/provider/pricing");
+                        // }}
                       >
                         Skip For Now
                       </Button>

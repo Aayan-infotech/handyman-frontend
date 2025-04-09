@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../components/axiosInstance";
 
 export const getAddress = createAsyncThunk(
   "Address/getAddress",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        "http://3.223.253.106:7777/api/address/addresses-by-id",
+      const response = await axiosInstance.get(
+        "/address/addresses-by-id",
         {
           headers: {
             Authorization: `Bearer ${

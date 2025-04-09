@@ -11,7 +11,7 @@ import "../user.css";
 
 import { Eye, EyeOff } from "lucide-react";
 import { IoImageOutline } from "react-icons/io5";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInstance";
 import Autocomplete from "react-google-autocomplete";
 import Toaster from "../../Toaster";
 import Loader from "../../Loader";
@@ -120,8 +120,8 @@ export default function SignUp() {
     // }
 
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/signup",
+      const response = await axiosInstance.post(
+        "/auth/signup",
 
         formData
       );
@@ -158,7 +158,7 @@ export default function SignUp() {
         }, 2000);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setToastProps({
         message: error.response?.data?.error || error.response?.data?.message,
         type: "error",

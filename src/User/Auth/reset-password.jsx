@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "../user.css";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInstance";
 import Toaster from "../../Toaster";
 import Loader from "../../Loader";
 export default function ResetPassword() {
@@ -34,8 +34,8 @@ export default function ResetPassword() {
     }
 
     try {
-      const response = await axios.post(
-        "http://3.223.253.106:7777/api/auth/reset-password-with-otp",
+      const response = await axiosInstance.post(
+        "/auth/reset-password-with-otp",
         {
           email,
           newPassword,
