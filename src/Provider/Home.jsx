@@ -289,7 +289,7 @@ export default function HomeProvider() {
                           <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
                             <div className="d-flex flex-row gap-2 align-items-center">
                               <BiCoinStack />
-                              <h5 className="mb-0">${job.estimatedBudget}</h5>
+                              <h5 className="mb-0">${job.estimatedBudget || "00"}</h5>
                             </div>
                             <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
                               <PiBag />

@@ -172,9 +172,11 @@ export default function ServiceProvider() {
     }
 
     if (providerRadius && providerRadius.length > 0) {
-      const selectedRadius = parseInt(providerRadius.replace(" km", ""), 10); // Ensure it's a number
+      const selectedRadius = parseInt(providerRadius.replace(" km", "") * 1000);
+      console.log("1212", selectedRadius);
+      console.log("1212", filtered);
       filtered = filtered.filter(
-        (provider) => provider.address.radius / 1000 <= selectedRadius // Convert meters to km before comparison
+        (provider) => provider.address.radius === selectedRadius // Convert meters to km before comparison
       );
     }
 
@@ -228,7 +230,9 @@ export default function ServiceProvider() {
                           value={search}
                           onChange={(e) => setSearch(e.target.value)}
                         />
-                        <button type="submit" className="btn btn-success">Search</button>
+                        <button type="submit" className="btn btn-success">
+                          Search
+                        </button>
                       </Form>
                     </div>
                     <div className="d-flex w-100 justify-content-end flex-row gap-2">
@@ -240,31 +244,33 @@ export default function ServiceProvider() {
                           labelId="radius-select-label"
                           id="radius-select"
                           value={providerRadius}
-                          onChange={(event) => {
-                            setProviderRadius(event.target.value); // Single value, not an array
-                          }}
+                          onChange={() => {}} // disable default onChange
                           input={
                             <OutlinedInput label="Select Provider Radius" />
                           }
-                          renderValue={(selected) => selected} // Remove .join(", ") since it's now a single string
+                          renderValue={(selected) =>
+                            selected || "Select radius"
+                          }
                           MenuProps={MenuProps}
-                          placeholder="Select Provider Radius"
                         >
-                          {Array.from(
-                            new Set(
-                              radiusOptions.flatMap((provider) => provider)
-                            )
-                          )
-                            .map((type) => `${type} km`) // Ensure value format matches
-                            .map((formattedType, index) => (
-                              <MenuItem key={index} value={formattedType}>
-                                <Checkbox
-                                  checked={providerRadius === formattedType}
-                                />{" "}
-                                {/* Adjusted for single selection */}
-                                <ListItemText primary={formattedType} />
-                              </MenuItem>
-                            ))}
+                          {radiusOptions.map((option, index) => (
+                            <MenuItem
+                              key={index}
+                              value={`${option} km`}
+                              onClick={() =>
+                                setProviderRadius(
+                                  providerRadius === `${option} km`
+                                    ? ""
+                                    : `${option} km`
+                                )
+                              }
+                            >
+                              <Checkbox
+                                checked={providerRadius === `${option} km`}
+                              />
+                              <ListItemText primary={`${option} km`} />
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
 
