@@ -198,6 +198,11 @@ function App() {
         />
 
         <Route
+          path="/provider/job-detail/:id"
+          element={<ProtectedRoute element={<JobDetail />} />}
+        />
+
+        <Route
           path="/service-provider"
           element={<ProtectedRoute element={<ServiceProvider />} />}
         />

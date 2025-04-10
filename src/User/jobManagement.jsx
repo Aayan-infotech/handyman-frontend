@@ -147,8 +147,8 @@ export default function JobManagement() {
       );
       console.log(res);
       if (res.status === 200) {
-        setData(res?.data?.data);
-        setFilteredData(res?.data?.data);
+        setData(res?.data?.jobs);
+        setFilteredData(res?.data?.jobs);
         setSearch("");
         setTotalPages(res?.data?.jobs?.totalPages);
         if (res?.data?.length === 0) {
@@ -209,6 +209,13 @@ export default function JobManagement() {
 
   console.log("filteredData", data);
 
+  const checkUserType = (id) => {
+    if (localStorage.getItem("ProviderToken")) {
+      navigate(`/provider/job-detail/${id}`);
+      return;
+    }
+    navigate(`/job-detail/${id}`);
+  };
   const filterAddressPatterns = (address) => {
     if (!address) return address;
 
@@ -326,9 +333,9 @@ export default function JobManagement() {
                             {filteredData?.map((provider, index) => (
                               <tr key={provider._id} className="text-center">
                                 <td>{index + 1}</td>
-                                <td> {provider.title}</td>
+                                <td> {provider?.title}</td>
                                 <td className={`text-start flex-wrap`}>
-                                  ${provider.estimatedBudget || "00"}
+                                  ${provider?.estimatedBudget || "00"}
                                 </td>
 
                                 <td>
@@ -342,16 +349,19 @@ export default function JobManagement() {
                                     provider?.date
                                   ).toLocaleDateString()}
                                 </td>
-                                <td>{provider.jobStatus}</td>
+                                <td>{provider?.jobStatus}</td>
                                 <td>
                                   <tr>
-                                    <td>
-                                      <Link to={`/job-edit/${provider._id}`}>
-                                        <HiOutlinePencilSquare
-                                          style={{ height: "30px" }}
-                                        />
-                                      </Link>
-                                    </td>
+                                    {provider?.jobStatus !== "Completed" && !location.pathname.includes("job-history") && (
+                                      <td>
+                                        <Link to={`/job-edit/${provider._id}`}>
+                                          <HiOutlinePencilSquare
+                                            style={{ height: "30px" }}
+                                          />
+                                        </Link>
+                                      </td>
+                                    )}
+
                                     <td>
                                       <Link to={`/job-detail/${provider._id}`}>
                                         <IoEyeSharp
