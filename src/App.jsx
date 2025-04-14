@@ -307,6 +307,10 @@ function App() {
           path="/provider/pricing"
           element={<ProtectedRoute element={<MainProvider />} />}
         />
+        <Route
+          path="/provider/subscription"
+          element={<ProtectedRoute element={<MainProvider />} />}
+        />
 
         <Route
           path="/provider/pricingtype/:id"
