@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import axiosInstance from "./components/axiosInstance";
 import Loader from "./Loader";
+import LoggedHeader from "./components/loggedNavbar";
 
 export default function About() {
   const { section } = useParams();
@@ -28,9 +29,7 @@ export default function About() {
     const handleResponse = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(
-          `/StaticContent/${section}`
-        );
+        const response = await axiosInstance.get(`/StaticContent/${section}`);
 
         if (response.status === 200 && response.data.content) {
           setBusinessData(response.data.content);
@@ -56,34 +55,45 @@ export default function About() {
       ) : (
         <div className="">
           <div className="">
-             <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
-          <Container fluid>
-            <Link to="/" className="py-1">
-              <img src={logo} alt="logo" />
-            </Link>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link href="#">About UCCCs</Link>
-                <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
-              </Nav> */}
+            {localStorage.getItem("ProviderToken") || localStorage.getItem("hunterToken") ? (
+              <LoggedHeader />
+            ) : (
+              <Navbar
+                collapseOnSelect
+                expand="lg"
+                className="position-relative z-1"
+              >
+                <Container fluid>
+                  <Link to="/" className="py-1">
+                    <img src={logo} alt="logo" />
+                  </Link>
+                  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                  <Navbar.Collapse id="responsive-navbar-nav">
+                    {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+              <Link href="#">About UCCCs</Link>
+              <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
+            </Nav> */}
 
+                    <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                      <Link to="/about" style={{ fontWeight: "350" }}>
+                        About Us
+                      </Link>
+                      <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                        Contact Us
+                      </Link>
+                    </Nav>
 
-              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link to="/about" style={{ fontWeight: '350' }}>About Us</Link>
-                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
-              </Nav>
-
-              <Nav>
-                {/* <Link to="/welcome">
-                  <Button variant="contained" color="success">
-                    Get Started <GoArrowRight className="fs-4 ms-1" />
-                  </Button>
-                </Link> */}
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+                    <Nav>
+                      {/* <Link to="/welcome">
+                <Button variant="contained" color="success">
+                  Get Started <GoArrowRight className="fs-4 ms-1" />
+                </Button>
+              </Link> */}
+                    </Nav>
+                  </Navbar.Collapse>
+                </Container>
+              </Navbar>
+            )}
           </div>
           <div className="container category my-5">
             <div className="row gy-4 mt-3">
