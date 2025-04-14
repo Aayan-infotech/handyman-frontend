@@ -727,6 +727,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .top-section-main h5 {
+    white-space: wrap;
+    font-size: 25px;
+  }
   .login .card {
     width: calc(100% - 8%);
   }

@@ -220,8 +220,8 @@ export default function Notification() {
                         } border-0 rounded-4`}
                       >
                         <div className="card-body px-3">
-                          <div className="d-flex flex-wrap justify-content-center flex-column flex-lg-row justify-content-lg-between align-items-center">
-                            <h5 className="mb-0">
+                          <div className="d-flex flex-wrap justify-content-center flex-column flex-lg-row justify-content-lg-between align-items-center gap-2">
+                            <h5 className="mb-0 text-center text-lg-start">
                               {notification.nameData?.sender?.contactName
                                 ? notification.nameData.sender.contactName
                                     .charAt(0)
@@ -246,7 +246,7 @@ export default function Notification() {
                               </span>
                             </div>
                           </div>
-                          <div className="row">
+                          <div className="row gy-2">
                             <div
                               className={
                                 notification.isRead === false
@@ -254,7 +254,7 @@ export default function Notification() {
                                   : `col-lg-10`
                               }
                             >
-                              <p className="mt-3 mb-0">{notification.body}</p>
+                              <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">{notification.body}</p>
                             </div>
                             {notification.isRead === false && (
                               <div className="col-lg-3 d-flex justify-content-end">
