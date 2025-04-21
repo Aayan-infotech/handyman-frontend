@@ -320,8 +320,8 @@ export default function JobSpecification() {
                             className="custom-green bg-green-custom rounded-5 py-3 w-100"
                           >
                             {hasAcceptedJob
-                              ? "You have accept this job"
-                              : "Accept"}
+                              ? "You have accepted to quote this job"
+                              : "Quote"}
                           </Button>
                           {hasAcceptedJob && (
                             <Button
