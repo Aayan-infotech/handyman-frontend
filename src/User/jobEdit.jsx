@@ -125,14 +125,15 @@ export default function JobEdit() {
 
           if (jobResponse.status === 200) {
             const jobData = jobResponse.data.data;
-            console.log(jobData);
+            console.log(jobData?.jobLocation);
             setTitle(jobData.title);
             setBudget(jobData.estimatedBudget);
             setSelectedRadius(jobData?.jobLocation?.jobRadius / 1000); // Convert back to km
             setAddress(jobData.jobLocation.jobAddressLine);
             setDocuments(jobData.documents);
-            setLatitude(jobData.latitude);
-            setLongitude(jobData.longitude);
+            setLatitude(jobData?.jobLocation?.location?.coordinates[1]);
+            setLongitude(jobData?.jobLocation?.location?.coordinates[0]);
+            setCity(jobData?.jobLocation?.city);
             setBusinessType(jobData.businessType || []);
             setRequirements(jobData.requirements);
 
