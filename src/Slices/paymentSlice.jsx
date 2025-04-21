@@ -86,21 +86,22 @@ import axiosInstance from "../components/axiosInstance";
 // );
 
 export const handlePayment = createAsyncThunk(
-  "/Payment/createPayment",
+  "/demoTransaction/transaction",
   async (
     {
-      transactionId,
+      // transactionId,
       userId, // ✅ Added userId
       subscriptionPlanId, // ✅ Added subscriptionPlanId
       amount, // ✅ Added amount
       paymentMethod, // ✅ Added paymentMethod
-      transactionDate,
-      transactionStatus,
-      transactionAmount,
-      transactionMode,
-      SubscriptionId,
-      SubscriptionAmount,
-      type,
+      subscriptionTypeId,
+      // transactionDate,
+      // transactionStatus,
+      // transactionAmount,
+      // transactionMode,
+      // SubscriptionId,
+      // SubscriptionAmount,
+      // type,
     },
     { rejectWithValue }
   ) => {
@@ -108,18 +109,18 @@ export const handlePayment = createAsyncThunk(
       const response = await axiosInstance.post(
         `/demoTransaction/transaction`,
         {
-          transactionId,
+          subscriptionTypeId,
           userId,
           subscriptionPlanId,
           amount,
           paymentMethod,
-          transactionDate,
-          transactionStatus,
-          transactionAmount,
-          transactionMode,
-          SubscriptionId,
-          SubscriptionAmount,
-          type,
+          // transactionDate,
+          // transactionStatus,
+          // transactionAmount,
+          // transactionMode,
+          // SubscriptionId,
+          // SubscriptionAmount,
+          // type,
         },
         {
           headers: {

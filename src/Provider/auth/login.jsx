@@ -180,7 +180,7 @@ export default function LoginProvider() {
                     Great You are Back
                   </p>
 
-                  <Form className="py-3">
+                  <Form className="pt-3">
                     <Form.Group
                       as={Row}
                       className="mb-3"
@@ -189,7 +189,7 @@ export default function LoginProvider() {
                       <Form.Label column sm="3">
                         Email
                       </Form.Label>
-                      <Col sm="7">
+                      <Col sm="9">
                         <Form.Control
                           type="email"
                           placeholder="Email Address"
@@ -225,7 +225,7 @@ export default function LoginProvider() {
                       <Form.Label column sm="3">
                         Password
                       </Form.Label>
-                      <Col sm="7" className="position-relative">
+                      <Col sm="9" className="position-relative">
                         <Form.Control
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
@@ -253,7 +253,7 @@ export default function LoginProvider() {
                   </Form>
                   <Link
                     to="/provider/forgetpassword"
-                    className="highlighted-text text-decoration-none text-end d-flex justify-content-end py-3"
+                    className="highlighted-text text-decoration-none text-end d-flex justify-content-end pb-3"
                   >
                     Forgot Password
                   </Link>
