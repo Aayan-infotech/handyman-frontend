@@ -65,7 +65,7 @@ export default function LoggedHeader() {
         className="position-relative z-1 loggedheader"
       >
         <Container fluid>
-          <Link to="/provider/pricing" className="py-1">
+          <Link to="/provider/home" className="py-1">
             <img src={logo} alt="logo" />
           </Link>
 

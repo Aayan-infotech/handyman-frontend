@@ -40,9 +40,11 @@ export default function MainProvider() {
           if (result.payload?.status === 200) {
             const subscriptionStatus = result.payload.data.subscriptionStatus;
             setSubscriptionStatus(subscriptionStatus);
-            if (subscriptionStatus === 1) {
-              navigate("/provider/home");
-              return;
+            if (location.pathname === "/provider/pricing") {
+              if (subscriptionStatus === 1) {
+                navigate("/provider/home");
+                return;
+              }
             }
           }
         }
@@ -100,21 +102,27 @@ export default function MainProvider() {
   }, []);
 
   useEffect(() => {
-    if (subscriptionStatus === 0) {
-      const getData = async () => {
-        setLoading(true);
-        try {
-          const res = await axiosInstance.get(
-            "/SubscriptionNew/subscription-type"
-          );
-          if (res?.data?.status === 200) {
-            setData(res?.data?.data);
-          }
-        } catch (error) {
-          console.log(error);
+    const getData = async () => {
+      setLoading(true);
+      try {
+        const res = await axiosInstance.get(
+          "/SubscriptionNew/subscription-type"
+        );
+        if (res?.data?.status === 200) {
+          setData(res?.data?.data);
         }
-        setLoading(false);
-      };
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    };
+
+    if (location.pathname === "/provider/pricing") {
+      if (subscriptionStatus === 0) {
+        getData();
+      }
+    }
+    if (location.pathname === "/provider/subscription") {
       getData();
     }
   }, [subscriptionStatus]);

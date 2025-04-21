@@ -3,12 +3,12 @@ import LoggedHeader from "./auth/component/loggedNavbar";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
-
+import Button from "@mui/material/Button";
 import Toaster from "../Toaster";
 export default function ManageSubscription() {
   const [data, setData] = useState();
   const [voucher, setVoucher] = useState();
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const name = localStorage.getItem("ProviderName");
   const providerId = localStorage.getItem("ProviderId");
@@ -79,9 +79,19 @@ export default function ManageSubscription() {
               <div className="top-section-main py-4 px-lg-5">
                 <div className="row ">
                   <div className="col-lg-4">
-                    <h5 className="user d-flex justify-content-center justify-content-lg-start">
-                      Hello {name}
-                    </h5>
+                    <h5 className="user ">Hello {name}</h5>
+                  </div>
+                  <div className="col-lg-8">
+                    <div className="d-flex justify-content-end">
+                      <Button
+                        variant="contained"
+                        color="success"
+                        className="rounded-0 custom-green bg-green-custom"
+                        onClick={() => navigate("/provider/subscription")}
+                      >
+                        Add Your subscription
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="row py-3 gy-4 mt-lg-4">
@@ -132,7 +142,7 @@ export default function ManageSubscription() {
                               </h3>
                               <h5 className="mt-3">${item.amount}</h5>
                               <h4>
-                                 Radius: {item.subscriptionPlanId.kmRadius}KM
+                                Radius: {item.subscriptionPlanId.kmRadius}KM
                               </h4>
                               <h3>
                                 Valid for{" "}

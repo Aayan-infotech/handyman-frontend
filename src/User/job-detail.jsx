@@ -10,7 +10,7 @@ import Rating from "@mui/material/Rating";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { IoIosStar } from "react-icons/io";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../components/axiosInstance";
 import { CiUser } from "react-icons/ci";
 import Loader from "../Loader";
@@ -44,6 +44,7 @@ export default function JobDetail() {
   const ProviderToken = localStorage.getItem("ProviderToken");
   const { id } = useParams();
   const [receiverId, setRecieverId] = useState(null);
+  const navigate = useNavigate();
 
   const handleProviderJobs = async () => {
     setLoading(true);
@@ -151,6 +152,7 @@ export default function JobDetail() {
   };
 
   const handleReview = async () => {
+    setLoading(true);
     try {
       const reponse = await axiosInstance.post(
         `/rating/giveRating/${receiverId}`,
@@ -165,13 +167,16 @@ export default function JobDetail() {
         }
       );
       console.log(reponse);
+      setLoading(false);
       setShow(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
   const handleJobStatus = async () => {
+    setLoading(true);
     try {
       const reponse = await axiosInstance.post(
         `/jobPost/changeJobStatus/${id}`,
@@ -186,18 +191,27 @@ export default function JobDetail() {
         }
       );
       console.log(reponse);
+      setLoading(false);
       setShow(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
-  const doubleFunction = () => {
-    handleReview();
-    handleJobStatus();
-    fetchData();
-    noficationFunctionality();
-    handleProviderJobs();
+  const doubleFunction = async () => {
+    setLoading(true);
+    try {
+      await handleReview();
+      await handleJobStatus();
+      await fetchData();
+      await noficationFunctionality();
+      setShow(false);
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   console.log("user", user);
@@ -266,7 +280,7 @@ export default function JobDetail() {
                 <div className="mt-4">
                   <h3>Uploaded Document</h3>
                   <div className="row g-2 gy-3">
-                    {data.documents ? (
+                    {data.documents.length > 0 ? (
                       data.documents.map((doc, index) => (
                         <div className="col-lg-4" key={index}>
                           <img
@@ -322,33 +336,47 @@ export default function JobDetail() {
                     </div>
                   </div>
                 </div>
-                {receiverId && (
+                {receiverId && localStorage.getItem("hunterToken") && (
                   <>
                     <div className="row gy-4 gx-4 w-100 align-items-center">
                       <div className="col-2">
                         <CiUser />
                       </div>
                       <div className="col-10 ps-lg-4 ps-5">
-                        <div className="d-flex flex-column align-items-start">
+                        <div className="d-flex flex-column align-items-start gap-2">
                           <span className="text-muted">
                             You have Assigned job to
                           </span>
-                          <b className="fw-medium fs-5">{providerName}</b>
+                          <div className="d-flex flex-row align-items-start gap-3 ">
+                            <b className="fw-medium fs-5">
+                              {providerName.toLocaleUpperCase()}
+                            </b>
+                            <button
+                              className="btn btn-info text-light"
+                              onClick={() => {
+                                navigate(`/service-profile/${receiverId}`);
+                              }}
+                            >
+                              View Profile
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      className="custom-green py-3 w-100 rounded-5 bg-green-custom"
-                      onClick={handleShow}
-                      disabled={data.jobStatus === "Completed"}
-                    >
-                      {data.jobStatus === "Completed"
-                        ? "This job has been Completed"
-                        : " Mark As Complete"}
-                    </Button>
                   </>
+                )}
+                {receiverId && localStorage.getItem("hunterToken") && (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+                    onClick={handleShow}
+                    disabled={data.jobStatus === "Completed"}
+                  >
+                    {data.jobStatus === "Completed"
+                      ? "This job has been Completed"
+                      : " Mark As Complete"}
+                  </Button>
                 )}
               </div>
               <hr />

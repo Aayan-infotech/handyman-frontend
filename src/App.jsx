@@ -198,6 +198,11 @@ function App() {
         />
 
         <Route
+          path="/provider/job-detail/:id"
+          element={<ProtectedRoute element={<JobDetail />} />}
+        />
+
+        <Route
           path="/service-provider"
           element={<ProtectedRoute element={<ServiceProvider />} />}
         />
@@ -300,6 +305,10 @@ function App() {
         />
         <Route
           path="/provider/pricing"
+          element={<ProtectedRoute element={<MainProvider />} />}
+        />
+        <Route
+          path="/provider/subscription"
           element={<ProtectedRoute element={<MainProvider />} />}
         />
 

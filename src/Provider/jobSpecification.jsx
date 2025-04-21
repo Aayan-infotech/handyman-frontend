@@ -109,10 +109,11 @@ export default function JobSpecification() {
       }
       try {
         const response = await axiosInstance.post(
-          `/provider/acceptCount/${ProviderId}`,
+          `/provider/acceptCount/${ProviderId}`
         );
         if (response.status === 200) {
           setShow(true);
+          noficationFunctionality();
           setToastProps({
             message: response.message,
             type: "success",
@@ -162,6 +163,9 @@ export default function JobSpecification() {
     (job) => job.providerId === providerIdToMatch
   );
 
+  const hasCompletedJob = data.jobStatus === "Completed" ? true : false;
+  console.log("hasCompletedJob", hasCompletedJob);
+
   const handleChat = () => {
     navigate(`/provider/chat/${data.user}?jobId=${data?._id}`);
   };
@@ -210,7 +214,13 @@ export default function JobSpecification() {
                         <div className="d-flex flex-row gap-2 align-items-center">
                           <div className="d-flex flex-column align-items-start gap-1">
                             <h3 className="mb-0">{data?.title}</h3>
-                            <h6>24/01/24</h6>
+                            <h6>
+                              {data?.date
+                                ? new Date(data.date).toLocaleString("en-US", {
+                                    timeZone: "UTC",
+                                  })
+                                : "No date provided"}
+                            </h6>
                           </div>
                         </div>
                         {/* <div className="d-flex flex-row gap-4 align-items-center pb-3 pt-2">
@@ -273,7 +283,7 @@ export default function JobSpecification() {
                                 Estimated budget
                               </span>
                               <b className="fw-medium fs-5">
-                                ${data?.estimatedBudget}
+                                ${data?.estimatedBudget || "00"}
                               </b>
                             </div>
                           </div>
@@ -295,7 +305,7 @@ export default function JobSpecification() {
                         </div>
                       </div>
                       <hr />
-                      {!guestCondition ? (
+                      {!guestCondition & (hasCompletedJob === false) ? (
                         <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-100">
                           {/* <Button
                           variant="contained"
@@ -323,6 +333,15 @@ export default function JobSpecification() {
                             </Button>
                           )}
                         </div>
+                      ) : null}
+                      {!guestCondition & (hasCompletedJob === true) ? (
+                        <Button
+                          variant="contained"
+                          disabled={hasCompletedJob}
+                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                        >
+                          You have completed this Job
+                        </Button>
                       ) : null}
                     </div>
                   </>

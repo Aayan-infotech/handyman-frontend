@@ -14,7 +14,6 @@ import notFound from "./assets/noprofile.png";
 import "swiper/css";
 import "swiper/css/navigation";
 
-
 export default function ServiceProviderProfile() {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
@@ -153,102 +152,107 @@ export default function ServiceProviderProfile() {
 
   return (
     <>
-      {loading === true && <Loader />}
-      <LoggedHeader />
-      <Link to="/support/chat/1">
-        <div className="admin-message">
-          <MdOutlineSupportAgent />
-        </div>
-      </Link>
-      <div className="message">
-        <Link to="/message">
-          <MdMessage />
-        </Link>
-      </div>
-      <div className="bg-second pb-3">
-        <div className="container">
-          <div className="image-shadow">
-            <img
-              src={backgroundImg || notFound}
-              alt="background"
-              className="w-100"
-            />
-          </div>
-
-          <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row pb-lg-3">
-            <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
-              <h3 className="fw-bold fs-1">{data?.contactName}</h3>
-              <h6>{data?.businessName}</h6>
-              <h6>{data?.about}</h6>
+      {loading === true ? (
+        <Loader />
+      ) : (
+        <>
+          <LoggedHeader />
+          <Link to="/support/chat/1">
+            <div className="admin-message">
+              <MdOutlineSupportAgent />
             </div>
-
-            <div className="position-relative order-1 order-lg-2">
-              <div className="pos-profile service-profile">
+          </Link>
+          <div className="message">
+            <Link to="/message">
+              <MdMessage />
+            </Link>
+          </div>
+          <div className="bg-second pb-3">
+            <div className="container">
+              <div className="image-shadow">
                 <img
-                  src={data?.images || notFound}
-                  alt="profile"
-                  className="profile-img"
+                  src={backgroundImg || notFound}
+                  alt="background"
+                  className="w-100"
                 />
               </div>
-            </div>
 
-            <div className="mw-40 w-100 order-3">
-              <div className="card green-card border-0 rounded-4 w-100">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div className="d-flex flex-column gap-3">
-                      <h5 className="mb-0">Available</h5>
-                      <p className="mb-0">
-                        Served {data?.jobCompleteCount}+ Clients
-                      </p>
+              <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row pb-lg-3">
+                <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
+                  <h3 className="fw-bold fs-1">{data?.contactName}</h3>
+                  <h6>{data?.businessName}</h6>
+                  <h6>{data?.about}</h6>
+                </div>
+
+                <div className="position-relative order-1 order-lg-2">
+                  <div className="pos-profile service-profile">
+                    <img
+                      src={data?.images || notFound}
+                      alt="profile"
+                      className="profile-img"
+                    />
+                  </div>
+                </div>
+
+                <div className="mw-40 w-100 order-3">
+                  <div className="card green-card border-0 rounded-4 w-100">
+                    <div className="card-body">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div className="d-flex flex-column gap-3">
+                          <h5 className="mb-0">Available</h5>
+                          <p className="mb-0">
+                            Served {data?.jobCompleteCount}+ Clients
+                          </p>
+                        </div>
+                        <BsThreeDotsVertical />
+                      </div>
                     </div>
-                    <BsThreeDotsVertical />
                   </div>
                 </div>
               </div>
+
+              <div className="d-flex flex-row flex-wrap justify-content-center gap-1 gap-lg-2 mt-lg-5 align-items-center profile my-4">
+                {data?.businessType?.map((type, index) => (
+                  <div
+                    className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
+                    key={index}
+                  >
+                    <span className="fs-6">{type}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="d-flex justify-content-between align-items-center mt-3 flex-column flex-lg-row gap-3">
+                <div className="d-flex flex-row gap-4 align-items-center">
+                  <div className="d-flex flex-row gap-3 align-items-center">
+                    <div className="circle-km"></div>
+                    <span>{(data?.address?.radius / 1000).toFixed(2)} km</span>
+                  </div>
+                </div>
+
+                <div className="d-flex align-items-center gap-4 flex-row">
+                  <div className="contact">
+                    <a href={`mailto:${data.email}`}>
+                      <MdEmail />
+                    </a>
+                  </div>
+                  <div className="contact">
+                    <RiMessage2Fill />
+                  </div>
+                  <div className="contact">
+                    <a href={`tel:${data.phoneNo}`}>
+                      <IoCall />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {renderGallery()}
+              {renderRatings()}
             </div>
           </div>
-
-          <div className="d-flex flex-row flex-wrap justify-content-center gap-1 gap-lg-2 mt-lg-5 align-items-center profile my-4">
-            {data?.businessType?.map((type, index) => (
-              <div
-                className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
-                key={index}
-              >
-                <span className="fs-6">{type}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="d-flex justify-content-between align-items-center mt-3 flex-column flex-lg-row gap-3">
-            <div className="d-flex flex-row gap-4 align-items-center">
-              <div className="d-flex flex-row gap-3 align-items-center">
-                <div className="circle-km"></div>
-                <span>{(data?.address?.radius / 1000).toFixed(2)} km</span>
-              </div>
-            </div>
-
-            <div className="d-flex align-items-center gap-4 flex-row">
-              <div className="contact">
-                <a href={`mailto:${data.email}`}>
-                  <MdEmail />
-                </a>
-              </div>
-              <div className="contact">
-                <RiMessage2Fill />
-              </div>
-              <div className="contact">
-                <a href={`tel:${data.phoneNo}`}>
-                  <IoCall />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {renderGallery()}
-          {renderRatings()}
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 }

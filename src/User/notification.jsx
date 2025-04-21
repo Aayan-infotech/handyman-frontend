@@ -86,16 +86,24 @@ export default function Notification() {
       setMarkingAsRead(true);
       await axiosInstance.get(
         `/pushNotification/Read-notification/${notificationId}/${type}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      // Instead of filtering locally, refetch all notifications
-      await fetchNotifications();
-    } catch (error) {
-      console.log("Error marking notification as read:", error);
+
+      // Update local state instead of refetching
+      setNotifications((prev) =>
+        prev.map((notif) =>
+          notif._id === notificationId ? { ...notif, isRead: true } : notif
+        )
+      );
       setToastProps({
-        message: "Failed to mark notification as read",
+        message: "Notification Mark as Read successfully",
+        type: "success",
+        toastKey: Date.now(),
+      });
+    } catch (error) {
+      console.log(error);
+      setToastProps({
+        message: "error marking notification as read",
         type: "error",
         toastKey: Date.now(),
       });
@@ -106,28 +114,74 @@ export default function Notification() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axiosInstance.delete(
-        `/pushNotification/deleteNotification/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (response.status === 200) {
-        setToastProps({
-          message: "Notifications deleted successfully",
-          type: "success",
-          toastKey: Date.now(),
-        });
-        fetchNotifications(); // Refresh notifications after deletion
-      }
+      await axiosInstance.delete(`/pushNotification/deleteNotification/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Update local state instead of refetching
+      setNotifications((prev) => prev.filter((notif) => notif._id !== id));
+
+      setToastProps({
+        message: "Notification deleted successfully",
+        type: "success",
+        toastKey: Date.now(),
+      });
     } catch (error) {
       setToastProps({
-        message: "Failed to delete notifications",
+        message: "error deleting notification",
         type: "error",
         toastKey: Date.now(),
       });
     }
   };
+
+  // const handleMarkAsRead = async (notificationId, type) => {
+  //   try {
+  //     setMarkingAsRead(true);
+  //     await axiosInstance.get(
+  //       `/pushNotification/Read-notification/${notificationId}/${type}`,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     // Instead of filtering locally, refetch all notifications
+  //     await fetchNotifications();
+  //   } catch (error) {
+  //     console.log("Error marking notification as read:", error);
+  //     setToastProps({
+  //       message: "Failed to mark notification as read",
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   } finally {
+  //     setMarkingAsRead(false);
+  //   }
+  // };
+
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const response = await axiosInstance.delete(
+  //       `/pushNotification/deleteNotification/${id}`,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     if (response.status === 200) {
+  //       setToastProps({
+  //         message: "Notifications deleted successfully",
+  //         type: "success",
+  //         toastKey: Date.now(),
+  //       });
+  //       fetchNotifications(); // Refresh notifications after deletion
+  //     }
+  //   } catch (error) {
+  //     setToastProps({
+  //       message: "Failed to delete notifications",
+  //       type: "error",
+  //       toastKey: Date.now(),
+  //     });
+  //   }
+  // };
 
   useEffect(() => {
     fetchNotifications();
@@ -166,8 +220,8 @@ export default function Notification() {
                         } border-0 rounded-4`}
                       >
                         <div className="card-body px-3">
-                          <div className="d-flex flex-wrap justify-content-center flex-column flex-lg-row justify-content-lg-between align-items-center">
-                            <h5 className="mb-0">
+                          <div className="d-flex flex-wrap justify-content-center flex-column flex-lg-row justify-content-lg-between align-items-center gap-2">
+                            <h5 className="mb-0 text-center text-lg-start">
                               {notification.nameData?.sender?.contactName
                                 ? notification.nameData.sender.contactName
                                     .charAt(0)
@@ -192,7 +246,7 @@ export default function Notification() {
                               </span>
                             </div>
                           </div>
-                          <div className="row">
+                          <div className="row gy-2">
                             <div
                               className={
                                 notification.isRead === false
@@ -200,7 +254,7 @@ export default function Notification() {
                                   : `col-lg-10`
                               }
                             >
-                              <p className="mt-3 mb-0">{notification.body}</p>
+                              <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">{notification.body}</p>
                             </div>
                             {notification.isRead === false && (
                               <div className="col-lg-3 d-flex justify-content-end">
