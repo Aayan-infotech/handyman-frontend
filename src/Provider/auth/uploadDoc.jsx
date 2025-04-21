@@ -219,7 +219,7 @@ export default function Upload() {
                           <Button
                             variant="contained"
                             color="success"
-                            className="fw-semibold custom-green-outline w-100 rounded-5 mb-2 fs-6 px-1 px-lg-5"
+                            className="fw-semibold custom-green-outline w-100 rounded-5 mb-2 fs-6 px-1"
                             size="small"
                             component="label"
                             startIcon={<FaCloudUploadAlt />}
