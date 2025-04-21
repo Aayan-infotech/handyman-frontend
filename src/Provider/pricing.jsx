@@ -146,49 +146,23 @@ export default function MainProvider() {
                   </div>
 
                   <div className="col-lg-4 ms-auto">
-                    <Box display="flex" alignItems="center" gap={2}>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
                       {/* Voucher Dropdown */}
-                      <FormControl
-                        fullWidth
-                        variant="standard"
+                      <Form.Control
+                        placeholder="  Do you have any voucher?"
+                        value={voucher}
+                        onChange={(e) => setVoucher(e.target.value)}
                         style={{ borderRadius: "20px 0px 0px 20px" }}
-                      >
-                        <InputLabel id="voucher-select-label">
-                          Do you have any voucher?
-                        </InputLabel>
-                        <Select
-                          labelId="voucher-select-label"
-                          id="voucher-select"
-                          value={voucher}
-                          onChange={(e) => setVoucher(e.target.value)}
-                          label="Voucher"
-                          className="border-0"
-                        >
-                          {loading ? (
-                            <MenuItem disabled>Loading...</MenuItem>
-                          ) : voucherOptions.length > 0 ? (
-                            voucherOptions.map((voucherOption) => (
-                              <MenuItem
-                                key={voucherOption._id}
-                                value={voucherOption.code}
-                              >
-                                {voucherOption.code} -{" "}
-                                {voucherOption.description}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            <MenuItem disabled>No vouchers available</MenuItem>
-                          )}
-                        </Select>
-                      </FormControl>
-
-                      {/* Apply Button */}
+                      />
                       <Button
                         variant="contained"
                         color="success"
                         className="custom-green bg-green-custom"
                         onClick={handleCoupon}
-                        style={{ marginTop: "10px" }}
                       >
                         Apply
                       </Button>
