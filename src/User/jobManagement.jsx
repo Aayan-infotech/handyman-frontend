@@ -373,7 +373,7 @@ export default function JobManagement() {
                                     <td>
                                       {!location.pathname.includes(
                                         "job-history"
-                                      ) && (
+                                      ) && provider?.jobStatus !== "Deleted" && (
                                         <IoTrashOutline
                                           onClick={() =>
                                             handleJobDelete(provider._id)

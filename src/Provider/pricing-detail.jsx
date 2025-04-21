@@ -81,6 +81,7 @@ export default function PricingProvider() {
           userId: providerId,
           subscriptionPlanId: id,
           amount: subscriptionAmount,
+          subscriptionTypeId: data?.type,
           paymentMethod: "credit_card",
         })
       );

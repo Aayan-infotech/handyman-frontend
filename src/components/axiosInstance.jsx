@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
       // Special case: If this is a refresh token request itself, don't retry
       if (originalRequest.url.includes("refreshtoken")) {
         localStorage.clear();
-        window.location.href = "/welcome";
+      window.location.href = "/welcome";
         return Promise.reject(error);
       }
 
@@ -70,7 +70,7 @@ axiosInstance.interceptors.response.use(
 
       if (!refreshToken) {
         localStorage.clear();
-        window.location.href = "/welcome";
+      window.location.href = "/welcome";
         return Promise.reject(error);
       }
 
@@ -110,7 +110,7 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         localStorage.clear();
-        window.location.href = "/welcome";
+       window.location.href = "/welcome";
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

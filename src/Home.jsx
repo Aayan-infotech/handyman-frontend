@@ -17,18 +17,9 @@ import sidepic from "./assets/sidepic.png";
 import { Link } from "react-router-dom";
 import { PiBagSimpleLight } from "react-icons/pi";
 import mobile from "./assets/mobile.png";
-import company1 from "./assets/company/company1.png";
-import company2 from "./assets/company/company2.png";
-import company3 from "./assets/company/company3.png";
-import company4 from "./assets/company/company4.png";
-import company5 from "./assets/company/company5.png";
-import company6 from "./assets/company/company6.png";
-import company7 from "./assets/company/company7.png";
 import Autocomplete from "react-google-autocomplete";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
-
-import company8 from "./assets/company/company8.png";
 import { LuDot } from "react-icons/lu";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -48,6 +39,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import axiosInstance from "./components/axiosInstance";
+import noImage from "./components/assets/noprofile.png"
 
 // const checkedIcon = <CheckBoxIcon fontSize="small" />;
 function Home() {
@@ -58,7 +50,7 @@ function Home() {
   // const [selectedBusiness, setSelectedBusiness] = useState(""); // State to store selected business
 
   const [selectedBusiness, setSelectedBusiness] = useState(null); // Manage selected business
-
+  const [providers, setProviders] = useState([]);
   const [inputValue, setInputValue] = React.useState("");
 
   const [address, setAddress] = useState("");
@@ -92,15 +84,18 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    axiosInstance
-      .get("/jobs/getRecentJobs")
-      .then((res) => {
-        setRecentJob(res?.data?.data);
-      });
+    axiosInstance.get("/jobs/getRecentJobs").then((res) => {
+      setRecentJob(res?.data?.data);
+    });
   }, []);
   // const handleBusinessChange = (event) => {
   //   setSelectedBusiness(event.target.value); // Update the selected business
   // };
+  useEffect(() => {
+    axiosInstance.get("/provider/getAllProviders").then((res) => {
+      setProviders(res?.data?.data.slice(0, 9) );
+    });
+  }, []);
 
   const handleBusinessChange = (selectedOption) => {
     console.log("Selected Business:", selectedOption);
@@ -140,6 +135,17 @@ function Home() {
     const pattern = /^.*?,\s*/;
 
     return address.replace(pattern, "").trim();
+  };
+
+  const filterAddressState = (address) => {
+    if (!address) return address;
+
+    // Regular expression to match city and country at the end of the address
+    // This assumes the address ends with ", City, Country" or similar
+    const pattern = /.*,\s*([^,]+,\s*[^,]+)$/;
+
+    const match = address.match(pattern);
+    return match ? match[1].trim() : address;
   };
   return (
     <>
@@ -319,7 +325,7 @@ function Home() {
             </div>
           </div>
         </div>
-        {/* <div className="jobs">
+        <div className="jobs">
           <div className="d-flex justify-content-start justify-content-lg-between align-items-start flex-column flex-md-row gap-3">
             <h2 className="mb-0">
               Featured <span className="text-primary">Businesses</span>
@@ -332,242 +338,45 @@ function Home() {
             </Link>
           </div>
           <div className="row gy-4 mt-4">
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company1}
-                        alt="company1"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
+            {providers.map((item) => (
+              <div className="col-lg-4" key={item._id}>
+                <Link to="/welcome" className="text-decoration-none">
+                  <div className="card rounded-0 h-100">
+                    <div className="card-body">
+                      <div className="d-flex justify-content-between align-items-center flex-row">
+                        <img
+                          src={item?.images || noImage}
+                          alt="company1"
+                          className="img-fluid"
+                          style={{width: "50px", height: "50px", borderRadius: "50%"}}
+                        />
+                        {/* <span className="border-full-time">Full Time</span> */}
+                      </div>
+                      <b>{item?.businessName}</b>
+                      <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
+                        <span>{item?.contactName}</span>
+                        <LuDot className="text-secondary fs-4" />
+                        <span>
+                          {filterAddressState(item?.address?.addressLine)}
+                        </span>
+                      </div>
+                      <span className="text-secondary">{item?.about}</span>
+                      <div className="d-flex flex-row flex-wrap gap-2">
+                        {item?.businessType.map((text, index) => (
+                          <Chip
+                            key={index}
+                            label={text}
+                            className="green-line"
+                          />
+                        ))}
+                      </div>
                     </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Revolut</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>Madrid, Spain</span>
-                    </div>
-                    <span className="text-secondary">
-                      Revolut is looking for Email Marketing to help team
-                      manager like a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Marketing" className="light-pink" />
-                      <Chip label="Design" className="light-green" />
-                    </Stack>
                   </div>
-                </div>
-              </Link>
-            </div>
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company2}
-                        alt="company2"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
-                    </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Dropbox</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>San Fransisco, US</span>
-                    </div>
-                    <span className="text-secondary">
-                      Dropbox is looking for Brand Designer to help the team
-                      manager like a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Design" className="light-green" />
-                      <Chip label="Businesses" className="light-blue" />
-                    </Stack>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company3}
-                        alt="company2"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
-                    </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Pitch</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>Berlin, Germany</span>
-                    </div>
-                    <span className="text-secondary">
-                      Pitch is looking for Customer Manager to join manager like
-                      a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Marketing" className="light-pink" />
-                    </Stack>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company4}
-                        alt="company2"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
-                    </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Blinklist</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>Granada, Spain</span>
-                    </div>
-                    <span className="text-secondary">
-                      Blinkist is looking for Visual Designer to help team
-                      manager like a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Design" className="light-green" />
-                    </Stack>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company5}
-                        alt="company2"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
-                    </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Blinklist</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>Granada, Spain</span>
-                    </div>
-                    <span className="text-secondary">
-                      Blinkist is looking for Visual Designer to help team
-                      manager like a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Design" className="light-green" />
-                    </Stack>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company6}
-                        alt="company2"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
-                    </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Blinklist</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>Granada, Spain</span>
-                    </div>
-                    <span className="text-secondary">
-                      Blinkist is looking for Visual Designer to help team
-                      manager like a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Design" className="light-green" />
-                    </Stack>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company7}
-                        alt="company2"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
-                    </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Blinklist</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>Granada, Spain</span>
-                    </div>
-                    <span className="text-secondary">
-                      Blinkist is looking for Visual Designer to help team
-                      manager like a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Design" className="light-green" />
-                    </Stack>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="col-lg-3">
-              <Link to="/welcome" className="text-decoration-none">
-                <div className="card rounded-0 h-100">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center flex-row">
-                      <img
-                        src={company8}
-                        alt="company2"
-                        className="img-fluid"
-                      />
-                      <span className="border-full-time">Full Time</span>
-                    </div>
-                    <b>Lorem Epsum</b>
-                    <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
-                      <span>Blinklist</span>
-                      <LuDot className="text-secondary fs-4" />
-                      <span>Granada, Spain</span>
-                    </div>
-                    <span className="text-secondary">
-                      Blinkist is looking for Visual Designer to help team
-                      manager like a who will get nothing like we all get
-                    </span>
-                    <Stack direction="row" spacing={1} className="mt-3">
-                      <Chip label="Design" className="light-green" />
-                    </Stack>
-                  </div>
-                </div>
-              </Link>
-            </div>
+                </Link>
+              </div>
+            ))}
           </div>
-        </div> */}
+        </div>
       </div>
       <div className="latest-job">
         <div className="container position-relative z-1">
