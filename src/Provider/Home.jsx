@@ -179,11 +179,11 @@ export default function HomeProvider() {
   };
 
   const navTest = (id) => {
-    const isGuest = localStorage.getItem("Guest") === "true";
-    if (isGuest) {
-      navigate("/provider/pricing");
-      return;
-    }
+    // const isGuest = localStorage.getItem("Guest") === "true";
+    // if (isGuest) {
+    //   navigate("/provider/pricing");
+    //   return;
+    // }
     navigate(`/provider/jobspecification/${id}`);
   };
 

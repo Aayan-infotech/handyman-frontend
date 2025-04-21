@@ -37,7 +37,24 @@ export default function JobSpecification() {
   const ProviderId = localStorage.getItem("ProviderId");
   const navigate = useNavigate();
   const { id } = useParams();
-  const guestCondition = localStorage.getItem("Guest") === "true";
+  // const guestCondition = () => {
+  //   const guestVerify = localStorage.getItem("Guest") === "true";
+  //   if (guestVerify) {
+  //     navigate("/provider/pricing");
+  //     return;
+  //   }
+  // };
+
+  // const guestCondition = localStorage.getItem("Guest") === "true";
+
+  const checkGuestCondition = () => {
+    const isGuest = localStorage.getItem("Guest") === "true";
+    if (isGuest) {
+      navigate("/provider/pricing");
+      return true;
+    }
+    return false;
+  };
 
   const noficationFunctionality = async () => {
     setLoading(true);
@@ -171,9 +188,12 @@ export default function JobSpecification() {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("Guest") === "true") {
+    const isGuest = localStorage.getItem("Guest") === "true";
+    if (isGuest) {
       handleGuestJob();
-    } else handleJob();
+    } else {
+      handleJob();
+    }
   }, [id]);
 
   const filterAddressPatterns = (address) => {
@@ -305,17 +325,21 @@ export default function JobSpecification() {
                         </div>
                       </div>
                       <hr />
-                      {!guestCondition & (hasCompletedJob === false) ? (
-                        <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-100">
+                      {hasCompletedJob === false ? (
+                        <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-2 align-items-center w-100">
                           {/* <Button
                           variant="contained"
                           className="custom-green bg-red-outline rounded-5 py-3 w-50"
                         >
                           Reject
                         </Button> */}
+
                           <Button
                             variant="contained"
-                            onClick={handleJobStatus}
+                            onClick={() => {
+                              if (checkGuestCondition()) return;
+                              handleJobStatus();
+                            }}
                             disabled={hasAcceptedJob}
                             className="custom-green bg-green-custom rounded-5 py-3 w-100"
                           >
@@ -323,18 +347,20 @@ export default function JobSpecification() {
                               ? "You have accepted to quote this job"
                               : "Quote"}
                           </Button>
+
                           {hasAcceptedJob && (
                             <Button
                               variant="contained"
                               onClick={() => setShow(true)}
                               className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                              style={{maxWidth: "160px"}}
                             >
                               Quick Message
                             </Button>
                           )}
                         </div>
                       ) : null}
-                      {!guestCondition & (hasCompletedJob === true) ? (
+                      {hasCompletedJob === true ? (
                         <Button
                           variant="contained"
                           disabled={hasCompletedJob}

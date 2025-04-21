@@ -256,7 +256,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     if (!currentUser || !receiverId) return;
 
     // Ensure chatId is always a string
-    const generatedChatId = [currentUser, receiverId].sort().join("_chat_");
+    const generatedChatId = [currentUser, receiverId].sort().join(`__${jobId}__`);
 
     setChatId(generatedChatId);
   }, [currentUser, receiverId]);
