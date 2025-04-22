@@ -10,6 +10,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getHunterUser, getProviderUser } from "../../../Slices/userSlice";
+import axiosInstance from "../../../components/axiosInstance";
 export default function LoggedHeader() {
   const navigate = useNavigate();
   const [images, setImages] = useState(null);
@@ -17,6 +18,63 @@ export default function LoggedHeader() {
   const providerToken = localStorage.getItem("ProviderToken");
   const dispatch = useDispatch();
   const Location = useLocation();
+  const hunterId = localStorage.getItem("hunterId");
+  const providerId = localStorage.getItem("ProviderId");
+  const userType = hunterId ? "hunter" : "provider";
+  const userId = hunterId || providerId;
+  const [notifications, setNotifications] = useState([]);
+  const handleName = async (notification) => {
+    try {
+      const response = await axiosInstance.post(
+        "/match/getMatchedDataNotification",
+        {
+          senderId: notification.userId,
+          receiverId: notification.receiverId,
+        },
+        {
+          headers: { Authorization: `Bearer ${hunterToken || providerToken}` },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching name:", error);
+      return null;
+    }
+  };
+
+  const fetchNotifications = async () => {
+    if (!userId) return;
+    try {
+      const url = `/pushNotification/get-notification/${userType}`;
+      const response = await axiosInstance.get(url, {
+        headers: { Authorization: `Bearer ${hunterToken || providerToken}` },
+      });
+
+      const notifList = response.data.data || [];
+
+      const updatedList = await Promise.all(
+        notifList.map(async (notification) => {
+          try {
+            const nameData = await handleName(notification);
+            return { ...notification, nameData };
+          } catch (error) {
+            console.error("Error processing notification:", error);
+            return notification;
+          }
+        })
+      );
+
+      setNotifications(updatedList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [userType]);
+
+  console.log("notifications", notifications);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -61,7 +119,18 @@ export default function LoggedHeader() {
 
             <div className="   d-flex justify-content-between align-items-center gap-5">
               <div className=" d-flex justify-content-between align-items-center gap-4">
-                <Link className="notification" to="/notification">
+                <Link
+                  className="notification position-relative"
+                  to="/notification"
+                >
+                  {notifications[0]?.isRead === false && (
+                    <span
+                      className="position-absolute translate-middle p-1 bg-danger border border-light rounded-circle"
+                      style={{ left: "80%", top: "4%" }}
+                    >
+                      <span className="visually-hidden">New alerts</span>
+                    </span>
+                  )}
                   <IoMdNotificationsOutline className="fs-4" />
                 </Link>
                 {providerToken ? (

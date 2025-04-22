@@ -94,6 +94,7 @@ export default function LoginProvider() {
           "ProviderName",
           response?.data?.data?.user?.contactName
         );
+        localStorage.setItem("PlanType", response?.data?.data?.user?.subscriptionPlan);
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
 
         localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
@@ -120,41 +121,6 @@ export default function LoginProvider() {
       }
     }
   };
-
-  const getLocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newLocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-
-          setGuestLocation(newLocation);
-
-          // Save the new location to localStorage
-          localStorage.setItem("guestLocation", JSON.stringify(newLocation));
-        },
-        (error) => {
-          setToastProps({
-            message: error?.message,
-            type: "error",
-            toastKey: Date.now(),
-          });
-        }
-      );
-    } else {
-      setToastProps({
-        message: "Geolocation is not supported by this browser.",
-        type: "error",
-        toastKey: Date.now(),
-      });
-    }
-  };
-
-  // Retrieve from localStorage
-  const savedLocation = JSON.parse(localStorage.getItem("guestLocation"));
-  console.log(savedLocation);
 
   const handleGuest = () => {
     setTimeout(() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link , useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { IoIosSearch } from "react-icons/io";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
@@ -47,9 +47,7 @@ export default function HomeProvider() {
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
-  const [toastMessage, setToastMessage] = useState("");
-  const [notifications, setNotifications] = useState([]);
-  const [massNotifications, setMassNotifications] = useState([]);
+
   const [filteredData, setFilteredData] = useState([]);
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -60,6 +58,7 @@ export default function HomeProvider() {
   const [alertMessages, setAlertMessages] = useState([]); // Store alerts
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
+  const planType = localStorage.getItem("PlanType");
   const guestCondition = localStorage.getItem("Guest") === "true";
   const dispatch = useDispatch();
 
@@ -147,7 +146,9 @@ export default function HomeProvider() {
 
   useEffect(() => {
     if (businessType && latitude !== null && longitude !== null) {
-      handleAllData();
+      if (planType !== "Advertising") {
+        handleAllData();
+      }
     }
   }, [businessType, latitude, longitude]);
 
@@ -227,95 +228,119 @@ export default function HomeProvider() {
           <div className="d-flex justify-content-between align-items-center pb-3">
             <h5 className="user">Hello {name}</h5>
           </div>
-          <div className="d-flex justify-content-between flex-column flex-lg-row align-items-center mb-4 mt-3">
-            <h2 className="fw-normal">Job Requests</h2>
-            <FormControl className="sort-input" sx={{ m: 1 }}>
-              <InputLabel id="radius-select-label">
-                Select Business Type
-              </InputLabel>
-              <Select
-                labelId="business-type-select-label"
-                id="business-type-select"
-                multiple
-                value={jobStatus}
-                onChange={handleChange}
-                input={<OutlinedInput label="Select Business Type" />}
-                renderValue={(selected) => selected.join(", ")}
-                MenuProps={MenuProps}
-                placeholder="Select Business Type"
-              >
-                {Array.from(
-                  new Set(data.flatMap((provider) => provider.businessType))
-                ).map((type, index) => (
-                  <MenuItem key={index} value={type}>
-                    <Checkbox checked={jobStatus.includes(type)} />
-                    <ListItemText primary={type} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <div className="row mt-4 gy-4 ">
-            {loading ? (
-              [...Array(4)].map((_, index) => (
-                <Skeleton
-                  key={index}
-                  sx={{ height: 100, width: "100%" }}
-                  animation="wave"
-                />
-              ))
-            ) : filteredData.length === 0 ? (
-              <div className="d-flex justify-content-center">
-                <img src={noData} alt="No Data Found" className="w-nodata" />
-              </div>
-            ) : (
-              filteredData.map((job) => (
-                <div className="col-lg-12 management" key={job._id}>
-                  <div
-                    
-                    className="card border-0 rounded-3 px-4"
+          {planType !== "Advertising" ? (
+            <div>
+              <div className="d-flex justify-content-between flex-column flex-lg-row align-items-center mb-4 mt-3">
+                <h2 className="fw-normal">Job Requests</h2>
+                <FormControl className="sort-input" sx={{ m: 1 }}>
+                  <InputLabel id="radius-select-label">
+                    Select Business Type
+                  </InputLabel>
+                  <Select
+                    labelId="business-type-select-label"
+                    id="business-type-select"
+                    multiple
+                    value={jobStatus}
+                    onChange={handleChange}
+                    input={<OutlinedInput label="Select Business Type" />}
+                    renderValue={(selected) => selected.join(", ")}
+                    MenuProps={MenuProps}
+                    placeholder="Select Business Type"
                   >
-                    <div className="card-body">
-                      <div className="row gy-4 gx-1 align-items-center">
-                        <div className="col-lg-3">
-                          <div className="d-flex flex-row gap-3 align-items-center">
-                            <div className="d-flex flex-column align-items-start gap-1">
-                              <h3 className="mb-0">{job.title}</h3>
-                              <h6>{new Date(job.createdAt).toDateString()}</h6>
+                    {Array.from(
+                      new Set(data.flatMap((provider) => provider.businessType))
+                    ).map((type, index) => (
+                      <MenuItem key={index} value={type}>
+                        <Checkbox checked={jobStatus.includes(type)} />
+                        <ListItemText primary={type} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="row mt-4 gy-4 ">
+                {loading ? (
+                  [...Array(4)].map((_, index) => (
+                    <Skeleton
+                      key={index}
+                      sx={{ height: 100, width: "100%" }}
+                      animation="wave"
+                    />
+                  ))
+                ) : filteredData.length === 0 ? (
+                  <div className="d-flex justify-content-center">
+                    <img
+                      src={noData}
+                      alt="No Data Found"
+                      className="w-nodata"
+                    />
+                  </div>
+                ) : (
+                  filteredData.map((job) => (
+                    <div className="col-lg-12 management" key={job._id}>
+                      <div className="card border-0 rounded-3 px-4">
+                        <div className="card-body">
+                          <div className="row gy-4 gx-1 align-items-center">
+                            <div className="col-lg-3">
+                              <div className="d-flex flex-row gap-3 align-items-center">
+                                <div className="d-flex flex-column align-items-start gap-1">
+                                  <h3 className="mb-0">{job.title}</h3>
+                                  <h6>
+                                    {new Date(job.createdAt).toDateString()}
+                                  </h6>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className="col-lg-7">
-                          <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
-                            <div className="d-flex flex-row gap-2 align-items-center">
-                              <BiCoinStack />
-                              <h5 className="mb-0">${job.estimatedBudget || "00"}</h5>
+                            <div className="col-lg-7">
+                              <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
+                                <div className="d-flex flex-row gap-2 align-items-center">
+                                  <BiCoinStack />
+                                  <h5 className="mb-0">
+                                    ${job.estimatedBudget || "00"}
+                                  </h5>
+                                </div>
+                                <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
+                                  <PiBag />
+                                  <h5 className="mb-0 text-trun">
+                                    {filterAddressPatterns(
+                                      job.jobLocation.jobAddressLine
+                                    )}
+                                  </h5>
+                                </div>
+                              </div>
                             </div>
-                            <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
-                              <PiBag />
-                              <h5 className="mb-0 text-trun">
-                                {filterAddressPatterns(job.jobLocation.jobAddressLine)}
-                              </h5>
-                            </div>
-                          </div>
-                        </div>
 
-                        <div className="col-lg-2">
-                          <Button
-                            variant="contained"
-                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                            onClick={() => navTest(job._id)}
-                          >
-                            Contact
-                          </Button>
+                            <div className="col-lg-2">
+                              <Button
+                                variant="contained"
+                                className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                                onClick={() => navTest(job._id)}
+                              >
+                                Contact
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+                  ))
+                )}
+              </div>
+            </div>
+          ) : (
+            <div
+              className="card rounded-5 h-100 py-5"
+              style={{ border: "2px solid #32de84" }}
+            >
+              <div className="card-body text-center">
+                <h3 className="">
+                  You are currently on an <strong>Advertising Plan</strong>,
+                  <br />
+                  which does not include access to job listings.
+                </h3>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
