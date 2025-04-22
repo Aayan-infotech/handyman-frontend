@@ -303,6 +303,7 @@ export default function MyProfile() {
         localStorage.removeItem("ProviderId");
         localStorage.removeItem("ProviderUId");
         localStorage.removeItem("Guest");
+        localStorage.removeItem("PlanType");
         localStorage.removeItem("hunterUId");
         localStorage.removeItem("ProviderRefreshToken");
         localStorage.removeItem("chatId");
