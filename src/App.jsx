@@ -58,6 +58,7 @@ import ManageSubscription from "./Provider/manageSubscription";
 import Pricingwithtype from "./Provider/pricingwithtype";
 import Support from "./support";
 import JobEdit from "./User/jobEdit";
+import AdvertiserChat from "./Chat/advertiserChat";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -227,6 +228,10 @@ function App() {
           element={<ProtectedRoute element={<ChangeRadius />} />}
         />
         <Route
+          path="/advertiser/chat/:id"
+          element={<ProtectedRoute element={<AdvertiserChat />} />}
+        />
+        <Route
           path="/myprofile"
           element={<ProtectedRoute element={<MyProfile />} />}
         />
@@ -295,6 +300,7 @@ function App() {
           path="/provider/admin/chat/"
           element={<ProtectedRoute element={<AdminChat />} />}
         />
+
         <Route
           path="/provider/editProfile"
           element={<ProtectedRoute element={<EditProfile />} />}

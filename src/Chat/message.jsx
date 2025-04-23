@@ -43,7 +43,7 @@ export default function Message() {
       const apiCalls = messages.map(async (message) => {
         const { jobId, senderId, receiverId } = message.users;
 
-        if (!jobId || !senderId || !receiverId) {
+        if ( !senderId || !receiverId) {
           console.error("Missing required parameters for API request");
           return null;
         }

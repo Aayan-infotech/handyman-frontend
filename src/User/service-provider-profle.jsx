@@ -237,7 +237,9 @@ export default function ServiceProviderProfile() {
                     </a>
                   </div>
                   <div className="contact">
-                    <RiMessage2Fill />
+                    <Link to={`/advertiser/chat/${id}`}>
+                      <RiMessage2Fill />
+                    </Link>
                   </div>
                   <div className="contact">
                     <a href={`tel:${data.phoneNo}`}>
