@@ -103,10 +103,10 @@ export default function Upload() {
   const navTest = () => {
     const isGuest = localStorage.getItem("Guest") === "true";
     if (isGuest) {
-      navigate("/provider/home");
+      navigate("/provider/pricing");
       return;
     }
-    navigate("/provider/pricing");
+    navigate("/provider/home");
   };
   const handleDelete = async (id) => {
     setLoading(true);

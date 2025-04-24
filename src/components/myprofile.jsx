@@ -7,6 +7,8 @@ import {
 } from "react-icons/md";
 import "swiper/css";
 import "swiper/css/navigation";
+import { ref, onValue, off, remove, update, get } from "firebase/database";
+import { realtimeDb } from "../Chat/lib/firestore";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaLock, FaPen } from "react-icons/fa";
 import { PiCircleHalfFill } from "react-icons/pi";
@@ -351,10 +353,14 @@ export default function MyProfile() {
         return;
       }
 
+      const userId = providerId || hunterId;
+
+      // First delete the chats from Firebase
+      await deleteUserChats(userId);
+
+      // Then proceed with account deletion
       const response = await axiosInstance.delete(
-        `/DeleteAccount/${providerId ? "provider" : "delete"}/${
-          providerId || hunterId
-        }`
+        `/DeleteAccount/${providerId ? "provider" : "delete"}/${userId}`
       );
 
       if (response.status === 200) {
@@ -363,6 +369,7 @@ export default function MyProfile() {
           type: "success",
           toastKey: Date.now(),
         });
+        // Clear local storage
         localStorage.removeItem("hunterToken");
         localStorage.removeItem("hunterEmail");
         localStorage.removeItem("hunterName");
@@ -386,6 +393,102 @@ export default function MyProfile() {
         type: "error",
         toastKey: Date.now(),
       });
+    }
+  };
+
+  // Function to delete user chats from Firebase
+  const deleteUserChats = async (userId) => {
+    try {
+      const db = realtimeDb; // Initialize Firebase database
+
+      // Get references to all relevant paths
+      const userChatListRef = ref(db, `chatList/${userId}`);
+      const allChatListRef = ref(db, "chatList");
+      const chatsRef = ref(db, "chats");
+      const chatsAdminRef = ref(db, "chatsAdmin");
+
+      // Get user's chat list snapshot
+      const userChatListSnapshot = await get(userChatListRef);
+
+      if (userChatListSnapshot.exists()) {
+        // Get all chat IDs where this user is involved
+        const chatIds = [];
+        const userChatList = userChatListSnapshot.val();
+
+        // Iterate through all chat partners
+        for (const partnerId in userChatList) {
+          for (const chatKey in userChatList[partnerId]) {
+            chatIds.push(chatKey);
+          }
+        }
+
+        // Remove user's entry from chatList
+        await remove(userChatListRef);
+
+        // Remove references to user's chats from other users' chatLists
+        const allChatListSnapshot = await get(allChatListRef);
+        if (allChatListSnapshot.exists()) {
+          const updates = {};
+          const allChatList = allChatListSnapshot.val();
+
+          for (const otherUserId in allChatList) {
+            if (otherUserId !== userId && allChatList[otherUserId][userId]) {
+              updates[`chatList/${otherUserId}/${userId}`] = null;
+            }
+          }
+
+          if (Object.keys(updates).length > 0) {
+            await update(ref(db), updates);
+          }
+        }
+
+        // Remove chat data from chats node
+        const chatsSnapshot = await get(chatsRef);
+        if (chatsSnapshot.exists()) {
+          const chats = chatsSnapshot.val();
+          const chatUpdates = {};
+
+          for (const jobId in chats) {
+            for (const chatId in chats[jobId]) {
+              if (chatIds.includes(chatId)) {
+                chatUpdates[`chats/${jobId}/${chatId}`] = null;
+              }
+            }
+          }
+
+          if (Object.keys(chatUpdates).length > 0) {
+            await update(ref(db), chatUpdates);
+          }
+        }
+      }
+
+      // Remove admin chats if user is in chatsAdmin
+      const chatsAdminSnapshot = await get(chatsAdminRef);
+      if (chatsAdminSnapshot.exists()) {
+        const chatsAdmin = chatsAdminSnapshot.val();
+        const adminUpdates = {};
+
+        for (const adminChatKey in chatsAdmin) {
+          if (
+            adminChatKey.includes(`_chat_${userId}`) ||
+            adminChatKey.includes(`${userId}_chat_`)
+          ) {
+            adminUpdates[`chatsAdmin/${adminChatKey}`] = null;
+          }
+        }
+
+        if (Object.keys(adminUpdates).length > 0) {
+          await update(ref(db), adminUpdates);
+        }
+      }
+
+      // Remove user from online status
+      await remove(ref(db, `user/${userId}`));
+
+      console.log("Successfully deleted all chat data for user:", userId);
+    } catch (error) {
+      console.error("Error deleting user chats:", error);
+      throw error;
     }
   };
   console.log("dgrd", gallery);

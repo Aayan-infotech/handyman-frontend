@@ -94,7 +94,7 @@ export default function LoginProvider() {
           "ProviderName",
           response?.data?.data?.user?.contactName
         );
-        localStorage.setItem("PlanType", response?.data?.data?.user?.subscriptionPlan);
+        localStorage.setItem("PlanType", response?.data?.data?.user?.subscriptionType);
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
 
         localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
