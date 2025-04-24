@@ -8,6 +8,8 @@ import Row from "react-bootstrap/Row";
 import "../user.css";
 import axiosInstance from "../../components/axiosInstance";
 import Toaster from "../../Toaster";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing the eye icons
+
 import Loader from "../../Loader";
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -15,6 +17,8 @@ export default function ResetPassword() {
   const [toastProps, setToastProps] = useState({ message: "", type: "" });
   const [loading, setLoading] = useState(false);
   const email = localStorage.getItem("verifyEmailOtp");
+  const [showOldPassword, setShowOldPassword] = useState(false); // state to toggle old password visibility
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const location = useLocation();
   const ProviderParams = location.pathname.includes("provider");
   console.log("ProviderParams", ProviderParams);
@@ -98,12 +102,20 @@ export default function ResetPassword() {
                         Enter new Password
                       </Form.Label>
                       <Col sm="7">
-                        <Form.Control
-                          type="password"
-                          placeholder="Enter new Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
+                        <div className="input-container">
+                          <Form.Control
+                            type={showOldPassword ? "text" : "password"}
+                            placeholder="Enter new Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                          />
+                          <span
+                            className="eye-icon"
+                            onClick={() => setShowOldPassword(!showOldPassword)}
+                          >
+                            {showOldPassword ? <FaEyeSlash /> : <FaEye />}
+                          </span>
+                        </div>
                       </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3 ">
@@ -111,12 +123,20 @@ export default function ResetPassword() {
                         Confirm new password
                       </Form.Label>
                       <Col sm="7">
-                        <Form.Control
-                          type="password"
-                          placeholder="Confirm new password"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                        />
+                        <div className="input-container">
+                          <Form.Control
+                            type={showNewPassword ? "text" : "password"}
+                            placeholder="Confirm new password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                          <span
+                            className="eye-icon"
+                            onClick={() => setShowNewPassword(!showOldPassword)}
+                          >
+                            {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                          </span>
+                        </div>
                       </Col>
                     </Form.Group>
                   </Form>
