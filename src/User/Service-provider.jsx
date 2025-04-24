@@ -174,7 +174,7 @@ export default function ServiceProvider() {
       console.log("1212", selectedRadius);
       console.log("1212", filtered);
       filtered = filtered.filter(
-        (provider) => provider.address.radius === selectedRadius // Convert meters to km before comparison
+        (provider) => provider.distance <= selectedRadius // Convert meters to km before comparison
       );
     }
 
