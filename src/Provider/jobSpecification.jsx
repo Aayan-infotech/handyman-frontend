@@ -52,7 +52,7 @@ export default function JobSpecification() {
     const planCondition =
       planType === null || planType === "null" || planType === "";
 
-    if (isGuest || planCondition) {
+    if (isGuest && planCondition) {
       navigate("/provider/pricing");
       return true;
     }

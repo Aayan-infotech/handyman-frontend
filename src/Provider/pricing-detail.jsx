@@ -92,13 +92,13 @@ export default function PricingProvider() {
           type: "success",
           toastKey: Date.now(),
         });
+        console.log(result?.payload?.data?.newSubscription?.type)
         setLoading(false);
         localStorage.setItem("Guest", false);
-
+        localStorage.setItem("PlanType", result.payload.token);
         setTimeout(() => {
           // navigate("/provider/home");
-          navigate("/provider/payment")
-         
+          navigate("/provider/payment");
         }, 2000);
       } else {
         const errorMessage =
