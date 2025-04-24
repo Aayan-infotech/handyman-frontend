@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import FormGroup from "@mui/material/FormGroup";
 import Pagination from "react-bootstrap/Pagination";
-
+import { getHunterUser } from "../Slices/userSlice";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
@@ -79,16 +79,14 @@ export default function ServiceProvider() {
   const handleGetData = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get("/address/addresses-by-id", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(response?.data?.[0]?.location?.coordinates);
-      if (response.status === 200) {
-        setLongitude(response?.data?.[0]?.location?.coordinates[0]);
-        setLatitude(response?.data?.[0]?.location?.coordinates[1]);
-        setRadius(response?.data?.[0]?.radius || []);
+      const response = await dispatch(getHunterUser());
+      console.log(response?.payload?.data?.address);
+      if (response?.payload?.status === 200) {
+        setLongitude(
+          response?.payload?.data?.address?.location?.coordinates[0]
+        );
+        setLatitude(response?.payload?.data?.address?.location?.coordinates[1]);
+        setRadius(response?.payload?.data?.address?.radius || []);
         setLoading(false);
 
         setToastProps({

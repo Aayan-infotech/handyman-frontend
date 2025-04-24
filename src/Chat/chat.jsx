@@ -15,7 +15,10 @@ import axiosInstance from "../components/axiosInstance";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import { assignedJobNotification } from "../Slices/notificationSlice";
+import {
+  assignedJobNotification,
+  messageNotification,
+} from "../Slices/notificationSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const sendMessage = async (
@@ -256,10 +259,30 @@ export default function Chat({ messageData, messages, selectedChat }) {
     if (!currentUser || !receiverId) return;
 
     // Ensure chatId is always a string
-    const generatedChatId = [currentUser, receiverId].sort().join(`__${jobId}__`);
+    const generatedChatId = [currentUser, receiverId]
+      .sort()
+      .join(`__${jobId}__`);
 
     setChatId(generatedChatId);
   }, [currentUser, receiverId]);
+
+  const messageNotificationFunctionality = async () => {
+    setLoading(true);
+    try {
+      const response = dispatch(
+        messageNotification({
+          receiverId: receiverId,
+        })
+      );
+      console.log("messageNotification response", response);
+      if (messageNotification.meta.requestStatus === "fulfilled") {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
 
   const handleSend = async () => {
     if (msg.trim() === "" || !chatId || !jobId || !currentUser) return;
@@ -274,6 +297,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       setMessagesPeople,
       selectedChat?.users?.jobId || jobId
     );
+    messageNotificationFunctionality();
     setMsg("");
   };
 
