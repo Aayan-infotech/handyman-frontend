@@ -578,6 +578,12 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 className="w-100 border-0 py-3 px-3 rounded-5"
                 value={msg}
                 onChange={(e) => setMsg(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); // Prevent default behavior (like new line in textarea)
+                    handleSend();
+                  }
+                }}
               />
               <IoSendSharp onClick={handleSend} style={{ cursor: "pointer" }} />
             </div>
