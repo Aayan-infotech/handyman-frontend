@@ -101,10 +101,8 @@ axiosInstance.interceptors.response.use(
           "Authorization"
         ] = `Bearer ${newToken}`;
 
-        // Process queued requests
         processQueue(null, newToken);
 
-        // Retry original request
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {

@@ -156,6 +156,35 @@ export default function Otp({ length = 6 }) {
     }
   };
 
+  const handleResendOtp = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.post("/auth/resendOtp", {
+        email,
+        userType: ProviderParams ? "Provider" : "hunter",
+      });
+      if (response.status === 200 || response.status === 201) {
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
+        setLoading(false);
+        setTimeout(() => {
+          navigate(`${ProviderParams} ? /provider/login : /login`);
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setToastProps({
+        message: error?.response?.data?.error || error.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
   return (
     <>
       {loading === true ? (
@@ -203,7 +232,7 @@ export default function Otp({ length = 6 }) {
                         </Col>
                       ))}
                   </Row>
-                  <div className="d-flex justify-content-center align-items-center pt-4">
+                  <div className="d-flex justify-content-center flex-column align-items-center pt-4 gap-4">
                     <Button
                       variant="contained"
                       color="success"
@@ -211,6 +240,15 @@ export default function Otp({ length = 6 }) {
                       onClick={forgetValidation ? handleForgetOtp : handleOtp}
                     >
                       {forgetValidation ? "Reset" : "Verify"}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="rounded-0 custom-green-outline bg-green-custom"
+                      style={{ maxWidth: "180px" }}
+                      onClick={() => handleResendOtp()}
+                    >
+                      Resend OTP
                     </Button>
                   </div>
                 </div>

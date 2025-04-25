@@ -40,7 +40,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
-  const [phoneNo, setPhoneNo] = useState("");
+  const [phoneNo, setPhoneNo] = useState();
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState(null);
@@ -228,7 +228,7 @@ export default function SignUp() {
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
-                          type="text"
+                          type="number"
                           placeholder="Phone number"
                           value={phoneNo}
                           onChange={(e) => setPhoneNo(e.target.value)}
@@ -244,7 +244,7 @@ export default function SignUp() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         />
                       </Col>
                     </Form.Group>

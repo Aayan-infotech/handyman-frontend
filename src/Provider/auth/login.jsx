@@ -78,6 +78,13 @@ export default function LoginProvider() {
           type: "success",
           toastKey: Date.now(),
         });
+        if (
+          response?.data?.message ===
+          "You are not verified, Please verify your email"
+        ) {
+          navigate(`/otp?email=${email}&action=login&type=provider`);
+          return;
+        }
         setTimeout(() => {
           navigate("/provider/upload");
         }, 2000);
@@ -94,7 +101,10 @@ export default function LoginProvider() {
           "ProviderName",
           response?.data?.data?.user?.contactName
         );
-        localStorage.setItem("PlanType", response?.data?.data?.user?.subscriptionType);
+        localStorage.setItem(
+          "PlanType",
+          response?.data?.data?.user?.subscriptionType
+        );
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
 
         localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
