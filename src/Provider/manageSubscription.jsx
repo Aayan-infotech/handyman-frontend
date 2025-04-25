@@ -5,8 +5,10 @@ import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import Button from "@mui/material/Button";
 import Toaster from "../Toaster";
+
 export default function ManageSubscription() {
-  const [data, setData] = useState();
+  const [activeSubscriptions, setActiveSubscriptions] = useState([]);
+  const [expiredSubscriptions, setExpiredSubscriptions] = useState([]);
   const [voucher, setVoucher] = useState();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -17,6 +19,7 @@ export default function ManageSubscription() {
     type: "",
     toastKey: 0,
   });
+
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -31,7 +34,20 @@ export default function ManageSubscription() {
         );
 
         if (res?.data?.status === 200) {
-          setData(res?.data?.data);
+          // Filter data into active and expired subscriptions
+          const active = [];
+          const expired = [];
+
+          res?.data?.data.forEach((item) => {
+            if (item.status !== "expired") {
+              active.push(item);
+            } else if (item.status === "expired") {
+              expired.push(item);
+            }
+          });
+
+          setActiveSubscriptions(active);
+          setExpiredSubscriptions(expired);
         }
       } catch (error) {
         console.log(error);
@@ -50,7 +66,6 @@ export default function ManageSubscription() {
             },
           }
         );
-        console.log(res);
 
         if (res?.data?.status === 200) {
           setVoucher(res?.data?.data[0]);
@@ -60,6 +75,7 @@ export default function ManageSubscription() {
       }
       setLoading(false);
     };
+
     getData();
     getVoucherData();
   }, []);
@@ -78,6 +94,7 @@ export default function ManageSubscription() {
       return "Invalid Date";
     }
   };
+
   const getRenewalDate = (createdDate, validity) => {
     try {
       const createdAt = new Date(createdDate);
@@ -126,60 +143,101 @@ export default function ManageSubscription() {
                     </div>
                   </div>
                 </div>
-                <div className="row py-3 gy-4 mt-lg-4">
-                  <h3 className="text-center text-lg-start">Your Plan</h3>
+                <div className="row py-3 gy-5 mt-lg-4">
                   {voucher?.voucherId && (
-                    <div className="col-lg-12">
-                      <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
-                        <div className="card-body d-flex flex-column gap-3 align-items-center">
-                          <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
-                            <h6>
-                              Valid From:{" "}
-                              {new Date(
-                                voucher?.startDate
-                              ).toLocaleDateString()}
-                            </h6>
-                            <h6>
-                              Valid To:{" "}
-                              {new Date(voucher?.endDate).toLocaleDateString()}
-                            </h6>
+                    <>
+                      <h3 className="text-center text-lg-start">Your Plan</h3>
+                      <div className="col-lg-12">
+                        <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
+                          <div className="card-body d-flex flex-column gap-3 align-items-center">
+                            <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
+                              <h6>
+                                Valid From:{" "}
+                                {new Date(
+                                  voucher?.startDate
+                                ).toLocaleDateString()}
+                              </h6>
+                              <h6>
+                                Valid To:{" "}
+                                {new Date(
+                                  voucher?.endDate
+                                ).toLocaleDateString()}
+                              </h6>
+                            </div>
+                            <h4>Radius: {voucher?.kmRadius} KM</h4>
                           </div>
-                          {/* <h3 className="mt-3 text-center">
-                            Voucher Id:{voucher?.voucherId}
-                          </h3> */}
-
-                          {/* <h5 className="mt-3 text-center">
-                            {" "}
-                            Voucher Code
-                            <br />
-                            <span className="text-center">{voucher?.code}</span>
-                          </h5> */}
-                          <h4>Radius: {voucher?.kmRadius} KM</h4>
                         </div>
                       </div>
-                    </div>
+                    </>
                   )}
-                  {!voucher?.voucherId && (
+
+                  {/* Active Subscriptions Section */}
+                  {!voucher?.voucherId && activeSubscriptions.length > 0 && (
                     <>
-                      {data?.map((item) => (
-                        <div className="col-lg-6" key={item._id}>
-                          <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
-                            <div className="card-body d-flex flex-column gap-3 align-items-start">
+                      {activeSubscriptions.map((item) => (
+                        <div className="col-lg-12" key={item._id}>
+                          <h3 className="text-center text-lg-start">
+                            Your{" "}
+                            {`${
+                              item.status.charAt(0).toUpperCase() +
+                              item.status.slice(1)
+                            }`}{" "}
+                            Plan
+                          </h3>
+                          <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 pt-5 pb-3">
+                            <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
                               <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start">
                                 <h6>
-                                  Valid From:{" "}
-                                  {formatDate(
-                                    item?.createdAt
-                                  )}
+                                  Valid From: {formatDate(item?.startDate)}
                                 </h6>
+                                <h6>Valid To: {formatDate(item?.endDate)}</h6>
+                              </div>
+                              <h3 className="mt-3 text-start">
+                                {item.subscriptionPlanId.planName}
+                              </h3>
+                              <div className="d-flex justify-content-lg-between justify-content-start align-items-center w-100">
+                              
+                              <h5>${item.amount}</h5>
+                              <h4>
+                                Radius: {item.subscriptionPlanId.kmRadius}KM
+                              </h4>
+                              <h5>
+                                Valid for{" "}
+                                {item.subscriptionPlanId.validity === 365
+                                  ? "Year"
+                                  : "Month"}
+                              </h5>
+                              </div>
+                              <div className=" d-flex flex-row gap-3 justify-content-between align-items-start w-100">
+                                <h6>Payment Method: {item.paymentMethod}</h6>
+                                <h6>Transaction Id: {item.transactionId}</h6>
+                              </div>
+                              <span className="line-white"></span>
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: item.subscriptionPlanId.description,
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Expired Subscriptions Section */}
+                  {!voucher?.voucherId && expiredSubscriptions.length > 0 && (
+                    <>
+                      <h3 className="text-center pt-3">Your Expired Plans</h3>
+                      {expiredSubscriptions.map((item) => (
+                        <div className="col-lg-6" key={item._id}>
+                          <div className="w-100 h-100 card price-card expired border-0 rounded-5 position-relative overflow-hidden px-4 pt-5 pb-3">
+                            <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
+                              <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start">
                                 <h6>
-                                  Valid To:{" "}
-                                  {getRenewalDate(
-                                    item?.updatedAt ||
-                                      item?.createdAt,
-                                    item?.subscriptionPlanId?.validity
-                                  )}
+                                  Valid From: {formatDate(item?.startDate)}
                                 </h6>
+                                <h6>Valid To: {formatDate(item?.endDate)}</h6>
                               </div>
                               <h3 className="mt-3 text-start">
                                 {item.subscriptionPlanId.planName}
