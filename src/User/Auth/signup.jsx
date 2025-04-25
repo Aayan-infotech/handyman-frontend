@@ -218,7 +218,13 @@ export default function SignUp() {
                           type="text"
                           placeholder="Name"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                            const filteredValue = e.target.value.replace(
+                              /[0-9]/g,
+                              ""
+                            );
+                            setName(filteredValue);
+                          }}
                         />
                       </Col>
                     </Form.Group>
@@ -244,7 +250,9 @@ export default function SignUp() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                          onChange={(e) =>
+                            setEmail(e.target.value.toLowerCase())
+                          }
                         />
                       </Col>
                     </Form.Group>

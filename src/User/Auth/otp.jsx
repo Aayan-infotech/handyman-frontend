@@ -185,6 +185,8 @@ export default function Otp({ length = 6 }) {
     }
   };
 
+  console.log("234234", ProviderParams);
+
   return (
     <>
       {loading === true ? (
@@ -256,7 +258,7 @@ export default function Otp({ length = 6 }) {
               <span className="my-3">
                 Go back to login page?{" "}
                 <Link
-                  to={`${Provider}` ? `/provider/login` : `/login`}
+                  to={ProviderParams === true ? "/provider/login" : "/login"}
                   className="highlighted-text text-decoration-none"
                 >
                   Sign in
