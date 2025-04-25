@@ -161,7 +161,7 @@ export default function Otp({ length = 6 }) {
       setLoading(true);
       const response = await axiosInstance.post("/auth/resendOtp", {
         email,
-        userType: ProviderParams ? "Provider" : "hunter",
+        userType: ProviderParams ? "provider" : "hunter",
       });
       if (response.status === 200 || response.status === 201) {
         setToastProps({
