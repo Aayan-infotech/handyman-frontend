@@ -76,9 +76,7 @@ export default function SignUpProvider() {
   useEffect(() => {
     const handleAllData = async () => {
       try {
-        const response = await axiosInstance.get(
-          "/service/getAllServices"
-        );
+        const response = await axiosInstance.get("/service/getAllServices");
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
@@ -161,15 +159,11 @@ export default function SignUpProvider() {
 
     setLoading(true);
     try {
-      const response = await axiosInstance.post(
-        "/auth/signup",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosInstance.post("/auth/signup", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status === 200 || response.status === 201) {
         setName("");
@@ -274,7 +268,14 @@ export default function SignUpProvider() {
                           type="text"
                           placeholder="Name"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                         
+                            const filteredValue = e.target.value.replace(
+                              /[0-9]/g,
+                              ""
+                            );
+                            setName(filteredValue);
+                          }}
                         />
                       </Col>
                     </Form.Group>
@@ -357,7 +358,9 @@ export default function SignUpProvider() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                          onChange={(e) =>
+                            setEmail(e.target.value.toLowerCase())
+                          }
                         />
                       </Col>
                     </Form.Group>

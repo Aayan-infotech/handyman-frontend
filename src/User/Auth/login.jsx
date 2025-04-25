@@ -143,7 +143,7 @@ export default function Login() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         />
                       </Col>
                     </Form.Group>

@@ -47,12 +47,12 @@ export default function JobSpecification() {
 
   // const guestCondition = localStorage.getItem("Guest") === "true";
   const checkGuestCondition = () => {
-    const isGuest = localStorage.getItem("Guest") === "true";
+  
     const planType = localStorage.getItem("PlanType");
     const planCondition =
       planType === null || planType === "null" || planType === "";
 
-    if (isGuest || planCondition) {
+    if ( planCondition) {
       navigate("/provider/pricing");
       return true;
     }

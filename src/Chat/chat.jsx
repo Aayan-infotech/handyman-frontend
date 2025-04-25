@@ -6,7 +6,7 @@ import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ref, push, set, onValue, update } from "firebase/database";
 import { realtimeDb, auth } from "./lib/firestore";
 import Loader from "../Loader";
@@ -115,7 +115,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const dispatch = useDispatch();
   console.log("message data in chat", messages);
   console.log("chat id in chat", chatId);
-
+  const navigate = useNavigate();
   const chatMessage = selectedChat?.messages;
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -432,7 +432,19 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     userChat?.contectName?.toUpperCase().charAt(0)}
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
-                  <h5 className="mb-0 fw-medium fs-5 text-dark">
+                  <h5
+                    className="mb-0 fw-medium fs-5 text-dark"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      if (localStorage.getItem("hunterId")) {
+                        navigate(
+                          `/service-profile/${
+                            selectedChat?.displayUser?._id || userChat?._id
+                          }`
+                        );
+                      }
+                    }}
+                  >
                     {selectedChat?.displayUser?.name ||
                       selectedChat?.displayUser?.contactName ||
                       userChat?.name ||

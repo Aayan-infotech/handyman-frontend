@@ -134,14 +134,16 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    axiosInstance
-      .get(`/provider/about/${userId}`)
-      .then((response) => {
-        if (response.data.data.length > 0) {
-          setAboutText(response.data.data[0].about);
-        }
-      })
-      .catch((error) => console.error("Error fetching about data:", error));
+    if (providerId) {
+      axiosInstance
+        .get(`/provider/about/${userId}`)
+        .then((response) => {
+          if (response.data.data.length > 0) {
+            setAboutText(response.data.data[0].about);
+          }
+        })
+        .catch((error) => console.error("Error fetching about data:", error));
+    }
   }, []);
 
   // Function to handle save (POST request)
@@ -222,7 +224,9 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    fetchGallery(); // Fetch gallery images when the component mounts
+    if (providerId) {
+      fetchGallery(); 
+    }
   }, []);
 
   const handleDeleteGallery = async (imageId) => {

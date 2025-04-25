@@ -77,6 +77,7 @@ export default function LoggedHeader() {
         } else if (!fetchedUser && providerToken) {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
+          console.log("1212121" , fetchedUser)
           if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
             localStorage.setItem("PlanType", null);
           }

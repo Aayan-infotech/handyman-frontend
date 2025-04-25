@@ -122,7 +122,7 @@ export default function ChangePassword() {
         <Loader />
       ) : (
         <div className="bg-welcome">
-          {!token ? <Header /> : <LoggedHeader />}  {/* Using the correct imported components */}
+          {!token ? <Header /> : <LoggedHeader />}
 
           <div className="container top-avatar login">
             <div className="d-flex justify-content-center align-items-center mt-4 flex-column gap-1">
