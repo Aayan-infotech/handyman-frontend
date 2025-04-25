@@ -206,10 +206,10 @@ export default function AdvertiserChat() {
                 <h5 className="mb-0 fw-medium fs-5 text-dark">{displayName}</h5>
               </div>
             </div>
-            <div className="d-flex flex-row gap-2 align-items-center">
+            {/* <div className="d-flex flex-row gap-2 align-items-center">
               <IoIosSearch className="fs-3" />
               <BsThreeDotsVertical className="fs-3" />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
