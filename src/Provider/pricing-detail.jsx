@@ -92,10 +92,9 @@ export default function PricingProvider() {
           type: "success",
           toastKey: Date.now(),
         });
-        console.log(result?.payload?.data?.newSubscription?.type)
         setLoading(false);
         localStorage.setItem("Guest", false);
-        localStorage.setItem("PlanType", result.payload.token);
+        localStorage.setItem("PlanType", result?.payload?.data?.newSubscription?.type);
         setTimeout(() => {
           // navigate("/provider/home");
           navigate("/provider/payment");
