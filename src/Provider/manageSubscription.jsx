@@ -32,7 +32,6 @@ export default function ManageSubscription() {
 
         if (res?.data?.status === 200) {
           setData(res?.data?.data);
-          console.log("res?.data?.data", res?.data?.data);
         }
       } catch (error) {
         console.log(error);
@@ -65,7 +64,39 @@ export default function ManageSubscription() {
     getVoucherData();
   }, []);
 
-  console.log(data);
+  const formatDate = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime())
+        ? "Invalid Date"
+        : date.toLocaleDateString("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          });
+    } catch (e) {
+      return "Invalid Date";
+    }
+  };
+  const getRenewalDate = (createdDate, validity) => {
+    try {
+      const createdAt = new Date(createdDate);
+      if (isNaN(createdAt.getTime())) return "Invalid Date";
+
+      const validityDays = Number(validity) || 0;
+      const renewalDate = new Date(createdAt);
+      renewalDate.setDate(createdAt.getDate() + validityDays);
+
+      return renewalDate.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    } catch (e) {
+      console.error("Date conversion error:", e);
+      return "Invalid Date";
+    }
+  };
 
   return (
     <>
@@ -131,28 +162,26 @@ export default function ManageSubscription() {
                   {!voucher?.voucherId && (
                     <>
                       {data?.map((item) => (
-                        <div className="col-lg-12" key={item._id}>
+                        <div className="col-lg-6" key={item._id}>
                           <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
-                            <div className="card-body d-flex flex-column gap-3 align-items-center">
-                              <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
-                                <h6>Payment Method: {item.paymentMethod}</h6>
-                                <h6>Transaction Id: {item.transactionId}</h6>
-                              </div>
-                              <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
+                            <div className="card-body d-flex flex-column gap-3 align-items-start">
+                              <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start">
                                 <h6>
                                   Valid From:{" "}
-                                  {new Date(
-                                    item?.subscriptionPlanId?.createdAt
-                                  ).toLocaleDateString()}
+                                  {formatDate(
+                                    item?.createdAt
+                                  )}
                                 </h6>
                                 <h6>
                                   Valid To:{" "}
-                                  {new Date(
-                                    item?.subscriptionPlanId?.updatedAt
-                                  ).toLocaleDateString()}
+                                  {getRenewalDate(
+                                    item?.updatedAt ||
+                                      item?.createdAt,
+                                    item?.subscriptionPlanId?.validity
+                                  )}
                                 </h6>
                               </div>
-                              <h3 className="mt-3 text-center">
+                              <h3 className="mt-3 text-start">
                                 {item.subscriptionPlanId.planName}
                               </h3>
                               <h5 className="mt-3">${item.amount}</h5>
@@ -165,6 +194,10 @@ export default function ManageSubscription() {
                                   ? "Year"
                                   : "Month"}
                               </h3>
+                              <div className=" d-flex flex-column  gap-3 justify-content-start align-items-start">
+                                <h6>Payment Method: {item.paymentMethod}</h6>
+                                <h6>Transaction Id: {item.transactionId}</h6>
+                              </div>
                               <span className="line-white"></span>
                               <div
                                 dangerouslySetInnerHTML={{

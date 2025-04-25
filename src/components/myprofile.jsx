@@ -696,14 +696,14 @@ export default function MyProfile() {
                           <div className="d-flex justify-content-center flex-row align-items-center gap-2 mt-3">
                             <Button
                               variant="success"
-                              className="px-3"
+                              
                               onClick={() => setLogoutModal(false)}
                             >
                               Close
                             </Button>
                             <Button
                               variant="danger"
-                              className="px-5"
+                              className="px-4"
                               onClick={signOut}
                             >
                               Yes
@@ -735,7 +735,7 @@ export default function MyProfile() {
                             action cannot be undone.
                           </h5>
                           <div className="d-flex justify-content-center align-items-center flex-row gap-3 mt-4">
-                            <Button variant="success" onClick={handleClose}>
+                            <Button variant="success" onClick={handleClose} className="px-4">
                               Cancel
                             </Button>
                             <Button variant="danger" onClick={deleteAccount}>
