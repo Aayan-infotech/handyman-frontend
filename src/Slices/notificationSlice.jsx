@@ -55,7 +55,7 @@ export const reviewJobNotification = createNotificationThunk(
 
 export const messageNotification = createNotificationThunk(
   "messageHunterNotification",
-  "Message from",
+  " New Message",
   "You have a new Message"
 );
 
