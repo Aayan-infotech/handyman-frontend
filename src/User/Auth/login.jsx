@@ -19,6 +19,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../Chat/lib/firestore";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -78,6 +79,10 @@ export default function Login() {
           type: "success",
           toastKey: Date.now(),
         });
+        if(response?.data?.message === "You are not verified, Please verify your email"){
+          navigate(`/otp?email=${email}&action=login&type=hunter`);
+          return
+        }
         setTimeout(() => {
           navigate("/home");
         }, 2000);
@@ -95,7 +100,6 @@ export default function Login() {
         localStorage.removeItem("ProviderId");
         localStorage.removeItem("ProviderUId");
         localStorage.removeItem("Guest");
-        console.log(response);
       }
     } catch (error) {
       console.log(error);

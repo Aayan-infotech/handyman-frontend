@@ -617,10 +617,22 @@ export default function MyProfile() {
                         <textarea
                           className="form-control"
                           rows="3"
-                          placeholder="Enter your description..."
+                          placeholder="Enter your description (max 150 words)..."
                           value={description}
-                          onChange={(e) => setDescription(e.target.value)}
+                          onChange={(e) => {
+                            const words = e.target.value.trim().split(/\s+/);
+                            if (words.length <= 50 || e.target.value === "") {
+                              setDescription(e.target.value);
+                            }
+                          }}
                         ></textarea>
+                        <p className="text-muted">
+                          Word count:{" "}
+                          {description.trim()
+                            ? description.trim().split(/\s+/).length
+                            : 0}
+                          /50
+                        </p>
                       </Modal.Body>
                       <Modal.Footer>
                         <Button
@@ -696,7 +708,6 @@ export default function MyProfile() {
                           <div className="d-flex justify-content-center flex-row align-items-center gap-2 mt-3">
                             <Button
                               variant="success"
-                              
                               onClick={() => setLogoutModal(false)}
                             >
                               Close
@@ -727,7 +738,7 @@ export default function MyProfile() {
                         centered // This ensures the modal is vertically centered
                       >
                         <Modal.Header className="border-0" closeButton>
-                          <Modal.Title>Confirm Account Deletion</Modal.Title>
+                          <Modal.Title>Confirm Account Delete</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                           <h5 className="fw-normal text-center">
@@ -735,7 +746,11 @@ export default function MyProfile() {
                             action cannot be undone.
                           </h5>
                           <div className="d-flex justify-content-center align-items-center flex-row gap-3 mt-4">
-                            <Button variant="success" onClick={handleClose} className="px-4">
+                            <Button
+                              variant="success"
+                              onClick={handleClose}
+                              className="px-4"
+                            >
                               Cancel
                             </Button>
                             <Button variant="danger" onClick={deleteAccount}>

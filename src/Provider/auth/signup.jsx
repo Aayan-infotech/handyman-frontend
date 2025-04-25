@@ -40,7 +40,7 @@ export default function SignUpProvider() {
   const [name, setName] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNo, setPhoneNo] = useState("");
+  const [phoneNo, setPhoneNo] = useState();
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -175,7 +175,7 @@ export default function SignUpProvider() {
         setName("");
         setBusinessName("");
         setEmail("");
-        setPhoneNo("");
+        setPhoneNo();
         setAddress("");
         setPassword("");
         setLatitude(null);
@@ -357,7 +357,7 @@ export default function SignUpProvider() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         />
                       </Col>
                     </Form.Group>
