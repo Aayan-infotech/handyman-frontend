@@ -260,7 +260,12 @@ export default function AdvertiserChat() {
                   className="w-100 border-0 py-3 px-3 rounded-5"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSend()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault(); // Prevent default behavior (like new line in textarea)
+                      handleSend();
+                    }
+                  }}
                 />
                 <IoSendSharp
                   onClick={handleSend}
