@@ -188,7 +188,7 @@ export default function EditProfile() {
     } catch (error) {
       setLoading(false);
       setToastProps({
-        message: error?.response?.data?.message,
+        message: error?.response?.data?.error,
         type: "error",
         toastKey: Date.now(),
       });
@@ -271,7 +271,17 @@ export default function EditProfile() {
                         <Form.Control
                           type="text"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                            const words = e.target.value.trim().split(/\s+/);
+                            const filteredValue = e.target.value.replace(
+                              /[0-9]/g,
+                              ""
+                            );
+
+                            if (words.length <= 5 || e.target.value === "") {
+                              setName(filteredValue);
+                            }
+                          }}
                         />
                       </Col>
                     </Form.Group>
@@ -287,7 +297,9 @@ export default function EditProfile() {
                         <Form.Control
                           type="text"
                           value={number}
-                          onChange={(e) => setNumber(e.target.value)}
+                          onChange={(e) =>
+                            setNumber(e.target.value.slice(0, 15))
+                          }
                         />
                       </Col>
                     </Form.Group>

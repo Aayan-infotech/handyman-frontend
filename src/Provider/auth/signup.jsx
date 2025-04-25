@@ -269,12 +269,15 @@ export default function SignUpProvider() {
                           placeholder="Name"
                           value={name}
                           onChange={(e) => {
-                         
+                            const words = e.target.value.trim().split(/\s+/);
                             const filteredValue = e.target.value.replace(
                               /[0-9]/g,
                               ""
                             );
-                            setName(filteredValue);
+
+                            if (words.length <= 5 || e.target.value === "") {
+                              setName(filteredValue);
+                            }
                           }}
                         />
                       </Col>
@@ -374,7 +377,9 @@ export default function SignUpProvider() {
                           type="text"
                           placeholder="Phone number"
                           value={phoneNo}
-                          onChange={(e) => setPhoneNo(e.target.value)}
+                          onChange={(e) =>
+                            setPhoneNo(e.target.value.slice(0, 15))
+                          }
                         />
                       </Col>
                     </Form.Group>
