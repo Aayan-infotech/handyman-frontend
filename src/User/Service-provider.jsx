@@ -171,8 +171,6 @@ export default function ServiceProvider() {
 
     if (providerRadius && providerRadius.length > 0) {
       const selectedRadius = parseInt(providerRadius.replace(" km", "") * 1000);
-      console.log("1212", selectedRadius);
-      console.log("1212", filtered);
       filtered = filtered.filter(
         (provider) => provider.distance <= selectedRadius // Convert meters to km before comparison
       );
@@ -180,8 +178,6 @@ export default function ServiceProvider() {
 
     setFilteredData(filtered);
   }, [businessType, providerRadius, currentPage]);
-
-  console.log("filteredData", filteredData);
 
   const filterAddressPatterns = (address) => {
     if (!address) return address;
