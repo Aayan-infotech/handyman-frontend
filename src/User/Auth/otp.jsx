@@ -170,9 +170,7 @@ export default function Otp({ length = 6 }) {
           toastKey: Date.now(),
         });
         setLoading(false);
-        setTimeout(() => {
-          navigate(`${ProviderParams} ? /provider/login : /login`);
-        }, 2000);
+       
       }
     } catch (error) {
       console.log(error);
