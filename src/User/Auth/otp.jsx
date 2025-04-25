@@ -218,7 +218,7 @@ export default function Otp({ length = 6 }) {
               <span className="my-3">
                 Go back to login page?{" "}
                 <Link
-                  to="/login"
+                  to={`${Provider}` ? `/provider/login` : `/login`}
                   className="highlighted-text text-decoration-none"
                 >
                   Sign in
