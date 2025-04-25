@@ -32,6 +32,7 @@ export default function ManageSubscription() {
 
         if (res?.data?.status === 200) {
           setData(res?.data?.data);
+          console.log("res?.data?.data", res?.data?.data);
         }
       } catch (error) {
         console.log(error);
@@ -64,7 +65,7 @@ export default function ManageSubscription() {
     getVoucherData();
   }, []);
 
-  console.log(voucher);
+  console.log(data);
 
   return (
     <>
@@ -136,6 +137,20 @@ export default function ManageSubscription() {
                               <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
                                 <h6>Payment Method: {item.paymentMethod}</h6>
                                 <h6>Transaction Id: {item.transactionId}</h6>
+                              </div>
+                              <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
+                                <h6>
+                                  Valid From:{" "}
+                                  {new Date(
+                                    item?.subscriptionPlanId?.createdAt
+                                  ).toLocaleDateString()}
+                                </h6>
+                                <h6>
+                                  Valid To:{" "}
+                                  {new Date(
+                                    item?.subscriptionPlanId?.updatedAt
+                                  ).toLocaleDateString()}
+                                </h6>
                               </div>
                               <h3 className="mt-3 text-center">
                                 {item.subscriptionPlanId.planName}
