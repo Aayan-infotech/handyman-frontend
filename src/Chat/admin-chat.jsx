@@ -5,8 +5,10 @@ import user1 from "../assets/user1.png";
 import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Form from "react-bootstrap/Form";
+import { FaArrowLeft } from "react-icons/fa";
+
 import { IoSendSharp } from "react-icons/io5";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { realtimeDb } from "./lib/firestore";
 import { ref, push, set, onValue, update } from "firebase/database";
 import Avatar from "@mui/material/Avatar";
@@ -32,7 +34,7 @@ const sendMessage = async (
       type: msgType,
       receiverId,
       senderId,
-      name
+      name,
     };
 
     const newMessageRef = push(
@@ -54,12 +56,13 @@ export default function AdminChat() {
   const [text, setText] = useState("");
   const [chatId, setChatId] = useState(null);
   const [receiverId] = useState("YWF5YW5pbmZvdGVjaEBnbWFpbC5jb20=");
-  const userType = localStorage.getItem("ProviderId") ? "Provider" : "Hunter"
+  const userType = localStorage.getItem("ProviderId") ? "Provider" : "Hunter";
+  const navigate = useNavigate();
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   const currentUserName =
     localStorage.getItem("ProviderName") || localStorage.getItem("hunterName");
-  
+
   console.log("currentUseradmin", currentUser);
 
   // Fetch messages when chatId and currentUser are available
@@ -133,7 +136,16 @@ export default function AdminChat() {
     <div className={`d-flex flex-column gap-3 pb-4 bg-second`}>
       <div className="card border-0 rounded-3">
         <div className="card-body p-2">
-          <div className="d-flex flex-row gap-2 align-items-center justify-content-between">
+          <div className="d-flex flex-row gap-2 align-items-center justify-content-start">
+            <FaArrowLeft
+              onClick={() => {
+                userType === "Provider"
+                  ? navigate("/provider/home")
+                  : navigate("/home");
+              }}
+              className="fs-4"
+              style={{ cursor: "pointer" }}
+            />
             <div className="d-flex flex-row align-items-center gap-2 profile-icon">
               <Avatar
                 alt="Image"
@@ -145,10 +157,6 @@ export default function AdminChat() {
               <div className="d-flex flex-column gap-1">
                 <h5 className="mb-0 fw-medium fs-5 text-dark">Admin</h5>
               </div>
-            </div>
-            <div className="d-flex flex-row gap-2 align-items-center">
-              <IoIosSearch className="fs-3" />
-              <BsThreeDotsVertical className="fs-3" />
             </div>
           </div>
         </div>
@@ -183,6 +191,12 @@ export default function AdminChat() {
               className="w-100 border-0 py-3 px-3 rounded-5"
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault(); // Prevent default behavior (like new line in textarea)
+                  handleSend();
+                }
+              }}
             />
             <IoSendSharp
               onClick={() => handleSend()}

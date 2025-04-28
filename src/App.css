@@ -449,11 +449,17 @@
   );
   color: #fff !important;
 }
-
+.price-card.expired {
+  background: rgb(199 209 204);
+  color: #fff !important;
+}
 .price-detail h2 {
   color: #000;
 }
-
+.message-box.limit-design {
+  max-height: 100vh !important;
+  overflow: auto !important;
+}
 .price-detail svg {
   color: rgba(50, 222, 132, 1) !important;
   font-size: 30px;

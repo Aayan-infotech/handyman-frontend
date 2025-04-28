@@ -53,6 +53,12 @@ export const reviewJobNotification = createNotificationThunk(
   "You have received feedback from your Hunter"
 );
 
+export const messageNotification = createNotificationThunk(
+  "messageHunterNotification",
+  " New Message",
+  "You have a new Message"
+);
+
 const notificationSlice = createSlice({
   name: "notification",
   initialState: {
@@ -92,6 +98,8 @@ const notificationSlice = createSlice({
     addNotificationCases(assignedJobNotification, "jobAssigned");
     addNotificationCases(completedJobNotification, "jobCompleted");
     addNotificationCases(reviewJobNotification, "reviewReceived");
+
+    addNotificationCases(messageNotification, "messageReceived");
   },
 });
 

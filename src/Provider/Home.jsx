@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { IoIosSearch } from "react-icons/io";
@@ -24,6 +24,7 @@ import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import FormControl from "@mui/material/FormControl";
+import axiosInstance from "../components/axiosInstance";
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -187,10 +188,39 @@ export default function HomeProvider() {
     // }
     navigate(`/provider/jobspecification/${id}`);
   };
+  const handlePlan = async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/pushNotification/expiring-soon",
+        {
+          headers: {
+            Authorization: `Bearer ${providerToken}`,
+          },
+        }
+      );
+      console.log("2323", response.data);
+      if (response.status === 200 && response?.data?.data) {
+        setToastProps({
+          message: response.data.message,
+          type: "info",
+          toastKey: Date.now(),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const providerAlert = localStorage.getItem("ProviderAlert");
+
+    if (providerAlert !== "true") {
+      handlePlan();
+      localStorage.setItem("ProviderAlert", "true");
+    }
+  }, []);
 
   return (
     <>
-      <div></div>
       <LoggedHeader />
       <Stack
         sx={{

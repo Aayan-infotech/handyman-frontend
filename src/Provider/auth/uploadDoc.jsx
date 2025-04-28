@@ -101,12 +101,17 @@ export default function Upload() {
   };
 
   const navTest = () => {
-    const isGuest = localStorage.getItem("Guest") === "true";
-    if (isGuest) {
-      navigate("/provider/home");
+    const isGuest = localStorage.getItem("Guest") === "false";
+    const planType = localStorage.getItem("PlanType");
+    const planCondition =
+      planType === null || planType === "null" || planType === "";
+
+    if (isGuest || planCondition) {
+      navigate("/provider/pricing");
       return;
     }
-    navigate("/provider/pricing");
+   
+    navigate("/provider/home");
   };
   const handleDelete = async (id) => {
     setLoading(true);

@@ -7,12 +7,19 @@ import Toaster from "../Toaster";
 import "./user.css";
 import noData from "../assets/no_data_found.gif";
 import { Button } from "@mui/material";
+import Pagination from "react-bootstrap/Pagination";
 
 export default function Notification() {
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+  });
   const token =
     localStorage.getItem("ProviderToken") ||
     localStorage.getItem("hunterToken");
@@ -45,17 +52,27 @@ export default function Notification() {
     }
   };
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = async (page = pagination.page) => {
     if (!userId) return;
     try {
       setLoading(true);
-      const url = `/pushNotification/get-notification/${userType}`;
+      const url = `/pushNotification/get-notification/${userType}?page=${page}&limit=${pagination.limit}`;
       const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
+  
       const notifList = response.data.data || [];
-
+      const { data, total, page: currentPage, limit } = response.data;
+      
+      // Update pagination state with new page
+      setPagination(prev => ({
+        ...prev,
+        total,
+        page: currentPage,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      }));
+  
       const updatedList = await Promise.all(
         notifList.map(async (notification) => {
           try {
@@ -67,7 +84,6 @@ export default function Notification() {
           }
         })
       );
-
       setNotifications(updatedList);
     } catch (error) {
       setToastProps({
@@ -78,6 +94,13 @@ export default function Notification() {
     } finally {
       setLoading(false);
       setMarkingAsRead(false);
+    }
+  };
+  
+  const handlePageChange = (page) => {
+    if (page !== pagination.page) {
+      setPagination(prev => ({ ...prev, page }));
+      fetchNotifications(page);
     }
   };
 
@@ -112,6 +135,12 @@ export default function Notification() {
     }
   };
 
+  // const handlePageChange = (page) => {
+  //   if (page !== pagination.page) {
+  //     fetchNotifications(page);
+  //   }
+  // };
+
   const handleDelete = async (id) => {
     try {
       await axiosInstance.delete(`/pushNotification/deleteNotification/${id}`, {
@@ -120,12 +149,19 @@ export default function Notification() {
 
       // Update local state instead of refetching
       setNotifications((prev) => prev.filter((notif) => notif._id !== id));
-
+      setPagination((prev) => ({
+        ...prev,
+        total: prev.total - 1,
+        totalPages: Math.ceil((prev.total - 1) / prev.limit),
+      }));
       setToastProps({
         message: "Notification deleted successfully",
         type: "success",
         toastKey: Date.now(),
       });
+      if (notifications.length === 1 && pagination.page > 1) {
+        fetchNotifications(pagination.page - 1);
+      }
     } catch (error) {
       setToastProps({
         message: "error deleting notification",
@@ -186,6 +222,8 @@ export default function Notification() {
   useEffect(() => {
     fetchNotifications();
   }, [userType]);
+
+  console.log("Notifications:", notifications);
 
   return (
     <>
@@ -254,7 +292,9 @@ export default function Notification() {
                                   : `col-lg-10`
                               }
                             >
-                              <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">{notification.body}</p>
+                              <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">
+                                {notification.body}
+                              </p>
                             </div>
                             {notification.isRead === false && (
                               <div className="col-lg-3 d-flex justify-content-end">
@@ -293,6 +333,30 @@ export default function Notification() {
                   </div>
                 )}
               </div>
+              {pagination.totalPages > 1 && (
+                <Pagination className="justify-content-center pagination-custom mt-4">
+                  <Pagination.Prev
+                    disabled={pagination.page === 1}
+                    onClick={() => handlePageChange(pagination.page - 1)}
+                  />
+                  {Array.from(
+                    { length: pagination.totalPages },
+                    (_, i) => i + 1
+                  ).map((page) => (
+                    <Pagination.Item
+                      key={page}
+                      active={page === pagination.page}
+                      onClick={() => handlePageChange(page)}
+                    >
+                      {page}
+                    </Pagination.Item>
+                  ))}
+                  <Pagination.Next
+                    disabled={pagination.page === pagination.totalPages}
+                    onClick={() => handlePageChange(pagination.page + 1)}
+                  />
+                </Pagination>
+              )}
             </div>
           </div>
         </>

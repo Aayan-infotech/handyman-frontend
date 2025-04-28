@@ -94,11 +94,10 @@ export default function PricingProvider() {
         });
         setLoading(false);
         localStorage.setItem("Guest", false);
-
+        localStorage.setItem("PlanType", result?.payload?.data?.newSubscription?.type);
         setTimeout(() => {
           // navigate("/provider/home");
-          navigate("/provider/payment")
-         
+          navigate("/provider/payment");
         }, 2000);
       } else {
         const errorMessage =

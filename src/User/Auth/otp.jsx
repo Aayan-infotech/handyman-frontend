@@ -156,6 +156,35 @@ export default function Otp({ length = 6 }) {
     }
   };
 
+  const handleResendOtp = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.post("/auth/resendOtp", {
+        email,
+        userType: ProviderParams ? "provider" : "hunter",
+      });
+      if (response.status === 200 || response.status === 201) {
+        setToastProps({
+          message: response?.data?.message,
+          type: "success",
+          toastKey: Date.now(),
+        });
+        setLoading(false);
+       
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setToastProps({
+        message: error?.response?.data?.error || error.response?.data?.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
+  console.log("234234", ProviderParams);
+
   return (
     <>
       {loading === true ? (
@@ -203,7 +232,7 @@ export default function Otp({ length = 6 }) {
                         </Col>
                       ))}
                   </Row>
-                  <div className="d-flex justify-content-center align-items-center pt-4">
+                  <div className="d-flex justify-content-center flex-column align-items-center pt-4 gap-4">
                     <Button
                       variant="contained"
                       color="success"
@@ -212,13 +241,22 @@ export default function Otp({ length = 6 }) {
                     >
                       {forgetValidation ? "Reset" : "Verify"}
                     </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      className="rounded-0 custom-green-outline bg-green-custom"
+                      style={{ maxWidth: "180px" }}
+                      onClick={() => handleResendOtp()}
+                    >
+                      Resend OTP
+                    </Button>
                   </div>
                 </div>
               </div>
               <span className="my-3">
                 Go back to login page?{" "}
                 <Link
-                  to="/login"
+                  to={ProviderParams === true ? "/provider/login" : "/login"}
                   className="highlighted-text text-decoration-none"
                 >
                   Sign in

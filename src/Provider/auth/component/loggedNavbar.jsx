@@ -56,22 +56,9 @@ export default function LoggedHeader() {
       const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${hunterToken || providerToken}` },
       });
+      console.log(response.data.data, "response.data.data");
 
-      const notifList = response.data.data || [];
-
-      const updatedList = await Promise.all(
-        notifList.map(async (notification) => {
-          try {
-            const nameData = await handleName(notification);
-            return { ...notification, nameData };
-          } catch (error) {
-            console.error("Error processing notification:", error);
-            return notification;
-          }
-        })
-      );
-
-      setNotifications(updatedList);
+      setNotifications(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -90,6 +77,11 @@ export default function LoggedHeader() {
         } else if (!fetchedUser && providerToken) {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
+          localStorage.setItem("PlanType", providerResponse?.payload?.data?.subscriptionType);
+          console.log("1212121" , fetchedUser)
+          if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
+            localStorage.setItem("PlanType", null);
+          }
         }
 
         if (fetchedUser) {

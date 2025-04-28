@@ -46,10 +46,13 @@ export default function JobSpecification() {
   // };
 
   // const guestCondition = localStorage.getItem("Guest") === "true";
-
   const checkGuestCondition = () => {
-    const isGuest = localStorage.getItem("Guest") === "true";
-    if (isGuest) {
+  
+    const planType = localStorage.getItem("PlanType");
+    const planCondition =
+      planType === null || planType === "null" || planType === "";
+
+    if ( planCondition) {
       navigate("/provider/pricing");
       return true;
     }
@@ -353,7 +356,7 @@ export default function JobSpecification() {
                               variant="contained"
                               onClick={() => setShow(true)}
                               className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                              style={{maxWidth: "160px"}}
+                              style={{ maxWidth: "160px" }}
                             >
                               Quick Message
                             </Button>

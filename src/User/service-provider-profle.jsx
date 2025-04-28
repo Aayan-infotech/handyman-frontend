@@ -150,6 +150,8 @@ export default function ServiceProviderProfile() {
     );
   };
 
+  console.log(data);
+
   return (
     <>
       {loading === true ? (
@@ -236,11 +238,14 @@ export default function ServiceProviderProfile() {
                       <MdEmail />
                     </a>
                   </div>
-                  <div className="contact">
-                    <Link to={`/advertiser/chat/${id}`}>
-                      <RiMessage2Fill />
-                    </Link>
-                  </div>
+                  {data?.subscriptionType === "Advertising" && (
+                    <div className="contact">
+                      <Link to={`/advertiser/chat/${id}`}>
+                        <RiMessage2Fill />
+                      </Link>
+                    </div>
+                  )}
+
                   <div className="contact">
                     <a href={`tel:${data.phoneNo}`}>
                       <IoCall />

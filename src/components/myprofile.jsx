@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import LoggedHeader from "./loggedNavbar";
 import {
   MdMessage,
@@ -7,6 +7,8 @@ import {
 } from "react-icons/md";
 import "swiper/css";
 import "swiper/css/navigation";
+import { ref, onValue, off, remove, update, get } from "firebase/database";
+import { realtimeDb } from "../Chat/lib/firestore";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaLock, FaPen } from "react-icons/fa";
 import { PiCircleHalfFill } from "react-icons/pi";
@@ -30,6 +32,8 @@ import { styled } from "@mui/material/styles";
 export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const [backgroundImg, setBackgroundImg] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [description, setDescription] = useState("");
@@ -61,6 +65,8 @@ export default function MyProfile() {
   const [loading, setLoading] = useState(false);
   const [businessType, setBusinessType] = useState([]);
   const [profile, setProfile] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
   const id =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");
   const hunterToken = localStorage.getItem("hunterToken");
@@ -75,6 +81,11 @@ export default function MyProfile() {
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
+  const Guest = JSON.parse(localStorage.getItem("Guest")); // Converts "false" to boolean false
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  // const Guest = localStorage.getItem("Guest") || false;
+  console.log(Guest, "guestttttttttttttttttt");
 
   const handleClose = () => setIsModalVisible(false);
   const handleShow = () => setIsModalVisible(true);
@@ -93,7 +104,13 @@ export default function MyProfile() {
       console.error("Error fetching background image:", error);
     }
   };
-
+  const lineClampStyle = {
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: "3",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  };
   const handleImageUpload = async (event) => {
     setToastProps({
       message: "Image uploading",
@@ -132,14 +149,16 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    axiosInstance
-      .get(`/provider/about/${userId}`)
-      .then((response) => {
-        if (response.data.data.length > 0) {
-          setAboutText(response.data.data[0].about);
-        }
-      })
-      .catch((error) => console.error("Error fetching about data:", error));
+    if (providerId) {
+      axiosInstance
+        .get(`/provider/about/${userId}`)
+        .then((response) => {
+          if (response.data.data.length > 0) {
+            setAboutText(response.data.data[0].about);
+          }
+        })
+        .catch((error) => console.error("Error fetching about data:", error));
+    }
   }, []);
 
   // Function to handle save (POST request)
@@ -220,14 +239,18 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    fetchGallery(); // Fetch gallery images when the component mounts
+    if (providerId) {
+      fetchGallery();
+    }
   }, []);
 
   const handleDeleteGallery = async (imageId) => {
     try {
-      await axiosInstance.delete(`/providerPhoto/${imageId}`);
-
-      fetchGallery(); // Fetch the gallery after successful deletion
+      const response = await axiosInstance.delete(`/providerPhoto/${imageId}`);
+      if (response.status === 200) {
+        setDeleteModal(false);
+        fetchGallery(); // Fetch the gallery after successful deletion
+      }
     } catch (error) {
       console.error("Failed to delete image:", error);
     }
@@ -321,6 +344,11 @@ export default function MyProfile() {
     }
   };
 
+  const handleNotificationToggle = (id) => {
+    setDeleteModal(true);
+    setDeleteId(id);
+  };
+
   // const handleNotificationToggle = async () => {
   //   try {
   //     const response = await fetch(`http://3.223.253.106:7777/api/pushNotification/notification/${userId}`, {
@@ -343,6 +371,16 @@ export default function MyProfile() {
   //     alert('Failed to update notification settings.');
   //   }
   // };
+  const aboutTextRef = useRef(null);
+  useEffect(() => {
+    if (aboutTextRef.current) {
+      const lineHeight = parseFloat(
+        getComputedStyle(aboutTextRef.current).lineHeight
+      );
+      const maxHeight = lineHeight * 3; // 3 lines
+      setIsOverflowing(aboutTextRef.current.scrollHeight > maxHeight);
+    }
+  }, [aboutText]);
   const deleteAccount = async () => {
     try {
       const token = hunterToken || providerToken;
@@ -351,10 +389,14 @@ export default function MyProfile() {
         return;
       }
 
+      const userId = providerId || hunterId;
+
+      // First delete the chats from Firebase
+      await deleteUserChats(userId);
+
+      // Then proceed with account deletion
       const response = await axiosInstance.delete(
-        `/DeleteAccount/${providerId ? "provider" : "delete"}/${
-          providerId || hunterId
-        }`
+        `/DeleteAccount/${providerId ? "provider" : "delete"}/${userId}`
       );
 
       if (response.status === 200) {
@@ -363,6 +405,7 @@ export default function MyProfile() {
           type: "success",
           toastKey: Date.now(),
         });
+        // Clear local storage
         localStorage.removeItem("hunterToken");
         localStorage.removeItem("hunterEmail");
         localStorage.removeItem("hunterName");
@@ -386,6 +429,102 @@ export default function MyProfile() {
         type: "error",
         toastKey: Date.now(),
       });
+    }
+  };
+
+  // Function to delete user chats from Firebase
+  const deleteUserChats = async (userId) => {
+    try {
+      const db = realtimeDb; // Initialize Firebase database
+
+      // Get references to all relevant paths
+      const userChatListRef = ref(db, `chatList/${userId}`);
+      const allChatListRef = ref(db, "chatList");
+      const chatsRef = ref(db, "chats");
+      const chatsAdminRef = ref(db, "chatsAdmin");
+
+      // Get user's chat list snapshot
+      const userChatListSnapshot = await get(userChatListRef);
+
+      if (userChatListSnapshot.exists()) {
+        // Get all chat IDs where this user is involved
+        const chatIds = [];
+        const userChatList = userChatListSnapshot.val();
+
+        // Iterate through all chat partners
+        for (const partnerId in userChatList) {
+          for (const chatKey in userChatList[partnerId]) {
+            chatIds.push(chatKey);
+          }
+        }
+
+        // Remove user's entry from chatList
+        await remove(userChatListRef);
+
+        // Remove references to user's chats from other users' chatLists
+        const allChatListSnapshot = await get(allChatListRef);
+        if (allChatListSnapshot.exists()) {
+          const updates = {};
+          const allChatList = allChatListSnapshot.val();
+
+          for (const otherUserId in allChatList) {
+            if (otherUserId !== userId && allChatList[otherUserId][userId]) {
+              updates[`chatList/${otherUserId}/${userId}`] = null;
+            }
+          }
+
+          if (Object.keys(updates).length > 0) {
+            await update(ref(db), updates);
+          }
+        }
+
+        // Remove chat data from chats node
+        const chatsSnapshot = await get(chatsRef);
+        if (chatsSnapshot.exists()) {
+          const chats = chatsSnapshot.val();
+          const chatUpdates = {};
+
+          for (const jobId in chats) {
+            for (const chatId in chats[jobId]) {
+              if (chatIds.includes(chatId)) {
+                chatUpdates[`chats/${jobId}/${chatId}`] = null;
+              }
+            }
+          }
+
+          if (Object.keys(chatUpdates).length > 0) {
+            await update(ref(db), chatUpdates);
+          }
+        }
+      }
+
+      // Remove admin chats if user is in chatsAdmin
+      const chatsAdminSnapshot = await get(chatsAdminRef);
+      if (chatsAdminSnapshot.exists()) {
+        const chatsAdmin = chatsAdminSnapshot.val();
+        const adminUpdates = {};
+
+        for (const adminChatKey in chatsAdmin) {
+          if (
+            adminChatKey.includes(`_chat_${userId}`) ||
+            adminChatKey.includes(`${userId}_chat_`)
+          ) {
+            adminUpdates[`chatsAdmin/${adminChatKey}`] = null;
+          }
+        }
+
+        if (Object.keys(adminUpdates).length > 0) {
+          await update(ref(db), adminUpdates);
+        }
+      }
+
+      // Remove user from online status
+      await remove(ref(db, `user/${userId}`));
+
+      console.log("Successfully deleted all chat data for user:", userId);
+    } catch (error) {
+      console.error("Error deleting user chats:", error);
+      throw error;
     }
   };
   console.log("dgrd", gallery);
@@ -469,18 +608,36 @@ export default function MyProfile() {
 
                     {providerToken && (
                       <>
-                        {" "}
                         {aboutText ? (
                           <div className="d-flex flex-column align-items-center align-items-lg-start gap-1 justify-content-center justify-content-lg-start">
-                            <p className="mt-3">{aboutText}</p>{" "}
+                            <div className="mt-3">
+                              <div
+                                ref={aboutTextRef}
+                                style={isExpanded ? {} : lineClampStyle}
+                              >
+                                {aboutText}
+                              </div>
+                              {isOverflowing && (
+                                <p
+                                  onClick={() => setIsExpanded((prev) => !prev)}
+                                  className="text-primary mt-2"
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {isExpanded ? "Read less" : "Read more"}
+                                </p>
+                              )}
+                            </div>
                             <button
-                              className=" px-3 py-2 rounded-pill shadow"
+                              className="px-3 py-2 rounded-pill shadow"
                               style={{
                                 backgroundColor: "#32de84",
                                 color: "#fff",
                                 border: "none",
                               }}
-                              onClick={() => setShowModal(true)} // Open the modal for editing
+                              onClick={() => {
+                                setDescription(aboutText);
+                                setShowModal(true);
+                              }}
                             >
                               Edit About
                             </button>
@@ -493,31 +650,104 @@ export default function MyProfile() {
                               color: "#fff",
                               border: "none",
                             }}
-                            onClick={() => setShowModal(true)} // Open the modal for adding about text
+                            onClick={() => setShowModal(true)}
                           >
                             Add Description
                           </button>
                         )}
+
+                        {/* Modal */}
+                        <Modal
+                          show={showModal}
+                          onHide={() => setShowModal(false)}
+                          centered
+                        >
+                          <Modal.Header closeButton>
+                            <Modal.Title>Description</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <textarea
+                              className="form-control"
+                              rows="3"
+                              placeholder="Enter your description (max 150 words)..."
+                              value={description}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === "") {
+                                  setDescription(value);
+                                  return;
+                                }
+                                const words = value.trim().split(/\s+/);
+                                const hasOversizedWord = words.some(
+                                  (word) => word.length > 30
+                                );
+
+                                if (!hasOversizedWord && words.length <= 50) {
+                                  setDescription(value);
+                                }
+                              }}
+                            ></textarea>
+                            <p className="text-muted">
+                              Word count:{" "}
+                              {description.trim()
+                                ? description.trim().split(/\s+/).length
+                                : 0}
+                              /50
+                            </p>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button
+                              variant="secondary"
+                              onClick={() => setShowModal(false)}
+                            >
+                              Close
+                            </Button>
+                            <Button variant="primary" onClick={handleSave}>
+                              Save
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
                       </>
                     )}
 
-                    {/* Modal Component */}
+                    {/* Modal */}
                     <Modal
                       show={showModal}
                       onHide={() => setShowModal(false)}
                       centered
                     >
                       <Modal.Header closeButton>
-                        <Modal.Title>Add Description</Modal.Title>
+                        <Modal.Title>Description</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <textarea
                           className="form-control"
                           rows="3"
-                          placeholder="Enter your description..."
+                          placeholder="Enter your description (max 150 words)..."
                           value={description}
-                          onChange={(e) => setDescription(e.target.value)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "") {
+                              setDescription(value);
+                              return;
+                            }
+                            const words = value.trim().split(/\s+/);
+                            const hasOversizedWord = words.some(
+                              (word) => word.length > 30
+                            );
+
+                            if (!hasOversizedWord && words.length <= 50) {
+                              setDescription(value);
+                            }
+                          }}
                         ></textarea>
+                        <p className="text-muted">
+                          Word count:{" "}
+                          {description.trim()
+                            ? description.trim().split(/\s+/).length
+                            : 0}
+                          /50
+                        </p>
                       </Modal.Body>
                       <Modal.Footer>
                         <Button
@@ -537,18 +767,15 @@ export default function MyProfile() {
                 <div className="col-lg-3">
                   <div className="w-100 ">
                     <div className="d-flex flex-column justify-content-between gap-3 align-items-center align-items-lg-end mt-lg-1">
-                      {hunterToken ? (
-                        <Link to="/editProfile" className="mw-20">
-                          <Button
-                            variant="dark"
-                            className="d-flex gap-2 align-items-center w-100 justify-content-center"
-                          >
-                            <FiEdit />
-                            Edit Profile
-                          </Button>
-                        </Link>
-                      ) : (
-                        <Link to="/provider/editProfile" className="mw-20">
+                      {!Guest && (
+                        <Link
+                          to={
+                            `${userType}` === "Provider"
+                              ? "/provider/editProfile"
+                              : "/editProfile"
+                          }
+                          className="mw-20"
+                        >
                           <Button
                             variant="dark"
                             className="d-flex gap-2 align-items-center w-100 justify-content-center"
@@ -558,6 +785,7 @@ export default function MyProfile() {
                           </Button>
                         </Link>
                       )}
+
                       {providerToken ? (
                         <Link to="/provider/edit/upload" className="mw-20">
                           <Button
@@ -593,14 +821,13 @@ export default function MyProfile() {
                           <div className="d-flex justify-content-center flex-row align-items-center gap-2 mt-3">
                             <Button
                               variant="success"
-                              className="px-3"
                               onClick={() => setLogoutModal(false)}
                             >
                               Close
                             </Button>
                             <Button
                               variant="danger"
-                              className="px-5"
+                              className="px-4"
                               onClick={signOut}
                             >
                               Yes
@@ -624,7 +851,7 @@ export default function MyProfile() {
                         centered // This ensures the modal is vertically centered
                       >
                         <Modal.Header className="border-0" closeButton>
-                          <Modal.Title>Confirm Account Deletion</Modal.Title>
+                          <Modal.Title>Confirm Account Delete</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                           <h5 className="fw-normal text-center">
@@ -632,7 +859,11 @@ export default function MyProfile() {
                             action cannot be undone.
                           </h5>
                           <div className="d-flex justify-content-center align-items-center flex-row gap-3 mt-4">
-                            <Button variant="success" onClick={handleClose}>
+                            <Button
+                              variant="success"
+                              onClick={handleClose}
+                              className="px-4"
+                            >
                               Cancel
                             </Button>
                             <Button variant="danger" onClick={deleteAccount}>
@@ -683,73 +914,121 @@ export default function MyProfile() {
               )}
 
               {userType === "Provider" && (
-                <div className="card border-0 rounded-5">
-                  <div className="card-body py-4 px-lg-4">
-                    <div>
-                      <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
-                        <h4 className="mb-0 text-center text-lg-start">
-                          Add your work gallery here
-                        </h4>
+                <>
+                  <div className="card border-0 rounded-5">
+                    <div className="card-body py-4 px-lg-4">
+                      <div>
+                        <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
+                          <h4 className="mb-0 text-center text-lg-start">
+                            Add your work gallery here (max 20 files)
+                          </h4>
+                          {gallery.length > 20 ? (
+                            <Button2
+                              component="label"
+                              role={undefined}
+                              variant="contained"
+                              disabled
+                              tabIndex={-1}
+                              style={{
+                                backgroundColor: "#32de84",
+                                color: "#fff",
+                                border: "none",
+                              }}
+                            >
+                              Maximun files uploaded
+                              <VisuallyHiddenInput
+                                type="file"
+                                onChange={handleFileChange}
+                              />
+                            </Button2>
+                          ) : (
+                            <Button2
+                              component="label"
+                              role={undefined}
+                              variant="contained"
+                              tabIndex={-1}
+                              style={{
+                                backgroundColor: "#32de84",
+                                color: "#fff",
+                                border: "none",
+                              }}
+                            >
+                              Upload files
+                              <VisuallyHiddenInput
+                                type="file"
+                                onChange={handleFileChange}
+                              />
+                            </Button2>
+                          )}
+                        </div>
 
-                        <Button2
-                          component="label"
-                          role={undefined}
-                          variant="contained"
-                          tabIndex={-1}
-                          style={{
-                            backgroundColor: "#32de84",
-                            color: "#fff",
-                            border: "none",
-                          }}
-                        >
-                          Upload files
-                          <VisuallyHiddenInput
-                            type="file"
-                            onChange={handleFileChange}
-                          />
-                        </Button2>
-                      </div>
-
-                      <div className="row mt-4">
-                        {gallery.length > 0 ? (
-                          gallery.map((image, index) => {
-                            return (
-                              <div
-                                key={index}
-                                className="col-md-3 col-6 mb-3 position-relative"
-                              >
-                                <div className="position-absolute top-0 end-0 me-4 mt-3">
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() =>
-                                      handleDeleteGallery(image._id)
-                                    }
-                                  >
-                                    <FaTrash />
-                                  </button>
+                        <div className="row mt-4">
+                          {gallery.length > 0 ? (
+                            gallery.map((image, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="col-md-3 col-6 mb-3 position-relative"
+                                >
+                                  <div className="position-absolute top-0 end-0 me-4 mt-3">
+                                    <button
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleNotificationToggle(image._id)
+                                      }
+                                    >
+                                      <FaTrash />
+                                    </button>
+                                  </div>
+                                  <img
+                                    src={image?.url}
+                                    alt="Gallery Item"
+                                    className="rounded-5"
+                                    style={{
+                                      width: "100%",
+                                      height: "200px",
+                                      objectFit: "cover",
+                                    }}
+                                  />
                                 </div>
-                                <img
-                                  src={image?.url}
-                                  alt="Gallery Item"
-                                  className="rounded-5"
-                                  style={{
-                                    width: "100%",
-                                    height: "200px",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                              </div>
-                            );
-                          })
-                        ) : (
-                          <p className="text-center mt-3">
-                            No images uploaded yet.
-                          </p>
-                        )}
+                              );
+                            })
+                          ) : (
+                            <p className="text-center mt-3">
+                              No images uploaded yet.
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                  <Modal
+                    show={deleteModal}
+                    onHide={() => setDeleteModal(false)}
+                    centered
+                  >
+                    <Modal.Header className="border-0" closeButton>
+                      <Modal.Title>Delete Alert</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="border-0 text-center">
+                      <h3>Do you want to delete this photo?</h3>
+                    </Modal.Body>
+                    <Modal.Footer className="border-0 ">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setDeleteModal(false)}
+                      >
+                        Close
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDeleteGallery(deleteId)}
+                      >
+                        Delete
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </>
               )}
 
               <div className="row gy-4 my-4">

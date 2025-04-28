@@ -206,10 +206,10 @@ export default function AdvertiserChat() {
                 <h5 className="mb-0 fw-medium fs-5 text-dark">{displayName}</h5>
               </div>
             </div>
-            <div className="d-flex flex-row gap-2 align-items-center">
+            {/* <div className="d-flex flex-row gap-2 align-items-center">
               <IoIosSearch className="fs-3" />
               <BsThreeDotsVertical className="fs-3" />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -260,7 +260,12 @@ export default function AdvertiserChat() {
                   className="w-100 border-0 py-3 px-3 rounded-5"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSend()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault(); // Prevent default behavior (like new line in textarea)
+                      handleSend();
+                    }
+                  }}
                 />
                 <IoSendSharp
                   onClick={handleSend}

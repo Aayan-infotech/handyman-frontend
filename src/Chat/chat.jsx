@@ -6,7 +6,7 @@ import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ref, push, set, onValue, update } from "firebase/database";
 import { realtimeDb, auth } from "./lib/firestore";
 import Loader from "../Loader";
@@ -15,7 +15,10 @@ import axiosInstance from "../components/axiosInstance";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import { assignedJobNotification } from "../Slices/notificationSlice";
+import {
+  assignedJobNotification,
+  messageNotification,
+} from "../Slices/notificationSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const sendMessage = async (
@@ -112,7 +115,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const dispatch = useDispatch();
   console.log("message data in chat", messages);
   console.log("chat id in chat", chatId);
-
+  const navigate = useNavigate();
   const chatMessage = selectedChat?.messages;
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -256,10 +259,30 @@ export default function Chat({ messageData, messages, selectedChat }) {
     if (!currentUser || !receiverId) return;
 
     // Ensure chatId is always a string
-    const generatedChatId = [currentUser, receiverId].sort().join(`__${jobId}__`);
+    const generatedChatId = [currentUser, receiverId]
+      .sort()
+      .join(`__${jobId}__`);
 
     setChatId(generatedChatId);
   }, [currentUser, receiverId]);
+
+  const messageNotificationFunctionality = async () => {
+    setLoading(true);
+    try {
+      const response = dispatch(
+        messageNotification({
+          receiverId: receiverId,
+        })
+      );
+      console.log("messageNotification response", response);
+      if (messageNotification.meta.requestStatus === "fulfilled") {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
 
   const handleSend = async () => {
     if (msg.trim() === "" || !chatId || !jobId || !currentUser) return;
@@ -274,6 +297,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       setMessagesPeople,
       selectedChat?.users?.jobId || jobId
     );
+    messageNotificationFunctionality();
     setMsg("");
   };
 
@@ -408,7 +432,19 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     userChat?.contectName?.toUpperCase().charAt(0)}
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
-                  <h5 className="mb-0 fw-medium fs-5 text-dark">
+                  <h5
+                    className="mb-0 fw-medium fs-5 text-dark"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      if (localStorage.getItem("hunterId")) {
+                        navigate(
+                          `/service-profile/${
+                            selectedChat?.displayUser?._id || userChat?._id
+                          }`
+                        );
+                      }
+                    }}
+                  >
                     {selectedChat?.displayUser?.name ||
                       selectedChat?.displayUser?.contactName ||
                       userChat?.name ||
@@ -419,10 +455,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
                   ) : null} */}
                 </div>
               </div>
-              <div className="d-flex flex-row gap-2 align-items-center">
+              {/* <div className="d-flex flex-row gap-2 align-items-center">
                 <IoIosSearch className="fs-3" />
                 <BsThreeDotsVertical className="fs-3" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -554,6 +590,12 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 className="w-100 border-0 py-3 px-3 rounded-5"
                 value={msg}
                 onChange={(e) => setMsg(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); // Prevent default behavior (like new line in textarea)
+                    handleSend();
+                  }
+                }}
               />
               <IoSendSharp onClick={handleSend} style={{ cursor: "pointer" }} />
             </div>

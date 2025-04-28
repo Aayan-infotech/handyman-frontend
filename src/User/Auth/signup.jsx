@@ -40,7 +40,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
-  const [phoneNo, setPhoneNo] = useState("");
+  const [phoneNo, setPhoneNo] = useState();
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState(null);
@@ -218,7 +218,27 @@ export default function SignUp() {
                           type="text"
                           placeholder="Name"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                            const words = e.target.value.trim().split(/\s+/);
+                            const filteredValue = e.target.value.replace(
+                              /[0-9]/g,
+                              ""
+                            );
+
+                            if (words.length <= 5 || e.target.value === "") {
+                              // Capitalize first letter of each word and make the rest lowercase
+                              const capitalizedValue = filteredValue
+                                .toLowerCase()
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(" ");
+
+                              setName(capitalizedValue);
+                            }
+                          }}
                         />
                       </Col>
                     </Form.Group>
@@ -228,10 +248,12 @@ export default function SignUp() {
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
-                          type="text"
+                          type="number"
                           placeholder="Phone number"
                           value={phoneNo}
-                          onChange={(e) => setPhoneNo(e.target.value)}
+                          onChange={(e) =>
+                            setPhoneNo(e.target.value.slice(0, 15))
+                          }
                         />
                       </Col>
                     </Form.Group>
@@ -244,7 +266,9 @@ export default function SignUp() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) =>
+                            setEmail(e.target.value.toLowerCase())
+                          }
                         />
                       </Col>
                     </Form.Group>

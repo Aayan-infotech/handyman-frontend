@@ -146,9 +146,9 @@ useEffect(() => {
                           </a>
                         </li>
                         <li>
-                          <a href="#privacy" className="text-light">
+                          <Link to="/privacy" className="text-light">
                             Privacy Policy
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </Col>
@@ -181,7 +181,7 @@ useEffect(() => {
                 </Col>
 
                 {/* Right Section: Subscription */}
-                <Col md={4} className="mb-4">
+                {/* <Col md={4} className="mb-4">
                   <h6>Get job notifications</h6>
                   <p className="my-3">
                     The latest job news, articles, sent to your inbox weekly.
@@ -202,7 +202,7 @@ useEffect(() => {
                       </Button>
                     </Form.Group>
                   </Form>
-                </Col>
+                </Col> */}
               </Row>
 
               <hr />

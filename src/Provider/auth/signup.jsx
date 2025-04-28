@@ -40,7 +40,7 @@ export default function SignUpProvider() {
   const [name, setName] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNo, setPhoneNo] = useState("");
+  const [phoneNo, setPhoneNo] = useState();
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -76,9 +76,7 @@ export default function SignUpProvider() {
   useEffect(() => {
     const handleAllData = async () => {
       try {
-        const response = await axiosInstance.get(
-          "/service/getAllServices"
-        );
+        const response = await axiosInstance.get("/service/getAllServices");
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
@@ -161,21 +159,17 @@ export default function SignUpProvider() {
 
     setLoading(true);
     try {
-      const response = await axiosInstance.post(
-        "/auth/signup",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosInstance.post("/auth/signup", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status === 200 || response.status === 201) {
         setName("");
         setBusinessName("");
         setEmail("");
-        setPhoneNo("");
+        setPhoneNo();
         setAddress("");
         setPassword("");
         setLatitude(null);
@@ -274,7 +268,27 @@ export default function SignUpProvider() {
                           type="text"
                           placeholder="Name"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                            const words = e.target.value.trim().split(/\s+/);
+                            const filteredValue = e.target.value.replace(
+                              /[0-9]/g,
+                              ""
+                            );
+
+                            if (words.length <= 5 || e.target.value === "") {
+                              // Capitalize first letter of each word and make the rest lowercase
+                              const capitalizedValue = filteredValue
+                                .toLowerCase()
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(" ");
+
+                              setName(capitalizedValue);
+                            }
+                          }}
                         />
                       </Col>
                     </Form.Group>
@@ -357,7 +371,9 @@ export default function SignUpProvider() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) =>
+                            setEmail(e.target.value.toLowerCase())
+                          }
                         />
                       </Col>
                     </Form.Group>
@@ -368,10 +384,12 @@ export default function SignUpProvider() {
                       </Form.Label>
                       <Col sm="7">
                         <Form.Control
-                          type="text"
+                          type="Number"
                           placeholder="Phone number"
                           value={phoneNo}
-                          onChange={(e) => setPhoneNo(e.target.value)}
+                          onChange={(e) =>
+                            setPhoneNo(e.target.value.slice(0, 15))
+                          }
                         />
                       </Col>
                     </Form.Group>

@@ -321,7 +321,7 @@ export default function JobDetail() {
                     </b>
                   </div>
                 </div>
-                <div className="row gy-4 gx-4">
+                <div className="row gy-4 gx-4 w-100">
                   <div className="col-2">
                     <PiBag />
                   </div>

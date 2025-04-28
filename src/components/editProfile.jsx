@@ -40,7 +40,7 @@ export default function EditProfile() {
   const [businessName, setBusinessName] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
+  const [number, setNumber] = useState(null);
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const hunterToken = localStorage.getItem("hunterToken");
@@ -188,7 +188,7 @@ export default function EditProfile() {
     } catch (error) {
       setLoading(false);
       setToastProps({
-        message: error?.response?.data?.message,
+        message: error?.response?.data?.error,
         type: "error",
         toastKey: Date.now(),
       });
@@ -271,7 +271,27 @@ export default function EditProfile() {
                         <Form.Control
                           type="text"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                            const words = e.target.value.trim().split(/\s+/);
+                            const filteredValue = e.target.value.replace(
+                              /[0-9]/g,
+                              ""
+                            );
+
+                            if (words.length <= 5 || e.target.value === "") {
+                              // Capitalize first letter of each word and make the rest lowercase
+                              const capitalizedValue = filteredValue
+                                .toLowerCase()
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(" ");
+
+                              setName(capitalizedValue);
+                            }
+                          }}
                         />
                       </Col>
                     </Form.Group>
@@ -285,9 +305,11 @@ export default function EditProfile() {
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
-                          type="text"
+                          type="Number"
                           value={number}
-                          onChange={(e) => setNumber(e.target.value)}
+                          onChange={(e) =>
+                            setNumber(e.target.value.slice(0, 15))
+                          }
                         />
                       </Col>
                     </Form.Group>
