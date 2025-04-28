@@ -131,7 +131,7 @@ function Search() {
           <div className="bg-second py-3">
             <div className="container top-section-main">
               <div className="row gy-4 management">
-                {filteredJobs.length === 0 ? (
+                {filteredJobs?.length === 0 ? (
                   <div className="d-flex justify-content-center">
                     <img
                       src={noData}
