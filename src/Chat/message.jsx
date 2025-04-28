@@ -221,7 +221,7 @@ export default function Message() {
               <div
                 className={open ? "col-lg-6 d-none d-lg-block" : "col-lg-12"}
               >
-                <div className="d-flex flex-column gap-3 message-box">
+                <div className="d-flex flex-column gap-3 message-box limit-design">
                   {filteredMessages.length === 0 ? (
                     <div className="d-flex justify-content-center">
                       <img

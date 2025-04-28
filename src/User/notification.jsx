@@ -52,25 +52,27 @@ export default function Notification() {
     }
   };
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = async (page = pagination.page) => {
     if (!userId) return;
     try {
       setLoading(true);
-      const url = `/pushNotification/get-notification/${userType}`;
+      const url = `/pushNotification/get-notification/${userType}?page=${page}&limit=${pagination.limit}`;
       const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
+  
       const notifList = response.data.data || [];
       const { data, total, page: currentPage, limit } = response.data;
-
-      setPagination({
+      
+      // Update pagination state with new page
+      setPagination(prev => ({
+        ...prev,
         total,
         page: currentPage,
         limit,
         totalPages: Math.ceil(total / limit),
-      });
-
+      }));
+  
       const updatedList = await Promise.all(
         notifList.map(async (notification) => {
           try {
@@ -82,8 +84,7 @@ export default function Notification() {
           }
         })
       );
-
-      setNotifications(updatedList, totalPages);
+      setNotifications(updatedList);
     } catch (error) {
       setToastProps({
         message: "Failed to fetch notifications",
@@ -93,6 +94,13 @@ export default function Notification() {
     } finally {
       setLoading(false);
       setMarkingAsRead(false);
+    }
+  };
+  
+  const handlePageChange = (page) => {
+    if (page !== pagination.page) {
+      setPagination(prev => ({ ...prev, page }));
+      fetchNotifications(page);
     }
   };
 
@@ -127,11 +135,11 @@ export default function Notification() {
     }
   };
 
-  const handlePageChange = (page) => {
-    if (page !== pagination.page) {
-      fetchNotifications(page);
-    }
-  };
+  // const handlePageChange = (page) => {
+  //   if (page !== pagination.page) {
+  //     fetchNotifications(page);
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     try {
