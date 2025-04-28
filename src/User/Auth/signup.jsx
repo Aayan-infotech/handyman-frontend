@@ -226,7 +226,17 @@ export default function SignUp() {
                             );
 
                             if (words.length <= 5 || e.target.value === "") {
-                              setName(filteredValue);
+                              // Capitalize first letter of each word and make the rest lowercase
+                              const capitalizedValue = filteredValue
+                                .toLowerCase()
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(" ");
+
+                              setName(capitalizedValue);
                             }
                           }}
                         />

@@ -40,7 +40,7 @@ export default function EditProfile() {
   const [businessName, setBusinessName] = useState("");
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
+  const [number, setNumber] = useState(null);
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const hunterToken = localStorage.getItem("hunterToken");
@@ -279,7 +279,17 @@ export default function EditProfile() {
                             );
 
                             if (words.length <= 5 || e.target.value === "") {
-                              setName(filteredValue);
+                              // Capitalize first letter of each word and make the rest lowercase
+                              const capitalizedValue = filteredValue
+                                .toLowerCase()
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(" ");
+
+                              setName(capitalizedValue);
                             }
                           }}
                         />
@@ -295,7 +305,7 @@ export default function EditProfile() {
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
-                          type="text"
+                          type="Number"
                           value={number}
                           onChange={(e) =>
                             setNumber(e.target.value.slice(0, 15))

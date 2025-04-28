@@ -63,6 +63,8 @@ export default function MyProfile() {
   const [loading, setLoading] = useState(false);
   const [businessType, setBusinessType] = useState([]);
   const [profile, setProfile] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
   const id =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");
   const hunterToken = localStorage.getItem("hunterToken");
@@ -77,6 +79,10 @@ export default function MyProfile() {
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
+  const Guest = JSON.parse(localStorage.getItem("Guest")); // Converts "false" to boolean false
+
+  // const Guest = localStorage.getItem("Guest") || false;
+  console.log(Guest, "guestttttttttttttttttt");
 
   const handleClose = () => setIsModalVisible(false);
   const handleShow = () => setIsModalVisible(true);
@@ -225,15 +231,17 @@ export default function MyProfile() {
 
   useEffect(() => {
     if (providerId) {
-      fetchGallery(); 
+      fetchGallery();
     }
   }, []);
 
   const handleDeleteGallery = async (imageId) => {
     try {
-      await axiosInstance.delete(`/providerPhoto/${imageId}`);
-
-      fetchGallery(); // Fetch the gallery after successful deletion
+      const response = await axiosInstance.delete(`/providerPhoto/${imageId}`);
+      if (response.status === 200) {
+        setDeleteModal(false);
+        fetchGallery(); // Fetch the gallery after successful deletion
+      }
     } catch (error) {
       console.error("Failed to delete image:", error);
     }
@@ -325,6 +333,11 @@ export default function MyProfile() {
         toastKey: Date.now(),
       });
     }
+  };
+
+  const handleNotificationToggle = (id) => {
+    setDeleteModal(true);
+    setDeleteId(id);
   };
 
   // const handleNotificationToggle = async () => {
@@ -656,18 +669,15 @@ export default function MyProfile() {
                 <div className="col-lg-3">
                   <div className="w-100 ">
                     <div className="d-flex flex-column justify-content-between gap-3 align-items-center align-items-lg-end mt-lg-1">
-                      {hunterToken ? (
-                        <Link to="/editProfile" className="mw-20">
-                          <Button
-                            variant="dark"
-                            className="d-flex gap-2 align-items-center w-100 justify-content-center"
-                          >
-                            <FiEdit />
-                            Edit Profile
-                          </Button>
-                        </Link>
-                      ) : (
-                        <Link to="/provider/editProfile" className="mw-20">
+                      {!Guest && (
+                        <Link
+                          to={
+                            `${userType}` === "Provider"
+                              ? "/provider/editProfile"
+                              : "/editProfile"
+                          }
+                          className="mw-20"
+                        >
                           <Button
                             variant="dark"
                             className="d-flex gap-2 align-items-center w-100 justify-content-center"
@@ -677,6 +687,7 @@ export default function MyProfile() {
                           </Button>
                         </Link>
                       )}
+
                       {providerToken ? (
                         <Link to="/provider/edit/upload" className="mw-20">
                           <Button
@@ -805,73 +816,121 @@ export default function MyProfile() {
               )}
 
               {userType === "Provider" && (
-                <div className="card border-0 rounded-5">
-                  <div className="card-body py-4 px-lg-4">
-                    <div>
-                      <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
-                        <h4 className="mb-0 text-center text-lg-start">
-                          Add your work gallery here
-                        </h4>
+                <>
+                  <div className="card border-0 rounded-5">
+                    <div className="card-body py-4 px-lg-4">
+                      <div>
+                        <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
+                          <h4 className="mb-0 text-center text-lg-start">
+                            Add your work gallery here (max 20 files)
+                          </h4>
+                          {gallery.length > 20 ? (
+                            <Button2
+                              component="label"
+                              role={undefined}
+                              variant="contained"
+                              disabled
+                              tabIndex={-1}
+                              style={{
+                                backgroundColor: "#32de84",
+                                color: "#fff",
+                                border: "none",
+                              }}
+                            >
+                              Maximun files uploaded
+                              <VisuallyHiddenInput
+                                type="file"
+                                onChange={handleFileChange}
+                              />
+                            </Button2>
+                          ) : (
+                            <Button2
+                              component="label"
+                              role={undefined}
+                              variant="contained"
+                              tabIndex={-1}
+                              style={{
+                                backgroundColor: "#32de84",
+                                color: "#fff",
+                                border: "none",
+                              }}
+                            >
+                              Upload files
+                              <VisuallyHiddenInput
+                                type="file"
+                                onChange={handleFileChange}
+                              />
+                            </Button2>
+                          )}
+                        </div>
 
-                        <Button2
-                          component="label"
-                          role={undefined}
-                          variant="contained"
-                          tabIndex={-1}
-                          style={{
-                            backgroundColor: "#32de84",
-                            color: "#fff",
-                            border: "none",
-                          }}
-                        >
-                          Upload files
-                          <VisuallyHiddenInput
-                            type="file"
-                            onChange={handleFileChange}
-                          />
-                        </Button2>
-                      </div>
-
-                      <div className="row mt-4">
-                        {gallery.length > 0 ? (
-                          gallery.map((image, index) => {
-                            return (
-                              <div
-                                key={index}
-                                className="col-md-3 col-6 mb-3 position-relative"
-                              >
-                                <div className="position-absolute top-0 end-0 me-4 mt-3">
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() =>
-                                      handleDeleteGallery(image._id)
-                                    }
-                                  >
-                                    <FaTrash />
-                                  </button>
+                        <div className="row mt-4">
+                          {gallery.length > 0 ? (
+                            gallery.map((image, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="col-md-3 col-6 mb-3 position-relative"
+                                >
+                                  <div className="position-absolute top-0 end-0 me-4 mt-3">
+                                    <button
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleNotificationToggle(image._id)
+                                      }
+                                    >
+                                      <FaTrash />
+                                    </button>
+                                  </div>
+                                  <img
+                                    src={image?.url}
+                                    alt="Gallery Item"
+                                    className="rounded-5"
+                                    style={{
+                                      width: "100%",
+                                      height: "200px",
+                                      objectFit: "cover",
+                                    }}
+                                  />
                                 </div>
-                                <img
-                                  src={image?.url}
-                                  alt="Gallery Item"
-                                  className="rounded-5"
-                                  style={{
-                                    width: "100%",
-                                    height: "200px",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                              </div>
-                            );
-                          })
-                        ) : (
-                          <p className="text-center mt-3">
-                            No images uploaded yet.
-                          </p>
-                        )}
+                              );
+                            })
+                          ) : (
+                            <p className="text-center mt-3">
+                              No images uploaded yet.
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                  <Modal
+                    show={deleteModal}
+                    onHide={() => setDeleteModal(false)}
+                    centered
+                  >
+                    <Modal.Header className="border-0" closeButton>
+                      <Modal.Title>Delete Alert</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="border-0 text-center">
+                      <h3>Do you want to delete this photo?</h3>
+                    </Modal.Body>
+                    <Modal.Footer className="border-0 ">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setDeleteModal(false)}
+                      >
+                        Close
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDeleteGallery(deleteId)}
+                      >
+                        Delete
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </>
               )}
 
               <div className="row gy-4 my-4">
