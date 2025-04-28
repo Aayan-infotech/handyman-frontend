@@ -530,9 +530,9 @@ function Home() {
                       </a>
                     </li> */}
                     <li>
-                      <a href="privacy" className="text-light">
+                      <Link to="/privacy" className="text-light">
                         Privacy Policy
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </Col>
