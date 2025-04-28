@@ -207,9 +207,9 @@ function Search() {
                           </a>
                         </li>
                         <li>
-                          <a href="privacy" className="text-light">
+                          <Link to="/privacy" className="text-light">
                             Privacy Policy
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </Col>
