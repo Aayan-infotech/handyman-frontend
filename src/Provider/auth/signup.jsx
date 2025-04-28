@@ -384,7 +384,7 @@ export default function SignUpProvider() {
                       </Form.Label>
                       <Col sm="7">
                         <Form.Control
-                          type="text"
+                          type="Number"
                           placeholder="Phone number"
                           value={phoneNo}
                           onChange={(e) =>

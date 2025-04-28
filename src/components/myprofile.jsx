@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import LoggedHeader from "./loggedNavbar";
 import {
   MdMessage,
@@ -32,6 +32,8 @@ import { styled } from "@mui/material/styles";
 export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const [backgroundImg, setBackgroundImg] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [description, setDescription] = useState("");
@@ -80,6 +82,7 @@ export default function MyProfile() {
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
   const Guest = JSON.parse(localStorage.getItem("Guest")); // Converts "false" to boolean false
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
   // const Guest = localStorage.getItem("Guest") || false;
   console.log(Guest, "guestttttttttttttttttt");
@@ -101,7 +104,13 @@ export default function MyProfile() {
       console.error("Error fetching background image:", error);
     }
   };
-
+  const lineClampStyle = {
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: "3",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  };
   const handleImageUpload = async (event) => {
     setToastProps({
       message: "Image uploading",
@@ -362,6 +371,16 @@ export default function MyProfile() {
   //     alert('Failed to update notification settings.');
   //   }
   // };
+  const aboutTextRef = useRef(null);
+  useEffect(() => {
+    if (aboutTextRef.current) {
+      const lineHeight = parseFloat(
+        getComputedStyle(aboutTextRef.current).lineHeight
+      );
+      const maxHeight = lineHeight * 3; // 3 lines
+      setIsOverflowing(aboutTextRef.current.scrollHeight > maxHeight);
+    }
+  }, [aboutText]);
   const deleteAccount = async () => {
     try {
       const token = hunterToken || providerToken;
@@ -589,18 +608,36 @@ export default function MyProfile() {
 
                     {providerToken && (
                       <>
-                        {" "}
                         {aboutText ? (
                           <div className="d-flex flex-column align-items-center align-items-lg-start gap-1 justify-content-center justify-content-lg-start">
-                            <p className="mt-3">{aboutText}</p>{" "}
+                            <div className="mt-3">
+                              <div
+                                ref={aboutTextRef}
+                                style={isExpanded ? {} : lineClampStyle}
+                              >
+                                {aboutText}
+                              </div>
+                              {isOverflowing && (
+                                <p
+                                  onClick={() => setIsExpanded((prev) => !prev)}
+                                  className="text-primary mt-2"
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {isExpanded ? "Read less" : "Read more"}
+                                </p>
+                              )}
+                            </div>
                             <button
-                              className=" px-3 py-2 rounded-pill shadow"
+                              className="px-3 py-2 rounded-pill shadow"
                               style={{
                                 backgroundColor: "#32de84",
                                 color: "#fff",
                                 border: "none",
                               }}
-                              onClick={() => setShowModal(true)} // Open the modal for editing
+                              onClick={() => {
+                                setDescription(aboutText);
+                                setShowModal(true);
+                              }}
                             >
                               Edit About
                             </button>
@@ -613,22 +650,74 @@ export default function MyProfile() {
                               color: "#fff",
                               border: "none",
                             }}
-                            onClick={() => setShowModal(true)} // Open the modal for adding about text
+                            onClick={() => setShowModal(true)}
                           >
                             Add Description
                           </button>
                         )}
+
+                        {/* Modal */}
+                        <Modal
+                          show={showModal}
+                          onHide={() => setShowModal(false)}
+                          centered
+                        >
+                          <Modal.Header closeButton>
+                            <Modal.Title>Description</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <textarea
+                              className="form-control"
+                              rows="3"
+                              placeholder="Enter your description (max 150 words)..."
+                              value={description}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === "") {
+                                  setDescription(value);
+                                  return;
+                                }
+                                const words = value.trim().split(/\s+/);
+                                const hasOversizedWord = words.some(
+                                  (word) => word.length > 30
+                                );
+
+                                if (!hasOversizedWord && words.length <= 50) {
+                                  setDescription(value);
+                                }
+                              }}
+                            ></textarea>
+                            <p className="text-muted">
+                              Word count:{" "}
+                              {description.trim()
+                                ? description.trim().split(/\s+/).length
+                                : 0}
+                              /50
+                            </p>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button
+                              variant="secondary"
+                              onClick={() => setShowModal(false)}
+                            >
+                              Close
+                            </Button>
+                            <Button variant="primary" onClick={handleSave}>
+                              Save
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
                       </>
                     )}
 
-                    {/* Modal Component */}
+                    {/* Modal */}
                     <Modal
                       show={showModal}
                       onHide={() => setShowModal(false)}
                       centered
                     >
                       <Modal.Header closeButton>
-                        <Modal.Title>Add Description</Modal.Title>
+                        <Modal.Title>Description</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <textarea
@@ -637,9 +726,18 @@ export default function MyProfile() {
                           placeholder="Enter your description (max 150 words)..."
                           value={description}
                           onChange={(e) => {
-                            const words = e.target.value.trim().split(/\s+/);
-                            if (words.length <= 50 || e.target.value === "") {
-                              setDescription(e.target.value);
+                            const value = e.target.value;
+                            if (value === "") {
+                              setDescription(value);
+                              return;
+                            }
+                            const words = value.trim().split(/\s+/);
+                            const hasOversizedWord = words.some(
+                              (word) => word.length > 30
+                            );
+
+                            if (!hasOversizedWord && words.length <= 50) {
+                              setDescription(value);
                             }
                           }}
                         ></textarea>
