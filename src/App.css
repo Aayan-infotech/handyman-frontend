@@ -456,6 +456,13 @@
 .price-detail h2 {
   color: #000;
 }
+textarea::placeholder {
+  padding: 10px 0;
+}
+textarea:focus-visible {
+  outline: none !important;
+}
+
 .message-box.limit-design {
   max-height: 100vh !important;
   overflow: auto !important;

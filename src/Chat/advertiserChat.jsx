@@ -46,7 +46,11 @@ const sendMessage = async (
       users,
     };
     await set(
-      ref(realtimeDb, `chatList/${receiverId}/${senderId}/${chatId}`),
+      ref(
+        realtimeDb,
+        `chatList/${receiverId}/${senderId}/${chatId}` ||
+          `chatList/${senderId}/${receiverId}/${chatId}`
+      ),
       chatMap
     );
   } catch (error) {
@@ -54,7 +58,7 @@ const sendMessage = async (
   }
 };
 
-export default function AdvertiserChat() {
+export default function AdvertiserChat({ messageData, selectedChat }) {
   const location = useLocation();
   const { id } = useParams();
   const [show, setShow] = useState(false);
@@ -64,15 +68,24 @@ export default function AdvertiserChat() {
   const [filteredChatData, setFilteredChatData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [chatId, setChatId] = useState(null);
-  const [receiverId] = useState(id);
+  const [chatId, setChatId] = useState(selectedChat?.chatId || null);
+
   const userType = localStorage.getItem("ProviderId") ? "Provider" : "Hunter";
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   const currentUserName =
     localStorage.getItem("ProviderName") || localStorage.getItem("hunterName");
+  const chatMessage = selectedChat?.messages;
+  console.log("chatId", chatId);
+  const receiverId =
+    id ||
+    (chatMessage?.receiverId !== currentUser && chatMessage.receiverId) ||
+    (chatMessage?.senderId !== currentUser && chatMessage.senderId);
 
-  // Fetch messages when chatId and currentUser are available
+  console.log("receiverId", receiverId);
+  console.log("currentUser", currentUser);
+  console.log("chatId", chatId);
+
   useEffect(() => {
     if (!currentUser || !receiverId || !chatId) return;
 
@@ -115,7 +128,7 @@ export default function AdvertiserChat() {
       if (
         responseData &&
         typeof responseData === "object" &&
-        (responseData.sender?._id === id || responseData.receiver?._id === id)
+        (responseData.senderId === id || responseData.receiverId === id)
       ) {
         setChatData([responseData]); // wrap in array if used elsewhere
         setFilteredChatData(responseData);
@@ -132,7 +145,7 @@ export default function AdvertiserChat() {
 
   useEffect(() => {
     handleData();
-  }, [id]); // Add id to dependency array to refetch when it changes
+  }, [id]);
 
   useEffect(() => {
     if (!currentUser || !receiverId) return;
@@ -170,22 +183,15 @@ export default function AdvertiserChat() {
     handleProvider();
   }, [location]);
 
-  // Determine the other user in the conversation
-  const otherUser = filteredChatData
-    ? filteredChatData.receiver?._id === id
-      ? filteredChatData.receiver
-      : filteredChatData.sender
-    : null;
+  console.log("filteredChatData", chatData);
+  const otherUser =
+    chatData[0]?.receiver?._id === receiverId
+      ? chatData[0]?.receiver
+      : chatData[0]?.sender;
 
-  // Display name based on user type
-  const displayName = otherUser
-    ? otherUser.name || otherUser.businessName
-    : "User";
-
-  // Display avatar based on user type
-  const avatarContent = otherUser
-    ? otherUser.name?.charAt(0) || otherUser.businessName?.charAt(0)
-    : "U";
+  const displayName = otherUser?.name || otherUser?.businessName || "User";
+  const avatarContent =
+    otherUser?.name?.charAt(0) || otherUser?.businessName?.charAt(0) || "U";
 
   console.log("messages", messages);
 
@@ -255,9 +261,9 @@ export default function AdvertiserChat() {
               <div
                 className={`input-send ${show ? "input-send-provider" : ""}`}
               >
-                <Form.Control
+                <textarea
                   placeholder="Type Message"
-                  className="w-100 border-0 py-3 px-3 rounded-5"
+                  className="w-100 border-0 px-3 rounded-5"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => {
