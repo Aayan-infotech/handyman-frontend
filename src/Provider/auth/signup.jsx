@@ -388,7 +388,7 @@ export default function SignUpProvider() {
                           placeholder="Phone number"
                           value={phoneNo}
                           onChange={(e) =>
-                            setPhoneNo(e.target.value.slice(0, 15))
+                            setPhoneNo(e.target.value)
                           }
                         />
                       </Col>
