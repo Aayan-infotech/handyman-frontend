@@ -127,7 +127,7 @@ export default function Message() {
     const { chatId, users } = selectedChat;
     const { jobId } = users;
 
-    if ( !chatId) {
+    if (!chatId) {
       console.error("Missing chatId in selectedChat");
       return;
     }
@@ -313,15 +313,18 @@ export default function Message() {
               {open && (
                 <div className="col-lg-6">
                   <div className="message-box">
-                    {localStorage.getItem("PlanType") === "Advertising" ? (
-                      <>
-                        <AdvertiserChat
-                          messageData={messageData}
-                          messages={chatMessages}
-                          selectedChat={selectedChat}
-                          setSelectedChat={setSelectedChat}
-                        />
-                      </>
+                    {localStorage.getItem("PlanType") === "Advertising" ||
+                    (selectedChat &&
+                      messageData[selectedChat.chatId]?.receiver
+                        ?.subscriptionType === "Advertising") ||
+                    messageData[selectedChat.chatId]?.sender
+                      ?.subscriptionType === "Advertising" ? (
+                      <AdvertiserChat
+                        messageData={messageData}
+                        messages={chatMessages}
+                        selectedChat={selectedChat}
+                        setSelectedChat={setSelectedChat}
+                      />
                     ) : (
                       <Chat
                         messageData={messageData}

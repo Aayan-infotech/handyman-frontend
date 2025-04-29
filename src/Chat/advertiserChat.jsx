@@ -189,14 +189,14 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       ? chatData[0]?.receiver
       : chatData[0]?.sender;
 
-  const displayName = otherUser?.name || otherUser?.businessName || "User";
+  const displayName = otherUser?.name || otherUser?.contactName || "User";
   const avatarContent =
-    otherUser?.name?.charAt(0) || otherUser?.businessName?.charAt(0) || "U";
+    otherUser?.name?.charAt(0) || otherUser?.contactName?.charAt(0) || "U";
 
   console.log("messages", messages);
 
   return (
-    <div className={`d-flex flex-column gap-3 pb-4 bg-second`}>
+    <div className={`d-flex flex-column gap-3 pb-4 bg-second advertiser-chat`}>
       <div className="card border-0 rounded-3">
         <div className="card-body p-2">
           <div className="d-flex flex-row gap-2 align-items-center justify-content-between">

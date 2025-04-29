@@ -352,15 +352,20 @@ export default function JobManagement() {
                                 <td>{provider?.jobStatus}</td>
                                 <td>
                                   <tr>
-                                    {provider?.jobStatus !== "Completed" && !location.pathname.includes("job-history") && (
-                                      <td>
-                                        <Link to={`/job-edit/${provider._id}`}>
-                                          <HiOutlinePencilSquare
-                                            style={{ height: "30px" }}
-                                          />
-                                        </Link>
-                                      </td>
-                                    )}
+                                    {provider?.jobStatus !== "Completed" &&
+                                      !location.pathname.includes(
+                                        "job-history"
+                                      ) && (
+                                        <td>
+                                          <Link
+                                            to={`/job-edit/${provider._id}`}
+                                          >
+                                            <HiOutlinePencilSquare
+                                              style={{ height: "30px" }}
+                                            />
+                                          </Link>
+                                        </td>
+                                      )}
 
                                     <td>
                                       <Link to={`/job-detail/${provider._id}`}>
@@ -373,17 +378,18 @@ export default function JobManagement() {
                                     <td>
                                       {!location.pathname.includes(
                                         "job-history"
-                                      ) && provider?.jobStatus !== "Deleted" && (
-                                        <IoTrashOutline
-                                          onClick={() =>
-                                            handleJobDelete(provider._id)
-                                          }
-                                          style={{
-                                            cursor: "pointer",
-                                            height: "30px",
-                                          }}
-                                        />
-                                      )}
+                                      ) &&
+                                        provider?.jobStatus !== "Deleted" && (
+                                          <IoTrashOutline
+                                            onClick={() =>
+                                              handleJobDelete(provider._id)
+                                            }
+                                            style={{
+                                              cursor: "pointer",
+                                              height: "30px",
+                                            }}
+                                          />
+                                        )}
                                     </td>
                                   </tr>
                                 </td>
@@ -392,6 +398,10 @@ export default function JobManagement() {
                           </tbody>
                         </Table>
                         <Pagination className="justify-content-center pagination-custom">
+                          <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                          />
                           {[...Array(totalPages)].map((_, index) => (
                             <Pagination.Item
                               key={index + 1}
@@ -401,6 +411,10 @@ export default function JobManagement() {
                               {index + 1}
                             </Pagination.Item>
                           ))}
+                          <Pagination.Next
+                            disabled={currentPage === totalPages}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                          />
                         </Pagination>
                       </div>
                     </div>
