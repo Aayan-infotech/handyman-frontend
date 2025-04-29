@@ -122,6 +122,17 @@ export default function MyProfile() {
     console.log(file, ".....file");
     if (!file) return;
 
+    const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+    if (!allowedExtensions.test(file.name)) {
+      setToastProps({
+        message: "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
+        type: "error",
+        toastKey: Date.now(),
+      });
+
+      return;
+    }
+
     const formData = new FormData();
     formData.append("backgroundImg", file);
     formData.append("userType", userType);
@@ -183,6 +194,18 @@ export default function MyProfile() {
       toastKey: Date.now(),
     });
     const file = event.target.files[0];
+
+    const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+    if (!allowedExtensions.test(file.name)) {
+      setToastProps({
+        message: "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
+        type: "error",
+        toastKey: Date.now(),
+      });
+
+      return;
+    }
+
     if (file) {
       setSelectedFile(file);
       handleUpload(file); // Trigger upload on file selection
