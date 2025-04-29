@@ -308,7 +308,7 @@ export default function EditProfile() {
                           type="Number"
                           value={number}
                           onChange={(e) =>
-                            setNumber(e.target.value.slice(0, 15))
+                            setNumber(e.target.value)
                           }
                         />
                       </Col>

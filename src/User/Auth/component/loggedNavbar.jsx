@@ -86,7 +86,10 @@ export default function LoggedHeader() {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
         }
-
+        if (fetchedUser === undefined || fetchedUser === null) {
+          localStorage.clear();
+          return;
+        }
         if (fetchedUser) {
           setImages(fetchedUser?.images || "");
         }
