@@ -131,7 +131,7 @@ export default function ManageSubscription() {
                     <h5 className="user ">Hello {name}</h5>
                   </div>
                   <div className="col-lg-8">
-                    <div className="d-flex justify-content-end">
+                    <div className="d-flex justify-content-center justify-content-lg-end">
                       <Button
                         variant="contained"
                         color="success"
@@ -186,7 +186,7 @@ export default function ManageSubscription() {
                           </h3>
                           <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 pt-5 pb-3">
                             <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
-                              <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start">
+                              <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start ">
                                 <h6>
                                   Valid From: {formatDate(item?.startDate)}
                                 </h6>
@@ -195,7 +195,7 @@ export default function ManageSubscription() {
                               <h3 className="mt-3 text-start">
                                 {item.subscriptionPlanId.planName}
                               </h3>
-                              <div className="d-flex justify-content-lg-between justify-content-start align-items-center w-100">
+                              <div className="d-flex justify-content-lg-between justify-content-start align-items-center w-100 flex-wrap flex-lg-nowrap gap-4">
                               
                               <h5>${item.amount}</h5>
                               <h4>

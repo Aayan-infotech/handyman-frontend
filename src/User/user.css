@@ -734,6 +734,10 @@
   .login .card {
     width: calc(100% - 8%);
   }
+  .login .card.shadow {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
   .service-profile {
     position: absolute;
     top: -75px !important;
