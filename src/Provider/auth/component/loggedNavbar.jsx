@@ -136,7 +136,7 @@ export default function LoggedHeader() {
               </div>
             )}
 
-            <div className="d-flex justify-content-between align-items-center gap-4">
+            <div className="d-flex justify-content-between align-items-center gap-2">
               <Link
                 className="notification position-relative"
                 to="/notification"
