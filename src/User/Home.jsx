@@ -142,10 +142,10 @@ export default function Main() {
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">
                 <div className="d-flex justify-content-between flex-column flex-lg-row gap-3 align-items-center pb-3">
-                  <h5 className="user">Hello {name}</h5>
+                  <h5 className="user text-center">Hello {name}</h5>
                 </div>
                 <div className="row py-3 gy-4">
-                  <div className="col-lg-3">
+                  <div className="col-lg-3 col-6">
                     <Link to="/post-new-job">
                       <div className="card green-card border-0 rounded-4 position-relative overflow-hidden h-200">
                         <div className="card-body">
@@ -158,7 +158,7 @@ export default function Main() {
                       </div>
                     </Link>
                   </div>
-                  <div className="col-lg-3">
+                  <div className="col-lg-3 col-6">
                     <Link to="/service-provider">
                       <div className="card blue-card border-0 rounded-4 position-relative overflow-hidden h-200">
                         <div className="card-body">

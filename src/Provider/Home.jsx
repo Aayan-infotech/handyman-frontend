@@ -393,7 +393,7 @@ export default function HomeProvider() {
                 <h3 className="">
                   You are currently on an <strong>Advertising Plan</strong>,
                   <br />
-                  which does not include access to job listings.
+                  Job listing are not available for this plan.
                 </h3>
               </div>
             </div>
