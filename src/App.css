@@ -708,6 +708,10 @@ table th {
   .limit-design .MuiAvatar-circular {
     max-width: 80px !important;
   }
+  .search {
+   
+    width: 100% !important;
+}
   .top-section-main .user {
     display: flex;
     justify-content: center;
