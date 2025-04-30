@@ -462,7 +462,10 @@ textarea::placeholder {
 textarea:focus-visible {
   outline: none !important;
 }
-
+.pagination {
+  margin-bottom: 0 !important;
+  padding-bottom: 10px !important;
+}
 .message-box.limit-design {
   max-height: 100vh !important;
   overflow: auto !important;

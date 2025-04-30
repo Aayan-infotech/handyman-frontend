@@ -124,11 +124,14 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       );
 
       const responseData = response?.data?.data;
+      console.log("responseData", responseData);
 
       if (
-        responseData &&
-        typeof responseData === "object" &&
-        (responseData.senderId === id || responseData.receiverId === id)
+        (responseData &&
+          typeof responseData === "object" &&
+          (responseData.senderId === id || responseData.receiverId === id)) ||
+        responseData.sender?._id === id ||
+        responseData.receiver?._id === id
       ) {
         setChatData([responseData]); // wrap in array if used elsewhere
         setFilteredChatData(responseData);

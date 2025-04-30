@@ -191,6 +191,7 @@ export default function Message() {
         : messageData[item.chatId]?.sender,
     };
   });
+  console.log("messageData", messageData, "selectedChat ", selectedChat);
 
   return (
     <>
@@ -198,7 +199,11 @@ export default function Message() {
       <div className="bg-second">
         <div className="container">
           {open && (
-            <FaArrowLeft onClick={() => setOpen(false)} className="mt-4 fs-4" style={{ cursor: "pointer" }} />
+            <FaArrowLeft
+              onClick={() => setOpen(false)}
+              className="mt-4 fs-4"
+              style={{ cursor: "pointer" }}
+            />
           )}
           <div className="top-section-main py-4 px-lg-5">
             {!open && (

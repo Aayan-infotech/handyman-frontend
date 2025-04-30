@@ -336,7 +336,12 @@ export default function HomeProvider() {
                             <div className="col-lg-3">
                               <div className="d-flex flex-row gap-3 align-items-center">
                                 <div className="d-flex flex-column align-items-start gap-1">
-                                  <h3 className="mb-0">{job.title}</h3>
+                                  <h3
+                                    className="mb-0 text-truncate"
+                                    style={{ maxWidth: "200px" }}
+                                  >
+                                    {job.title}
+                                  </h3>
                                   <h6>
                                     {new Date(job.createdAt).toDateString()}
                                   </h6>
