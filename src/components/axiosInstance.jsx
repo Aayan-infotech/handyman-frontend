@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://3.223.253.106:7787/api",
+  baseURL: "http://18.209.91.97:7787/api",
 });
 
 let isRefreshing = false;
@@ -76,11 +76,11 @@ axiosInstance.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          "http://3.223.253.106:7787/api/auth/refreshtoken",
+          "http://18.209.91.97:7787/api/auth/refreshtoken",
           { refreshToken, userType },
           {
             // Important: Don't use axiosInstance here to avoid infinite loop
-            baseURL: "http://3.223.253.106:7787/api",
+            baseURL: "http://18.209.91.97:7787/api",
             headers: {
               "Content-Type": "application/json",
             },
