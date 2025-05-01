@@ -456,6 +456,16 @@
 .price-detail h2 {
   color: #000;
 }
+textarea::placeholder {
+  padding: 10px 0;
+}
+textarea:focus-visible {
+  outline: none !important;
+}
+.pagination {
+  margin-bottom: 0 !important;
+  padding-bottom: 10px !important;
+}
 .message-box.limit-design {
   max-height: 100vh !important;
   overflow: auto !important;
@@ -690,7 +700,24 @@ table th {
     height: 130px;
     border: 8px solid white;
   }
-
+  .otp-input input {
+    border: 0 !important;
+    border-radius: 20px !important;
+    padding: 10px 4px !important;
+  }
+  .limit-design .MuiAvatar-circular {
+    max-width: 80px !important;
+  }
+  .search {
+   
+    width: 100% !important;
+}
+  .top-section-main .user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
   .w-nodata {
     width: 100% !important;
   }

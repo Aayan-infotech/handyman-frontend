@@ -11,6 +11,7 @@ import {
   MobileDatePicker,
   DatePicker,
 } from "@mui/x-date-pickers";
+import Modal from "react-bootstrap/Modal";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TextField, Stack } from "@mui/material";
 import axiosInstance from "../components/axiosInstance";
@@ -24,6 +25,7 @@ import Select from "@mui/material/Select";
 import { MdOutlineSupportAgent } from "react-icons/md";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { FaTrash } from "react-icons/fa";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -68,6 +70,15 @@ export default function JobEdit() {
   const [radius, setRadius] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [show, setShow] = useState(false);
+  const [modalMode, setModalMode] = useState("view"); // 'view' or 'add'
+  const [newDocuments, setNewDocuments] = useState([]);
+
+  const handleClose = () => setShow(false);
+  const handleShow = (mode) => {
+    setModalMode(mode);
+    setShow(true);
+  };
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -130,7 +141,7 @@ export default function JobEdit() {
             setBudget(jobData.estimatedBudget);
             setSelectedRadius(jobData?.jobLocation?.jobRadius / 1000); // Convert back to km
             setAddress(jobData.jobLocation.jobAddressLine);
-            setDocuments(jobData.documents);
+            setDocuments(jobData.documents || []);
             setLatitude(jobData?.jobLocation?.location?.coordinates[1]);
             setLongitude(jobData?.jobLocation?.location?.coordinates[0]);
             setCity(jobData?.jobLocation?.city);
@@ -184,7 +195,19 @@ export default function JobEdit() {
     formData.append("timeframe[to]", endTime.unix());
     formData.append("date", time.toISOString());
 
-    Array.from(documents).forEach((file) => {
+    // Add existing documents
+    documents.forEach((file) => {
+      if (file instanceof File || file instanceof Blob) {
+        formData.append("documents", file);
+      } else if (file.url) {
+        // If it's an existing file from server, you might want to handle differently
+        // Maybe send the URL or ID to keep it
+        formData.append("existingDocuments[]", file.url);
+      }
+    });
+
+    // Add new documents
+    Array.from(newDocuments).forEach((file) => {
       formData.append("documents", file);
     });
 
@@ -218,6 +241,23 @@ export default function JobEdit() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddFiles = (e) => {
+    const files = Array.from(e.target.files);
+    setNewDocuments(files);
+  };
+
+  const handleSaveNewFiles = () => {
+    setDocuments([...documents, ...newDocuments]);
+    setNewDocuments([]);
+    handleClose();
+  };
+
+  const handleDeleteFile = (index) => {
+    const updatedDocuments = [...documents];
+    updatedDocuments.splice(index, 1);
+    setDocuments(updatedDocuments);
   };
 
   console.log(address);
@@ -343,7 +383,7 @@ export default function JobEdit() {
                       </Select>
                     </FormControl>
                   </div>
-                  <div className="col-lg-4">
+                  <div className={` col-lg-4`}>
                     <Form.Control
                       type="file"
                       className="input1"
@@ -351,20 +391,19 @@ export default function JobEdit() {
                       multiple
                     />
                     {documents.length > 0 && (
-                      <div className="mt-2">
-                        <h6>Selected Files:</h6>
-                        <ul className="list-unstyled d-flex flex-row flex-wrap">
-                          {documents.map((file, index) => (
-                            <li className="" key={index}>
-                              <img
-                                src={file}
-                                alt="file"
-                                width="100"
-                                height="50"
-                              />
-                            </li>
-                          ))}
-                        </ul>
+                      <div className="d-flex flex-row gap-3 mt-3">
+                        <button
+                          className="btn btn-info btn-sm w-100"
+                          onClick={() => handleShow("view")}
+                        >
+                          See
+                        </button>
+                        <button
+                          className="btn btn-success btn-sm w-100"
+                          onClick={() => handleShow("add")}
+                        >
+                          Add
+                        </button>
                       </div>
                     )}
                   </div>
@@ -445,7 +484,142 @@ export default function JobEdit() {
           </div>
         </>
       )}
+      <Modal show={show} onHide={handleClose} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {modalMode === "view"
+              ? "Your Uploaded Documents"
+              : "Add More Documents"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {modalMode === "view" ? (
+            <div className="mt-2">
+              {documents.length > 0 ? (
+                <>
+                  <h6>Uploaded Files:</h6>
+                  <div className="row">
+                    {documents.map((file, index) => {
+                      // Handle both string URLs and File objects
+                      const isFileObject =
+                        file instanceof File || file instanceof Blob;
+                      const fileUrl = isFileObject
+                        ? URL.createObjectURL(file)
+                        : file.url || file;
+                      const fileName = isFileObject
+                        ? file.name
+                        : fileUrl.split("/").pop();
 
+                      // Determine file type
+                      const fileExtension = fileName
+                        .split(".")
+                        .pop()
+                        .toLowerCase();
+                      const isImage = [
+                        "jpg",
+                        "jpeg",
+                        "png",
+                        "webp",
+                        "gif",
+                      ].includes(fileExtension);
+                      const isPDF = fileExtension === "pdf";
+
+                      return (
+                        <div className="col-md-4 mb-3" key={index}>
+                          <div className="card h-100">
+                            <div className="card-body p-2">
+                              {isImage ? (
+                                <img
+                                  src={fileUrl}
+                                  alt={fileName}
+                                  className="img-fluid"
+                                  style={{
+                                    height: "150px",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              ) : isPDF ? (
+                                <embed
+                                  src={fileUrl}
+                                  width="100%"
+                                  height="150px"
+                                  type="application/pdf"
+                                />
+                              ) : (
+                                <div
+                                  className="document-preview d-flex align-items-center justify-content-center bg-light"
+                                  style={{ height: "150px" }}
+                                >
+                                  <i className="fas fa-file-alt fa-3x text-secondary"></i>
+                                </div>
+                              )}
+                              <div className="mt-2 d-flex justify-content-between align-items-center">
+                                <small
+                                  className="text-truncate"
+                                  style={{ maxWidth: "70%" }}
+                                >
+                                  {fileName}
+                                </small>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  onClick={() => handleDeleteFile(index)}
+                                >
+                                  <FaTrash />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-4">
+                  <p>No documents uploaded yet</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <Form.Control
+                type="file"
+                className="mb-3"
+                onChange={handleAddFiles}
+                multiple
+              />
+              {newDocuments.length > 0 && (
+                <div className="mt-3">
+                  <h6>Files to be added:</h6>
+                  <ul className="list-group">
+                    {Array.from(newDocuments).map((file, index) => (
+                      <li
+                        key={index}
+                        className="list-group-item d-flex justify-content-between align-items-center"
+                      >
+                        {file.name}
+                        <span className="badge bg-primary rounded-pill">
+                          {(file.size / 1024).toFixed(2)} KB
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-secondary" onClick={handleClose}>
+            Close
+          </button>
+          {modalMode === "add" && newDocuments.length > 0 && (
+            <button className="btn btn-success" onClick={handleSaveNewFiles}>
+              Add Files
+            </button>
+          )}
+        </Modal.Footer>
+      </Modal>
       <Toaster
         message={toastProps.message}
         type={toastProps.type}

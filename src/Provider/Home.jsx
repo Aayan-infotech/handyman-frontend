@@ -25,6 +25,8 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import FormControl from "@mui/material/FormControl";
 import axiosInstance from "../components/axiosInstance";
+import Pagination from "react-bootstrap/Pagination";
+
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -48,6 +50,12 @@ export default function HomeProvider() {
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+  });
 
   const [filteredData, setFilteredData] = useState([]);
   const [toastProps, setToastProps] = useState({
@@ -73,21 +81,29 @@ export default function HomeProvider() {
     }
     return `/provider/jobspecification/${job._id}`;
   };
-  const handleAllData = async () => {
+  const handleAllData = async (page = 1) => {
     if (!businessType || latitude === null || longitude === null) return;
     setLoading(true);
     try {
       const result = await dispatch(
-        getProviderJobs({ businessType, latitude, longitude, radius })
+        getProviderJobs({
+          businessType,
+          latitude,
+          longitude,
+          radius,
+          page,
+          limit: pagination.limit,
+        })
       );
 
       if (getProviderJobs.fulfilled.match(result)) {
         setData(result.payload?.data || []);
-        // setToastProps({
-        //   message: "Nearby Jobs Fetched Successfully",
-        //   type: "success",
-        //   toastKey: Date.now(),
-        // });
+        setPagination({
+          total: result.payload?.pagination?.totalJobs || 0,
+          page: result.payload?.pagination?.currentPage || 1,
+          totalPages: result.payload?.pagination?.totalPages || 1,
+          limit: pagination.limit,
+        });
       } else {
         throw new Error(result.payload?.message || "Error fetching jobs.");
       }
@@ -103,6 +119,7 @@ export default function HomeProvider() {
     }
   };
 
+  console.log("pagination", pagination.totalPages);
   useEffect(() => {
     if (providerToken) {
       getUser();
@@ -170,7 +187,12 @@ export default function HomeProvider() {
       // addAlert("Error fetching user data", "error");
     }
   };
-
+  const handlePageChange = (page) => {
+    if (page !== pagination.page) {
+      setPagination((prev) => ({ ...prev, page }));
+      handleAllData(page);
+    }
+  };
   const filterAddressPatterns = (address) => {
     if (!address) return address;
 
@@ -314,7 +336,12 @@ export default function HomeProvider() {
                             <div className="col-lg-3">
                               <div className="d-flex flex-row gap-3 align-items-center">
                                 <div className="d-flex flex-column align-items-start gap-1">
-                                  <h3 className="mb-0">{job.title}</h3>
+                                  <h3
+                                    className="mb-0 text-truncate"
+                                    style={{ maxWidth: "200px" }}
+                                  >
+                                    {job.title}
+                                  </h3>
                                   <h6>
                                     {new Date(job.createdAt).toDateString()}
                                   </h6>
@@ -366,10 +393,46 @@ export default function HomeProvider() {
                 <h3 className="">
                   You are currently on an <strong>Advertising Plan</strong>,
                   <br />
-                  which does not include access to job listings.
+                  Job listing are not available for this plan.
                 </h3>
               </div>
             </div>
+          )}
+          {pagination.totalPages > 1 && (
+            <Pagination className="justify-content-center pagination-custom mt-4">
+              <Pagination.Prev
+                disabled={pagination.page === 1}
+                onClick={() => handlePageChange(pagination.page - 1)}
+              />
+              {Array.from(
+                { length: Math.min(5, pagination.totalPages) },
+                (_, i) => {
+                  let pageNum;
+                  if (pagination.totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (pagination.page <= 3) {
+                    pageNum = i + 1;
+                  } else if (pagination.page >= pagination.totalPages - 2) {
+                    pageNum = pagination.totalPages - 4 + i;
+                  } else {
+                    pageNum = pagination.page - 2 + i;
+                  }
+                  return (
+                    <Pagination.Item
+                      key={pageNum}
+                      active={pageNum === pagination.page}
+                      onClick={() => handlePageChange(pageNum)}
+                    >
+                      {pageNum}
+                    </Pagination.Item>
+                  );
+                }
+              )}
+              <Pagination.Next
+                disabled={pagination.page === pagination.totalPages}
+                onClick={() => handlePageChange(pagination.page + 1)}
+              />
+            </Pagination>
           )}
         </div>
       </div>

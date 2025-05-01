@@ -31,7 +31,7 @@ const sendMessage = async (
   setMessages,
   jobId
 ) => {
-  if (!chatId || !jobId) {
+  if (!chatId) {
     console.error("Chat ID or Job ID is missing");
     return;
   }
@@ -64,7 +64,7 @@ const sendMessage = async (
     console.log("CHAT MAP =>", chatMap);
 
     const newMessageRef = push(
-      ref(realtimeDb, `chats/${jobId}/${chatId}/messages`)
+      ref(realtimeDb, `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`)
     );
     await set(newMessageRef, chat);
 
@@ -161,7 +161,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   console.log("Filtered messageData:", validMessageData);
   const hunterId = localStorage.getItem("hunterId");
   const receiverId = id || chatMessage?.senderId;
-  const senderId = id || chatMessage?.recieverId;
+  const senderId = id || chatMessage?.receiverId  ;
   const [jobShow, setJobShow] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
@@ -169,7 +169,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const jobId =
     new URLSearchParams(location.search).get("jobId") ||
     messageData?.jobPost?._id ||
-    selectedChat?.users?.jobId;
+    selectedChat?.users?.jobId ||
+    null;
 
   console.log("job id in chat", receiverId);
   useEffect(() => {
@@ -184,7 +185,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
     const chatMessagesRef = ref(
       realtimeDb,
-      `chats/${jobId}/${chatId}/messages`
+      `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`
     );
 
     const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
@@ -285,7 +286,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   };
 
   const handleSend = async () => {
-    if (msg.trim() === "" || !chatId || !jobId || !currentUser) return;
+    if (msg.trim() === "" || !chatId  || !currentUser) return;
 
     await sendMessage(
       "text",
@@ -295,7 +296,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       currentUser,
       false,
       setMessagesPeople,
-      selectedChat?.users?.jobId || jobId
+      selectedChat?.users?.jobId || jobId || null
     );
     messageNotificationFunctionality();
     setMsg("");
@@ -585,9 +586,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
           <div className={`send-box ${show ? "container mb-5" : ""}`}>
             <div className={`input-send ${show ? "input-send-provider" : ""}`}>
-              <Form.Control
+              <textarea
                 placeholder="Type Message"
-                className="w-100 border-0 py-3 px-3 rounded-5"
+                className="w-100 border-0 px-3 rounded-5"
                 value={msg}
                 onChange={(e) => setMsg(e.target.value)}
                 onKeyDown={(e) => {

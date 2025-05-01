@@ -77,10 +77,17 @@ export default function LoggedHeader() {
         } else if (!fetchedUser && providerToken) {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
-          localStorage.setItem("PlanType", providerResponse?.payload?.data?.subscriptionType);
-          console.log("1212121" , fetchedUser)
+          localStorage.setItem(
+            "PlanType",
+            providerResponse?.payload?.data?.subscriptionType
+          );
+          console.log("1212121", fetchedUser);
           if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
             localStorage.setItem("PlanType", null);
+          }
+          if (fetchedUser === undefined || fetchedUser === null) {
+            localStorage.clear();
+            return;
           }
         }
 
@@ -129,7 +136,7 @@ export default function LoggedHeader() {
               </div>
             )}
 
-            <div className="d-flex justify-content-between align-items-center gap-4">
+            <div className="d-flex justify-content-between align-items-center gap-2">
               <Link
                 className="notification position-relative"
                 to="/notification"

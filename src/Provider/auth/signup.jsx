@@ -93,24 +93,31 @@ export default function SignUpProvider() {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    if (
-      !name ||
-      !businessName ||
-      !email ||
-      !phoneNo ||
-      !address ||
-      !password ||
-      !businessType ||
-      !registrationNumber
-      // !images
-    ) {
+    const requiredFields = {
+      Name: name,
+      "Business Name": businessName,
+      Email: email,
+      "Phone Number": phoneNo,
+      Address: address,
+      Password: password,
+      "Business Type": businessType?.length > 0,
+      "Registration Number": registrationNumber,
+      // Image: images, // if needed
+    };
+
+    const missing = Object.entries(requiredFields)
+      .filter(([_, v]) => !v)
+      .map(([k]) => k);
+
+    if (missing.length) {
       setToastProps({
-        message: "Please fill all required fields",
+        message: `Please fill: ${missing.join(", ")}`,
         type: "error",
         toastKey: Date.now(),
       });
       return;
     }
+
     console.log("guestVerify", guestVerify);
 
     const formData = new FormData();
@@ -245,7 +252,24 @@ export default function SignUpProvider() {
                         <Form.Control
                           className="pos-image-selector"
                           type="file"
-                          onChange={(e) => setImages(e.target.files)}
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (!file) return;
+
+                            const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+                            if (!allowedExtensions.test(file.name)) {
+                              setToastProps({
+                                message:
+                                  "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
+                                type: "error",
+                                toastKey: Date.now(),
+                              });
+                              e.target.value = null; // Reset file input
+                              return;
+                            }
+
+                            setImages(e.target.files);
+                          }}
                         />
                       </div>
                     </>
@@ -387,9 +411,7 @@ export default function SignUpProvider() {
                           type="Number"
                           placeholder="Phone number"
                           value={phoneNo}
-                          onChange={(e) =>
-                            setPhoneNo(e.target.value.slice(0, 15))
-                          }
+                          onChange={(e) => setPhoneNo(e.target.value)}
                         />
                       </Col>
                     </Form.Group>

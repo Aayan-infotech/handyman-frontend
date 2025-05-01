@@ -13,6 +13,7 @@ import axiosInstance from "../components/axiosInstance";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import AdvertiserChat from "./advertiserChat";
 export default function Message() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -43,7 +44,7 @@ export default function Message() {
       const apiCalls = messages.map(async (message) => {
         const { jobId, senderId, receiverId } = message.users;
 
-        if ( !senderId || !receiverId) {
+        if (!senderId || !receiverId) {
           console.error("Missing required parameters for API request");
           return null;
         }
@@ -126,14 +127,14 @@ export default function Message() {
     const { chatId, users } = selectedChat;
     const { jobId } = users;
 
-    if (!jobId || !chatId) {
-      console.error("Missing jobId or chatId in selectedChat");
+    if (!chatId) {
+      console.error("Missing chatId in selectedChat");
       return;
     }
 
     const chatMessagesRef = ref(
       realtimeDb,
-      `chats/${jobId}/${chatId}/messages`
+      `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`
     );
 
     const listener = onValue(chatMessagesRef, (snapshot) => {
@@ -190,7 +191,7 @@ export default function Message() {
         : messageData[item.chatId]?.sender,
     };
   });
-
+  console.log("messageData", messageData, "selectedChat ", selectedChat);
 
   return (
     <>
@@ -198,7 +199,11 @@ export default function Message() {
       <div className="bg-second">
         <div className="container">
           {open && (
-            <FaArrowLeft onClick={() => setOpen(false)} className="mt-4 fs-4" />
+            <FaArrowLeft
+              onClick={() => setOpen(false)}
+              className="mt-4 fs-4"
+              style={{ cursor: "pointer" }}
+            />
           )}
           <div className="top-section-main py-4 px-lg-5">
             {!open && (
@@ -206,7 +211,7 @@ export default function Message() {
                 <div className="col-lg-2">
                   <h3>Messages</h3>
                 </div>
-                <div className="col-lg-10">
+                {/* <div className="col-lg-10">
                   <div className="position-relative icon">
                     <IoIosSearch className="mt-lg-1 mt-2 ms-1 fs-4" />
                     <Form.Control
@@ -214,7 +219,7 @@ export default function Message() {
                       className="w-100 border-0 px-2 ps-5 py-3 rounded-5"
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             )}
             <div className="row gy-3 gx-2">
@@ -313,11 +318,26 @@ export default function Message() {
               {open && (
                 <div className="col-lg-6">
                   <div className="message-box">
-                    <Chat
-                      messageData={messageData}
-                      messages={chatMessages}
-                      selectedChat={selectedChat}
-                    />
+                    {localStorage.getItem("PlanType") === "Advertising" ||
+                    (selectedChat &&
+                      messageData[selectedChat.chatId]?.receiver
+                        ?.subscriptionType === "Advertising") ||
+                    messageData[selectedChat.chatId]?.sender
+                      ?.subscriptionType === "Advertising" ? (
+                      <AdvertiserChat
+                        messageData={messageData}
+                        messages={chatMessages}
+                        selectedChat={selectedChat}
+                        setSelectedChat={setSelectedChat}
+                      />
+                    ) : (
+                      <Chat
+                        messageData={messageData}
+                        messages={chatMessages}
+                        selectedChat={selectedChat}
+                        setSelectedChat={setSelectedChat}
+                      />
+                    )}
                   </div>
                 </div>
               )}

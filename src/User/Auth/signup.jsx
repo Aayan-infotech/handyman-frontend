@@ -74,10 +74,35 @@ export default function SignUp() {
     }
     formData.append("userType", userType);
     formData.append("radius", radius);
+    if (images) {
+      const allowedExtensions = /\.(jpeg|jpg|png)$/;
+      if (!allowedExtensions.test(images.name)) {
+        setToastProps({
+          message: "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
+          type: "error",
+          toastKey: Date.now(),
+        });
+        setLoading(false);
+        return;
+      }
+    }
+    const requiredFields = {
+      Name: name,
+      Email: email,
+      "Phone Number": phoneNo,
+      Address: address,
+      Password: password,
+     
+      // Image: images, // if needed
+    };
 
-    if (!name || !email || !password || !phoneNo || !address) {
+    const missing = Object.entries(requiredFields)
+      .filter(([_, v]) => !v)
+      .map(([k]) => k);
+
+    if (missing.length) {
       setToastProps({
-        message: "Please fill all fields!",
+        message: `Please fill: ${missing.join(", ")}`,
         type: "error",
         toastKey: Date.now(),
       });
@@ -194,7 +219,24 @@ export default function SignUp() {
                         <Form.Control
                           className="pos-image-selector"
                           type="file"
-                          onChange={(e) => setImages(e.target.files)}
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (!file) return;
+
+                            const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+                            if (!allowedExtensions.test(file.name)) {
+                              setToastProps({
+                                message:
+                                  "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
+                                type: "error",
+                                toastKey: Date.now(),
+                              });
+                              e.target.value = null; // Reset file input
+                              return;
+                            }
+
+                            setImages(e.target.files);
+                          }}
                         />
                       </>
                     ) : (
@@ -251,9 +293,7 @@ export default function SignUp() {
                           type="number"
                           placeholder="Phone number"
                           value={phoneNo}
-                          onChange={(e) =>
-                            setPhoneNo(e.target.value.slice(0, 15))
-                          }
+                          onChange={(e) => setPhoneNo(e.target.value)}
                         />
                       </Col>
                     </Form.Group>

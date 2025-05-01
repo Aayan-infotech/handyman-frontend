@@ -47,12 +47,11 @@ export default function JobSpecification() {
 
   // const guestCondition = localStorage.getItem("Guest") === "true";
   const checkGuestCondition = () => {
-  
     const planType = localStorage.getItem("PlanType");
     const planCondition =
       planType === null || planType === "null" || planType === "";
 
-    if ( planCondition) {
+    if (planCondition) {
       navigate("/provider/pricing");
       return true;
     }
@@ -272,16 +271,80 @@ export default function JobSpecification() {
                           <div className="mt-4">
                             <h3>Uploaded Document</h3>
                             <div className="row g-2 gy-3">
-                              {data.documents ? (
-                                data.documents.map((doc, index) => (
-                                  <div className="col-lg-4" key={index}>
-                                    <img
-                                      src={doc}
-                                      alt="document"
-                                      className="w-100 h-100 px-1"
-                                    />
-                                  </div>
-                                ))
+                              {data.documents && data.documents.length > 0 ? (
+                                data.documents.map((doc, index) => {
+                                  // Handle both string URLs and File objects
+                                  const isFileObject =
+                                    doc instanceof File || doc instanceof Blob;
+                                  const fileUrl = isFileObject
+                                    ? URL.createObjectURL(doc)
+                                    : doc.url || doc;
+                                  const fileName = isFileObject
+                                    ? doc.name
+                                    : fileUrl.split("/").pop();
+
+                                  // Determine file type
+                                  const fileExtension = fileName
+                                    .split(".")
+                                    .pop()
+                                    .toLowerCase();
+                                  const isImage = [
+                                    "jpg",
+                                    "jpeg",
+                                    "png",
+                                    "webp",
+                                    "gif",
+                                  ].includes(fileExtension);
+                                  const isPDF = fileExtension === "pdf";
+                                  const isVideo = [
+                                    "mp4",
+                                    "webm",
+                                    "ogg",
+                                  ].includes(fileExtension);
+
+                                  return (
+                                    <div className="col-lg-4 mb-3" key={index}>
+                                      {isImage ? (
+                                        <img
+                                          src={fileUrl}
+                                          alt={fileName}
+                                          className="img-fluid w-100"
+                                          style={{
+                                            height: "150px",
+                                            objectFit: "cover",
+                                          }}
+                                        />
+                                      ) : isPDF ? (
+                                        <iframe
+                                          src={fileUrl}
+                                          className="w-100"
+                                          style={{ height: "150px" }}
+                                          title={fileName}
+                                        />
+                                      ) : isVideo ? (
+                                        <video
+                                          controls
+                                          className="w-100"
+                                          style={{ height: "150px" }}
+                                        >
+                                          <source
+                                            src={fileUrl}
+                                            type={`video/${fileExtension}`}
+                                          />
+                                          Your browser does not support the
+                                          video tag.
+                                        </video>
+                                      ) : (
+                                        <div
+                                          className="document-preview d-flex align-items-center justify-content-center bg-light"
+                                          style={{ height: "150px" }}
+                                        >
+                                          <i className="fas fa-file-alt fa-3x text-secondary"></i>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })
                               ) : (
                                 <p>No document uploaded</p>
                               )}

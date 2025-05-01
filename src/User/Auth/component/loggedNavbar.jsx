@@ -86,7 +86,10 @@ export default function LoggedHeader() {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
         }
-
+        if (fetchedUser === undefined || fetchedUser === null) {
+          localStorage.clear();
+          return;
+        }
         if (fetchedUser) {
           setImages(fetchedUser?.images || "");
         }
@@ -118,7 +121,7 @@ export default function LoggedHeader() {
             )}
 
             <div className="   d-flex justify-content-between align-items-center gap-5">
-              <div className=" d-flex justify-content-between align-items-center gap-4">
+              <div className=" d-flex justify-content-between align-items-center gap-2">
                 <Link
                   className="notification position-relative"
                   to="/notification"
