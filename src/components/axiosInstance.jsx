@@ -86,7 +86,6 @@ axiosInstance.interceptors.response.use(
             },
           }
         );
-
         const newToken = res.data.accessToken;
 
         // Store the new token
