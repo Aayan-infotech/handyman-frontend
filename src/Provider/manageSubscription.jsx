@@ -24,14 +24,11 @@ export default function ManageSubscription() {
     const getData = async () => {
       setLoading(true);
       try {
-        const res = await axiosInstance.get(
-          `/demoTransaction/subscription/getById`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
-            },
-          }
-        );
+        const res = await axiosInstance.get(`/eway/getSusbcriptionById`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+          },
+        });
 
         if (res?.data?.status === 200) {
           // Filter data into active and expired subscriptions
@@ -138,7 +135,7 @@ export default function ManageSubscription() {
                         className="rounded-0 custom-green bg-green-custom"
                         onClick={() => navigate("/provider/subscription")}
                       >
-                        Add Your subscription
+                        Update your subscription
                       </Button>
                     </div>
                   </div>
@@ -154,13 +151,13 @@ export default function ManageSubscription() {
                               <h6>
                                 Valid From:{" "}
                                 {new Date(
-                                  voucher?.startDate
+                                  voucher?.subscriptionStartDate
                                 ).toLocaleDateString()}
                               </h6>
                               <h6>
                                 Valid To:{" "}
                                 {new Date(
-                                  voucher?.endDate
+                                  voucher?.subscriptionEndDate
                                 ).toLocaleDateString()}
                               </h6>
                             </div>
@@ -188,36 +185,37 @@ export default function ManageSubscription() {
                             <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
                               <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start ">
                                 <h6>
-                                  Valid From: {formatDate(item?.startDate)}
+                                  Valid From:{" "}
+                                  {formatDate(item?.subscriptionStartDate)}
                                 </h6>
-                                <h6>Valid To: {formatDate(item?.endDate)}</h6>
+                                <h6>
+                                  Valid To:{" "}
+                                  {formatDate(item?.subscriptionEndDate)}
+                                </h6>
                               </div>
                               <h3 className="mt-3 text-start">
                                 {item.subscriptionPlanId.planName}
                               </h3>
                               <div className="d-flex justify-content-lg-between justify-content-start align-items-center w-100 flex-wrap flex-lg-nowrap gap-4">
-                              
-                              <h5>${item.amount}</h5>
-                              <h4>
-                                Radius: {item.subscriptionPlanId.kmRadius}KM
-                              </h4>
-                              <h5>
-                                Valid for{" "}
-                                {item.subscriptionPlanId.validity === 365
-                                  ? "Year"
-                                  : "Month"}
-                              </h5>
+                                <h5>${item.amount}</h5>
+                                <h4>
+                                  Radius: {item.subscriptionPlanId.kmRadius}KM
+                                </h4>
+                                <h5>
+                                  Valid for{" "}
+                                  {item.subscriptionPlanId.validity === 365
+                                    ? "Year"
+                                    : "Month"}
+                                </h5>
                               </div>
                               <div className=" d-flex flex-row gap-3 justify-content-between align-items-start w-100">
-                                <h6>Payment Method: {item.paymentMethod}</h6>
-                                <h6>Transaction Id: {item.transactionId}</h6>
+                                <h6>
+                                  Payment Method: {item.payment.paymentSource}
+                                </h6>
+                                <h6>
+                                  Subscription Id: {item.subscriptionPlanId._id}
+                                </h6>
                               </div>
-                              <span className="line-white"></span>
-                              <div
-                                dangerouslySetInnerHTML={{
-                                  __html: item.subscriptionPlanId.description,
-                                }}
-                              ></div>
                             </div>
                           </div>
                         </div>

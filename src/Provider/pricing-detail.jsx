@@ -19,14 +19,10 @@ export default function PricingProvider() {
     toastKey: 0,
   });
   const name = localStorage.getItem("ProviderName");
-  const [transactionId, setTransactionId] = useState(45435435435);
-  const [transactionDate, setTransactionDate] = useState(new Date());
-  const [kmRadius, setKmRadius] = useState(""); // New state for kmRadius
 
-  const [transactionStatus, setTransactionStatus] = useState("done");
+  const [kmRadius, setKmRadius] = useState(""); // New state for kmRadius
   const [subscriptionAmount, setSubscriptionAmount] = useState("");
   const [transactionAmount, setTransactionAmount] = useState("");
-  const [transactionMode, setTransactionMode] = useState("Pending");
   const [subscriptionId, setSubscriptionId] = useState("");
   const [subscriptionType, setSubscriptionType] = useState("");
   const [description, setDescription] = useState("");
@@ -71,55 +67,10 @@ export default function PricingProvider() {
     navigate("/home");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const result = await dispatch(
-        handlePayment({
-          userId: providerId,
-          subscriptionPlanId: id,
-          amount: subscriptionAmount,
-          subscriptionTypeId: data?.type,
-          paymentMethod: "credit_card",
-        })
-      );
-
-      if (handlePayment.fulfilled.match(result)) {
-        setToastProps({
-          message: "Subscription purchased successfully!",
-          type: "success",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-        localStorage.setItem("Guest", false);
-        localStorage.setItem("PlanType", result?.payload?.data?.newSubscription?.type);
-        setTimeout(() => {
-          // navigate("/provider/home");
-          navigate("/provider/payment");
-        }, 2000);
-      } else {
-        const errorMessage =
-          result.payload.message ||
-          "Failed to complete the transaction. Please try again.";
-        setToastProps({
-          message: errorMessage,
-          type: "error",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("Error during transaction:", error);
-      setToastProps({
-        message: error?.response?.data?.message,
-        type: "error",
-        toastKey: Date.now(),
-      });
-      setLoading(false);
-    }
-  };
+  const handleSubmit = () => {
+    navigate(`/provider/paymentdetail/${id}`)
+  }
+  
 
   return (
     <>

@@ -5,6 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
+import Tooltip from "@mui/material/Tooltip";
+
 import arrow from "./assets/arrow.png";
 import pillai from "./assets/pillai.png";
 import bag from "./assets/bag.png";
@@ -129,15 +131,21 @@ export default function Main() {
         <>
           <LoggedHeader />
           <Link to="/support/chat/1">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to="/message">
-              <MdMessage />
-            </Link>
-          </div>
+
+          <Link to="/message">
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />{" "}
+              </div>
+            </Tooltip>
+          </Link>
+
           <div className="bg-second">
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">

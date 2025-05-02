@@ -141,7 +141,11 @@ export default function EditProfile() {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("name", name);
+    {
+      localStorage.getItem("ProviderId")
+        ? formData.append("contactName", name)
+        : formData.append("name", name);
+    }
     formData.append("phoneNo", number);
     formData.append("email", email);
     formData.append("addressLine", address);
@@ -204,20 +208,17 @@ export default function EditProfile() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
-      const allowedExtensions = /\.(jpeg|jpg|png)$/i;
-      if (!allowedExtensions.test(file.name)) {
-      
-        setToastProps({
-          message:
-            "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
-          type: "error",
-          toastKey: Date.now(),
-        });
-        e.target.value = null; // Reset file input
-        return;
-      }
+    const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+    if (!allowedExtensions.test(file.name)) {
+      setToastProps({
+        message: "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      e.target.value = null; // Reset file input
+      return;
+    }
 
-    
     if (file) {
       setImages(e.target.files); // Store the file list
       setPreviewImage(URL.createObjectURL(file)); // Create a preview URL
@@ -256,7 +257,6 @@ export default function EditProfile() {
 
                             const allowedExtensions = /\.(jpeg|jpg|png)$/i;
                             if (!allowedExtensions.test(file.name)) {
-                            
                               setToastProps({
                                 message:
                                   "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
@@ -338,11 +338,23 @@ export default function EditProfile() {
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
-                          type="Number"
-                          value={number}
-                          onChange={(e) =>
-                            setNumber(e.target.value)
-                          }
+                          type="text"
+                          placeholder="Phone number"
+                          value={number ? `+61${number}` : ""}
+                          onChange={(e) => {
+                            const rawValue = e.target.value;
+                            // Remove any existing "+61" prefix to avoid duplication
+                            const sanitizedValue = rawValue.replace(
+                              /^\+61/,
+                              ""
+                            );
+                            // Allow only digits after the prefix
+                            const digitsOnly = sanitizedValue.replace(
+                              /\D/g,
+                              ""
+                            );
+                            setNumber(digitsOnly);
+                          }}
                         />
                       </Col>
                     </Form.Group>

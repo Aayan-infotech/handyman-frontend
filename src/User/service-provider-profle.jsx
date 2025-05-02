@@ -12,6 +12,7 @@ import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import notFound from "./assets/noprofile.png";
 import "swiper/css";
+import Tooltip from "@mui/material/Tooltip";
 import "swiper/css/navigation";
 
 export default function ServiceProviderProfile() {
@@ -160,15 +161,21 @@ export default function ServiceProviderProfile() {
         <>
           <LoggedHeader />
           <Link to="/support/chat/1">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to="/message">
-              <MdMessage />
-            </Link>
-          </div>
+
+          <Link to="/message">
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
+
           <div className="bg-second pb-3">
             <div className="container">
               <div className="image-shadow">
@@ -183,7 +190,6 @@ export default function ServiceProviderProfile() {
                 <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
                   <h3 className="fw-bold fs-1">{data?.contactName}</h3>
                   <h6>{data?.businessName}</h6>
-                  <h6>{data?.about}</h6>
                 </div>
 
                 <div className="position-relative order-1 order-lg-2">
@@ -224,14 +230,8 @@ export default function ServiceProviderProfile() {
                 ))}
               </div>
 
-              <div className="d-flex justify-content-between align-items-center mt-3 flex-column flex-lg-row gap-3">
-                <div className="d-flex flex-row gap-4 align-items-center">
-                  <div className="d-flex flex-row gap-3 align-items-center">
-                    <div className="circle-km"></div>
-                    <span>{(data?.address?.radius / 1000).toFixed(2)} km</span>
-                  </div>
-                </div>
-
+              <div className="d-flex justify-content-center align-items-center mt-3 flex-column flex-column gap-3">
+                <h6>{data?.about}</h6>
                 <div className="d-flex align-items-center gap-4 flex-row">
                   <div className="contact">
                     <a href={`mailto:${data.email}`}>

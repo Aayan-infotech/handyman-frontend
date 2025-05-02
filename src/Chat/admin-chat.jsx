@@ -149,13 +149,13 @@ export default function AdminChat() {
             <div className="d-flex flex-row align-items-center gap-2 profile-icon">
               <Avatar
                 alt="Image"
-                className="w-100"
+                className=""
                 style={{ height: "82px", width: "82px" }}
               >
-                A
+                S
               </Avatar>
               <div className="d-flex flex-column gap-1">
-                <h5 className="mb-0 fw-medium fs-5 text-dark">Admin</h5>
+                <h5 className="mb-0 fw-medium fs-5 text-dark">Support</h5>
               </div>
             </div>
           </div>

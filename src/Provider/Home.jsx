@@ -11,6 +11,8 @@ import Form from "react-bootstrap/Form";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { getProviderJobs, getGuestProviderJobs } from "../Slices/providerSlice";
 import { getProviderUser } from "../Slices/userSlice";
+import Tooltip from "@mui/material/Tooltip";
+
 import Toaster from "../Toaster";
 import { Alert, Stack } from "@mui/material";
 import noData from "../assets/no_data_found.gif";
@@ -74,7 +76,11 @@ export default function HomeProvider() {
   const handleChange = (event) => {
     setJobStatus(event.target.value);
   };
+  const providerIdToMatch = providerId;
 
+  const hasAcceptedJob = data?.jobAcceptCount?.some(
+    (job) => job.providerId === providerIdToMatch
+  );
   const guesNavigation = () => {
     if (localStorage.getItem("Guest") == "true") {
       return "/provider/pricing";
@@ -266,14 +272,20 @@ export default function HomeProvider() {
         ))}
       </Stack>
 
-      <Link to="/provider/admin/chat/" className="admin-message">
-        <MdOutlineSupportAgent />
+      <Link to="/provider/admin/chat/">
+        <Tooltip title="Admin chat" placement="left-start">
+          <div className="admin-message">
+            <MdOutlineSupportAgent />
+          </div>
+        </Tooltip>
       </Link>
-      <div className="message">
-        <Link to="/provider/message">
-          <MdMessage />
-        </Link>
-      </div>
+      <Link to="/provider/message">
+        <Tooltip title="Message" placement="left-start">
+          <div className="message">
+            <MdMessage />
+          </div>
+        </Tooltip>
+      </Link>
 
       <div className="bg-second py-3">
         <div className="container top-section-main">
@@ -328,59 +340,76 @@ export default function HomeProvider() {
                     />
                   </div>
                 ) : (
-                  filteredData.map((job) => (
-                    <div className="col-lg-12 management" key={job._id}>
-                      <div className="card border-0 rounded-3 px-4">
-                        <div className="card-body">
-                          <div className="row gy-4 gx-1 align-items-center">
-                            <div className="col-lg-3">
-                              <div className="d-flex flex-row gap-3 align-items-center">
-                                <div className="d-flex flex-column align-items-start gap-1">
-                                  <h3
-                                    className="mb-0 text-truncate"
-                                    style={{ maxWidth: "200px" }}
-                                  >
-                                    {job.title}
-                                  </h3>
-                                  <h6>
-                                    {new Date(job.createdAt).toDateString()}
-                                  </h6>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-lg-7">
-                              <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
-                                <div className="d-flex flex-row gap-2 align-items-center">
-                                  <BiCoinStack />
-                                  <h5 className="mb-0">
-                                    ${job.estimatedBudget || "00"}
-                                  </h5>
-                                </div>
-                                <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
-                                  <PiBag />
-                                  <h5 className="mb-0 text-trun">
-                                    {filterAddressPatterns(
-                                      job.jobLocation.jobAddressLine
-                                    )}
-                                  </h5>
-                                </div>
-                              </div>
-                            </div>
+                  filteredData.map((job) => {
+                    const hasAcceptedJob = job.jobAcceptCount?.some(
+                      (accept) => accept.providerId === providerId
+                    );
 
-                            <div className="col-lg-2">
-                              <Button
-                                variant="contained"
-                                className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                                onClick={() => navTest(job._id)}
-                              >
-                                Contact
-                              </Button>
+                    return (
+                      <div className="col-lg-12 management" key={job._id}>
+                        <div className="card border-0 rounded-3 px-4">
+                          <div className="card-body">
+                            <div className="row gy-4 gx-1 align-items-center">
+                              <div className="col-lg-3">
+                                <div className="d-flex flex-row gap-3 align-items-center">
+                                  <div className="d-flex flex-column align-items-start gap-1">
+                                    <h3
+                                      className="mb-0 text-truncate"
+                                      style={{ maxWidth: "200px" }}
+                                    >
+                                      {job.title}
+                                    </h3>
+                                    <h6>
+                                      {new Date(job.createdAt).toDateString()}
+                                    </h6>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-lg-7">
+                                <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
+                                  <div className="d-flex flex-row gap-2 align-items-center">
+                                    <BiCoinStack />
+                                    <h5 className="mb-0">
+                                      ${job.estimatedBudget || "00"}
+                                    </h5>
+                                  </div>
+                                  <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
+                                    <PiBag />
+                                    <h5 className="mb-0 text-trun">
+                                      {filterAddressPatterns(
+                                        job.jobLocation.jobAddressLine
+                                      )}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="col-lg-2">
+                                {hasAcceptedJob ? (
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    className="rounded-5 w-100 py-3"
+                                    onClick={() => navTest(job._id)}
+                                  >
+                                    Quoted
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    variant="contained"
+                                    className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                                    onClick={() => navTest(job._id)}
+                                  >
+                                    Contact
+                                  </Button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>

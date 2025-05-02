@@ -6,6 +6,7 @@ import {
   MdOutlineSupportAgent,
 } from "react-icons/md";
 import "swiper/css";
+import Tooltip from "@mui/material/Tooltip";
 import "swiper/css/navigation";
 import { ref, onValue, off, remove, update, get } from "firebase/database";
 import { realtimeDb } from "../Chat/lib/firestore";
@@ -560,18 +561,25 @@ export default function MyProfile() {
       ) : (
         <>
           <LoggedHeader />
+
           <Link
             to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
           >
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
-              <MdMessage />
-            </Link>
-          </div>
+
+          <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
+
           <div className="bg-second pb-3">
             <div className="container">
               <div className="profile-container position-relative">
@@ -790,24 +798,22 @@ export default function MyProfile() {
                 <div className="col-lg-3">
                   <div className="w-100 ">
                     <div className="d-flex flex-column justify-content-between gap-3 align-items-center align-items-lg-end mt-lg-1">
-                      {!Guest && (
-                        <Link
-                          to={
-                            `${userType}` === "Provider"
-                              ? "/provider/editProfile"
-                              : "/editProfile"
-                          }
-                          className="mw-20"
+                      <Link
+                        to={
+                          `${userType}` === "Provider"
+                            ? "/provider/editProfile"
+                            : "/editProfile"
+                        }
+                        className="mw-20"
+                      >
+                        <Button
+                          variant="dark"
+                          className="d-flex gap-2 align-items-center w-100 justify-content-center"
                         >
-                          <Button
-                            variant="dark"
-                            className="d-flex gap-2 align-items-center w-100 justify-content-center"
-                          >
-                            <FiEdit />
-                            Edit Profile
-                          </Button>
-                        </Link>
-                      )}
+                          <FiEdit />
+                          Edit Profile
+                        </Button>
+                      </Link>
 
                       {providerToken ? (
                         <Link to="/provider/edit/upload" className="mw-20">
@@ -943,46 +949,25 @@ export default function MyProfile() {
                       <div>
                         <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
                           <h4 className="mb-0 text-center text-lg-start">
-                            Add your work gallery here (max 20 files)
+                            Add your work gallery here
                           </h4>
-                          {gallery.length > 20 ? (
-                            <Button2
-                              component="label"
-                              role={undefined}
-                              variant="contained"
-                              disabled
-                              tabIndex={-1}
-                              style={{
-                                backgroundColor: "#32de84",
-                                color: "#fff",
-                                border: "none",
-                              }}
-                            >
-                              Maximun files uploaded
-                              <VisuallyHiddenInput
-                                type="file"
-                                onChange={handleFileChange}
-                              />
-                            </Button2>
-                          ) : (
-                            <Button2
-                              component="label"
-                              role={undefined}
-                              variant="contained"
-                              tabIndex={-1}
-                              style={{
-                                backgroundColor: "#32de84",
-                                color: "#fff",
-                                border: "none",
-                              }}
-                            >
-                              Upload files
-                              <VisuallyHiddenInput
-                                type="file"
-                                onChange={handleFileChange}
-                              />
-                            </Button2>
-                          )}
+                          <Button2
+                            component="label"
+                            role={undefined}
+                            variant="contained"
+                            tabIndex={-1}
+                            style={{
+                              backgroundColor: "#32de84",
+                              color: "#fff",
+                              border: "none",
+                            }}
+                          >
+                            Upload files
+                            <VisuallyHiddenInput
+                              type="file"
+                              onChange={handleFileChange}
+                            />
+                          </Button2>
                         </div>
 
                         <div className="row mt-4">
@@ -1159,11 +1144,17 @@ export default function MyProfile() {
                 <div
                   className={` ${
                     Location.pathname.includes("provider")
-                      ? "d-none"
+                      ? "col-lg-2"
                       : "col-lg-3"
                   }`}
                 >
-                  <Link to="/support">
+                  <Link
+                    to={
+                      Location.pathname.includes("provider")
+                        ? "/provider/admin/chat"
+                        : "/support/chat/1"
+                    }
+                  >
                     <div className="card border-0 rounded-5 h-100">
                       <div className="card-body">
                         <div

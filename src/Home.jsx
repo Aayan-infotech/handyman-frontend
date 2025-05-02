@@ -39,7 +39,9 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import axiosInstance from "./components/axiosInstance";
-import noImage from "./components/assets/noprofile.png"
+import noImage from "./components/assets/noprofile.png";
+import appleIcon from "./assets/apple.png";
+import playIcon from "./assets/google.png";
 
 // const checkedIcon = <CheckBoxIcon fontSize="small" />;
 function Home() {
@@ -93,7 +95,7 @@ function Home() {
   // };
   useEffect(() => {
     axiosInstance.get("/provider/getAllProviders").then((res) => {
-      setProviders(res?.data?.data.slice(0, 9) );
+      setProviders(res?.data?.data.slice(0, 9));
     });
   }, []);
 
@@ -331,7 +333,7 @@ function Home() {
               Featured <span className="text-primary">Businesses</span>
             </h2>
             <Link
-              to="/featured-jobs"
+              to="/featured-business"
               className="text-decoration-none custom-text-success"
             >
               Show all Bussiness <GoArrowRight className="fs-4 ms-1" />
@@ -348,7 +350,11 @@ function Home() {
                           src={item?.images || noImage}
                           alt="company1"
                           className="img-fluid"
-                          style={{width: "50px", height: "50px", borderRadius: "50%"}}
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "50%",
+                          }}
                         />
                         {/* <span className="border-full-time">Full Time</span> */}
                       </div>
@@ -562,6 +568,22 @@ function Home() {
                   </ul>
                 </Col>
               </Row>
+            </Col>
+
+            <Col md={4} className="mb-4">
+              <h6>Download Our app</h6>
+              <img
+                src={playIcon}
+                alt="play store icon"
+                className="rounded-4 mb-4"
+                style={{ height: "60px", width: "200px" }}
+              />
+              <img
+                src={appleIcon}
+                alt="apple store icon"
+                className=" rounded-4"
+                style={{ height: "60px", width: "200px" }}
+              />
             </Col>
           </Row>
 
