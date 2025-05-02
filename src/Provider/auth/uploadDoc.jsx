@@ -106,10 +106,10 @@ export default function Upload() {
     const planCondition =
       planType === null || planType === "null" || planType === "";
 
-    if (isGuest || planCondition) {
-      navigate("/provider/pricing");
-      return;
-    }
+    // if (isGuest || planCondition) {
+    //   navigate("/provider/pricing");
+    //   return;
+    // }
    
     navigate("/provider/home");
   };

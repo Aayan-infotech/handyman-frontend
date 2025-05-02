@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "@mui/material/Button";
@@ -10,6 +8,8 @@ import Nav from "react-bootstrap/Nav";
 import { GoArrowRight } from "react-icons/go";
 import logoWhite from "./assets/logo-white.png";
 import { Row, Col, Form } from "react-bootstrap";
+import appleIcon from "./assets/apple.png";
+import playIcon from "./assets/google.png";
 import {
   FaFacebook,
   FaInstagram,
@@ -23,35 +23,37 @@ import { useForm } from "react-hook-form"; // Importing React Hook Form
 import { toast, ToastContainer } from "react-toastify"; // Importing Toastify
 
 // You must import the CSS for Toastify to work properly
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Contact() {
   const { section } = useParams();
   const [loading, setLoading] = useState(false);
 
-  
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
-
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
   // Handle form submission
   const onSubmit = (data) => {
     const contactUsData = {
       name: data.name,
       email: data.email,
-      message: data.message
+      message: data.message,
     };
 
-    console.log(data);  // For debugging: logs form data before submitting
+    console.log(data); // For debugging: logs form data before submitting
 
-    setLoading(true);  // Set loading to true while waiting for the API response
+    setLoading(true); // Set loading to true while waiting for the API response
 
     axiosInstance
-      .post("/contact/send", contactUsData)  // Sending form data to the API
+      .post("/contact/send", contactUsData) // Sending form data to the API
       .then((response) => {
         console.log("Response from API:", response.data);
-        setLoading(false);  // Reset loading state
-        
+        setLoading(false); // Reset loading state
+
         // Show success toast
         toast.success("Message sent successfully!");
 
@@ -60,10 +62,12 @@ export default function Contact() {
       })
       .catch((error) => {
         console.error("There was an error sending the data:", error);
-        setLoading(false);  // Reset loading state
-        
+        setLoading(false); // Reset loading state
+
         // Show error toast
-        toast.error("There was an error sending your message. Please try again.");
+        toast.error(
+          "There was an error sending your message. Please try again."
+        );
       });
   };
 
@@ -74,8 +78,12 @@ export default function Contact() {
       ) : (
         <div className="">
           <div className="">
-            <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
-             <Container fluid>
+            <Navbar
+              collapseOnSelect
+              expand="lg"
+              className="position-relative z-1"
+            >
+              <Container fluid>
                 <Link to="/" className="py-1">
                   <img src={logo} alt="logo" />
                 </Link>
@@ -242,6 +250,21 @@ export default function Contact() {
                     </Col>
                   </Row>
                 </Col>
+                <Col md={4} className="mb-4">
+                  <h6>Download Our app</h6>
+                  <img
+                    src={playIcon}
+                    alt="play store icon"
+                    className="rounded-4 mb-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                  <img
+                    src={appleIcon}
+                    alt="apple store icon"
+                    className=" rounded-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                </Col>
 
                 {/* Right Section: Subscription */}
                 {/* <Col md={4} className="mb-4">
@@ -305,4 +328,3 @@ export default function Contact() {
     </>
   );
 }
-

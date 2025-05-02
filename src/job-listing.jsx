@@ -10,9 +10,8 @@ import logoWhite from "./assets/logo-white.png";
 import { LuPencilRuler } from "react-icons/lu";
 import { GiNetworkBars } from "react-icons/gi";
 import { TbSpeakerphone } from "react-icons/tb";
-import { HiOutlineCash } from "react-icons/hi";
-import { CiMonitor } from "react-icons/ci";
-import { IoCodeSlashSharp } from "react-icons/io5";
+import appleIcon from "./assets/apple.png";
+import playIcon from "./assets/google.png";
 import { PiBagSimpleLight } from "react-icons/pi";
 import { GrGroup } from "react-icons/gr";
 import { Row, Col, Form } from "react-bootstrap";
@@ -30,14 +29,12 @@ export default function JobListing() {
   const [businessData, setBusinessData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-useEffect(() => {
+  useEffect(() => {
     const handleResponse = async () => {
       setLoading(true);
-      const response = await axiosInstance.get(
-        "/jobpost/business-type-count"
-      );
+      const response = await axiosInstance.get("/jobpost/business-type-count");
       console.log(response);
-      if (response.data.success === true  || response.data.status === 200) {
+      if (response.data.success === true || response.data.status === 200) {
         setLoading(false);
         setBusinessData(response?.data?.data);
       }
@@ -51,34 +48,41 @@ useEffect(() => {
       ) : (
         <div className="">
           <div className="">
-             <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
-          <Container fluid>
-            <Link to="/" className="py-1">
-              <img src={logo} alt="logo" />
-            </Link>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+            <Navbar
+              collapseOnSelect
+              expand="lg"
+              className="position-relative z-1"
+            >
+              <Container fluid>
+                <Link to="/" className="py-1">
+                  <img src={logo} alt="logo" />
+                </Link>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                  {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
                 <Link href="#">About UCCCs</Link>
                 <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
               </Nav> */}
 
+                  <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                    <Link to="/about" style={{ fontWeight: "350" }}>
+                      About Us
+                    </Link>
+                    <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                      Contact Us
+                    </Link>
+                  </Nav>
 
-              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link to="/about" style={{ fontWeight: '350' }}>About Us</Link>
-                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
-              </Nav>
-
-              <Nav>
-                <Link to="/welcome">
-                  <Button variant="contained" color="success">
-                    Get Started <GoArrowRight className="fs-4 ms-1" />
-                  </Button>
-                </Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+                  <Nav>
+                    <Link to="/welcome">
+                      <Button variant="contained" color="success">
+                        Get Started <GoArrowRight className="fs-4 ms-1" />
+                      </Button>
+                    </Link>
+                  </Nav>
+                </Navbar.Collapse>
+              </Container>
+            </Navbar>
           </div>
           <div className="container category my-5">
             <div className="d-flex justify-content-start justify-content-lg-between align-items-lg-end flex-column flex-md-row gap-3">
@@ -86,7 +90,7 @@ useEffect(() => {
                 Explore by <span className="highlighted-text">category</span>
               </h2>
             </div>
-            <div className="row gy-4 mt-3">        
+            <div className="row gy-4 mt-3">
               {businessData.map((item) => (
                 <div className="col-lg-3" key={item.id}>
                   <Link to="/welcome" className="h-100">
@@ -180,6 +184,21 @@ useEffect(() => {
                   </Row>
                 </Col>
 
+                <Col md={4} className="mb-4">
+                  <h6>Download Our app</h6>
+                  <img
+                    src={playIcon}
+                    alt="play store icon"
+                    className="rounded-4 mb-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                  <img
+                    src={appleIcon}
+                    alt="apple store icon"
+                    className=" rounded-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                </Col>
                 {/* Right Section: Subscription */}
                 {/* <Col md={4} className="mb-4">
                   <h6>Get job notifications</h6>

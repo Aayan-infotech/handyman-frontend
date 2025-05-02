@@ -11,6 +11,7 @@ import {
   MobileDatePicker,
   DatePicker,
 } from "@mui/x-date-pickers";
+import Tooltip from "@mui/material/Tooltip";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TextField, Stack } from "@mui/material";
 import axiosInstance from "../components/axiosInstance";
@@ -184,15 +185,21 @@ export default function NewJob() {
         <>
           <LoggedHeader />
           <Link to="/support/chat/1">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to="/message">
-              <MdMessage />
-            </Link>
-          </div>
+
+          <Link to="/message">
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
+
           <div className="bg-second py-3">
             <div className="container">
               <div className="top-section-main py-4">

@@ -6,6 +6,8 @@ import {
   MdCall,
   MdOutlineSupportAgent,
 } from "react-icons/md";
+import Tooltip from "@mui/material/Tooltip";
+
 import company1 from "./assets/logo/companyLogo.png";
 import Chip from "@mui/material/Chip";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -23,7 +25,7 @@ import { getGuestProviderJobId } from "../Slices/providerSlice";
 import { acceptJobNotification } from "../Slices/notificationSlice";
 
 export default function JobSpecification() {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -186,7 +188,7 @@ export default function JobSpecification() {
   console.log("hasCompletedJob", hasCompletedJob);
 
   const handleChat = () => {
-    navigate(`/provider/chat/${data.user}?jobId=${data?._id}`);
+    navigate(`/provider/chat/${data.user?._id}?jobId=${data?._id}`);
   };
 
   useEffect(() => {
@@ -217,14 +219,18 @@ export default function JobSpecification() {
         <div className="">
           <LoggedHeader />
           <Link to="/provider/admin/chat/">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
           <div className="message">
-            <Link to="/provider/message">
-              <MdMessage />
-            </Link>
+            <Tooltip title="Message" placement="left-start">
+              <Link to="/provider/message">
+                <MdMessage />
+              </Link>
+            </Tooltip>
           </div>
           <div className="bg-second py-5">
             <div className="container">
@@ -460,7 +466,7 @@ export default function JobSpecification() {
                 className="custom-green bg-green-custom rounded-5 py-3 w-100 mb-4"
                 onClick={handleChat}
               >
-                Message
+                Message to {data?.user?.name}
               </Button>
             </div>
 

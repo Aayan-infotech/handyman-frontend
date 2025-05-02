@@ -12,6 +12,8 @@ import axiosInstance from "./components/axiosInstance";
 import Loader from "./Loader";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import appleIcon from "./assets/apple.png";
+import playIcon from "./assets/google.png";
 import {
   FaFacebook,
   FaInstagram,
@@ -45,7 +47,7 @@ export default function LatestJobs() {
 
     return address.replace(pattern, "").trim();
   };
-  
+
   return (
     <>
       {loading === true ? (
@@ -53,34 +55,41 @@ export default function LatestJobs() {
       ) : (
         <div className="">
           <div className="">
-             <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
-          <Container fluid>
-            <Link to="/" className="py-1">
-              <img src={logo} alt="logo" />
-            </Link>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+            <Navbar
+              collapseOnSelect
+              expand="lg"
+              className="position-relative z-1"
+            >
+              <Container fluid>
+                <Link to="/" className="py-1">
+                  <img src={logo} alt="logo" />
+                </Link>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                  {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
                 <Link href="#">About UCCCs</Link>
                 <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
               </Nav> */}
 
+                  <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
+                    <Link to="/about" style={{ fontWeight: "350" }}>
+                      About Us
+                    </Link>
+                    <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                      Contact Us
+                    </Link>
+                  </Nav>
 
-              <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link to="/about" style={{ fontWeight: '350' }}>About Us</Link>
-                <Link to="/contact-us" style={{ fontWeight: '350' }}>Contact Us</Link>
-              </Nav>
-
-              <Nav>
-                <Link to="/welcome">
-                  <Button variant="contained" color="success">
-                    Get Started <GoArrowRight className="fs-4 ms-1" />
-                  </Button>
-                </Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+                  <Nav>
+                    <Link to="/welcome">
+                      <Button variant="contained" color="success">
+                        Get Started <GoArrowRight className="fs-4 ms-1" />
+                      </Button>
+                    </Link>
+                  </Nav>
+                </Navbar.Collapse>
+              </Container>
+            </Navbar>
           </div>
           <div className="latest-job pt-5">
             <div className="container jobs my-5">
@@ -99,7 +108,6 @@ export default function LatestJobs() {
                             <div className="d-flex flex-column gap-2 justify-content-start">
                               <div className="d-flex justify-content-start align-items-center">
                                 <h6 className="mb-0">{item?.title}</h6>
-                               
                               </div>
 
                               <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
@@ -107,7 +115,9 @@ export default function LatestJobs() {
                                   {item?.user?.name}
                                 </span>
                                 <span className="text-muted">
-                                  {filterAddressPatterns(item?.jobLocation?.jobAddressLine)}
+                                  {filterAddressPatterns(
+                                    item?.jobLocation?.jobAddressLine
+                                  )}
                                 </span>
                               </div>
                               <Stack
@@ -206,7 +216,21 @@ export default function LatestJobs() {
                     </Col>
                   </Row>
                 </Col>
-
+                <Col md={4} className="mb-4">
+                  <h6>Download Our app</h6>
+                  <img
+                    src={playIcon}
+                    alt="play store icon"
+                    className="rounded-4 mb-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                  <img
+                    src={appleIcon}
+                    alt="apple store icon"
+                    className=" rounded-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                </Col>
                 {/* Right Section: Subscription */}
                 {/* <Col md={4} className="mb-4">
               <h6>Get job notifications</h6>

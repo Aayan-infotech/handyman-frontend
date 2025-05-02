@@ -408,10 +408,23 @@ export default function SignUpProvider() {
                       </Form.Label>
                       <Col sm="7">
                         <Form.Control
-                          type="Number"
+                          type="text"
                           placeholder="Phone number"
-                          value={phoneNo}
-                          onChange={(e) => setPhoneNo(e.target.value)}
+                          value={phoneNo ? `+61${phoneNo}` : ""}
+                          onChange={(e) => {
+                            const rawValue = e.target.value;
+                            // Remove any existing "+61" prefix to avoid duplication
+                            const sanitizedValue = rawValue.replace(
+                              /^\+61/,
+                              ""
+                            );
+                            // Allow only digits after the prefix
+                            const digitsOnly = sanitizedValue.replace(
+                              /\D/g,
+                              ""
+                            );
+                            setPhoneNo(digitsOnly);
+                          }}
                         />
                       </Col>
                     </Form.Group>

@@ -5,6 +5,8 @@ import Form from "react-bootstrap/Form";
 import Button from "@mui/material/Button";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
+import Tooltip from "@mui/material/Tooltip";
+
 import {
   LocalizationProvider,
   MobileTimePicker,
@@ -270,15 +272,21 @@ export default function JobEdit() {
         <>
           <LoggedHeader />
           <Link to="/support/chat/1">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to="/message">
-              <MdMessage />
-            </Link>
-          </div>
+
+          <Link to="/message">
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
+
           <div className="bg-second py-3">
             <div className="container">
               <div className="top-section-main py-4">

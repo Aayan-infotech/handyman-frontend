@@ -7,6 +7,8 @@ import axiosInstance from "./axiosInstance";
 import Container from "react-bootstrap/Container";
 import Button from "@mui/material/Button";
 import logoWhite from "../assets/logo-white.png";
+import appleIcon from "../assets/apple.png";
+import playIcon from "../assets/google.png";
 import {
   FaFacebook,
   FaTwitter,
@@ -31,9 +33,7 @@ export default function BlogDetail() {
         const allBlogs = response?.data?.blog;
         const currentBlog = allBlogs.find((b) => b._id.toString() === id);
         setBlog(currentBlog);
-        setRelatedBlogs(
-          allBlogs.filter((b) => b._id !== currentBlog?._id)
-        ); 
+        setRelatedBlogs(allBlogs.filter((b) => b._id !== currentBlog?._id));
       })
       .catch((error) => {
         console.error("Error fetching blog details:", error);
@@ -196,6 +196,22 @@ export default function BlogDetail() {
                   </ul>
                 </Col>
               </Row>
+            </Col>
+
+            <Col md={4} className="mb-4">
+              <h6>Download Our app</h6>
+              <img
+                src={playIcon}
+                alt="play store icon"
+                className="rounded-4 mb-4"
+                style={{ height: "60px", width: "200px" }}
+              />
+              <img
+                src={appleIcon}
+                alt="apple store icon"
+                className=" rounded-4"
+                style={{ height: "60px", width: "200px" }}
+              />
             </Col>
           </Row>
 

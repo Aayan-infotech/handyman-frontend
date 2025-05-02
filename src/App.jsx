@@ -173,7 +173,7 @@ function App() {
           element={<UnProtectedRoute element={<JobListing />} />}
         />
         <Route
-          path="/featured-jobs"
+          path="/featured-business"
           element={<UnProtectedRoute element={<FeaturedJobs />} />}
         />
         <Route
