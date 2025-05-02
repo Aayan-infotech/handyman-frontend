@@ -138,7 +138,7 @@ export default function ManageSubscription() {
                         className="rounded-0 custom-green bg-green-custom"
                         onClick={() => navigate("/provider/subscription")}
                       >
-                        Add Your subscription
+                        Update your subscription
                       </Button>
                     </div>
                   </div>
@@ -196,17 +196,16 @@ export default function ManageSubscription() {
                                 {item.subscriptionPlanId.planName}
                               </h3>
                               <div className="d-flex justify-content-lg-between justify-content-start align-items-center w-100 flex-wrap flex-lg-nowrap gap-4">
-                              
-                              <h5>${item.amount}</h5>
-                              <h4>
-                                Radius: {item.subscriptionPlanId.kmRadius}KM
-                              </h4>
-                              <h5>
-                                Valid for{" "}
-                                {item.subscriptionPlanId.validity === 365
-                                  ? "Year"
-                                  : "Month"}
-                              </h5>
+                                <h5>${item.amount}</h5>
+                                <h4>
+                                  Radius: {item.subscriptionPlanId.kmRadius}KM
+                                </h4>
+                                <h5>
+                                  Valid for{" "}
+                                  {item.subscriptionPlanId.validity === 365
+                                    ? "Year"
+                                    : "Month"}
+                                </h5>
                               </div>
                               <div className=" d-flex flex-row gap-3 justify-content-between align-items-start w-100">
                                 <h6>Payment Method: {item.paymentMethod}</h6>

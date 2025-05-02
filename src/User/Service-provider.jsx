@@ -12,6 +12,8 @@ import { getHunterUser } from "../Slices/userSlice";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
+import Tooltip from "@mui/material/Tooltip";
+
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -195,15 +197,19 @@ export default function ServiceProvider() {
         <>
           <LoggedHeader />
           <Link to="/support/chat/1">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Message" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to="/message">
-              <MdMessage />
-            </Link>
-          </div>
+          <Link to="/message">
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
           <div className="bg-second py-3">
             <div className="container">
               <div className="row gy-4">

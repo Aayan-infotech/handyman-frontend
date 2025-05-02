@@ -46,7 +46,7 @@ function Search() {
   );
 
   const handleClick = () => {
-    navigate("/welcome");
+    navigate("/login");
   };
 
   const handleSearchJob = async () => {
@@ -145,15 +145,15 @@ function Search() {
                       <div className="card border-0 rounded-5 shadow px-4">
                         <div className="card-body">
                           <div className="row gy-4 gx-1 align-items-center">
-                            <div className="col-lg-3">
+                            <div className="col-lg-4">
                               <div className="d-flex flex-row gap-3 align-items-center">
                                 <div className="d-flex flex-column align-items-start gap-1">
-                                  <h3 className="mb-0">{job.businessName}</h3>
-                                  <h6>{job.email}</h6>
+                                  <h3 className="mb-0">{job?.businessName}</h3>
+                                  <h6>{job?.ABN_Number}</h6>
                                 </div>
                               </div>
                             </div>
-                            <div className="col-lg-7">
+                            <div className="col-lg-6">
                               <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-start">
                                 <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
                                   <PiBag />

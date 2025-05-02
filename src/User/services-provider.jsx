@@ -4,6 +4,8 @@ import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import Toaster from "../Toaster";
 import axiosInstance from "../components/axiosInstance";
+import Tooltip from "@mui/material/Tooltip";
+
 import { getHunterUser } from "../Slices/userSlice";
 import { useDispatch } from "react-redux";
 import Loader from "../Loader";
@@ -100,15 +102,21 @@ export default function ServicesProvider() {
         <>
           <LoggedHeader />
           <Link to="/support/chat/1">
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to="/message">
-              <MdMessage />
-            </Link>
-          </div>
+
+          <Link to="/message">
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
+
           <div className="container">
             <div className="row gy-4 my-4">
               {data.length === 0 ? (

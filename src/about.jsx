@@ -8,6 +8,8 @@ import Nav from "react-bootstrap/Nav";
 import { GoArrowRight } from "react-icons/go";
 import logoWhite from "./assets/logo-white.png";
 import { Row, Col, Form } from "react-bootstrap";
+import appleIcon from "./assets/apple.png";
+import playIcon from "./assets/google.png";
 import {
   FaFacebook,
   FaInstagram,
@@ -172,7 +174,21 @@ export default function About() {
                     </Col>
                   </Row>
                 </Col>
-
+ <Col md={4} className="mb-4">
+                  <h6>Download Our app</h6>
+                  <img
+                    src={playIcon}
+                    alt="play store icon"
+                    className="rounded-4 mb-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                  <img
+                    src={appleIcon}
+                    alt="apple store icon"
+                    className=" rounded-4"
+                    style={{ height: "60px", width: "200px" }}
+                  />
+                </Col>
                 {/* Right Section: Subscription */}
                 {/* <Col md={4} className="mb-4">
               <h6>Get job notifications</h6>

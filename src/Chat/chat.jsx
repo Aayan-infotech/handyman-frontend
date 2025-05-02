@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import "../User/user.css";
 import user1 from "../assets/user1.png";
 import { IoIosSearch } from "react-icons/io";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { FaArrowLeft } from "react-icons/fa";
+
 import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
@@ -64,7 +65,10 @@ const sendMessage = async (
     console.log("CHAT MAP =>", chatMap);
 
     const newMessageRef = push(
-      ref(realtimeDb, `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`)
+      ref(
+        realtimeDb,
+        `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`
+      )
     );
     await set(newMessageRef, chat);
 
@@ -161,7 +165,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   console.log("Filtered messageData:", validMessageData);
   const hunterId = localStorage.getItem("hunterId");
   const receiverId = id || chatMessage?.senderId;
-  const senderId = id || chatMessage?.receiverId  ;
+  const senderId = id || chatMessage?.receiverId;
   const [jobShow, setJobShow] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
@@ -286,7 +290,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   };
 
   const handleSend = async () => {
-    if (msg.trim() === "" || !chatId  || !currentUser) return;
+    if (msg.trim() === "" || !chatId || !currentUser) return;
 
     await sendMessage(
       "text",
@@ -312,12 +316,17 @@ export default function Chat({ messageData, messages, selectedChat }) {
     }
   };
 
+  const handleBack = () => {
+    navigate(`/provider/jobspecification/${jobId}`);
+  };
+
   console.log("storedUserId", storedUserId);
   const handleCompletedJob = async ({ id }) => {
     setLoading(true);
     try {
       const response = await axiosInstance.post(
         `/provider/completedCount/${id}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -402,7 +411,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     noficationFunctionality();
   };
 
-  console.log("messageData in chat", selectedChat);
+  console.log("messageData in chat", location.pathname);
 
   const messages1 = messages || messagesPeople || [];
 
@@ -413,8 +422,15 @@ export default function Chat({ messageData, messages, selectedChat }) {
       <div className={`d-flex flex-column gap-3 pb-4 bg-second`}>
         <div className="card border-0 rounded-3">
           <div className="card-body p-2">
-            <div className="d-flex flex-row gap-2 align-items-center justify-content-between">
+            <div className="d-flex flex-row gap-2 align-items-center justify-content-start">
               <div className="d-flex flex-row align-items-center gap-2 profile-icon">
+                {location.pathname.startsWith("/provider/chat/") && (
+                  <FaArrowLeft
+                    className="fs-4"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleBack(jobId)}
+                  />
+                )}
                 <Avatar
                   alt="Image"
                   src={selectedChat?.displayUser?.images || userChat?.images}

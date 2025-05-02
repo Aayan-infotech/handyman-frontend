@@ -157,6 +157,7 @@ export default function JobDetail() {
       const reponse = await axiosInstance.post(
         `/rating/giveRating/${receiverId}`,
         {
+          jobId: data?._id,
           rating: value,
           review,
         },

@@ -1,19 +1,45 @@
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
+import Container from "react-bootstrap/Container";
+import React, { useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import axiosInstance from "./axiosInstance";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
-import logo from "./assets/logo.png";
+import Toaster from "../Toaster";
+import logo from "../assets/logo.png";
+import logoWhite from "../assets/logo-white.png";
+
 import { GoArrowRight } from "react-icons/go";
-import Loader from "../Loader";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { CiSearch } from "react-icons/ci";
+import MenuItem from "@mui/material/MenuItem";
+import { SlLocationPin } from "react-icons/sl";
+
+import { Link } from "react-router-dom";
+import { PiBagSimpleLight } from "react-icons/pi";
+import Autocomplete from "react-google-autocomplete";
+import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
-import Container from "react-bootstrap/Container";
+import { LuDot } from "react-icons/lu";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import { Row, Col, Form } from "react-bootstrap";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import CardActionArea from "@mui/material/CardActionArea";
+import Select from "react-select";
+
+import {
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaDribbble,
+  FaLinkedin,
+} from "react-icons/fa";
+import axiosInstance from "./axiosInstance";
+import appleIcon from "../assets/apple.png";
+import playIcon from "../assets/google.png";
 export default function AllBlogs() {
   const [blogs, setBlogs] = useState([]);
 
@@ -109,6 +135,130 @@ export default function AllBlogs() {
           </Grid>
         </Container>
       </div>
+      <footer className="footer text-light mt-4">
+        <Container>
+          <Row>
+            {/* Left Section: Logo and Description */}
+            <Col md={4} className="mb-4">
+              <img src={logoWhite} alt="logo" />
+              <p className="fw-normal mt-3">
+                Great platfrom for connecting service Hunters to Service
+                providers in Australia
+              </p>
+            </Col>
+
+            {/* Center Section: Links */}
+            <Col md={4} className="mb-4">
+              <Row>
+                <Col>
+                  <h6 className="">About</h6>
+                  <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                    {/* <li>
+                            <a href="#companies" className="text-light">
+                              Companies
+                            </a>
+                          </li> */}
+                    {/* <li>
+                            <a href="#pricing" className="text-light">
+                              Pricing
+                            </a>
+                          </li> */}
+                    <li>
+                      <a href="allblogs" className="text-light">
+                        Blogs
+                      </a>
+                    </li>
+                    <li>
+                      <a href="terms" className="text-light">
+                        Terms
+                      </a>
+                    </li>
+                    {/* <li>
+                            <a href="#advice" className="text-light">
+                              Advice
+                            </a>
+                          </li> */}
+                    <li>
+                      <Link to="/privacy" className="text-light">
+                        Privacy Policy
+                      </Link>
+                    </li>
+                  </ul>
+                </Col>
+                <Col>
+                  <h6>Resources</h6>
+                  <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                    <li>
+                      <a href="#help-docs" className="text-light">
+                        Help Docs
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#guide" className="text-light">
+                        Guide
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#updates" className="text-light">
+                        Updates
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/contact-us" className="text-light">
+                        Contact Us
+                      </a>
+                    </li>
+                  </ul>
+                </Col>
+              </Row>
+            </Col>
+
+            <Col md={4} className="mb-4">
+              <h6>Download Our app</h6>
+              <img
+                src={playIcon}
+                alt="play store icon"
+                className="rounded-4 mb-4"
+                style={{ height: "60px", width: "200px" }}
+              />
+              <img
+                src={appleIcon}
+                alt="apple store icon"
+                className=" rounded-4"
+                style={{ height: "60px", width: "200px" }}
+              />
+            </Col>
+          </Row>
+
+          <hr />
+          <Row className="mt-4">
+            <Col lg={6}>
+              <p className="text-start">
+                2025 @ TradeHunters. All rights reserved.
+              </p>
+            </Col>
+            <Col lg={6}>
+              <div className="social-icons d-flex justify-content-center justify-content-lg-end gap-4 mb-3">
+                <a href="#facebook" className="text-light bg-dark">
+                  <FaFacebook size={16} />
+                </a>
+                <a href="#dribble" className="text-light">
+                  <FaDribbble size={16} />
+                </a>
+                <a href="#instagram" className="text-light">
+                  <FaInstagram size={16} />
+                </a>
+                <a href="#twitter" className="text-light">
+                  <FaTwitter size={16} />
+                </a>
+                <a href="#linkedin" className="text-light">
+                  <FaLinkedin size={16} />
+                </a>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </footer>
     </>
   );
 }

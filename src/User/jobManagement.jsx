@@ -8,6 +8,8 @@ import { PiBag } from "react-icons/pi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Toaster from "../Toaster";
 import Loader from "../Loader";
+import Tooltip from "@mui/material/Tooltip";
+
 import noData from "../assets/no_data_found.gif";
 import { IoEyeSharp, IoTrashOutline, IoPencil } from "react-icons/io5";
 import Table from "react-bootstrap/Table";
@@ -45,8 +47,8 @@ export default function JobManagement() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const provider = location.pathname.includes("provider");
-
-  const [jobStatus, setJobStatus] = useState([]);
+  const [totalJobs, setTotalJobs] = useState("");
+  const [jobStatus, setJobStatus] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const ProviderToken = localStorage.getItem("ProviderToken");
   const queryParams = new URLSearchParams(location.search);
@@ -62,14 +64,24 @@ export default function JobManagement() {
   }, [location.search, navigate]);
 
   const handleChange = (event) => {
-    setJobStatus(event.target.value);
+    const newStatus = event.target.value;
+    setJobStatus(newStatus);
+
+    // Update URL with job status
+    if (newStatus) {
+      queryParams.set("jobStatus", newStatus);
+    } else {
+      queryParams.delete("jobStatus");
+    }
+    queryParams.set("page", "1"); // Reset to first page when filter changes
+    navigate(`?${queryParams.toString()}`);
   };
 
   const fetchJobs = async () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(
-        `/jobpost/getJobPostByUserId?search=${search}&page=${currentPage}`,
+        `/jobpost/getJobPostByUserId?search=${search}&page=${currentPage}&jobStatus=${jobStatus}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -85,6 +97,7 @@ export default function JobManagement() {
         setFilteredData(res.data.data);
         setSearch("");
         setTotalPages(res.data.pagination.totalPages);
+        setTotalJobs(res.data.pagination.totalJobs);
         if (res.data.data.length === 0) {
           setToastProps({
             message: "No jobs posted yet",
@@ -187,25 +200,24 @@ export default function JobManagement() {
 
   const handlePageChange = (page) => {
     queryParams.set("page", page.toString());
+    if (jobStatus) {
+      queryParams.set("jobStatus", jobStatus);
+    }
     navigate(`?${queryParams.toString()}`);
   };
-
+  console.log("jobStatus", jobStatus);
   useEffect(() => {
     let filtered = data;
-
-    if (search) {
-      fetchJobs();
-    }
-
-    // Apply job status filter if any statuses are selected
-    if (jobStatus.length > 0) {
-      filtered = filtered.filter((provider) =>
-        jobStatus.includes(provider.jobStatus)
-      );
-    }
+    fetchJobs();
+    // // Apply job status filter if any statuses are selected
+    // if (jobStatus.length > 0) {
+    //   filtered = filtered.filter((provider) =>
+    //     jobStatus.includes(provider.jobStatus)
+    //   );
+    // }
 
     setFilteredData(filtered);
-  }, [data, jobStatus, currentPage]);
+  }, [jobStatus, currentPage, search]);
 
   console.log("filteredData", data);
 
@@ -234,15 +246,21 @@ export default function JobManagement() {
           <Link
             to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
           >
-            <div className="admin-message">
-              <MdOutlineSupportAgent />
-            </div>
+            <Tooltip title="Admin chat" placement="left-start">
+              <div className="admin-message">
+                <MdOutlineSupportAgent />
+              </div>
+            </Tooltip>
           </Link>
-          <div className="message">
-            <Link to={`${hunterToken ? "/message" : "/provider/message"}`}>
-              <MdMessage />
-            </Link>
-          </div>
+
+          <Link to={`${hunterToken ? "/message" : "/provider/message"}`}>
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
+
           <div className="bg-second py-3">
             <div className="container">
               <div className="d-flex justify-content-lg-between flex-column flex-lg-row gap-4">
@@ -265,26 +283,34 @@ export default function JobManagement() {
                 </div>
                 {!location.pathname.includes("job-history") && (
                   <FormControl className="sort-input" sx={{ m: 1 }}>
-                    <InputLabel id="radius-select-label">Job status</InputLabel>
+                    <InputLabel id="job-status-select-label">
+                      Job status
+                    </InputLabel>
                     <Select
-                      labelId="business-type-select-label"
-                      id="business-type-select"
-                      multiple
+                      labelId="job-status-select-label"
+                      id="job-status-select"
                       value={jobStatus}
                       onChange={handleChange}
-                      input={<OutlinedInput label="Select Business Type" />}
-                      renderValue={(selected) => selected.join(", ")}
+                      renderValue={(selected) => selected}
+                      input={<OutlinedInput label="Select Job Status" />}
                       MenuProps={MenuProps}
-                      placeholder="Select Business Type"
                     >
-                      {Array.from(
-                        new Set(data.flatMap((provider) => provider.jobStatus))
-                      ).map((type, index) => (
-                        <MenuItem key={index} value={type}>
-                          <Checkbox checked={jobStatus.includes(type)} />
-                          <ListItemText primary={type} />
-                        </MenuItem>
-                      ))}
+                      <MenuItem key="Completed" value="Completed">
+                        <Checkbox checked={jobStatus.includes("Completed")} />
+                        <ListItemText primary="Completed" />
+                      </MenuItem>
+                      <MenuItem key="Pending" value="Pending">
+                        <Checkbox checked={jobStatus.includes("Pending")} />
+                        <ListItemText primary="Pending" />
+                      </MenuItem>
+                      <MenuItem key="Assigned" value="Assigned">
+                        <Checkbox checked={jobStatus.includes("Assigned")} />
+                        <ListItemText primary="Assigned" />
+                      </MenuItem>
+                      <MenuItem key="Deleted" value="Deleted">
+                        <Checkbox checked={jobStatus.includes("Deleted")} />
+                        <ListItemText primary="Deleted" />
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 )}
@@ -322,7 +348,7 @@ export default function JobManagement() {
                                 Date Posted
                               </th>
                               <th className="green-card-important py-3 text-center">
-                                job Status
+                                Job Status
                               </th>
                               <th className="green-card-important py-3 text-center">
                                 Actions
@@ -397,25 +423,27 @@ export default function JobManagement() {
                             ))}
                           </tbody>
                         </Table>
-                        <Pagination className="justify-content-center pagination-custom">
-                          <Pagination.Prev
-                            disabled={currentPage === 1}
-                            onClick={() => handlePageChange(currentPage - 1)}
-                          />
-                          {[...Array(totalPages)].map((_, index) => (
-                            <Pagination.Item
-                              key={index + 1}
-                              active={index + 1 === currentPage}
-                              onClick={() => handlePageChange(index + 1)}
-                            >
-                              {index + 1}
-                            </Pagination.Item>
-                          ))}
-                          <Pagination.Next
-                            disabled={currentPage === totalPages}
-                            onClick={() => handlePageChange(currentPage + 1)}
-                          />
-                        </Pagination>
+                        {totalJobs >= 10 && (
+                          <Pagination className="justify-content-center pagination-custom">
+                            <Pagination.Prev
+                              disabled={currentPage === 1}
+                              onClick={() => handlePageChange(currentPage - 1)}
+                            />
+                            {[...Array(totalPages)].map((_, index) => (
+                              <Pagination.Item
+                                key={index + 1}
+                                active={index + 1 === currentPage}
+                                onClick={() => handlePageChange(index + 1)}
+                              >
+                                {index + 1}
+                              </Pagination.Item>
+                            ))}
+                            <Pagination.Next
+                              disabled={currentPage === totalPages}
+                              onClick={() => handlePageChange(currentPage + 1)}
+                            />
+                          </Pagination>
+                        )}
                       </div>
                     </div>
                   </>
