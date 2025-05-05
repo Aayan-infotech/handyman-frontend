@@ -411,7 +411,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     noficationFunctionality();
   };
 
-  console.log("messageData in chat", location.pathname);
+  console.log("messageData in chat", userChat);
 
   const messages1 = messages || messagesPeople || [];
 
@@ -424,7 +424,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
           <div className="card-body p-2">
             <div className="d-flex flex-row gap-2 align-items-center justify-content-start">
               <div className="d-flex flex-row align-items-center gap-2 profile-icon">
-                {location.pathname.startsWith("/provider/chat/") && (
+                {(location.pathname.startsWith("/provider/") ||
+                  location.pathname.startsWith("/chat/")) && (
                   <FaArrowLeft
                     className="fs-4"
                     style={{ cursor: "pointer" }}
@@ -446,7 +447,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                       .toUpperCase()
                       .charAt(0) ||
                     userChat?.name?.toUpperCase().charAt(0) ||
-                    userChat?.contectName?.toUpperCase().charAt(0)}
+                    userChat?.contactName?.toUpperCase().charAt(0)}
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
                   <h5
@@ -465,7 +466,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     {selectedChat?.displayUser?.name ||
                       selectedChat?.displayUser?.contactName ||
                       userChat?.name ||
-                      userChat?.contectName}
+                      userChat?.contactName}
                   </h5>
                   {/* {!show ? (
                     <span className="text-muted fs-6">2m ago</span>

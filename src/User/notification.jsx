@@ -429,39 +429,41 @@ export default function Notification() {
                                 View Message
                               </Button>
                             </div>
-                            {notification?.jobStatus === "Pending" && (
-                              <>
+                            {notification?.jobStatus === "Pending" &&
+                              hunterId && (
+                                <>
+                                  <div className="col-lg-3 d-flex justify-content-end">
+                                    <Button
+                                      variant="outlined"
+                                      color="success"
+                                      onClick={() =>
+                                        handleJobAccept(notification)
+                                      }
+                                      className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                    >
+                                      Assign job
+                                    </Button>
+                                  </div>
+                                </>
+                              )}
+
+                            {notification?.nameData?.jobPost?.jobStatus !==
+                              "Completed" &&
+                              hunterId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button
                                     variant="outlined"
                                     color="success"
-                                    onClick={() =>
-                                      handleJobAccept(notification)
-                                    }
                                     className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                    onClick={() =>
+                                      handleJobCompleted(notification)
+                                    }
+                                    disabled={markingAsRead}
                                   >
-                                    Assign job
+                                    Mark as completed
                                   </Button>
                                 </div>
-                              </>
-                            )}
-
-                            {notification?.nameData?.jobPost?.jobStatus !==
-                              "Completed" && (
-                              <div className="col-lg-3 d-flex justify-content-end">
-                                <Button
-                                  variant="outlined"
-                                  color="success"
-                                  className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
-                                  onClick={() =>
-                                    handleJobCompleted(notification)
-                                  }
-                                  disabled={markingAsRead}
-                                >
-                                  Mark as completed
-                                </Button>
-                              </div>
-                            )}
+                              )}
                             <div className="col-lg-3 d-flex justify-content-end">
                               <Button
                                 variant="outlined"
