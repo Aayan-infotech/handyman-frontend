@@ -409,8 +409,20 @@ export default function Notification() {
                                 color="success"
                                 onClick={() => {
                                   userType === "hunter"
-                                    ? navigate(`/chat/${notification._id}`)
-                                    : navigate(`/provider/message`);
+                                    ? navigate(
+                                        `/chat/${
+                                          notification.userId === userId
+                                            ? notification.receiverId
+                                            : notification.userId
+                                        }?jobId=${notification.jobId}`
+                                      )
+                                    : navigate(
+                                        `/provider/chat/${
+                                          notification.userId === userId
+                                            ? notification.receiverId
+                                            : notification.userId
+                                        }?jobId=${notification.jobId}`
+                                      );
                                 }}
                                 className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
                               >
@@ -434,7 +446,8 @@ export default function Notification() {
                               </>
                             )}
 
-                            {notification?.nameData?.jobPost?.jobStatus !== "Completed" && (
+                            {notification?.nameData?.jobPost?.jobStatus !==
+                              "Completed" && (
                               <div className="col-lg-3 d-flex justify-content-end">
                                 <Button
                                   variant="outlined"
