@@ -267,13 +267,13 @@ function Home() {
           <div className="d-flex flex-column gap-3">
             <div className="d-flex justify-content-start justify-content-lg-between align-items-lg-end flex-column flex-md-row gap-3">
               <h2 className="mb-0">
-                Explore by <span className="highlighted-text">category</span>
+                Explore by <span className="highlighted-text">Categories</span>
               </h2>
               <Link
                 to="/job-listing"
                 className="text-decoration-none custom-text-success"
               >
-                Show all category <GoArrowRight className="fs-4 ms-1" />
+                Show all categories <GoArrowRight className="fs-4 ms-1" />
               </Link>
             </div>
             <div className="row gy-4 mt-3">
@@ -336,7 +336,7 @@ function Home() {
               to="/featured-business"
               className="text-decoration-none custom-text-success"
             >
-              Show all Bussiness <GoArrowRight className="fs-4 ms-1" />
+              Show All Bussiness <GoArrowRight className="fs-4 ms-1" />
             </Link>
           </div>
           <div className="row gy-4 mt-4">

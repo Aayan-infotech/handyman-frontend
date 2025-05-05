@@ -70,7 +70,7 @@ export default function Welcome() {
                     <div className="d-flex flex-column flex-lg-row align-items-center gap-4">
                       <img src={female} alt="" />
                       <div className="d-flex flex-column align-items-center align-items-lg-start w-100">
-                        <h5>Service hunter</h5>
+                        <h5>Service Hunter</h5>
                         <p>
                           Finding a service here never been easier than before
                         </p>

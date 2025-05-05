@@ -5,10 +5,13 @@ import {
   MdOutlineWork,
   MdOutlineSupportAgent,
 } from "react-icons/md";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import "swiper/css";
 import Tooltip from "@mui/material/Tooltip";
 import "swiper/css/navigation";
-import { ref, onValue, off, remove, update, get } from "firebase/database";
+import { ref, onValue, off, remove, update, get, set } from "firebase/database";
 import { realtimeDb } from "../Chat/lib/firestore";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaLock, FaPen } from "react-icons/fa";
@@ -34,7 +37,7 @@ export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const [notificationModal, setNotificationModal] = useState(false);
   const [backgroundImg, setBackgroundImg] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [description, setDescription] = useState("");
@@ -84,9 +87,12 @@ export default function MyProfile() {
   const hunterId = localStorage.getItem("hunterId");
   const Guest = JSON.parse(localStorage.getItem("Guest")); // Converts "false" to boolean false
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [notificationSetting, setNotificationSetting] = useState(
+    providerToken
+      ? localStorage.getItem("notificationEnableProvider") === "true"
+      : localStorage.getItem("notificationEnableHunter") === "true"
+  ); 
 
-  // const Guest = localStorage.getItem("Guest") || false;
-  console.log(Guest, "guestttttttttttttttttt");
 
   const handleClose = () => setIsModalVisible(false);
   const handleShow = () => setIsModalVisible(true);
@@ -368,6 +374,17 @@ export default function MyProfile() {
     }
   };
 
+  const handleNotification = () => {
+    const newSetting = !notificationSetting;
+    setNotificationSetting(newSetting);
+
+    if (providerToken) {
+      localStorage.setItem("notificationEnableProvider", newSetting);
+    } else {
+      localStorage.setItem("notificationEnableHunter", newSetting);
+    }
+  };
+
   const handleNotificationToggle = (id) => {
     setDeleteModal(true);
     setDeleteId(id);
@@ -455,7 +472,13 @@ export default function MyProfile() {
       });
     }
   };
+  const modalNotification = () => {
+    setNotificationModal(true);
+  };
 
+  const closeModalNotification = () => {
+    setNotificationModal(false);
+  };
   // Function to delete user chats from Firebase
   const deleteUserChats = async (userId) => {
     try {
@@ -562,7 +585,7 @@ export default function MyProfile() {
         <>
           <LoggedHeader />
 
-          <Link
+          {/* <Link
             to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
           >
             <Tooltip title="Admin chat" placement="left-start">
@@ -570,7 +593,7 @@ export default function MyProfile() {
                 <MdOutlineSupportAgent />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
             <Tooltip title="Message" placement="left-start">
@@ -1182,7 +1205,78 @@ export default function MyProfile() {
                     </div>
                   </Link>
                 </div>
+                <div
+                  className={` ${
+                    Location.pathname.includes("provider")
+                      ? "col-lg-2"
+                      : "col-lg-3"
+                  }`}
+                >
+                  <div
+                    onClick={modalNotification}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className="card border-0 rounded-5 h-100">
+                      <div className="card-body">
+                        <div
+                          className={`d-flex gap-3 align-items-center justify-content-center ${
+                            Location.pathname.includes("provider")
+                              ? "flex-column"
+                              : "flex-row"
+                          }`}
+                        >
+                          <div className="circle-container">
+                            <div className="progress-circle">
+                              <div className="lock-icon">
+                                <FaLock />
+                              </div>
+                            </div>
+                          </div>
 
+                          <div className="d-flex flex-row gap-3 align-items-center">
+                            <span className="text-success text-center">
+                              Notification Setting
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Modal
+                  show={notificationModal}
+                  onHide={closeModalNotification}
+                  centered // This ensures the modal is vertically centered
+                >
+                  <Modal.Header className="border-0" closeButton>
+                    <Modal.Title>Notification setting</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="d-flex flex-row gap-2 justify-content-between align-items-center">
+                      <h5 className="fw-normal">Enable your Notification</h5>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={notificationSetting}
+                              onChange={handleNotification}
+                            />
+                          }
+                          label={notificationSetting ? "Active" : "Inactive"}
+                        />
+                      </FormGroup>
+                    </div>
+                    <div className="d-flex justify-content-center align-items-center flex-row gap-3 mt-4">
+                      <Button
+                        variant="success"
+                        onClick={closeModalNotification}
+                        className="px-4"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </Modal.Body>
+                </Modal>
                 <div
                   className={`${
                     Location.pathname.includes("provider")

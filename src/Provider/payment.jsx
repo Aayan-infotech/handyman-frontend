@@ -13,11 +13,11 @@ export default function Payment() {
   return (
     <>
       <LoggedHeader />
-      <Link to="/provider/admin/chat/">
+      {/* <Link to="/provider/admin/chat/">
         <div className="admin-message">
           <MdOutlineSupportAgent />
         </div>
-      </Link>
+      </Link> */}
       <div className="message">
         <Link to="/provider/message">
           <MdMessage />

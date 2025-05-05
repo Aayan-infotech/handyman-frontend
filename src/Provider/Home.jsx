@@ -272,13 +272,13 @@ export default function HomeProvider() {
         ))}
       </Stack>
 
-      <Link to="/provider/admin/chat/">
+      {/* <Link to="/provider/admin/chat/">
         <Tooltip title="Admin chat" placement="left-start">
           <div className="admin-message">
             <MdOutlineSupportAgent />
           </div>
         </Tooltip>
-      </Link>
+      </Link> */}
       <Link to="/provider/message">
         <Tooltip title="Message" placement="left-start">
           <div className="message">

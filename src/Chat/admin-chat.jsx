@@ -152,10 +152,10 @@ export default function AdminChat() {
                 className=""
                 style={{ height: "82px", width: "82px" }}
               >
-                S
+                A
               </Avatar>
               <div className="d-flex flex-column gap-1">
-                <h5 className="mb-0 fw-medium fs-5 text-dark">Support</h5>
+                <h5 className="mb-0 fw-medium fs-5 text-dark">Admin</h5>
               </div>
             </div>
           </div>

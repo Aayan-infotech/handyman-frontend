@@ -87,7 +87,7 @@ export default function JobListing() {
           <div className="container category my-5">
             <div className="d-flex justify-content-start justify-content-lg-between align-items-lg-end flex-column flex-md-row gap-3">
               <h2 className="mb-0">
-                Explore by <span className="highlighted-text">category</span>
+                Explore by <span className="highlighted-text">Categories</span>
               </h2>
             </div>
             <div className="row gy-4 mt-3">

@@ -246,11 +246,11 @@ export default function JobDetail() {
   return (
     <>
       <LoggedHeader />
-      <Link to="/support/chat/1">
+      {/* <Link to="/support/chat/1">
         <div className="admin-message">
           <MdOutlineSupportAgent />
         </div>
-      </Link>
+      </Link> */}
       <div className="message">
         <Link to="/message">
           <MdMessage />

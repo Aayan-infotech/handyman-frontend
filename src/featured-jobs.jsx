@@ -104,7 +104,7 @@ export default function FeaturedJobs() {
           <div className="d-flex flex-row gap-2 align-items-center navbar">
             <TextField
               id="standard-basic"
-              label="Search for businessName"
+              label="Search for Business Type"
               variant="standard"
               value={searchQuery}
               onChange={(e) => {
