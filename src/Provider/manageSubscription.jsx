@@ -82,9 +82,10 @@ export default function ManageSubscription() {
       const date = new Date(dateString);
       return isNaN(date.getTime())
         ? "Invalid Date"
-        : date.toLocaleDateString("en-US", {
+        : date.toLocaleDateString("en-AU", {
+            timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
             day: "2-digit",
-            month: "short",
+            month: "2-digit",
             year: "numeric",
           });
     } catch (e) {
@@ -101,10 +102,14 @@ export default function ManageSubscription() {
       const renewalDate = new Date(createdAt);
       renewalDate.setDate(createdAt.getDate() + validityDays);
 
-      return renewalDate.toLocaleDateString("en-US", {
+      return renewalDate.toLocaleString("en-AU", {
+        timeZone: "Australia/Sydney",
         day: "2-digit",
-        month: "short",
+        month: "2-digit",
         year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
       });
     } catch (e) {
       console.error("Date conversion error:", e);
@@ -150,27 +155,36 @@ export default function ManageSubscription() {
                             <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-center">
                               <h6>
                                 Valid From:{" "}
-                                {new Date(
-                                  voucher?.subscriptionStartDate
-                                ).toLocaleTimeString("en-AU", {
-                                  timeZone: "Australia/Sydney",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  hour12: true,
-                                })}
+                                {new Date(voucher?.startDate).toLocaleString(
+                                  "en-AU",
+                                  {
+                                    timeZone: "Australia/Sydney",
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  }
+                                )}
                               </h6>
                               <h6>
                                 Valid To:{" "}
-                                {new Date(
-                                  voucher?.subscriptionEndDate
-                                ).toLocaleTimeString("en-AU", {
-                                  timeZone: "Australia/Sydney",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  hour12: true,
-                                })}
+                                {new Date(voucher?.endDate).toLocaleString(
+                                  "en-AU",
+                                  {
+                                    timeZone: "Australia/Sydney",
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  }
+                                )}
                               </h6>
                             </div>
+                            <h4>Code: {voucher?.code}</h4>
                             <h4>Radius: {voucher?.kmRadius} KM</h4>
                           </div>
                         </div>

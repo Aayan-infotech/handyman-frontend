@@ -87,7 +87,7 @@ export default function ServiceProviderProfile() {
                   className="rounded-5"
                   style={{
                     width: "100%",
-                    height: "200px",
+                    height: "150px",
                     objectFit: "cover",
                   }}
                 />
@@ -190,6 +190,7 @@ export default function ServiceProviderProfile() {
                 <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
                   <h3 className="fw-bold fs-1">{data?.contactName}</h3>
                   <h6>{data?.businessName}</h6>
+                  <h6>ABN NO:{data?.ABN_Number}</h6>
                 </div>
 
                 <div className="position-relative order-1 order-lg-2">

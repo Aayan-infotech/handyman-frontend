@@ -8,8 +8,9 @@ import "./user.css";
 import noData from "../assets/no_data_found.gif";
 import { Button } from "@mui/material";
 import Pagination from "react-bootstrap/Pagination";
-
+import { useNavigate } from "react-router-dom";
 export default function Notification() {
+  const navigate = useNavigate();
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
@@ -36,10 +37,11 @@ export default function Notification() {
   const handleName = async (notification) => {
     try {
       const response = await axiosInstance.post(
-        "/match/getMatchedDataNotification",
+        "/match/getMatchedData",
         {
           senderId: notification.userId,
           receiverId: notification.receiverId,
+          jobPostId: notification.jobId,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -105,6 +107,88 @@ export default function Notification() {
     }
   };
 
+  const handleJobAccept = async (notification) => {
+    // Get current user ID
+    const currentUserId = userId;
+
+    // Determine which ID to use (the one that doesn't match current user)
+    const assignToId =
+      notification.userId === currentUserId
+        ? notification.receiverId
+        : notification.userId;
+
+    if (!assignToId) {
+      setToastProps({
+        message: "No valid user to assign job to",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axiosInstance.post(
+        `/jobpost/changeJobStatus/${notification.jobId}`,
+        {
+          jobStatus: "Assigned",
+          providerId: assignToId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setLoading(false);
+      setToastProps({
+        message: response.data.message || "Job assigned successfully",
+        type: "success",
+        toastKey: Date.now(),
+      });
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setToastProps({
+        message: error.response?.data?.message || "Error assigning job",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
+  const handleJobCompleted = async (notification) => {
+    // Get current user ID
+    const currentUserId = userId;
+
+    // Determine which ID to use (the one that doesn't match current user)
+    const assignToId =
+      notification.userId === currentUserId
+        ? notification.receiverId
+        : notification.userId;
+
+    setLoading(true);
+    try {
+      const reponse = await axiosInstance.post(
+        `/jobPost/changeJobStatus/${notification.jobId}`,
+        {
+          jobStatus: " Completed",
+          providerId: assignToId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(reponse);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
   const handleMarkAsRead = async (notificationId, type) => {
     try {
       setMarkingAsRead(true);
@@ -307,46 +391,72 @@ export default function Notification() {
                               </span>
                             </div>
                           </div>
-                          <div className="row gy-2">
+                          <div className="row gy-2 align-items-end">
                             <div
                               className={
                                 notification.isRead === false
-                                  ? `col-lg-7`
-                                  : `col-lg-10`
+                                  ? `col-lg-12`
+                                  : `col-lg-12`
                               }
                             >
                               <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">
                                 {notification.body}
                               </p>
                             </div>
-                            {notification.isRead === false && (
+                            <div className="col-lg-3 d-flex justify-content-end">
+                              <Button
+                                variant="outlined"
+                                color="success"
+                                onClick={() => {
+                                  userType === "hunter"
+                                    ? navigate(`/chat/${notification._id}`)
+                                    : navigate(`/provider/message`);
+                                }}
+                                className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                              >
+                                View Message
+                              </Button>
+                            </div>
+                            {notification?.jobStatus === "Pending" && (
+                              <>
+                                <div className="col-lg-3 d-flex justify-content-end">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={() =>
+                                      handleJobAccept(notification)
+                                    }
+                                    className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                  >
+                                    Assign job
+                                  </Button>
+                                </div>
+                              </>
+                            )}
+
+                            {notification?.nameData?.jobPost?.jobStatus !== "Completed" && (
                               <div className="col-lg-3 d-flex justify-content-end">
                                 <Button
                                   variant="outlined"
                                   color="success"
                                   className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
                                   onClick={() =>
-                                    handleMarkAsRead(
-                                      notification._id,
-                                      notification?.type
-                                    )
+                                    handleJobCompleted(notification)
                                   }
                                   disabled={markingAsRead}
                                 >
-                                  {markingAsRead
-                                    ? "Processing..."
-                                    : "Mark as Read"}
+                                  Mark as completed
                                 </Button>
                               </div>
                             )}
-                            <div className="col-lg-2 d-flex justify-content-end">
+                            <div className="col-lg-3 d-flex justify-content-end">
                               <Button
                                 variant="outlined"
                                 color="success"
                                 className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
                                 onClick={() => handleDelete(notification._id)}
                               >
-                                Delete
+                                Delete Message
                               </Button>
                             </div>
                           </div>

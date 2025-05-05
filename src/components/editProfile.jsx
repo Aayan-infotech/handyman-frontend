@@ -342,18 +342,7 @@ export default function EditProfile() {
                           placeholder="Phone number"
                           value={number ? `+61${number}` : ""}
                           onChange={(e) => {
-                            const rawValue = e.target.value;
-                            // Remove any existing "+61" prefix to avoid duplication
-                            const sanitizedValue = rawValue.replace(
-                              /^\+0/,
-                              ""
-                            );
-                            // Allow only digits after the prefix
-                            const digitsOnly = sanitizedValue.replace(
-                              /\D/g,
-                              ""
-                            );
-                            setNumber(digitsOnly);
+                            setNumber(e.target.value);
                           }}
                         />
                       </Col>
@@ -423,7 +412,7 @@ export default function EditProfile() {
                         controlId="formPlaintextAddress"
                       >
                         <Form.Label column sm="4">
-                          Registration Number
+                         ABN Number
                         </Form.Label>
                         <Col sm="8">
                           <Form.Control

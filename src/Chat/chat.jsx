@@ -4,7 +4,6 @@ import "../User/user.css";
 import user1 from "../assets/user1.png";
 import { IoIosSearch } from "react-icons/io";
 import { FaArrowLeft } from "react-icons/fa";
-
 import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
@@ -277,6 +276,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       const response = dispatch(
         messageNotification({
           receiverId: receiverId,
+          jobId: jobId,
         })
       );
       console.log("messageNotification response", response);

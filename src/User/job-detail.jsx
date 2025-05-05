@@ -75,23 +75,6 @@ export default function JobDetail() {
     }
   };
 
-  // const noficationFunctionality = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = dispatch(
-  //       completedJobNotification({
-  //         receiverId: receiverId,
-  //       })
-  //     );
-  //     if (completedJobNotification.fulfilled.match(response)) {
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error Getting Nearby Jobs:", error);
-  //     setLoading(false);
-  //   }
-  // };
-
   const noficationFunctionality = async () => {
     setLoading(true);
     try {
@@ -217,17 +200,78 @@ export default function JobDetail() {
 
   console.log("user", user);
 
-  const fetchData = async () => {
-    setLoading(true);
-    await handleProviderJobs();
-    if (user && receiverId) {
-      await handleProvider();
-    }
-    setLoading(false);
-  };
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // First get job details
+        const jobRes = await axiosInstance.get(
+          `/jobpost/jobpost-details/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${ProviderToken || hunterToken}`,
+            },
+          }
+        );
+
+        if (jobRes.status === 200) {
+          setData(jobRes.data.data);
+          const jobData = jobRes.data.data;
+
+          // Set user and receiverId together
+          setUser(jobData.user);
+          setRecieverId(jobData.provider);
+
+          // Only fetch provider if we have both IDs
+          if (jobData.user && jobData.provider) {
+            const providerRes = await axiosInstance.post(
+              "/match/getMatchedData",
+              {
+                jobPostId: id,
+                senderId: jobData.user,
+                receiverId: jobData.provider,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${ProviderToken || hunterToken}`,
+                },
+              }
+            );
+
+            const responseData = providerRes.data.data;
+            if (responseData.sender && responseData.receiver) {
+              // Your provider name logic here
+              let nameToSet = "";
+              if (responseData.sender.name === name) {
+                nameToSet =
+                  responseData.receiver.contactName || responseData.sender.name;
+              } else if (
+                responseData.sender.name === name ||
+                responseData.receiver.contactName === name
+              ) {
+                nameToSet = responseData.sender.name;
+              } else {
+                nameToSet =
+                  responseData.receiver.contactName || responseData.sender.name;
+              }
+              setProviderName(nameToSet);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setToastProps({
+          message: error.message,
+          type: "error",
+          toastKey: Date.now(),
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, [id, user, receiverId]);
+  }, [id]); // Only depend on id which doesn't change
 
   const filterAddressPatterns = (address) => {
     if (!address) return address;
@@ -238,68 +282,68 @@ export default function JobDetail() {
     return address.replace(pattern, "").trim();
   };
 
-  if (loading) return <Loader />;
   if (!data) return <noData />;
 
   console.log("data", data);
+  console.log("loading", loading);
 
   return (
     <>
-      <LoggedHeader />
-      {/* <Link to="/support/chat/1">
-        <div className="admin-message">
-          <MdOutlineSupportAgent />
-        </div>
-      </Link> */}
-      <div className="message">
-        <Link to="/message">
-          <MdMessage />
-        </Link>
-      </div>
-      <div className="bg-second py-5">
-        <div className="container">
-          <div className="row gy-4 gx-lg-2 management">
-            <div className="col-lg-6">
-              <div className="d-flex flex-column gap-4 align-items-start">
-                <div className="d-flex flex-row gap-2 align-items-center">
-                  <div className="d-flex flex-column align-items-start gap-1">
-                    <h3 className="mb-0">{data.title || "Job Title"}</h3>
-                    <h6>
-                      {data.date
-                        ? new Date(data.date).toLocaleTimeString("en-AU", {
-                          timeZone: "Australia/Sydney",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: true,
-                        })
-                        : "No date provided"}
-                    </h6>
-                  </div>
-                </div>
-                <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
-                  {data.businessType?.map((tag, index) => (
-                    <Chip key={index} label={tag} variant="outlined" />
-                  ))}
-                </div>
-                <div className="mt-4">
-                  <h3>Uploaded Document</h3>
-                  <div className="row g-2 gy-3">
-                    {data.documents.length > 0 ? (
-                      data.documents.map((doc, index) => (
-                        <div className="col-lg-4" key={index}>
-                          <img
-                            src={doc}
-                            alt="document"
-                            className="w-100 h-100 px-1"
-                          />
-                        </div>
-                      ))
-                    ) : (
-                      <p>No document uploaded</p>
-                    )}
-                  </div>
-                </div>
-                {/* <ul className="list-unstyled d-flex flex-column gap-2">
+      {loading === true ? (
+        <Loader />
+      ) : (
+        <>
+          {" "}
+          <LoggedHeader />
+          <div className="message">
+            <Link to="/message">
+              <MdMessage />
+            </Link>
+          </div>
+          <div className="bg-second py-5">
+            <div className="container">
+              <div className="row gy-4 gx-lg-2 management">
+                <div className="col-lg-6">
+                  <div className="d-flex flex-column gap-4 align-items-start">
+                    <div className="d-flex flex-row gap-2 align-items-center">
+                      <div className="d-flex flex-column align-items-start gap-1">
+                        <h3 className="mb-0">{data.title || "Job Title"}</h3>
+                        <h6>
+                          {data.date
+                            ? new Date(data.date).toLocaleTimeString("en-AU", {
+                                timeZone: "Australia/Sydney",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })
+                            : "No date provided"}
+                        </h6>
+                      </div>
+                    </div>
+                    <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
+                      {data.businessType?.map((tag, index) => (
+                        <Chip key={index} label={tag} variant="outlined" />
+                      ))}
+                    </div>
+                    <div className="mt-4">
+                      <h3>Uploaded Document</h3>
+                      <div className="row g-2 gy-3">
+                        {data.documents.length > 0 ? (
+                          data.documents.map((doc, index) => (
+                            <div className="col-lg-4" key={index}>
+                              <img
+                                src={doc}
+                                alt="document"
+                                className="w-100 h-100 px-1"
+                              />
+                            </div>
+                          ))
+                        ) : (
+                          <p>No document uploaded</p>
+                        )}
+                      </div>
+                    </div>
+                    {/* <ul className="list-unstyled d-flex flex-column gap-2">
                   {data.requirements?.map((req, index) => (
                     <li key={index}>
                       <span>
@@ -309,82 +353,82 @@ export default function JobDetail() {
                     </li>
                   ))}
                 </ul> */}
-              </div>
-            </div>
-            <div className="col-lg-5">
-              <h3 className="fw-bold">Job Description</h3>
-              <p>{data.requirements || "No description available"}</p>
-              <hr />
-              <div className="d-flex flex-column gap-3 align-items-start more-info">
-                <div className="d-flex flex-row gap-4 align-items-start w-100">
-                  <BiCoinStack />
-                  <div className="d-flex flex-column gap-2 align-items-start">
-                    <span className="text-muted">Estimated budget</span>
-                    <b className="fw-medium fs-5">
-                      ${data.estimatedBudget || "N/A"}
-                    </b>
                   </div>
                 </div>
-                <div className="row gy-4 gx-4 w-100">
-                  <div className="col-2">
-                    <PiBag />
-                  </div>
-                  <div className="col-10 ps-lg-4 ps-5">
-                    <div className="d-flex flex-column gap-2 align-items-start">
-                      <span className="text-muted">Location</span>
-                      <b className="fw-medium fs-5">
-                        {filterAddressPatterns(
-                          data.jobLocation.jobAddressLine
-                        ) || "N/A"}
-                      </b>
+                <div className="col-lg-5">
+                  <h3 className="fw-bold">Job Description</h3>
+                  <p>{data.requirements || "No description available"}</p>
+                  <hr />
+                  <div className="d-flex flex-column gap-3 align-items-start more-info">
+                    <div className="d-flex flex-row gap-4 align-items-start w-100">
+                      <BiCoinStack />
+                      <div className="d-flex flex-column gap-2 align-items-start">
+                        <span className="text-muted">Estimated budget</span>
+                        <b className="fw-medium fs-5">
+                          ${data.estimatedBudget || "N/A"}
+                        </b>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                {receiverId && localStorage.getItem("hunterToken") && (
-                  <>
-                    <div className="row gy-4 gx-4 w-100 align-items-center">
+                    <div className="row gy-4 gx-4 w-100">
                       <div className="col-2">
-                        <CiUser />
+                        <PiBag />
                       </div>
                       <div className="col-10 ps-lg-4 ps-5">
-                        <div className="d-flex flex-column align-items-start gap-2">
-                          <span className="text-muted">
-                            You have Assigned job to
-                          </span>
-                          <div className="d-flex flex-row align-items-start gap-3 ">
-                            <b className="fw-medium fs-5">
-                              {providerName.toLocaleUpperCase()}
-                            </b>
-                            <button
-                              className="btn btn-info text-light"
-                              onClick={() => {
-                                navigate(`/service-profile/${receiverId}`);
-                              }}
-                            >
-                              View Profile
-                            </button>
-                          </div>
+                        <div className="d-flex flex-column gap-2 align-items-start">
+                          <span className="text-muted">Location</span>
+                          <b className="fw-medium fs-5">
+                            {filterAddressPatterns(
+                              data.jobLocation.jobAddressLine
+                            ) || "N/A"}
+                          </b>
                         </div>
                       </div>
                     </div>
-                  </>
-                )}
-                {receiverId && localStorage.getItem("hunterToken") && (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="custom-green py-3 w-100 rounded-5 bg-green-custom"
-                    onClick={handleShow}
-                    disabled={data.jobStatus === "Completed"}
-                  >
-                    {data.jobStatus === "Completed"
-                      ? "This job has been Completed"
-                      : " Mark As Complete"}
-                  </Button>
-                )}
-              </div>
-              <hr />
-              {/* <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-lg-75">
+                    {receiverId && localStorage.getItem("hunterToken") && (
+                      <>
+                        <div className="row gy-4 gx-4 w-100 align-items-center">
+                          <div className="col-2">
+                            <CiUser />
+                          </div>
+                          <div className="col-10 ps-lg-4 ps-5">
+                            <div className="d-flex flex-column align-items-start gap-2">
+                              <span className="text-muted">
+                                You have Assigned job to
+                              </span>
+                              <div className="d-flex flex-row align-items-start gap-3 ">
+                                <b className="fw-medium fs-5">
+                                  {providerName.toLocaleUpperCase()}
+                                </b>
+                                <button
+                                  className="btn btn-info text-light"
+                                  onClick={() => {
+                                    navigate(`/service-profile/${receiverId}`);
+                                  }}
+                                >
+                                  View Profile
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {receiverId && localStorage.getItem("hunterToken") && (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+                        onClick={handleShow}
+                        disabled={data.jobStatus === "Completed"}
+                      >
+                        {data.jobStatus === "Completed"
+                          ? "This job has been Completed"
+                          : " Mark As Complete"}
+                      </Button>
+                    )}
+                  </div>
+                  <hr />
+                  {/* <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-lg-75">
                 <div className="card outline-card">
                   <div className="card-body d-flex flex-row gap-2 align-items-center">
                     <span>{data.rating || "0.0"}</span>
@@ -397,7 +441,7 @@ export default function JobDetail() {
                   </div>
                 </div>
               </div> */}
-              {/* <Modal show={show} onHide={handleClose} centered>
+                  {/* <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header className="border-0" closeButton>
                   <Modal.Title>Add Your Review</Modal.Title>
                 </Modal.Header>
@@ -430,51 +474,53 @@ export default function JobDetail() {
                 </Modal.Body>
               </Modal> */}
 
-              <Modal show={show} onHide={handleClose} centered>
-                <Modal.Header className="border-0" closeButton>
-                  <Modal.Title>Add Your Review</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className="d-flex flex-column align-items-center justify-content-center gap-2">
-                    <Rating
-                      name="simple-controlled"
-                      value={value}
-                      className="fs-2"
-                      onChange={(event, newValue) => {
-                        setValue(newValue);
-                      }}
-                    />
-                    <Form.Control
-                      as="textarea"
-                      placeholder="Leave a comment here"
-                      style={{ height: "150px" }}
-                      value={review}
-                      onChange={(e) => setReview(e.target.value)}
-                    />
-                    <Button
-                      variant="contained"
-                      color="success"
-                      className="custom-green py-3 w-100 rounded-5 bg-green-custom"
-                      onClick={() => {
-                        if (!review.trim()) {
-                          // If the review field is empty, show an alert message
-                          alert(
-                            "Please fill in the comment field before submitting!"
-                          );
-                        } else {
-                          doubleFunction();
-                        }
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </Modal.Body>
-              </Modal>
+                  <Modal show={show} onHide={handleClose} centered>
+                    <Modal.Header className="border-0" closeButton>
+                      <Modal.Title>Add Your Review</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <div className="d-flex flex-column align-items-center justify-content-center gap-2">
+                        <Rating
+                          name="simple-controlled"
+                          value={value}
+                          className="fs-2"
+                          onChange={(event, newValue) => {
+                            setValue(newValue);
+                          }}
+                        />
+                        <Form.Control
+                          as="textarea"
+                          placeholder="Leave a comment here"
+                          style={{ height: "150px" }}
+                          value={review}
+                          onChange={(e) => setReview(e.target.value)}
+                        />
+                        <Button
+                          variant="contained"
+                          color="success"
+                          className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+                          onClick={() => {
+                            if (!review.trim()) {
+                              // If the review field is empty, show an alert message
+                              alert(
+                                "Please fill in the comment field before submitting!"
+                              );
+                            } else {
+                              doubleFunction();
+                            }
+                          }}
+                        >
+                          Submit
+                        </Button>
+                      </div>
+                    </Modal.Body>
+                  </Modal>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 }

@@ -64,7 +64,7 @@ export default function SignUp() {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
-    formData.append("phoneNo", phoneNo);
+    formData.append("phoneNo", `+0${phoneNo}`);
     formData.append("addressLine", address);
     formData.append("password", password);
     formData.append("latitude", latitude);
@@ -292,15 +292,13 @@ export default function SignUp() {
                         <Form.Control
                           type="text"
                           placeholder="Phone number"
-                          value={phoneNo ? `+61${phoneNo}` : ""}
+                          value={phoneNo ? `+0${phoneNo}` : ""}
                           onChange={(e) => {
                             const rawValue = e.target.value;
-                            // Remove any existing "+61" prefix to avoid duplication
                             const sanitizedValue = rawValue.replace(
                               /^\+0/,
                               ""
                             );
-                            // Allow only digits after the prefix
                             const digitsOnly = sanitizedValue.replace(
                               /\D/g,
                               ""
