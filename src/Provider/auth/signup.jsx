@@ -415,7 +415,7 @@ export default function SignUpProvider() {
                             const rawValue = e.target.value;
                             // Remove any existing "+61" prefix to avoid duplication
                             const sanitizedValue = rawValue.replace(
-                              /^\+61/,
+                              /^\+0/,
                               ""
                             );
                             // Allow only digits after the prefix
@@ -456,7 +456,7 @@ export default function SignUpProvider() {
 
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
-                        Registration number
+                        ABN number
                       </Form.Label>
                       <Col sm="7">
                         <Form.Control

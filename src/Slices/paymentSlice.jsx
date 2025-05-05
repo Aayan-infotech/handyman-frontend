@@ -86,42 +86,18 @@ import axiosInstance from "../components/axiosInstance";
 // );
 
 export const handlePayment = createAsyncThunk(
-  "/demoTransaction/transaction",
+  "/transaction/eway",
   async (
-    {
-      // transactionId,
-      userId, // ✅ Added userId
-      subscriptionPlanId, // ✅ Added subscriptionPlanId
-      amount, // ✅ Added amount
-      paymentMethod, // ✅ Added paymentMethod
-      subscriptionTypeId,
-      // transactionDate,
-      // transactionStatus,
-      // transactionAmount,
-      // transactionMode,
-      // SubscriptionId,
-      // SubscriptionAmount,
-      // type,
-    },
+    paymentData,
+
     { rejectWithValue }
   ) => {
     try {
       const response = await axiosInstance.post(
-        `/demoTransaction/transaction`,
-        {
-          subscriptionTypeId,
-          userId,
-          subscriptionPlanId,
-          amount,
-          paymentMethod,
-          // transactionDate,
-          // transactionStatus,
-          // transactionAmount,
-          // transactionMode,
-          // SubscriptionId,
-          // SubscriptionAmount,
-          // type,
-        },
+        `/eway/pay`,
+
+        paymentData,
+
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,

@@ -158,12 +158,12 @@ export default function JobManagement() {
           },
         }
       );
-      console.log(res);
+      console.log("12", res.data);
       if (res.status === 200) {
         setData(res?.data?.jobs);
         setFilteredData(res?.data?.jobs);
         setSearch("");
-        setTotalPages(res?.data?.jobs?.totalPages);
+        setTotalPages(res?.data?.pagination?.totalPages);
         if (res?.data?.length === 0) {
           setToastProps({
             message: "No jobs history yet",
@@ -189,7 +189,6 @@ export default function JobManagement() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (location.pathname.includes("job-history")) {
       fetchJobsHistory();
@@ -243,7 +242,7 @@ export default function JobManagement() {
       ) : (
         <>
           <LoggedHeader />
-          <Link
+          {/* <Link
             to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
           >
             <Tooltip title="Admin chat" placement="left-start">
@@ -251,7 +250,7 @@ export default function JobManagement() {
                 <MdOutlineSupportAgent />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <Link to={`${hunterToken ? "/message" : "/provider/message"}`}>
             <Tooltip title="Message" placement="left-start">

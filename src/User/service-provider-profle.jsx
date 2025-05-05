@@ -160,13 +160,13 @@ export default function ServiceProviderProfile() {
       ) : (
         <>
           <LoggedHeader />
-          <Link to="/support/chat/1">
+          {/* <Link to="/support/chat/1">
             <Tooltip title="Admin chat" placement="left-start">
               <div className="admin-message">
                 <MdOutlineSupportAgent />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <Link to="/message">
             <Tooltip title="Message" placement="left-start">

@@ -59,6 +59,8 @@ import Pricingwithtype from "./Provider/pricingwithtype";
 import Support from "./support";
 import JobEdit from "./User/jobEdit";
 import AdvertiserChat from "./Chat/advertiserChat";
+import PaymentSuccessPage from "./components/success";
+import PaymentFailedPage from "./components/failed";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -327,7 +329,15 @@ function App() {
           element={<ProtectedRoute element={<PricingProvider />} />}
         />
         <Route
-          path="/provider/payment"
+          path="/provider/payment/success"
+          element={<ProtectedRoute element={<PaymentSuccessPage />} />}
+        />
+        <Route
+          path="/provider/payment/error"
+          element={<ProtectedRoute element={<PaymentFailedPage />} />}
+        />
+        <Route
+          path="/provider/payment/:id"
           element={<ProtectedRoute element={<Payment />} />}
         />
         <Route

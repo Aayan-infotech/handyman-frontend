@@ -25,7 +25,7 @@ import { getGuestProviderJobId } from "../Slices/providerSlice";
 import { acceptJobNotification } from "../Slices/notificationSlice";
 
 export default function JobSpecification() {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -218,13 +218,13 @@ export default function JobSpecification() {
       ) : (
         <div className="">
           <LoggedHeader />
-          <Link to="/provider/admin/chat/">
+          {/* <Link to="/provider/admin/chat/">
             <Tooltip title="Admin chat" placement="left-start">
               <div className="admin-message">
                 <MdOutlineSupportAgent />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
           <div className="message">
             <Tooltip title="Message" placement="left-start">
               <Link to="/provider/message">
