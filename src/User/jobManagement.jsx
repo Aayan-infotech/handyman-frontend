@@ -370,9 +370,15 @@ export default function JobManagement() {
                                 </td>
                                 <td>
                                   {" "}
-                                  {new Date(
-                                    provider?.date
-                                  ).toLocaleDateString()}
+                                  {new Date(provider?.date).toLocaleDateString(
+                                    "en-AU",
+                                    {
+                                      timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "numeric",
+                                    }
+                                  )}
                                 </td>
                                 <td>{provider?.jobStatus}</td>
                                 <td>
