@@ -90,6 +90,9 @@ export default function Login() {
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
+        if(localStorage.getItem("notificationEnableHunter") === null || localStorage.getItem("notificationEnableHunter") === "null" || localStorage.getItem("notificationEnableHunter") === "" || localStorage.getItem("notificationEnableHunter") === undefined){
+          localStorage.setItem("notificationEnableProvider" , true)
+        }
         localStorage.setItem(
           "hunterRefreshToken",
           response?.data?.data?.user?.refreshToken

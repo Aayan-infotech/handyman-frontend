@@ -93,6 +93,14 @@ export default function LoginProvider() {
           "ProviderRefreshToken",
           response?.data?.data?.user?.refreshToken
         );
+        if (
+          localStorage.getItem("notificationEnableProvider") === null ||
+          localStorage.getItem("notificationEnableProvider") === "null" ||
+          localStorage.getItem("notificationEnableProvider") === "" ||
+          localStorage.getItem("notificationEnableProvider") === undefined
+        ) {
+          localStorage.setItem("notificationEnableProvider", true);
+        }
         localStorage.setItem(
           "ProviderEmail",
           response?.data?.data?.user?.email
@@ -170,7 +178,9 @@ export default function LoginProvider() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                          onChange={(e) =>
+                            setEmail(e.target.value.toLowerCase())
+                          }
                         />
                       </Col>
                     </Form.Group>

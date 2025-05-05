@@ -54,25 +54,26 @@ export default function Notification() {
 
   const fetchNotifications = async (page = pagination.page) => {
     if (!userId) return;
+
     try {
       setLoading(true);
       const url = `/pushNotification/get-notification/${userType}?page=${page}&limit=${pagination.limit}`;
       const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       const notifList = response.data.data || [];
       const { data, total, page: currentPage, limit } = response.data;
-      
+
       // Update pagination state with new page
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         total,
         page: currentPage,
         limit,
         totalPages: Math.ceil(total / limit),
       }));
-  
+
       const updatedList = await Promise.all(
         notifList.map(async (notification) => {
           try {
@@ -96,10 +97,10 @@ export default function Notification() {
       setMarkingAsRead(false);
     }
   };
-  
+
   const handlePageChange = (page) => {
     if (page !== pagination.page) {
-      setPagination(prev => ({ ...prev, page }));
+      setPagination((prev) => ({ ...prev, page }));
       fetchNotifications(page);
     }
   };
@@ -220,7 +221,22 @@ export default function Notification() {
   // };
 
   useEffect(() => {
-    fetchNotifications();
+    // Get the stored notification setting (parsed as boolean)
+    const isNotificationEnabled =
+      userType === "provider"
+        ? JSON.parse(
+            localStorage.getItem("notificationEnableProvider") ?? "true"
+          )
+        : JSON.parse(
+            localStorage.getItem("notificationEnableHunter") ?? "true"
+          );
+
+    // Only fetch notifications if enabled
+    if (isNotificationEnabled) {
+      fetchNotifications();
+    } else {
+      setLoading(false); // Set loading to false immediately if notifications are disabled
+    }
   }, [userType]);
 
   console.log("Notifications:", notifications);

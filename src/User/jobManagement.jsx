@@ -242,7 +242,7 @@ export default function JobManagement() {
       ) : (
         <>
           <LoggedHeader />
-          <Link
+          {/* <Link
             to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
           >
             <Tooltip title="Admin chat" placement="left-start">
@@ -250,7 +250,7 @@ export default function JobManagement() {
                 <MdOutlineSupportAgent />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <Link to={`${hunterToken ? "/message" : "/provider/message"}`}>
             <Tooltip title="Message" placement="left-start">

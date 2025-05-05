@@ -297,7 +297,7 @@ export default function SignUp() {
                             const rawValue = e.target.value;
                             // Remove any existing "+61" prefix to avoid duplication
                             const sanitizedValue = rawValue.replace(
-                              /^\+61/,
+                              /^\+0/,
                               ""
                             );
                             // Allow only digits after the prefix
