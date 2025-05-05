@@ -296,7 +296,14 @@ export default function Notification() {
                             <div>
                               <FaRegClock className="me-1" />
                               <span>
-                                {new Date(notification.createdAt).toUTCString()}
+                                {new Date(
+                                  notification.createdAt
+                                ).toLocaleTimeString("en-AU", {
+                                  timeZone: "Australia/Sydney",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
                               </span>
                             </div>
                           </div>

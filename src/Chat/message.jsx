@@ -303,8 +303,14 @@ export default function Message() {
                                 <span className="text-muted">
                                   {new Date(
                                     item?.messages?.timeStamp
-                                  ).toLocaleTimeString()}{" "}
+                                  ).toLocaleTimeString("en-AU", {
+                                    timeZone: "Australia/Sydney",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })}{" "}
                                   ago
+                                 
                                 </span>
                               </div>
                             </div>

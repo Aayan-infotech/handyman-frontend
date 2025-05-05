@@ -360,7 +360,15 @@ export default function HomeProvider() {
                                       {job.title}
                                     </h3>
                                     <h6>
-                                      {new Date(job.createdAt).toDateString()}
+                                      {new Date(
+                                        job.createdAt
+                                      ).toLocaleDateString("en-AU", {
+                                        timeZone: "Australia/Sydney",
+                                        weekday: "long", 
+                                        day: "numeric",
+                                        month: "long", 
+                                        year: "numeric", 
+                                      })}
                                     </h6>
                                   </div>
                                 </div>

@@ -266,9 +266,12 @@ export default function JobDetail() {
                     <h3 className="mb-0">{data.title || "Job Title"}</h3>
                     <h6>
                       {data.date
-                        ? new Date(data.date).toLocaleString("en-US", {
-                            timeZone: "UTC",
-                          })
+                        ? new Date(data.date).toLocaleTimeString("en-AU", {
+                          timeZone: "Australia/Sydney",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })
                         : "No date provided"}
                     </h6>
                   </div>

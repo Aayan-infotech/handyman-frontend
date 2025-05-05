@@ -92,7 +92,14 @@ export default function BlogDetail() {
               />
               <h2 className=" mb-3">{blog.title}</h2>
               <p className="text-muted">
-                Published on {new Date(blog.createdAt).toLocaleDateString()}.
+                Published on{" "}
+                {new Date(blog.createdAt).toLocaleTimeString("en-AU", {
+                  timeZone: "Australia/Sydney",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+                .
               </p>
               <div
                 className="content"

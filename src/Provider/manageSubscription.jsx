@@ -152,13 +152,23 @@ export default function ManageSubscription() {
                                 Valid From:{" "}
                                 {new Date(
                                   voucher?.subscriptionStartDate
-                                ).toLocaleDateString()}
+                                ).toLocaleTimeString("en-AU", {
+                                  timeZone: "Australia/Sydney",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
                               </h6>
                               <h6>
                                 Valid To:{" "}
                                 {new Date(
                                   voucher?.subscriptionEndDate
-                                ).toLocaleDateString()}
+                                ).toLocaleTimeString("en-AU", {
+                                  timeZone: "Australia/Sydney",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
                               </h6>
                             </div>
                             <h4>Radius: {voucher?.kmRadius} KM</h4>
