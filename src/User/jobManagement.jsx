@@ -65,16 +65,23 @@ export default function JobManagement() {
 
   const handleChange = (event) => {
     const newStatus = event.target.value;
-    setJobStatus(newStatus);
 
-    // Update URL with job status
-    if (newStatus) {
-      queryParams.set("jobStatus", newStatus);
-    } else {
+    // If clicking the same status that's already selected, deselect it
+    if (jobStatus === newStatus) {
+      setJobStatus("");
+      // Update URL - remove jobStatus filter
+      const queryParams = new URLSearchParams(location.search);
       queryParams.delete("jobStatus");
+      queryParams.set("page", "1");
+      navigate(`?${queryParams.toString()}`);
+    } else {
+      setJobStatus(newStatus);
+      // Update URL with new job status
+      const queryParams = new URLSearchParams(location.search);
+      queryParams.set("jobStatus", newStatus);
+      queryParams.set("page", "1");
+      navigate(`?${queryParams.toString()}`);
     }
-    queryParams.set("page", "1"); // Reset to first page when filter changes
-    navigate(`?${queryParams.toString()}`);
   };
 
   const fetchJobs = async () => {
@@ -94,10 +101,11 @@ export default function JobManagement() {
         );
 
         setData(res.data.data);
-        setFilteredData(res.data.data);
+        setFilteredData(filteredData); // Set filtered data directly from API response
         setSearch("");
         setTotalPages(res.data.pagination.totalPages);
         setTotalJobs(res.data.pagination.totalJobs);
+
         if (res.data.data.length === 0) {
           setToastProps({
             message: "No jobs posted yet",
@@ -195,7 +203,7 @@ export default function JobManagement() {
       return;
     }
     fetchJobs(currentPage);
-  }, [currentPage]);
+  }, [currentPage, jobStatus, search]);
 
   const handlePageChange = (page) => {
     queryParams.set("page", page.toString());
@@ -205,18 +213,18 @@ export default function JobManagement() {
     navigate(`?${queryParams.toString()}`);
   };
   console.log("jobStatus", jobStatus);
-  useEffect(() => {
-    let filtered = data;
-    fetchJobs();
-    // // Apply job status filter if any statuses are selected
-    // if (jobStatus.length > 0) {
-    //   filtered = filtered.filter((provider) =>
-    //     jobStatus.includes(provider.jobStatus)
-    //   );
-    // }
+  // useEffect(() => {
+  //   let filtered = data;
+  //   fetchJobs();
+  //   // // Apply job status filter if any statuses are selected
+  //   // if (jobStatus.length > 0) {
+  //   //   filtered = filtered.filter((provider) =>
+  //   //     jobStatus.includes(provider.jobStatus)
+  //   //   );
+  //   // }
 
-    setFilteredData(filtered);
-  }, [jobStatus, currentPage, search]);
+  //   setFilteredData(filtered);
+  // }, [ search]);
 
   console.log("filteredData", data);
 
@@ -281,37 +289,49 @@ export default function JobManagement() {
                   </Form>
                 </div>
                 {!location.pathname.includes("job-history") && (
-                  <FormControl className="sort-input" sx={{ m: 1 }}>
-                    <InputLabel id="job-status-select-label">
-                      Job status
-                    </InputLabel>
-                    <Select
-                      labelId="job-status-select-label"
-                      id="job-status-select"
-                      value={jobStatus}
-                      onChange={handleChange}
-                      renderValue={(selected) => selected}
-                      input={<OutlinedInput label="Select Job Status" />}
-                      MenuProps={MenuProps}
-                    >
-                      <MenuItem key="Completed" value="Completed">
-                        <Checkbox checked={jobStatus.includes("Completed")} />
-                        <ListItemText primary="Completed" />
-                      </MenuItem>
-                      <MenuItem key="Pending" value="Pending">
-                        <Checkbox checked={jobStatus.includes("Pending")} />
-                        <ListItemText primary="Pending" />
-                      </MenuItem>
-                      <MenuItem key="Assigned" value="Assigned">
-                        <Checkbox checked={jobStatus.includes("Assigned")} />
-                        <ListItemText primary="Assigned" />
-                      </MenuItem>
-                      <MenuItem key="Deleted" value="Deleted">
-                        <Checkbox checked={jobStatus.includes("Deleted")} />
-                        <ListItemText primary="Deleted" />
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
+                  <div className="d-flex flex-row gap-2 w-100 justify-content-end align-items-center">
+                    <FormControl className="sort-input" sx={{ m: 1 }}>
+                      <InputLabel id="job-status-select-label">
+                        Job status
+                      </InputLabel>
+
+                      <Select
+                        labelId="job-status-select-label"
+                        id="job-status-select"
+                        value={jobStatus}
+                        onChange={handleChange}
+                        input={<OutlinedInput label="Select Job Status" />}
+                        MenuProps={MenuProps}
+                        renderValue={(selected) =>
+                          selected || "Select Job Status"
+                        }
+                      >
+                        {["Completed", "Pending", "Assigned", "Deleted"].map(
+                          (status) => (
+                            <MenuItem key={status} value={status}>
+                              <Checkbox
+                                checked={jobStatus === status}
+                                // Prevent the checkbox from intercepting clicks
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              <ListItemText primary={status} />
+                            </MenuItem>
+                          )
+                        )}
+                      </Select>
+                    </FormControl>
+                    {jobStatus && (
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => {
+                          navigate("/job-management");
+                          window.location.reload();
+                        }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
               <div className="row mt-4 gy-4 management">

@@ -146,6 +146,8 @@ export default function Login() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
+                          required
+                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
                           onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         />
                       </Col>
@@ -182,10 +184,13 @@ export default function Login() {
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
                           value={password}
+                          required
                           onChange={(e) => setPassword(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
                         />
                         <span
                           onClick={() => setShowPassword(!showPassword)}
+
                           style={{
                             position: "absolute",
                             right: "20px",

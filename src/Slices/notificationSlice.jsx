@@ -6,13 +6,13 @@ const createNotificationThunk = (name, defaultTitle, defaultBody) =>
   createAsyncThunk(
     `notification/${name}`,
     async (
-      { receiverId, title = defaultTitle, body = defaultBody },
+      { jobId, receiverId, title = defaultTitle, body = defaultBody },
       { rejectWithValue }
     ) => {
       try {
         const response = await axiosInstance.post(
           API_BASE_URL,
-          { title, body, receiverId },
+          { title, body, receiverId, jobId },
           {
             headers: {
               Authorization: `Bearer ${
@@ -55,7 +55,7 @@ export const reviewJobNotification = createNotificationThunk(
 
 export const messageNotification = createNotificationThunk(
   "messageHunterNotification",
-  " New Message",
+  " New Message Alert",
   "You have a new Message"
 );
 

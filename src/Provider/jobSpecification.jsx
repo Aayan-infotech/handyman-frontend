@@ -66,6 +66,7 @@ export default function JobSpecification() {
       const response = dispatch(
         acceptJobNotification({
           receiverId: data?.user,
+          jobId: id,
         })
       );
       if (acceptJobNotification.fulfilled.match(response)) {

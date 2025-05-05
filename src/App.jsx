@@ -298,6 +298,10 @@ function App() {
           path="/provider/chat/:id"
           element={<ProtectedRoute element={<Chat />} />}
         />
+         <Route
+          path="/chat/:id"
+          element={<ProtectedRoute element={<Chat />} />}
+        />
         <Route
           path="/provider/admin/chat/"
           element={<ProtectedRoute element={<AdminChat />} />}

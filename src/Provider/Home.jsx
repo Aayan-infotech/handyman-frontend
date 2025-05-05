@@ -177,6 +177,7 @@ export default function HomeProvider() {
   }, [businessType, latitude, longitude]);
 
   const getUser = async () => {
+    const isGuest = JSON.parse(localStorage.getItem("Guest")) === true;
     try {
       const result = await dispatch(getProviderUser());
       if (result.payload?.status === 200) {
@@ -184,7 +185,9 @@ export default function HomeProvider() {
         setBusinessType(businessType);
         setLatitude(address?.location?.coordinates?.[1] || null);
         setLongitude(address?.location?.coordinates?.[0] || null);
-        setRadius(address?.radius || null);
+        {
+          isGuest ? setRadius(160000) : setRadius(address?.radius || null);
+        }
       } else {
         throw new Error("Failed to fetch user data.");
       }
@@ -364,10 +367,10 @@ export default function HomeProvider() {
                                         job.createdAt
                                       ).toLocaleDateString("en-AU", {
                                         timeZone: "Australia/Sydney",
-                                        weekday: "long", 
+                                        weekday: "long",
                                         day: "numeric",
-                                        month: "long", 
-                                        year: "numeric", 
+                                        month: "long",
+                                        year: "numeric",
                                       })}
                                     </h6>
                                   </div>

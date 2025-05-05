@@ -178,9 +178,11 @@ export default function LoginProvider() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
+                          required
                           onChange={(e) =>
                             setEmail(e.target.value.toLowerCase())
                           }
+                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
                         />
                       </Col>
                     </Form.Group>
@@ -216,6 +218,8 @@ export default function LoginProvider() {
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
                           value={password}
+                          required
+                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
                           onChange={(e) => setPassword(e.target.value)}
                         />
                         <span
