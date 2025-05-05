@@ -437,7 +437,7 @@ export default function MyProfile() {
 
       // Then proceed with account deletion
       const response = await axiosInstance.delete(
-        `/DeleteAccount/${providerId ? "provider" : "delete"}/${userId}`
+        `${providerId ? "prvdr" : "DeleteAccount"}/${providerId ? "provider" : "delete"}/${userId}`
       );
 
       if (response.status === 200) {
@@ -574,7 +574,6 @@ export default function MyProfile() {
       throw error;
     }
   };
-  console.log("dgrd", gallery);
 
   const Location = useLocation();
   return (

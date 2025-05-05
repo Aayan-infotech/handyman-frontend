@@ -71,7 +71,20 @@ export default function LoggedHeader() {
   };
 
   useEffect(() => {
-    fetchNotifications();
+    // Get the stored notification setting (parsed as boolean)
+    const isNotificationEnabled =
+      userType === "provider"
+        ? JSON.parse(
+            localStorage.getItem("notificationEnableProvider") ?? "true"
+          )
+        : JSON.parse(
+            localStorage.getItem("notificationEnableHunter") ?? "true"
+          );
+
+    // Only fetch notifications if enabled
+    if (isNotificationEnabled) {
+      fetchNotifications();
+    }
   }, [userType]);
 
   console.log("notifications", notifications);
