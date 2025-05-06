@@ -340,7 +340,7 @@ export default function EditProfile() {
                         <Form.Control
                           type="text"
                           placeholder="Phone number"
-                          value={number ? `+61${number}` : ""}
+                          value={number ? `${number}` : ""}
                           onChange={(e) => {
                             setNumber(e.target.value);
                           }}

@@ -290,6 +290,34 @@ export default function Chat({ messageData, messages, selectedChat }) {
     }
   };
 
+  const handleSendEmail = async () => {
+    try {
+      const response = await axiosInstance.post(
+        "/hunter/send-job-email",
+        {
+          jobTitle: chatData?.jobPost?.title || selectedChat?.jobData?.title,
+          name:
+            selectedChat?.displayUser?.name ||
+            selectedChat?.displayUser?.contactName ||
+            userChat?.name ||
+            userChat?.contactName,
+          receverEmail: selectedChat?.displayUser?.email || userChat?.name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ||
+              localStorage.getItem("ProviderToken")
+            }`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSend = async () => {
     if (msg.trim() === "" || !chatId || !currentUser) return;
 
@@ -303,6 +331,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
       setMessagesPeople,
       selectedChat?.users?.jobId || jobId || null
     );
+
+    await handleSendEmail();
 
     // Get the business name and job title
     const businessName = localStorage.getItem("ProviderBusinessName");
