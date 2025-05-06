@@ -385,10 +385,14 @@ export default function Notification() {
                               <span>
                                 {new Date(
                                   notification.createdAt
-                                ).toLocaleTimeString("en-AU", {
+                                ).toLocaleString("en-AU", {
                                   timeZone: "Australia/Sydney",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
+                                  weekday: "short", 
+                                  day: "numeric", 
+                                  month: "short", 
+                                  year: "numeric", 
+                                  hour: "2-digit", 
+                                  minute: "2-digit", 
                                   hour12: true,
                                 })}
                               </span>
