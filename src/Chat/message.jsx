@@ -191,6 +191,12 @@ export default function Message() {
         : messageData[item.chatId]?.sender,
     };
   });
+
+  const sortedMessages = [...filteredMessages].sort((a, b) => {
+    const timeA = a.messages?.timeStamp || 0;
+    const timeB = b.messages?.timeStamp || 0;
+    return timeB - timeA;
+  });
   console.log("messageData", messageData, "selectedChat ", selectedChat);
 
   return (
@@ -227,7 +233,7 @@ export default function Message() {
                 className={open ? "col-lg-6 d-none d-lg-block" : "col-lg-12"}
               >
                 <div className="d-flex flex-column gap-3 message-box limit-design">
-                  {filteredMessages.length === 0 ? (
+                  {sortedMessages.length === 0 ? (
                     <div className="d-flex justify-content-center">
                       <img
                         src={noData}
@@ -261,7 +267,7 @@ export default function Message() {
                       </Stack>
                     </>
                   ) : (
-                    filteredMessages.map((item) => (
+                    sortedMessages.map((item) => (
                       <Link
                         className="text-decoration-none"
                         onClick={() => handleSendMessage(item)} // Pass chat data to handleSendMessage

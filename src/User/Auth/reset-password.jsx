@@ -156,7 +156,7 @@ export default function ResetPassword() {
               <span className="my-3">
                 Go back to login page?{" "}
                 <Link
-                  to="/login"
+                  to={ProviderParams === true ? "/provider/login" : "/login"}
                   className="highlighted-text text-decoration-none"
                 >
                   Sign in

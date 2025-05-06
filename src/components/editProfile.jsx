@@ -282,11 +282,11 @@ export default function EditProfile() {
                         />
                         <div className="position-absolute end-0 bottom-0">
                           <Form.Control
-                            className="pos-image-selector"
+                            className="pos-image-selector2"
                             type="file"
                             onChange={handleImageChange}
                           />
-                          <FaPen />
+                          <FaPen className="pos-image-selector3 "/>
                         </div>
                       </div>
                     </div>
@@ -340,9 +340,18 @@ export default function EditProfile() {
                         <Form.Control
                           type="text"
                           placeholder="Phone number"
-                          value={number ? `${number}` : ""}
+                          value={number ? `+0${number}` : ""}
                           onChange={(e) => {
-                            setNumber(e.target.value);
+                            let inputValue = e.target.value;
+
+                            // Remove all non-digit characters
+                            inputValue = inputValue.replace(/\D/g, "");
+
+                            // If the input starts with +0, remove the + and keep the 0
+                            if (inputValue.startsWith("0")) {
+                              inputValue = inputValue.substring(1); // Remove the leading 0
+                              setNumber(inputValue);
+                            }
                           }}
                         />
                       </Col>
@@ -412,7 +421,7 @@ export default function EditProfile() {
                         controlId="formPlaintextAddress"
                       >
                         <Form.Label column sm="4">
-                         ABN Number
+                          ABN Number
                         </Form.Label>
                         <Col sm="8">
                           <Form.Control

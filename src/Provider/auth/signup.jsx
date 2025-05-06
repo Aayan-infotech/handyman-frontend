@@ -5,6 +5,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { FaPen } from "react-icons/fa";
 import "../../User/user.css";
 import { IoImageOutline } from "react-icons/io5";
 import { Eye, EyeOff } from "lucide-react";
@@ -44,6 +45,7 @@ export default function SignUpProvider() {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null); // Store the preview image
 
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
@@ -226,6 +228,32 @@ export default function SignUpProvider() {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+    if (!allowedExtensions.test(file.name)) {
+      setToastProps({
+        message: "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      e.target.value = null; // Reset file input
+      return;
+    }
+
+    if (file) {
+      setImages(e.target.files); // Store the file list
+      setPreviewImage(URL.createObjectURL(file)); // Create a preview URL
+    }
+  };
+
+  useEffect(() => {
+    if (images && typeof images === "string") {
+      setPreviewImage(images); // Use the existing image URL
+    }
+  }, [images]);
+
   return (
     <>
       {loading === true ? (
@@ -275,11 +303,21 @@ export default function SignUpProvider() {
                     </>
                   ) : (
                     <div className="mt-3 profile d-flex align-items-center justify-content-center flex-column">
-                      <img
-                        src={URL.createObjectURL(images[0])}
-                        alt="profile"
-                        className="profile-image"
-                      />
+                      <div className="position-relative">
+                        <img
+                          src={URL.createObjectURL(images[0]) || previewImage}
+                          alt="profile"
+                          className="profile-image"
+                        />
+                        <div className="position-absolute end-0 bottom-0">
+                          <Form.Control
+                            className="pos-image-selector2"
+                            type="file"
+                            onChange={handleImageChange}
+                          />
+                          <FaPen className="pos-image-selector3 "/>
+                        </div>
+                      </div>
                     </div>
                   )}
                   <Form className="py-3">

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage, MdEmail, MdOutlineSupportAgent } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { Eye } from "lucide-react";
+
 import { IoIosStar } from "react-icons/io";
 import { IoCall } from "react-icons/io5";
 import { RiMessage2Fill } from "react-icons/ri";
@@ -84,13 +86,20 @@ export default function ServiceProviderProfile() {
                 <img
                   src={image?.url}
                   alt="Gallery Item"
-                  className="rounded-5"
+                  className="rounded-5 position-relative"
                   style={{
                     width: "100%",
                     height: "150px",
                     objectFit: "cover",
                   }}
                 />
+                <a
+                  className="position-absolute bottom-0 end-0"
+                  href={image?.url}
+                  target="_blank"
+                >
+                  <Eye />
+                </a>
               </div>
             ))}
           </div>
