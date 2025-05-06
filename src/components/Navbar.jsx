@@ -17,8 +17,12 @@ export default function Header() {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-              <Link href="#">Find Jobs</Link>
-              <Link href="#">Browse Companies</Link>
+              <Link to="/about" style={{ fontWeight: "350" }}>
+                About Us
+              </Link>
+              <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                Contact Us
+              </Link>
             </Nav>
             <Nav>
               <div className="d-flex flex-row gap-1">
