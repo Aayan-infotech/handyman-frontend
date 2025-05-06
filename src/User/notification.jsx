@@ -147,6 +147,8 @@ export default function Notification() {
         type: "success",
         toastKey: Date.now(),
       });
+
+      await fetchNotifications();
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -183,6 +185,7 @@ export default function Notification() {
         }
       );
       console.log(reponse);
+      await fetchNotifications();
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -400,36 +403,46 @@ export default function Notification() {
                               }
                             >
                               <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">
-                                {notification.body}
+                                {providerId
+                                  ? `${notification.body} ${
+                                      notification.nameData?.sender
+                                        ?.contactName ||
+                                      notification.nameData?.sender?.name
+                                    }`
+                                  : notification.body}
                               </p>
                             </div>
-                            <div className="col-lg-3 d-flex justify-content-end">
-                              <Button
-                                variant="outlined"
-                                color="success"
-                                onClick={() => {
-                                  userType === "hunter"
-                                    ? navigate(
-                                        `/chat/${
-                                          notification.userId === userId
-                                            ? notification.receiverId
-                                            : notification.userId
-                                        }?jobId=${notification.jobId}`
-                                      )
-                                    : navigate(
-                                        `/provider/chat/${
-                                          notification.userId === userId
-                                            ? notification.receiverId
-                                            : notification.userId
-                                        }?jobId=${notification.jobId}`
-                                      );
-                                }}
-                                className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
-                              >
-                                View Message
-                              </Button>
-                            </div>
-                            {notification?.jobStatus === "Pending" &&
+                            {notification?.type != "mass" && (
+                              <div className="col-lg-3 d-flex justify-content-end">
+                                <Button
+                                  variant="outlined"
+                                  color="success"
+                                  onClick={() => {
+                                    userType === "hunter"
+                                      ? navigate(
+                                          `/chat/${
+                                            notification.userId === userId
+                                              ? notification.receiverId
+                                              : notification.userId
+                                          }?jobId=${notification.jobId}`
+                                        )
+                                      : navigate(
+                                          `/provider/chat/${
+                                            notification.userId === userId
+                                              ? notification.receiverId
+                                              : notification.userId
+                                          }?jobId=${notification.jobId}`
+                                        );
+                                  }}
+                                  className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                >
+                                  View Message
+                                </Button>
+                              </div>
+                            )}
+
+                            {notification?.nameData?.jobPost?.jobStatus ===
+                              "Pending" &&
                               hunterId && (
                                 <>
                                   <div className="col-lg-3 d-flex justify-content-end">

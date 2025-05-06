@@ -96,9 +96,7 @@ export default function JobManagement() {
         }
       );
       if (res.status === 200) {
-        const filteredData = res.data.data.filter(
-          (job) => job.jobStatus !== "Deleted"
-        );
+        const filteredData = res.data.data;
 
         setData(res.data.data);
         setFilteredData(filteredData); // Set filtered data directly from API response
@@ -306,18 +304,22 @@ export default function JobManagement() {
                           selected || "Select Job Status"
                         }
                       >
-                        {["Completed", "Pending", "Assigned", "Deleted"].map(
-                          (status) => (
-                            <MenuItem key={status} value={status}>
-                              <Checkbox
-                                checked={jobStatus === status}
-                                // Prevent the checkbox from intercepting clicks
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <ListItemText primary={status} />
-                            </MenuItem>
-                          )
-                        )}
+                        {[
+                          "Completed",
+                          "Pending",
+                          "Assigned",
+                          "Deleted",
+                          "InProgress",
+                        ].map((status) => (
+                          <MenuItem key={status} value={status}>
+                            <Checkbox
+                              checked={jobStatus === status}
+                              // Prevent the checkbox from intercepting clicks
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            <ListItemText primary={status} />
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                     {jobStatus && (

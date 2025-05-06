@@ -34,8 +34,8 @@
 }
 
 .mh-100vh {
-  min-height: calc(100vh - 20vh);
-  max-height: calc(100vh - 20vh);
+  min-height: calc(100vh - 30vh);
+  max-height: calc(100vh - 30vh);
   height: 100%;
   overflow: auto;
 }

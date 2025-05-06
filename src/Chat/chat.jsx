@@ -18,6 +18,7 @@ import Stack from "@mui/material/Stack";
 import {
   assignedJobNotification,
   messageNotification,
+  messageNotificationProvider,
 } from "../Slices/notificationSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -254,7 +255,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const userChat =
     chatData?.receiver?._id === id ? chatData?.sender : chatData?.receiver;
 
-  console.log("userChat", userChat);
+  console.log("chatData", chatData);
 
   useEffect(() => {
     console.log("currentUser", currentUser);
@@ -302,7 +303,31 @@ export default function Chat({ messageData, messages, selectedChat }) {
       setMessagesPeople,
       selectedChat?.users?.jobId || jobId || null
     );
-    messageNotificationFunctionality();
+
+    // Get the business name and job title
+    const businessName = localStorage.getItem("ProviderBusinessName");
+
+    console.log(userChat, selectedChat);
+    const jobTitle = chatData?.jobPost?.title || selectedChat?.jobData?.title;
+    if (businessName) {
+      dispatch(
+        messageNotification({
+          receiverId: receiverId,
+          jobId: jobId,
+          body: `You have a new message from ${businessName} for the job ${jobTitle}`,
+        })
+      );
+    } else {
+      dispatch(
+        messageNotificationProvider({
+          receiverId: receiverId,
+          jobId: jobId,
+        })
+      );
+    }
+
+    // Call notification with additional details
+
     setMsg("");
   };
 
