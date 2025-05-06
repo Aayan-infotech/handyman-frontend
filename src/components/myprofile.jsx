@@ -91,8 +91,7 @@ export default function MyProfile() {
     providerToken
       ? localStorage.getItem("notificationEnableProvider") === "true"
       : localStorage.getItem("notificationEnableHunter") === "true"
-  ); 
-
+  );
 
   const handleClose = () => setIsModalVisible(false);
   const handleShow = () => setIsModalVisible(true);
@@ -303,7 +302,7 @@ export default function MyProfile() {
         }
 
         if (fetchedUser) {
-          setName(fetchedUser.contactName || fetchedUser.name || "");
+          setName(fetchedUser.businessName || fetchedUser.name || "");
           setNumber(fetchedUser.phoneNo || "");
           setEmail(fetchedUser.email || "");
           setAdress(fetchedUser.address?.addressLine || "");
@@ -437,7 +436,9 @@ export default function MyProfile() {
 
       // Then proceed with account deletion
       const response = await axiosInstance.delete(
-        `${providerId ? "prvdr" : "DeleteAccount"}/${providerId ? "provider" : "delete"}/${userId}`
+        `${providerId ? "prvdr" : "DeleteAccount"}/${
+          providerId ? "provider" : "delete"
+        }/${userId}`
       );
 
       if (response.status === 200) {

@@ -81,8 +81,12 @@ export default function FeaturedJobs() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-                <Link to="#">Find Jobs</Link>
-                <Link to="#">Browse Companies</Link>
+                <Link to="/about" style={{ fontWeight: "350" }}>
+                  About Us
+                </Link>
+                <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                  Contact Us
+                </Link>
               </Nav>
               <Nav>
                 <Link to="/welcome">

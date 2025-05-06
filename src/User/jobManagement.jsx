@@ -37,7 +37,7 @@ const MenuProps = {
 export default function JobManagement() {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [search, setSearch] = useState("");
+
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -63,6 +63,8 @@ export default function JobManagement() {
     }
   }, [location.search, navigate]);
 
+  const [search, setSearch] = useState(queryParams.get("search") || "");
+
   const handleChange = (event) => {
     const newStatus = event.target.value;
 
@@ -84,11 +86,14 @@ export default function JobManagement() {
     }
   };
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (
+    page = currentPage,
+    searchTerm = queryParams.get("search") || ""
+  ) => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(
-        `/jobpost/getJobPostByUserId?search=${search}&page=${currentPage}&jobStatus=${jobStatus}`,
+        `/jobpost/getJobPostByUserId?search=${searchTerm}&page=${page}&jobStatus=${jobStatus}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -99,7 +104,7 @@ export default function JobManagement() {
         const filteredData = res.data.data;
 
         setData(res.data.data);
-        setFilteredData(filteredData); // Set filtered data directly from API response
+        setFilteredData(filteredData);
         setSearch("");
         setTotalPages(res.data.pagination.totalPages);
         setTotalJobs(res.data.pagination.totalJobs);
@@ -153,11 +158,14 @@ export default function JobManagement() {
     }
   };
 
-  const fetchJobsHistory = async () => {
+  const fetchJobsHistory = async (
+    page = currentPage,
+    searchTerm = queryParams.get("search") || ""
+  ) => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(
-        `/jobpost/myAcceptedJobs?page=${currentPage}`,
+        `/jobpost/myAcceptedJobs?search=${search}&page=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -197,11 +205,11 @@ export default function JobManagement() {
   };
   useEffect(() => {
     if (location.pathname.includes("job-history")) {
-      fetchJobsHistory();
+      fetchJobsHistory(currentPage);
       return;
     }
     fetchJobs(currentPage);
-  }, [currentPage, jobStatus, search]);
+  }, [currentPage, jobStatus]); // Add search to dependencies
 
   const handlePageChange = (page) => {
     queryParams.set("page", page.toString());
@@ -209,6 +217,35 @@ export default function JobManagement() {
       queryParams.set("jobStatus", jobStatus);
     }
     navigate(`?${queryParams.toString()}`);
+  };
+
+  const handleSearch = () => {
+    queryParams.set("page", "1");
+    if (search.trim()) {
+      queryParams.set("search", search.trim());
+    } else {
+      queryParams.delete("search");
+    }
+    navigate(`?${queryParams.toString()}`);
+
+    if (location.pathname.includes("job-history")) {
+      fetchJobsHistory(1, search);
+    } else {
+      fetchJobs(1, search);
+    }
+  };
+
+  const resetSearch = () => {
+    setSearch("");
+    queryParams.delete("search");
+    queryParams.set("page", "1");
+    navigate(`?${queryParams.toString()}`);
+
+    if (location.pathname.includes("job-history")) {
+      fetchJobsHistory(1, "");
+    } else {
+      fetchJobs(1, "");
+    }
   };
   console.log("jobStatus", jobStatus);
   // useEffect(() => {
@@ -277,13 +314,16 @@ export default function JobManagement() {
                       className="search"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                     />
-                    <button
-                      onClick={() => fetchJobs()}
-                      className="btn btn-success"
-                    >
+                    <button onClick={handleSearch} className="btn btn-success">
                       Search
                     </button>
+                    {queryParams.has("search") && (
+                      <button className="btn btn-danger" onClick={resetSearch}>
+                        Reset
+                      </button>
+                    )}
                   </Form>
                 </div>
                 {!location.pathname.includes("job-history") && (

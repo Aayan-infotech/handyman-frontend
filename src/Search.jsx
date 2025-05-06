@@ -149,7 +149,7 @@ function Search() {
                               <div className="d-flex flex-row gap-3 align-items-center">
                                 <div className="d-flex flex-column align-items-start gap-1">
                                   <h3 className="mb-0">{job?.businessName}</h3>
-                                  <h6>{job?.ABN_Number}</h6>
+                                  <h6>ABN No:{job?.ABN_Number}</h6>
                                 </div>
                               </div>
                             </div>
@@ -162,6 +162,9 @@ function Search() {
                                       job?.address?.addressLine
                                     )}
                                   </h5>
+                                  <h6 className="mb-0 text-trun">
+                                    {job?.about}
+                                  </h6>
                                 </div>
                               </div>
                             </div>
