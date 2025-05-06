@@ -56,7 +56,14 @@ export const reviewJobNotification = createNotificationThunk(
 export const messageNotification = createNotificationThunk(
   "messageHunterNotification",
   " New Message Alert",
-  "You have a new Message"
+  // "You have a new Message from "
+  //  `You have a new Message from ${} for the job ${}`
+);
+
+export const messageNotificationProvider = createNotificationThunk(
+  "messageHunterNotification",
+  " New Message Alert",
+  "You have a new Message from "
 );
 
 const notificationSlice = createSlice({

@@ -114,6 +114,10 @@ export default function LoginProvider() {
           response?.data?.data?.user?.subscriptionType
         );
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
+        localStorage.setItem(
+          "ProviderBusinessName",
+          response?.data?.data?.user?.businessName
+        );
 
         localStorage.setItem("Guest", response?.data?.data?.user?.isGuestMode);
         localStorage.removeItem("hunterToken");
@@ -182,7 +186,7 @@ export default function LoginProvider() {
                           onChange={(e) =>
                             setEmail(e.target.value.toLowerCase())
                           }
-                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
+                          onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
                         />
                       </Col>
                     </Form.Group>
@@ -219,7 +223,7 @@ export default function LoginProvider() {
                           placeholder="Password"
                           value={password}
                           required
-                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
+                          onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
                           onChange={(e) => setPassword(e.target.value)}
                         />
                         <span
