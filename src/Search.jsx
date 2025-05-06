@@ -151,6 +151,11 @@ function Search() {
                                 <div className="d-flex flex-column align-items-start gap-1">
                                   <h3 className="mb-0">{job?.businessName}</h3>
                                   <h6>ABN No:{job?.ABN_Number}</h6>
+                                  {job?.about && (
+                                      <h6 className="mb-0 text-trun">
+                                        {job?.about}
+                                      </h6>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -165,15 +170,6 @@ function Search() {
                                       )}
                                     </h5>
                                   </div>
-
-                                  {job?.about && (
-                                    <div className="d-flex flex-row gap-2 align-items-center">
-                                      <FaPersonCircleExclamation />
-                                      <h5 className="mb-0 text-trun">
-                                        {job?.about}
-                                      </h5>
-                                    </div>
-                                  )}
                                 </div>
                               </div>
                             </div>
