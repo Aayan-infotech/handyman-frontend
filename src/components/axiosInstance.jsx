@@ -4,6 +4,10 @@ const axiosInstance = axios.create({
   baseURL: "http://18.209.91.97:7787/api",
 });
 
+const userApi =
+  axiosInstance.get("/auth/getHunterProfile") ||
+  axiosInstance.get("/auth/getProviderProfile");
+
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -37,8 +41,8 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Check if this is an authentication error
-    if (error.response?.status === 404) {
+    // Only proceed with token refresh if it's a 401 error
+    if (error.response && error.response.status === 401 && userApi) {
       // Special case: If this is a refresh token request itself, don't retry
       if (originalRequest.url.includes("refreshtoken")) {
         localStorage.clear();
@@ -114,6 +118,7 @@ axiosInstance.interceptors.response.use(
       }
     }
 
+    // For all other errors (including 400), just reject
     return Promise.reject(error);
   }
 );
