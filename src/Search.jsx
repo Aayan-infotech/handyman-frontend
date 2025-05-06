@@ -24,6 +24,7 @@ import Loader from "./Loader";
 import Toaster from "./Toaster";
 import noData from "./assets/no_data_found.gif";
 import logoWhite from "./assets/logo-white.png";
+import { FaPersonCircleExclamation } from "react-icons/fa6";
 function Search() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -141,11 +142,11 @@ function Search() {
                   </div>
                 ) : (
                   filteredJobs.map((job) => (
-                    <div className="col-lg-12" key={job._id}>
+                    <div className="col-lg-6" key={job._id}>
                       <div className="card border-0 rounded-5 shadow px-4">
                         <div className="card-body">
                           <div className="row gy-4 gx-1 align-items-center">
-                            <div className="col-lg-4">
+                            <div className="col-lg-12">
                               <div className="d-flex flex-row gap-3 align-items-center">
                                 <div className="d-flex flex-column align-items-start gap-1">
                                   <h3 className="mb-0">{job?.businessName}</h3>
@@ -153,22 +154,30 @@ function Search() {
                                 </div>
                               </div>
                             </div>
-                            <div className="col-lg-6">
+                            <div className="col-lg-12">
                               <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-start">
-                                <div className="d-flex flex-row gap-2 align-items-center flex-wrap w-100">
-                                  <PiBag />
-                                  <h5 className="mb-0 text-trun">
-                                    {filterAddressPatterns(
-                                      job?.address?.addressLine
-                                    )}
-                                  </h5>
-                                  <h6 className="mb-0 text-trun">
-                                    {job?.about}
-                                  </h6>
+                                <div className="d-flex flex-column gap-2 align-items-start flex-wrap w-100">
+                                  <div className="d-flex flex-row gap-2 align-items-center">
+                                    <PiBag />
+                                    <h5 className="mb-0 text-trun">
+                                      {filterAddressPatterns(
+                                        job?.address?.addressLine
+                                      )}
+                                    </h5>
+                                  </div>
+
+                                  {job?.about && (
+                                    <div className="d-flex flex-row gap-2 align-items-center">
+                                      <FaPersonCircleExclamation />
+                                      <h5 className="mb-0 text-trun">
+                                        {job?.about}
+                                      </h5>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
-                            <div className="col-lg-2">
+                            <div className="col-lg-12">
                               <Button
                                 variant="contained"
                                 className="custom-green bg-green-custom rounded-5 py-3 w-100"
