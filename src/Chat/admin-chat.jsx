@@ -6,6 +6,7 @@ import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Form from "react-bootstrap/Form";
 import { FaArrowLeft } from "react-icons/fa";
+import axiosInstance from "../components/axiosInstance";
 
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -90,6 +91,30 @@ export default function AdminChat() {
     return [currentUser, receiverId].sort().join("_chat_");
   };
 
+  const handleSendEmail = async () => {
+    try {
+      const response = await axiosInstance.post(
+        "/hunter/send-job-email",
+        {
+          name:
+            localStorage.getItem("ProviderName") ||
+            localStorage.getItem("hunterName"),
+          receverEmail: "rishabh.sharma@aayaninfotech.com",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ||
+              localStorage.getItem("ProviderToken")
+            }`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     if (!currentUser || !receiverId) return;
 
@@ -122,6 +147,7 @@ export default function AdminChat() {
       currentUserName,
       setMessages
     );
+    await handleSendEmail()
     setText("");
   };
 
@@ -152,10 +178,10 @@ export default function AdminChat() {
                 className=""
                 style={{ height: "82px", width: "82px" }}
               >
-                A
+                S
               </Avatar>
               <div className="d-flex flex-column gap-1">
-                <h5 className="mb-0 fw-medium fs-5 text-dark">Admin</h5>
+                <h5 className="mb-0 fw-medium fs-5 text-dark">Support</h5>
               </div>
             </div>
           </div>

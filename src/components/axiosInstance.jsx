@@ -38,7 +38,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     // Check if this is an authentication error
-    if (error.response?.status === 401) {
+    if (error.response?.status === 404) {
       // Special case: If this is a refresh token request itself, don't retry
       if (originalRequest.url.includes("refreshtoken")) {
         localStorage.clear();

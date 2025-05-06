@@ -241,7 +241,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
           },
         }
       );
-      console.log(response);
+      console.log("121212", response);
       setChatData(response?.data?.data);
     } catch (error) {
       console.log(error);
@@ -301,7 +301,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
             selectedChat?.displayUser?.contactName ||
             userChat?.name ||
             userChat?.contactName,
-          receverEmail: selectedChat?.displayUser?.email || userChat?.name,
+          receverEmail: selectedChat?.displayUser?.email || userChat?.email,
         },
         {
           headers: {
@@ -460,10 +460,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
     }
   };
 
-  const dobFunction = ({ id }) => {
+  const dobFunction = async ({ id }) => {
     handleCompletedJob({ id });
     handleJobAccept({ id });
-    noficationFunctionality();
+    await noficationFunctionality();
   };
 
   console.log("messageData in chat", userChat);
@@ -536,7 +536,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
           </div>
         </div>
         {hunterId &&
-          selectedChat?.jobData?.jobStatus === "Pending" &&
+          (selectedChat?.jobData?.jobStatus === "Pending" ||
+            chatData?.jobPost?.jobStatus === "Pending") &&
           !jobShow && (
             <div className="container-fluid">
               <div className="row">
@@ -545,14 +546,16 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     <div className="card-body px-4 py-3">
                       <span className="text-center d-flex justify-content-center">
                         Do you want to work with them for this job
-                        <br /> {selectedChat?.jobData?.title}
+                        <br />{" "}
+                        {selectedChat?.jobData?.title ||
+                          chatData?.jobPost?.title}
                       </span>
                       <div className="d-flex justify-content-evenly mt-3">
                         <button
                           className="btn btn-primary px-5"
                           onClick={() =>
                             dobFunction({
-                              id: selectedChat?.displayUser?._id,
+                              id: selectedChat?.displayUser?._id || id,
                             })
                           }
                         >

@@ -469,7 +469,9 @@ export default function Notification() {
                                     color="success"
                                     className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
                                     onClick={() =>
-                                      handleJobCompleted(notification)
+                                      navigate(
+                                        `/job-detail/${notification.jobId}`
+                                      )
                                     }
                                     disabled={markingAsRead}
                                   >
