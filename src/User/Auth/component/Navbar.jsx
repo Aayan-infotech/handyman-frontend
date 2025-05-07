@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 
 export default function Header() {
-  const userType = location.pathname.includes("/provider") ? "/Provider" : "";
+  const userType = location.pathname.startsWith("/provider") ? "/provider" : "";
 
   return (
     <>
