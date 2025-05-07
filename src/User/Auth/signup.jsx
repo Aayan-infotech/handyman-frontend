@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
@@ -36,18 +36,36 @@ import upload from "../../Chat/lib/upload";
 import { realtimeDb } from "../../Chat/lib/firestore";
 
 export default function SignUp() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [previewImage, setPreviewImage] = useState(null); // Store the preview image
+  const { state } = useLocation();
+
+  const [name, setName] = useState(localStorage.getItem("signup_name") || "");
+  const [email, setEmail] = useState(
+    localStorage.getItem("signup_email") || ""
+  );
+  const [password, setPassword] = useState(
+    localStorage.getItem("signup_password") || ""
+  );
+  const [previewImage, setPreviewImage] = useState(
+    localStorage.getItem("signup_previewImage") || null
+  );
+  const [phoneNo, setPhoneNo] = useState(
+    localStorage.getItem("signup_phoneNo") || ""
+  );
+  const [address, setAddress] = useState(
+    localStorage.getItem("signup_address") || ""
+  );
+  const [latitude, setLatitude] = useState(
+    localStorage.getItem("signup_latitude") || null
+  );
+  const [longitude, setLongitude] = useState(
+    localStorage.getItem("signup_longitude") || null
+  );
+
+  const [images, setImages] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [phoneNo, setPhoneNo] = useState();
-  const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -85,6 +103,42 @@ export default function SignUp() {
     }
   }, [images]);
 
+  const navigateToTerms = () => {
+    localStorage.setItem("signup_name", name);
+    localStorage.setItem("signup_email", email);
+    localStorage.setItem("signup_password", password);
+    localStorage.setItem("signup_phoneNo", phoneNo);
+    localStorage.setItem("signup_address", address);
+    localStorage.setItem("signup_latitude", latitude);
+    localStorage.setItem("signup_longitude", longitude);
+
+    navigate("/terms", {
+      state: {
+        name,
+        email,
+        password,
+        phoneNo,
+        address,
+        latitude,
+        longitude,
+        images: images ? Array.from(images) : null,
+        previewImage,
+      },
+    });
+  };
+
+  // Clear localStorage after successful submission
+  const clearSignupStorage = () => {
+    localStorage.removeItem("signup_name");
+    localStorage.removeItem("signup_email");
+    localStorage.removeItem("signup_password");
+    localStorage.removeItem("signup_phoneNo");
+    localStorage.removeItem("signup_address");
+    localStorage.removeItem("signup_latitude");
+    localStorage.removeItem("signup_longitude");
+    localStorage.removeItem("signup_previewImage");
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
 
@@ -102,7 +156,7 @@ export default function SignUp() {
     }
     formData.append("userType", userType);
     formData.append("radius", radius);
-   
+
     const requiredFields = {
       Name: name,
       Email: email,
@@ -169,6 +223,7 @@ export default function SignUp() {
       );
 
       if (response.status === 200 || response.status === 201) {
+        clearSignupStorage();
         // const firebaseUser = await createUserWithEmailAndPassword(
         //   auth,
         //   email,
@@ -211,6 +266,16 @@ export default function SignUp() {
     }
   };
 
+  useEffect(() => {
+    const loadFromStorage = async () => {
+      const storedPreview = localStorage.getItem("signup_previewImage");
+      if (storedPreview) {
+        setPreviewImage(storedPreview);
+      }
+    };
+
+    loadFromStorage();
+  }, []);
   return (
     <>
       {loading === true ? (
@@ -288,14 +353,17 @@ export default function SignUp() {
                           placeholder="Name"
                           value={name}
                           onChange={(e) => {
-                            const words = e.target.value.trim().split(/\s+/);
-                            const filteredValue = e.target.value.replace(
+                            const cursorPosition = e.target.selectionStart; // Save cursor position
+                            const originalValue = e.target.value;
+
+                            const words = originalValue.trim().split(/\s+/);
+                            const filteredValue = originalValue.replace(
                               /[0-9]/g,
                               ""
                             );
 
-                            if (words.length <= 5 || e.target.value === "") {
-                              // Capitalize first letter of each word and make the rest lowercase
+                            if (words.length <= 5 || originalValue === "") {
+                              // Capitalize first letter of each word
                               const capitalizedValue = filteredValue
                                 .toLowerCase()
                                 .split(" ")
@@ -306,6 +374,12 @@ export default function SignUp() {
                                 .join(" ");
 
                               setName(capitalizedValue);
+
+                              // Restore cursor position after state update
+                              setTimeout(() => {
+                                e.target.selectionStart = cursorPosition;
+                                e.target.selectionEnd = cursorPosition;
+                              }, 0);
                             }
                           }}
                         />
@@ -424,12 +498,13 @@ export default function SignUp() {
                   </Form>
                   <span>
                     By tapping “Sign Up” you accept our{" "}
-                    <Link
-                      to="/terms"
+                    <span
+                      style={{ cursor: "pointer" }}
+                      onClick={navigateToTerms}
                       className="highlighted-text text-decoration-none"
                     >
                       terms and condition
-                    </Link>
+                    </span>
                   </span>
 
                   <div className="d-flex justify-content-center align-items-center py-3">
