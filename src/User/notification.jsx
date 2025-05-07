@@ -9,6 +9,7 @@ import noData from "../assets/no_data_found.gif";
 import { Button } from "@mui/material";
 import Pagination from "react-bootstrap/Pagination";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 export default function Notification() {
   const navigate = useNavigate();
   const hunterId = localStorage.getItem("hunterId");
@@ -39,12 +40,12 @@ export default function Notification() {
 
   const handleName = async (notification) => {
     try {
-      const response = await axiosInstance.post(
-        "/match/getMatchedData",
+      const response = await axios.post(
+        "http://18.209.91.97:7787/api/match/getMatchedData",
         {
           senderId: notification.userId,
           receiverId: notification.receiverId,
-          jobPostId: notification.jobId,
+          jobPostId: notification.jobId || null,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -226,12 +227,6 @@ export default function Notification() {
     }
   };
 
-  // const handlePageChange = (page) => {
-  //   if (page !== pagination.page) {
-  //     fetchNotifications(page);
-  //   }
-  // };
-
   const handleDelete = async (id) => {
     try {
       await axiosInstance.delete(`/pushNotification/deleteNotification/${id}`, {
@@ -261,54 +256,6 @@ export default function Notification() {
       });
     }
   };
-
-  // const handleMarkAsRead = async (notificationId, type) => {
-  //   try {
-  //     setMarkingAsRead(true);
-  //     await axiosInstance.get(
-  //       `/pushNotification/Read-notification/${notificationId}/${type}`,
-  //       {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       }
-  //     );
-  //     // Instead of filtering locally, refetch all notifications
-  //     await fetchNotifications();
-  //   } catch (error) {
-  //     console.log("Error marking notification as read:", error);
-  //     setToastProps({
-  //       message: "Failed to mark notification as read",
-  //       type: "error",
-  //       toastKey: Date.now(),
-  //     });
-  //   } finally {
-  //     setMarkingAsRead(false);
-  //   }
-  // };
-
-  // const handleDelete = async (id) => {
-  //   try {
-  //     const response = await axiosInstance.delete(
-  //       `/pushNotification/deleteNotification/${id}`,
-  //       {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       }
-  //     );
-  //     if (response.status === 200) {
-  //       setToastProps({
-  //         message: "Notifications deleted successfully",
-  //         type: "success",
-  //         toastKey: Date.now(),
-  //       });
-  //       fetchNotifications(); // Refresh notifications after deletion
-  //     }
-  //   } catch (error) {
-  //     setToastProps({
-  //       message: "Failed to delete notifications",
-  //       type: "error",
-  //       toastKey: Date.now(),
-  //     });
-  //   }
-  // };
 
   useEffect(() => {
     // Get the stored notification setting (parsed as boolean)
