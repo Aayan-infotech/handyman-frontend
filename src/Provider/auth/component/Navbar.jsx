@@ -11,7 +11,7 @@ import react from "react";
 import { GoArrowRight } from "react-icons/go";
 
 export default function Header() {
-  const userType = location.pathname.includes("/provider") ? "/Provider" : null;
+  const userType = location.pathname.includes("/provider") ? "/provider" : '';
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
