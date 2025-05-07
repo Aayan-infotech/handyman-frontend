@@ -359,9 +359,9 @@ function Home() {
                         {/* <span className="border-full-time">Full Time</span> */}
                       </div>
                       <b>{item?.businessName}</b>
-                      <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-wrap">
+                      <div className="d-flex justify-content-start align-items-center flex-row my-2 flex-column">
                         <span>{item?.contactName}</span>
-                        <LuDot className="text-secondary fs-4" />
+                      
                         <span>
                           {filterAddressState(item?.address?.addressLine)}
                         </span>
