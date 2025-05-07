@@ -215,14 +215,15 @@ export default function SignUp() {
     // }
 
     try {
+      
       const response = await axios.post(
         "http://18.209.91.97:7787/api/auth/signup",
 
         formData
       );
-
+      clearSignupStorage();
       if (response.status === 200 || response.status === 201) {
-        clearSignupStorage();
+        
         // const firebaseUser = await createUserWithEmailAndPassword(
         //   auth,
         //   email,

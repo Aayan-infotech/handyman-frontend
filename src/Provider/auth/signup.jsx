@@ -140,7 +140,7 @@ export default function SignUpProvider() {
     localStorage.removeItem("signup_registrationNumber", registrationNumber);
     localStorage.removeItem("signup_latitude", latitude);
     localStorage.removeItem("signup_longitude", longitude);
-    localStorage.removeItem("signup_phonePrefix" , phonePrefix);
+    localStorage.removeItem("signup_phonePrefix", phonePrefix);
   };
 
   const handleSignUp = async (e) => {
@@ -228,9 +228,8 @@ export default function SignUpProvider() {
           },
         }
       );
-
+      clearSignupStorage();
       if (response.status === 200 || response.status === 201) {
-        clearSignupStorage();
         setName("");
         setBusinessName("");
         setEmail("");
