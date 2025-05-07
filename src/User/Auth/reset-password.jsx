@@ -132,7 +132,7 @@ export default function ResetPassword() {
                           />
                           <span
                             className="eye-icon"
-                            onClick={() => setShowNewPassword(!showOldPassword)}
+                            onClick={() => setShowNewPassword(!showNewPassword)}
                           >
                             {showNewPassword ? <FaEyeSlash /> : <FaEye />}
                           </span>

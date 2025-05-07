@@ -63,7 +63,9 @@ export default function SignUpProvider() {
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
   const [images, setImages] = useState(null);
-  const [phonePrefix, setPhonePrefix] = useState("" || "+0");
+  const [phonePrefix, setPhonePrefix] = useState(
+    localStorage.getItem("signup_phonePrefix") || "+0"
+  );
 
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -123,6 +125,7 @@ export default function SignUpProvider() {
     localStorage.setItem("signup_registrationNumber", registrationNumber);
     localStorage.setItem("signup_latitude", latitude);
     localStorage.setItem("signup_longitude", longitude);
+    localStorage.setItem("signup_phonePrefix", phonePrefix);
 
     navigate("/terms");
   };
@@ -137,6 +140,7 @@ export default function SignUpProvider() {
     localStorage.removeItem("signup_registrationNumber", registrationNumber);
     localStorage.removeItem("signup_latitude", latitude);
     localStorage.removeItem("signup_longitude", longitude);
+    localStorage.removeItem("signup_phonePrefix" , phonePrefix);
   };
 
   const handleSignUp = async (e) => {

@@ -13,6 +13,8 @@ import Stack from "@mui/material/Stack";
 import { getProviderUser } from "../../Slices/userSlice";
 import { useDispatch } from "react-redux";
 import LoggedHeader from "./component/loggedNavbar";
+import { FaTrash } from "react-icons/fa";
+import { Modal } from "react-bootstrap";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -36,9 +38,17 @@ export default function Upload() {
     type: "",
     toastKey: 0,
   });
+  const [filesAdded, setFilesAdded] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
   const dispatch = useDispatch();
   const providerId = localStorage.getItem("ProviderId");
   const navigate = useNavigate();
+
+  const handleNotificationToggle = (id) => {
+    setDeleteModal(true);
+    setDeleteId(id);
+  };
   const getUploadProfile = async () => {
     try {
       if (providerId) {
@@ -59,10 +69,6 @@ export default function Upload() {
       });
     }
   };
-
-  useEffect(() => {
-    getUploadProfile();
-  }, []);
 
   useEffect(() => {
     if (location.pathname === "/provider/upload") {
@@ -95,9 +101,14 @@ export default function Upload() {
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    getUploadProfile();
+  }, []);
+
   const handleFileChange = (event) => {
     const files = event.target.files;
-    setDocument(files.length > 0 ? files : null);
+    setDocument(files.length > 0 ? files : []);
+    setFilesAdded(files.length > 0);
   };
 
   const navTest = () => {
@@ -110,8 +121,22 @@ export default function Upload() {
     //   navigate("/provider/pricing");
     //   return;
     // }
-   
+
     navigate("/provider/home");
+  };
+
+  const handleDeleteGallery = async (imageId) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/provider/deleteFile/${imageId}`
+      );
+      if (response.status === 200) {
+        setDeleteModal(false);
+        await getUploadProfile();
+      }
+    } catch (error) {
+      console.error("Failed to delete image:", error);
+    }
   };
   const handleDelete = async (id) => {
     setLoading(true);
@@ -243,6 +268,7 @@ export default function Upload() {
                             size="large"
                             className="custom-green-outline fs-6 w-100 rounded-4 bg-green-custom"
                             color="success"
+                            disabled={!filesAdded || document.length === 0}
                           >
                             Submit
                           </Button>
@@ -274,36 +300,59 @@ export default function Upload() {
                       {Array.from(document).map((file, index) => (
                         <div className="col-lg-4 py-1" key={index}>
                           <div className="card p-3 w-100">
-                            <div className="card-body p-0">
-                              {file.type?.includes("image") ||
-                              file.name?.match(/\.(jpg|jpeg|png|gif)$/i) ||
-                              file.path?.includes("image") ||
-                              file.path?.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-                                <img
-                                  src={
-                                    file instanceof File
-                                      ? URL.createObjectURL(file)
-                                      : file.path
-                                  }
-                                  alt="docImage"
-                                  className="object-fit-contain w-100 rounded-4"
-                                  height={100}
-                                />
-                              ) : file.type?.includes("pdf") ||
-                                file.name?.endsWith(".pdf") ? (
-                                <iframe
-                                  src={
-                                    file instanceof File
-                                      ? URL.createObjectURL(file)
-                                      : file.path
-                                  }
-                                  className="w-100 rounded-4 "
-                                  height={100}
-                                  title={`PDF Preview ${index}`}
-                                />
+                            <div className="card-body p-0 position-relative">
+                              {file.type?.includes("pdf") ||
+                              file.name?.toLowerCase().endsWith(".pdf") ||
+                              (file.path &&
+                                file.path.toLowerCase().endsWith(".pdf")) ? (
+                                <>
+                                  <iframe
+                                    src={
+                                      file instanceof File
+                                        ? URL.createObjectURL(file)
+                                        : file.path
+                                    }
+                                    className="w-100 rounded-4 "
+                                    height={100}
+                                    title={`PDF Preview ${index}`}
+                                  />
+                                  <button
+                                    className="btn btn-danger position-absolute top-0 end-0"
+                                    onClick={() =>
+                                      handleNotificationToggle(file._id)
+                                    }
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                </>
+                              ) : file.type?.includes("image") ||
+                                file.name?.match(/\.(jpg|jpeg|png|gif)$/i) ||
+                                (file.path &&
+                                  file.path.match(/\.(jpg|jpeg|png|gif)$/i)) ? (
+                                <>
+                                  <img
+                                    src={
+                                      file instanceof File
+                                        ? URL.createObjectURL(file)
+                                        : file.path
+                                    }
+                                    alt="docImage"
+                                    className="object-fit-contain w-100 rounded-4"
+                                    height={100}
+                                  />
+                                  <button
+                                    className="btn btn-danger position-absolute top-0 end-0"
+                                    onClick={() =>
+                                      handleNotificationToggle(file._id)
+                                    }
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                </>
                               ) : (
                                 <p className="text-center">
-                                  Unsupported file type
+                                  Unsupported file type:{" "}
+                                  {file.name || file.path?.split("/").pop()}
                                 </p>
                               )}
                             </div>
@@ -345,6 +394,29 @@ export default function Upload() {
           </div>
         </div>
       )}
+
+      <Modal show={deleteModal} onHide={() => setDeleteModal(false)} centered>
+        <Modal.Header className="border-0" closeButton>
+          <Modal.Title>Delete Alert</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="border-0 text-center">
+          <h3>Do you want to delete this Document?</h3>
+        </Modal.Body>
+        <Modal.Footer className="border-0 ">
+          <button
+            className="btn btn-danger"
+            onClick={() => setDeleteModal(false)}
+          >
+            Close
+          </button>
+          <button
+            className="btn btn-success"
+            onClick={() => handleDeleteGallery(deleteId)}
+          >
+            Delete
+          </button>
+        </Modal.Footer>
+      </Modal>
       <Toaster
         message={toastProps.message}
         type={toastProps.type}
