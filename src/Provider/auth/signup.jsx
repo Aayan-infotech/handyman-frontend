@@ -16,6 +16,7 @@ import Loader from "../../Loader";
 import Select from "react-select";
 import FormControl from "@mui/material/FormControl";
 import { useTheme } from "@mui/material/styles";
+import axios from "axios";
 
 import MenuItem from "@mui/material/MenuItem";
 import {
@@ -62,6 +63,8 @@ export default function SignUpProvider() {
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
   const [images, setImages] = useState(null);
+  const [phonePrefix, setPhonePrefix] = useState("" || "+0");
+
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -170,7 +173,7 @@ export default function SignUpProvider() {
     formData.append("name", name);
     formData.append("businessName", businessName);
     formData.append("email", email);
-    formData.append("phoneNo", `+0${phoneNo}`);
+    formData.append("phoneNo", `${phonePrefix}${phoneNo}`);
     formData.append("addressLine", address);
     formData.append("password", password);
     selectedBusiness.forEach((type) => {
@@ -212,11 +215,15 @@ export default function SignUpProvider() {
 
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/auth/signup", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://18.209.91.97:7787/api/auth/signup",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.status === 200 || response.status === 201) {
         clearSignupStorage();
@@ -511,22 +518,28 @@ export default function SignUpProvider() {
                         Phone Number
                       </Form.Label>
                       <Col sm="7">
-                        <Form.Control
-                          type="text"
-                          placeholder="Phone number"
-                          value={phoneNo ? `+0${phoneNo}` : ""}
-                          onChange={(e) => {
-                            const rawValue = e.target.value;
-                            // Remove any existing "+61" prefix to avoid duplication
-                            const sanitizedValue = rawValue.replace(/^\+0/, "");
-                            // Allow only digits after the prefix
-                            const digitsOnly = sanitizedValue.replace(
-                              /\D/g,
-                              ""
-                            );
-                            setPhoneNo(digitsOnly);
-                          }}
-                        />
+                        <div className="d-flex">
+                          <Form.Select
+                            value={phonePrefix}
+                            onChange={(e) => setPhonePrefix(e.target.value)}
+                            style={{ width: "80px", marginRight: "10px" }}
+                          >
+                            <option value="+0">+0</option>
+                            <option value="+61">+61</option>
+                          </Form.Select>
+                          <Form.Control
+                            type="text"
+                            placeholder="Phone number"
+                            value={phoneNo}
+                            onChange={(e) => {
+                              const digitsOnly = e.target.value.replace(
+                                /\D/g,
+                                ""
+                              );
+                              setPhoneNo(digitsOnly);
+                            }}
+                          />
+                        </div>
                       </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">

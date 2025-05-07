@@ -36,9 +36,9 @@ export default function ManageSubscription() {
           const expired = [];
 
           res?.data?.data.forEach((item) => {
-            if (item.status !== "expired") {
+            if (item.subscriptionStatus !== "expired") {
               active.push(item);
-            } else if (item.status === "expired") {
+            } else if (item.subscriptionStatus === "expired") {
               expired.push(item);
             }
           });

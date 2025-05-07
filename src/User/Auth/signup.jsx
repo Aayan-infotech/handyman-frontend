@@ -9,7 +9,7 @@ import Row from "react-bootstrap/Row";
 import "../user.css";
 // import { Form, Col } from "react-bootstrap";
 import { FaPen } from "react-icons/fa";
-
+import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { IoImageOutline } from "react-icons/io5";
 import axiosInstance from "../../components/axiosInstance";
@@ -60,7 +60,7 @@ export default function SignUp() {
   const [longitude, setLongitude] = useState(
     localStorage.getItem("signup_longitude") || null
   );
-
+  const [phonePrefix, setPhonePrefix] = useState("" || "+0");
   const [images, setImages] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -146,7 +146,7 @@ export default function SignUp() {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
-    formData.append("phoneNo", `+0${phoneNo}`);
+    formData.append("phoneNo", `${phonePrefix}${phoneNo}`);
     formData.append("addressLine", address);
     formData.append("password", password);
     formData.append("latitude", latitude);
@@ -216,8 +216,8 @@ export default function SignUp() {
     // }
 
     try {
-      const response = await axiosInstance.post(
-        "/auth/signup",
+      const response = await axios.post(
+        "http://18.209.91.97:7787/api/auth/signup",
 
         formData
       );
@@ -390,20 +390,28 @@ export default function SignUp() {
                         Phone Number
                       </Form.Label>
                       <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          placeholder="Phone number"
-                          value={phoneNo ? `+0${phoneNo}` : ""}
-                          onChange={(e) => {
-                            const rawValue = e.target.value;
-                            const sanitizedValue = rawValue.replace(/^\+0/, "");
-                            const digitsOnly = sanitizedValue.replace(
-                              /\D/g,
-                              ""
-                            );
-                            setPhoneNo(digitsOnly);
-                          }}
-                        />
+                        <div className="d-flex">
+                          <Form.Select
+                            value={phonePrefix}
+                            onChange={(e) => setPhonePrefix(e.target.value)}
+                            style={{ width: "80px", marginRight: "10px" }}
+                          >
+                            <option value="+0">+0</option>
+                            <option value="+61">+61</option>
+                          </Form.Select>
+                          <Form.Control
+                            type="text"
+                            placeholder="Phone number"
+                            value={phoneNo}
+                            onChange={(e) => {
+                              const digitsOnly = e.target.value.replace(
+                                /\D/g,
+                                ""
+                              );
+                              setPhoneNo(digitsOnly);
+                            }}
+                          />
+                        </div>
                       </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">
