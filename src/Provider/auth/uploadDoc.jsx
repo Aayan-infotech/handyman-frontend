@@ -33,6 +33,8 @@ export default function Upload() {
   console.log(location.pathname);
   const [loading, setLoading] = useState(false);
   const [document, setDocument] = useState([]);
+  const [newDocuments, setNewDocuments] = useState([]); // For newly selected files
+
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -107,10 +109,9 @@ export default function Upload() {
 
   const handleFileChange = (event) => {
     const files = event.target.files;
-    setDocument(files.length > 0 ? files : []);
+    setNewDocuments(files.length > 0 ? Array.from(files) : []);
     setFilesAdded(files.length > 0);
   };
-
   const navTest = () => {
     const isGuest = localStorage.getItem("Guest") === "false";
     const planType = localStorage.getItem("PlanType");
@@ -175,7 +176,7 @@ export default function Upload() {
     }
 
     const formData = new FormData();
-    Array.from(document).forEach((file) => {
+    Array.from(newDocuments).forEach((file) => {
       formData.append("file", file);
     });
     console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
@@ -226,6 +227,8 @@ export default function Upload() {
     }
   };
 
+  const allDocuments = [...document, ...newDocuments];
+
   console.log(document);
 
   return (
@@ -243,7 +246,7 @@ export default function Upload() {
                   <h2 className="text-center fw-bold fs-1">Upload Documents</h2>
                   <p className="text-center mt-3 mb-4">Let’s Get Started</p>
                   <div className="row gx-2 gy-4">
-                    {document.length > 0 ? (
+                    {allDocuments.length > 0 ? (
                       <>
                         <div className="col-lg-9">
                           <Button
@@ -252,6 +255,7 @@ export default function Upload() {
                             className="fw-semibold custom-green-outline w-100 rounded-5 mb-2 fs-6 px-1"
                             size="small"
                             component="label"
+                            multiple
                             startIcon={<FaCloudUploadAlt />}
                           >
                             Upload Documents
@@ -295,9 +299,9 @@ export default function Upload() {
                     )}
                   </div>
 
-                  {document && document.length > 0 && (
+                  {allDocuments && allDocuments.length > 0 && (
                     <div direction="row" className=" row gy-4">
-                      {Array.from(document).map((file, index) => (
+                      {Array.from(allDocuments).map((file, index) => (
                         <div className="col-lg-4 py-1" key={index}>
                           <div className="card p-3 w-100">
                             <div className="card-body p-0 position-relative">
