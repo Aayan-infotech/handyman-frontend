@@ -94,6 +94,10 @@ export default function LoggedHeader() {
             "PlanType",
             providerResponse?.payload?.data?.subscriptionType
           );
+          localStorage.setItem(
+            "ProviderName",
+            providerResponse?.payload?.data?.contactName
+          );
           console.log("1212121", fetchedUser);
           if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
             localStorage.setItem("PlanType", null);

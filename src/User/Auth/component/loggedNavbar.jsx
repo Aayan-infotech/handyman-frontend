@@ -50,21 +50,21 @@ export default function LoggedHeader() {
         headers: { Authorization: `Bearer ${hunterToken || providerToken}` },
       });
 
-      const notifList = response.data.data || [];
+      // const notifList = response.data.data || [];
 
-      const updatedList = await Promise.all(
-        notifList.map(async (notification) => {
-          try {
-            const nameData = await handleName(notification);
-            return { ...notification, nameData };
-          } catch (error) {
-            console.error("Error processing notification:", error);
-            return notification;
-          }
-        })
-      );
+      // const updatedList = await Promise.all(
+      //   notifList.map(async (notification) => {
+      //     try {
+      //       const nameData = await handleName(notification);
+      //       return { ...notification, nameData };
+      //     } catch (error) {
+      //       console.error("Error processing notification:", error);
+      //       return notification;
+      //     }
+      //   })
+      // );
 
-      setNotifications(updatedList);
+      setNotifications(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -99,6 +99,11 @@ export default function LoggedHeader() {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
         }
+        console.log("fetchedUser", fetchedUser);
+        localStorage.setItem(
+          "hunterName",
+          fetchedUser?.name
+        );
         if (fetchedUser === undefined || fetchedUser === null) {
           localStorage.clear();
           return;

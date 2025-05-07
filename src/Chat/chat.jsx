@@ -297,10 +297,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
         {
           jobTitle: chatData?.jobPost?.title || selectedChat?.jobData?.title,
           name:
-            selectedChat?.displayUser?.name ||
-            selectedChat?.displayUser?.contactName ||
-            userChat?.name ||
-            userChat?.contactName,
+            localStorage.getItem("ProviderName") ||
+            localStorage.getItem("hunterName"),
           receverEmail: selectedChat?.displayUser?.email || userChat?.email,
         },
         {

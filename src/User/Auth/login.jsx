@@ -141,7 +141,7 @@ export default function Login() {
                       <Form.Label column sm="3">
                         Email
                       </Form.Label>
-                      <Col sm="7">
+                      <Col sm="9">
                         <Form.Control
                           type="email"
                           placeholder="Email Address"
@@ -179,7 +179,7 @@ export default function Login() {
                       <Form.Label column sm="3">
                         Password
                       </Form.Label>
-                      <Col sm="7" className="position-relative">
+                      <Col sm="9" className="position-relative">
                         <Form.Control
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
