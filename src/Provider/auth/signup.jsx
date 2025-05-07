@@ -13,9 +13,10 @@ import axiosInstance from "../../components/axiosInstance";
 import Toaster from "../../Toaster";
 import Autocomplete from "react-google-autocomplete";
 import Loader from "../../Loader";
-import Select from "@mui/material/Select";
+import Select from "react-select";
 import FormControl from "@mui/material/FormControl";
 import { useTheme } from "@mui/material/styles";
+
 import MenuItem from "@mui/material/MenuItem";
 import {
   createUserWithEmailAndPassword,
@@ -46,7 +47,7 @@ export default function SignUpProvider() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [previewImage, setPreviewImage] = useState(null); // Store the preview image
-
+  const [selectedBusiness, setSelectedBusiness] = useState([]);
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
   const [registrationNumber, setRegistrationNumber] = useState("");
@@ -64,6 +65,10 @@ export default function SignUpProvider() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const guestVerify = searchParams.get("type") === "Guest" ? true : false;
+  const handleBusinessChange = (selectedOption) => {
+    console.log("Selected Business:", selectedOption);
+    setSelectedBusiness(selectedOption || []);
+  };
 
   // const handleChange = (event) => {
   //   const { value } = event.target;
@@ -102,7 +107,7 @@ export default function SignUpProvider() {
       "Phone Number": phoneNo,
       Address: address,
       Password: password,
-      "Business Type": businessType?.length > 0,
+      "Business Type": selectedBusiness?.length > 0,
       "Registration Number": registrationNumber,
       // Image: images, // if needed
     };
@@ -129,8 +134,8 @@ export default function SignUpProvider() {
     formData.append("phoneNo", `+0${phoneNo}`);
     formData.append("addressLine", address);
     formData.append("password", password);
-    businessType.forEach((type) => {
-      formData.append("businessType[]", type);
+    selectedBusiness.forEach((type) => {
+      formData.append("businessType[]", type.name);
     });
     formData.append("ABN_Number", registrationNumber);
     formData.append("userType", "provider");
@@ -315,7 +320,7 @@ export default function SignUpProvider() {
                             type="file"
                             onChange={handleImageChange}
                           />
-                          <FaPen className="pos-image-selector3 "/>
+                          <FaPen className="pos-image-selector3 " />
                         </div>
                       </div>
                     </div>
@@ -361,6 +366,20 @@ export default function SignUpProvider() {
                       <Col sm="7">
                         <FormControl className="w-100 select-ion">
                           <Select
+                            options={businessData.sort((a, b) =>
+                              a.name.localeCompare(b.name)
+                            )} // Sorted Business Names
+                            getOptionLabel={(e) => e.name} // Display Business Name
+                            value={selectedBusiness} // Show selected business in input box
+                            onChange={handleBusinessChange} // Update state on selection
+                            isClearable
+                            isSearchable
+                            isMulti
+                            placeholder="Select a business"
+                            getOptionValue={(e) => e.name} // Option Value
+                            className="w-100 "
+                          />
+                          {/* <Select
                             labelId="demo-multiple-name-label"
                             id="demo-multiple-name"
                             className="pad-select"
@@ -384,7 +403,7 @@ export default function SignUpProvider() {
                                 {data.name}
                               </MenuItem>
                             ))}
-                          </Select>
+                          </Select> */}
                         </FormControl>
                       </Col>
                     </Form.Group>
@@ -496,7 +515,7 @@ export default function SignUpProvider() {
                       <Col sm="7">
                         <Form.Control
                           type="text"
-                          placeholder="Registration number"
+                          placeholder="ABN number"
                           value={registrationNumber}
                           onChange={(e) =>
                             setRegistrationNumber(e.target.value)

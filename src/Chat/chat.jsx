@@ -372,6 +372,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
   };
 
   const handleBack = () => {
+    if (hunterId) {
+      navigate(`/job-detail/${jobId}`);
+      return;
+    }
     navigate(`/provider/jobspecification/${jobId}`);
   };
 
@@ -463,6 +467,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const dobFunction = async ({ id }) => {
     handleCompletedJob({ id });
     handleJobAccept({ id });
+    setJobShow(true);
     await noficationFunctionality();
   };
 

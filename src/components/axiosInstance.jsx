@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     // Only proceed with token refresh if it's a 401 error
-    if (error.response && error.response.status === 401 && userApi) {
+    if (userApi) {
       // Special case: If this is a refresh token request itself, don't retry
       if (originalRequest.url.includes("refreshtoken")) {
         localStorage.clear();

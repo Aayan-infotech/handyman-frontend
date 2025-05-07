@@ -15,6 +15,9 @@ export default function Notification() {
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
+  const isGuest = JSON.parse(
+    localStorage.getItem("notificationEnableProvider") ?? "false"
+  );
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
@@ -387,12 +390,12 @@ export default function Notification() {
                                   notification.createdAt
                                 ).toLocaleString("en-AU", {
                                   timeZone: "Australia/Sydney",
-                                  weekday: "short", 
-                                  day: "numeric", 
-                                  month: "short", 
-                                  year: "numeric", 
-                                  hour: "2-digit", 
-                                  minute: "2-digit", 
+                                  weekday: "short",
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
                                   hour12: true,
                                 })}
                               </span>
@@ -409,9 +412,17 @@ export default function Notification() {
                               <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">
                                 {providerId
                                   ? `${notification.body} ${
-                                      notification.nameData?.sender
-                                        ?.contactName ||
-                                      notification.nameData?.sender?.name
+                                      notification?.type !== "mass" &&
+                                      ((isGuest &&
+                                        notification.nameData?.sender
+                                          ?.contactName) ||
+                                        notification.nameData?.sender?.name)
+                                        ? `from ${
+                                            notification.nameData?.sender
+                                              ?.contactName ||
+                                            notification.nameData?.sender?.name
+                                          }`
+                                        : ""
                                     }`
                                   : notification.body}
                               </p>

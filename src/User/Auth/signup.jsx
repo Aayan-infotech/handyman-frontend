@@ -102,18 +102,7 @@ export default function SignUp() {
     }
     formData.append("userType", userType);
     formData.append("radius", radius);
-    if (images) {
-      const allowedExtensions = /\.(jpeg|jpg|png)$/;
-      if (!allowedExtensions.test(images.name)) {
-        setToastProps({
-          message: "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
-          type: "error",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-        return;
-      }
-    }
+   
     const requiredFields = {
       Name: name,
       Email: email,

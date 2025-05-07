@@ -8,7 +8,7 @@ import "../user.css";
 import Loader from "../../Loader";
 import Toaster from "../../Toaster";
 import axiosInstance from "../../components/axiosInstance";
-
+import axios from "axios";
 export default function Otp({ length = 6 }) {
   const [otp, setOtp] = useState(Array(length).fill(""));
   const inputRefs = useRef([]);
@@ -78,11 +78,14 @@ export default function Otp({ length = 6 }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/auth/verify-email", {
-        email,
-        verificationOTP: otpValue,
-        userType: Provider || "hunter",
-      });
+      const response = await axios.post(
+        "http://18.209.91.97:7787/api/auth/verify-email",
+        {
+          email,
+          verificationOTP: otpValue,
+          userType: Provider || "hunter",
+        }
+      );
       if (response.status === 200 || response.status === 201) {
         setToastProps({
           message: response?.data?.message,
@@ -94,15 +97,15 @@ export default function Otp({ length = 6 }) {
         if (ProviderParams) {
           localStorage.setItem("verifyEmailOtp", email);
           setLoading(false);
-          setTimeout(() => {
-            navigate(`/provider/login`);
-          }, 2000);
+          // setTimeout(() => {
+          //   navigate(`/provider/login`);
+          // }, 2000);
         } else {
           localStorage.setItem("verifyEmailOtp", email);
           setLoading(false);
-          setTimeout(() => {
-            navigate(`/login`);
-          }, 2000);
+          // setTimeout(() => {
+          //   navigate(`/login`);
+          // }, 2000);
         }
       }
     } catch (error) {
@@ -120,10 +123,13 @@ export default function Otp({ length = 6 }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/auth/verify-otp", {
-        email,
-        verificationOTP: otpValue,
-      });
+      const response = await axios.post(
+        "http://18.209.91.97:7787/api/auth/verify-otp",
+        {
+          email,
+          verificationOTP: otpValue,
+        }
+      );
       if (response.status === 200 || response.status === 201) {
         setToastProps({
           message: response?.data?.message,
@@ -159,10 +165,13 @@ export default function Otp({ length = 6 }) {
   const handleResendOtp = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.post("/auth/resendOtp", {
-        email,
-        userType: ProviderParams ? "provider" : "hunter",
-      });
+      const response = await axios.post(
+        "http://18.209.91.97:7787/api/auth/resendOtp",
+        {
+          email,
+          userType: ProviderParams ? "provider" : "hunter",
+        }
+      );
       if (response.status === 200 || response.status === 201) {
         setToastProps({
           message: response?.data?.message,
@@ -170,7 +179,6 @@ export default function Otp({ length = 6 }) {
           toastKey: Date.now(),
         });
         setLoading(false);
-       
       }
     } catch (error) {
       console.log(error);
