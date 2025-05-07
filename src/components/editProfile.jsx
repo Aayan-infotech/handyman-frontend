@@ -23,6 +23,7 @@ import {
 import { ref, set } from "firebase/database";
 import { FaPen } from "react-icons/fa";
 import { auth, db } from "../Chat/lib/firestore";
+import axios from "axios"
 import {
   collection,
   query,
@@ -47,6 +48,8 @@ export default function EditProfile() {
   const providerToken = localStorage.getItem("ProviderToken");
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
+  const [phonePrefix, setPhonePrefix] = useState("+0");
+
   const providerUid = localStorage.getItem("ProviderUId");
   const hunterUid = localStorage.getItem("hunterUId");
   const [businessData, setBusinessData] = useState([]);
@@ -101,7 +104,18 @@ export default function EditProfile() {
         if (fetchedUser) {
           setName(fetchedUser?.contactName || fetchedUser?.name || "");
           setImages(fetchedUser?.images || "");
-          setNumber(fetchedUser?.phoneNo || "");
+          const phoneNumber = fetchedUser?.phoneNo || "";
+          if (phoneNumber.startsWith("+61")) {
+            setPhonePrefix("+61");
+            setNumber(phoneNumber.substring(3)); // Remove +61 prefix
+          } else if (phoneNumber.startsWith("+0")) {
+            setPhonePrefix("+0");
+            setNumber(phoneNumber.substring(2)); // Remove +0 prefix
+          } else {
+            // Default case if no prefix matches
+            setPhonePrefix("+0");
+            setNumber(phoneNumber);
+          }
           setEmail(fetchedUser?.email || "");
           setAddress(fetchedUser?.address?.addressLine || "");
           setBusinessName(fetchedUser?.businessName || "");
@@ -146,7 +160,7 @@ export default function EditProfile() {
         ? formData.append("contactName", name)
         : formData.append("name", name);
     }
-    formData.append("phoneNo", number);
+    formData.append("phoneNo", `${phonePrefix}${number}`);
     formData.append("email", email);
     formData.append("addressLine", address);
     formData.append("latitude", latitude);
@@ -286,7 +300,7 @@ export default function EditProfile() {
                             type="file"
                             onChange={handleImageChange}
                           />
-                          <FaPen className="pos-image-selector3 "/>
+                          <FaPen className="pos-image-selector3 " />
                         </div>
                       </div>
                     </div>
@@ -328,34 +342,35 @@ export default function EditProfile() {
                         />
                       </Col>
                     </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      className="mb-3"
-                      controlId="formPlaintextPhone"
-                    >
+                    <div className="row mb-3">
                       <Form.Label column sm="4">
-                        Phone Number
+                        Name
                       </Form.Label>
-                      <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          placeholder="Phone number"
-                          value={number ? `+0${number}` : ""}
-                          onChange={(e) => {
-                            let inputValue = e.target.value;
-
-                            // Remove all non-digit characters
-                            inputValue = inputValue.replace(/\D/g, "");
-
-                            // If the input starts with +0, remove the + and keep the 0
-                            if (inputValue.startsWith("0")) {
-                              inputValue = inputValue.substring(1); // Remove the leading 0
-                              setNumber(inputValue);
-                            }
-                          }}
-                        />
-                      </Col>
-                    </Form.Group>
+                      <div className="col-8">
+                        <div className="d-flex align-items-center gap-1">
+                          <Form.Select
+                            value={phonePrefix}
+                            onChange={(e) => setPhonePrefix(e.target.value)}
+                            style={{ width: "80px", marginRight: "10px" }}
+                          >
+                            <option value="+0">+0</option>
+                            <option value="+61">+61</option>
+                          </Form.Select>
+                          <Form.Control
+                            type="text"
+                            placeholder="Phone number"
+                            value={number}
+                            onChange={(e) => {
+                              const digitsOnly = e.target.value.replace(
+                                /\D/g,
+                                ""
+                              );
+                              setNumber(digitsOnly);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
                     <Form.Group
                       as={Row}
                       className="mb-3"

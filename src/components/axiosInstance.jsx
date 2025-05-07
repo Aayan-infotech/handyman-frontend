@@ -4,10 +4,6 @@ const axiosInstance = axios.create({
   baseURL: "http://18.209.91.97:7787/api",
 });
 
-const userApi =
-  axiosInstance.get("/auth/getHunterProfile") ||
-  axiosInstance.get("/auth/getProviderProfile");
-
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -22,7 +18,7 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Request Interceptor: Attach token to every request
+// Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     const token =
@@ -36,90 +32,83 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Response Interceptor
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Only proceed with token refresh if it's a 401 error
-    if (userApi) {
-      // Special case: If this is a refresh token request itself, don't retry
-      if (originalRequest.url.includes("refreshtoken")) {
-        localStorage.clear();
-        window.location.href = "/welcome";
-        return Promise.reject(error);
-      }
-
-      // If already refreshing, queue the request
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return axiosInstance(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      const refreshToken =
-        localStorage.getItem("hunterRefreshToken") ||
-        localStorage.getItem("ProviderRefreshToken");
-      const userType = localStorage.getItem("hunterToken")
-        ? "hunter"
-        : "provider";
-
-      if (!refreshToken) {
-        localStorage.clear();
-        window.location.href = "/welcome";
-        return Promise.reject(error);
-      }
-
-      try {
-        const res = await axios.post(
-          "http://18.209.91.97:7787/api/auth/refreshtoken",
-          { refreshToken, userType },
-          {
-            // Important: Don't use axiosInstance here to avoid infinite loop
-            baseURL: "http://18.209.91.97:7787/api",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const newToken = res.data.accessToken;
-
-        // Store the new token
-        if (userType === "hunter") {
-          localStorage.setItem("hunterToken", newToken);
-        } else {
-          localStorage.setItem("ProviderToken", newToken);
-        }
-
-        // Update default headers
-        axiosInstance.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${newToken}`;
-
-        processQueue(null, newToken);
-
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError, null);
-        localStorage.clear();
-        window.location.href = "/welcome";
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
+    // Only handle 401 errors
+    if (error.response?.status !== 401) {
+      return Promise.reject(error);
     }
 
-    // For all other errors (including 400), just reject
-    return Promise.reject(error);
+    // Special case: Don't retry refresh token requests
+    if (originalRequest.url.includes("refreshtoken")) {
+      localStorage.clear();
+      window.location.href = "/welcome";
+      return Promise.reject(error);
+    }
+
+    // If already refreshing, queue the request
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      })
+        .then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return axiosInstance(originalRequest);
+        })
+        .catch((err) => Promise.reject(err));
+    }
+
+    originalRequest._retry = true;
+    isRefreshing = true;
+
+    const refreshToken =
+      localStorage.getItem("hunterRefreshToken") ||
+      localStorage.getItem("ProviderRefreshToken");
+    const userType = localStorage.getItem("hunterToken")
+      ? "hunter"
+      : "provider";
+
+    if (!refreshToken) {
+      localStorage.clear();
+      window.location.href = "/welcome";
+      return Promise.reject(error);
+    }
+
+    try {
+      const res = await axios.post(
+        "http://18.209.91.97:7787/api/auth/refreshtoken",
+        { refreshToken, userType },
+        {
+          baseURL: "http://18.209.91.97:7787/api",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const newToken = res.data.accessToken;
+      const tokenKey = userType === "hunter" ? "hunterToken" : "ProviderToken";
+
+      localStorage.setItem(tokenKey, newToken);
+      axiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${newToken}`;
+
+      processQueue(null, newToken);
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return axiosInstance(originalRequest);
+    } catch (refreshError) {
+      processQueue(refreshError, null);
+      localStorage.clear();
+      window.location.href = "/welcome";
+      return Promise.reject(refreshError);
+    } finally {
+      isRefreshing = false;
+    }
   }
 );
 

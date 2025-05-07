@@ -44,7 +44,7 @@ export default function MyProfile() {
   const [logoutModal, setLogoutModal] = useState(false);
   const [aboutText, setAboutText] = useState("");
   const [fileToUpload, setFileToUpload] = useState(null);
-const [editShowModal , setEditShowModal] = useState(false);
+  const [editShowModal, setEditShowModal] = useState(false);
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -436,9 +436,8 @@ const [editShowModal , setEditShowModal] = useState(false);
 
       // Then proceed with account deletion
       const response = await axiosInstance.delete(
-        `${providerId ? "prvdr" : "DeleteAccount"}/${
-          providerId ? "provider" : "delete"
-        }/${userId}`
+        `${providerId ? "Prvdr" : "DeleteAccount"}/"delete"
+        /${userId}`
       );
 
       if (response.status === 200) {
@@ -776,7 +775,7 @@ const [editShowModal , setEditShowModal] = useState(false);
                       <Modal.Body>
                         <textarea
                           className="form-control"
-                           rows="5"
+                          rows="5"
                           placeholder="Enter your description (max 50 words)..."
                           value={description}
                           onChange={(e) => {
