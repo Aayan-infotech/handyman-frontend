@@ -212,7 +212,7 @@ export default function Login() {
                     to="/forgot-password"
                     className="highlighted-text text-decoration-none text-end d-flex justify-content-end py-3"
                   >
-                    Forgot Password
+                    Forgot Password?
                   </Link>
                   <div className="d-flex justify-content-center align-items-center py-3">
                     <Button
