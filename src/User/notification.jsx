@@ -257,6 +257,36 @@ export default function Notification() {
     }
   };
 
+  const handleDeleteMass = async (id) => {
+    try {
+      await axiosInstance.delete(`/massNotification/delete/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Update local state instead of refetching
+      setNotifications((prev) => prev.filter((notif) => notif._id !== id));
+      setPagination((prev) => ({
+        ...prev,
+        total: prev.total - 1,
+        totalPages: Math.ceil((prev.total - 1) / prev.limit),
+      }));
+      setToastProps({
+        message: "Notification deleted successfully",
+        type: "success",
+        toastKey: Date.now(),
+      });
+      if (notifications.length === 1 && pagination.page > 1) {
+        fetchNotifications(pagination.page - 1);
+      }
+    } catch (error) {
+      setToastProps({
+        message: "error deleting notification",
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
   useEffect(() => {
     // Get the stored notification setting (parsed as boolean)
     const isNotificationEnabled =
@@ -442,14 +472,25 @@ export default function Notification() {
                                 </div>
                               )}
                             <div className="col-lg-3 d-flex justify-content-end">
-                              <Button
-                                variant="outlined"
-                                color="success"
-                                className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                onClick={() => handleDelete(notification._id)}
-                              >
-                                Delete Message
-                              </Button>
+                              {notification?.type === "mass" ? (
+                                <Button
+                                  variant="outlined"
+                                  color="success"
+                                  className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
+                                  onClick={() => handleDeleteMass(notification._id)}
+                                >
+                                  Delete Message
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="outlined"
+                                  color="success"
+                                  className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
+                                  onClick={() => handleDelete(notification._id)}
+                                >
+                                  Delete Message
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </div>

@@ -200,8 +200,8 @@ export default function ManageSubscription() {
                           <h3 className="text-center text-lg-start">
                             Your{" "}
                             {`${
-                              item.status.charAt(0).toUpperCase() +
-                              item.status.slice(1)
+                              item.subscriptionStatus.charAt(0).toUpperCase() +
+                              item.subscriptionStatus.slice(1)
                             }`}{" "}
                             Plan
                           </h3>

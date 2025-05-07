@@ -42,9 +42,7 @@ export default function SignUp() {
   const [email, setEmail] = useState(
     localStorage.getItem("signup_email") || ""
   );
-  const [password, setPassword] = useState(
-    localStorage.getItem("signup_password") || ""
-  );
+  const [password, setPassword] = useState("");
   const [previewImage, setPreviewImage] = useState(
     localStorage.getItem("signup_previewImage") || null
   );
@@ -60,7 +58,9 @@ export default function SignUp() {
   const [longitude, setLongitude] = useState(
     localStorage.getItem("signup_longitude") || null
   );
-  const [phonePrefix, setPhonePrefix] = useState("" || "+0");
+  const [phonePrefix, setPhonePrefix] = useState(
+    localStorage.getItem("signup_phonePrefix") || "+0"
+  );
   const [images, setImages] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -106,12 +106,11 @@ export default function SignUp() {
   const navigateToTerms = () => {
     localStorage.setItem("signup_name", name);
     localStorage.setItem("signup_email", email);
-    localStorage.setItem("signup_password", password);
     localStorage.setItem("signup_phoneNo", phoneNo);
     localStorage.setItem("signup_address", address);
     localStorage.setItem("signup_latitude", latitude);
     localStorage.setItem("signup_longitude", longitude);
-
+    localStorage.setItem("signup_phonePrefix", phonePrefix);
     navigate("/terms", {
       state: {
         name,
@@ -131,12 +130,12 @@ export default function SignUp() {
   const clearSignupStorage = () => {
     localStorage.removeItem("signup_name");
     localStorage.removeItem("signup_email");
-    localStorage.removeItem("signup_password");
     localStorage.removeItem("signup_phoneNo");
     localStorage.removeItem("signup_address");
     localStorage.removeItem("signup_latitude");
     localStorage.removeItem("signup_longitude");
     localStorage.removeItem("signup_previewImage");
+    localStorage.removeItem("signup_phonePrefix");
   };
 
   const handleSignUp = async (e) => {
