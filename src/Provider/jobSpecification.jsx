@@ -142,6 +142,13 @@ export default function JobSpecification() {
             toastKey: Date.now(),
           });
         }
+        if (response.status === 400) {
+          setToastProps({
+            message: response.message,
+            type: "error",
+            toastKey: Date.now(),
+          });
+        }
       } catch (error) {
         setToastProps({
           message: error?.response?.data?.message,

@@ -97,15 +97,15 @@ export default function Otp({ length = 6 }) {
         if (ProviderParams) {
           localStorage.setItem("verifyEmailOtp", email);
           setLoading(false);
-          // setTimeout(() => {
-          //   navigate(`/provider/login`);
-          // }, 2000);
+          setTimeout(() => {
+            navigate(`/provider/login`);
+          }, 2000);
         } else {
           localStorage.setItem("verifyEmailOtp", email);
           setLoading(false);
-          // setTimeout(() => {
-          //   navigate(`/login`);
-          // }, 2000);
+          setTimeout(() => {
+            navigate(`/login`);
+          }, 2000);
         }
       }
     } catch (error) {

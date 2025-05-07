@@ -39,26 +39,40 @@ function getStyles(name, personName, theme) {
 }
 
 export default function SignUpProvider() {
-  const [name, setName] = useState("");
-  const [businessName, setBusinessName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNo, setPhoneNo] = useState();
-  const [address, setAddress] = useState("");
+  const [name, setName] = useState(localStorage.getItem("signup_name") || "");
+  const [businessName, setBusinessName] = useState(
+    localStorage.getItem("signup_businessName") || ""
+  );
+  const [email, setEmail] = useState(
+    localStorage.getItem("signup_email") || ""
+  );
+  const [phoneNo, setPhoneNo] = useState(
+    localStorage.getItem("signup_phoneNo") || ""
+  );
+  const [address, setAddress] = useState(
+    localStorage.getItem("signup_address") || ""
+  );
   const [password, setPassword] = useState("");
+  const [registrationNumber, setRegistrationNumber] = useState(
+    localStorage.getItem("signup_registrationNumber") || ""
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [previewImage, setPreviewImage] = useState(null); // Store the preview image
   const [selectedBusiness, setSelectedBusiness] = useState([]);
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
-  const [registrationNumber, setRegistrationNumber] = useState("");
   const [images, setImages] = useState(null);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const [latitude, setLatitude] = useState(
+    localStorage.getItem("signup_latitude") || null
+  );
+  const [longitude, setLongitude] = useState(
+    localStorage.getItem("signup_longitude") || null
+  );
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -96,6 +110,31 @@ export default function SignUpProvider() {
   }, []);
 
   console.log("guestVerify", guestVerify);
+
+  const navigateToTerms = () => {
+    localStorage.setItem("signup_name", name);
+    localStorage.setItem("signup_businessName", businessName);
+    localStorage.setItem("signup_email", email);
+    localStorage.setItem("signup_phoneNo", phoneNo);
+    localStorage.setItem("signup_address", address);
+    localStorage.setItem("signup_registrationNumber", registrationNumber);
+    localStorage.setItem("signup_latitude", latitude);
+    localStorage.setItem("signup_longitude", longitude);
+
+    navigate("/terms");
+  };
+
+  // Clear localStorage after successful submission
+  const clearSignupStorage = () => {
+    localStorage.removeItem("signup_name", name);
+    localStorage.removeItem("signup_businessName", businessName);
+    localStorage.removeItem("signup_email", email);
+    localStorage.removeItem("signup_phoneNo", phoneNo);
+    localStorage.removeItem("signup_address", address);
+    localStorage.removeItem("signup_registrationNumber", registrationNumber);
+    localStorage.removeItem("signup_latitude", latitude);
+    localStorage.removeItem("signup_longitude", longitude);
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -180,6 +219,7 @@ export default function SignUpProvider() {
       });
 
       if (response.status === 200 || response.status === 201) {
+        clearSignupStorage();
         setName("");
         setBusinessName("");
         setEmail("");
@@ -336,14 +376,17 @@ export default function SignUpProvider() {
                           placeholder="Name"
                           value={name}
                           onChange={(e) => {
-                            const words = e.target.value.trim().split(/\s+/);
-                            const filteredValue = e.target.value.replace(
+                            const cursorPosition = e.target.selectionStart; // Save cursor position
+                            const originalValue = e.target.value;
+
+                            const words = originalValue.trim().split(/\s+/);
+                            const filteredValue = originalValue.replace(
                               /[0-9]/g,
                               ""
                             );
 
-                            if (words.length <= 5 || e.target.value === "") {
-                              // Capitalize first letter of each word and make the rest lowercase
+                            if (words.length <= 5 || originalValue === "") {
+                              // Capitalize first letter of each word
                               const capitalizedValue = filteredValue
                                 .toLowerCase()
                                 .split(" ")
@@ -354,6 +397,12 @@ export default function SignUpProvider() {
                                 .join(" ");
 
                               setName(capitalizedValue);
+
+                              // Restore cursor position after state update
+                              setTimeout(() => {
+                                e.target.selectionStart = cursorPosition;
+                                e.target.selectionEnd = cursorPosition;
+                              }, 0);
                             }
                           }}
                         />
@@ -442,7 +491,6 @@ export default function SignUpProvider() {
                         />
                       </Col>
                     </Form.Group>
-
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Email Address
@@ -458,7 +506,6 @@ export default function SignUpProvider() {
                         />
                       </Col>
                     </Form.Group>
-
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Phone Number
@@ -482,7 +529,6 @@ export default function SignUpProvider() {
                         />
                       </Col>
                     </Form.Group>
-
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Address
@@ -507,7 +553,6 @@ export default function SignUpProvider() {
                         />
                       </Col>
                     </Form.Group>
-
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         ABN number
@@ -523,7 +568,6 @@ export default function SignUpProvider() {
                         />
                       </Col>
                     </Form.Group>
-
                     {/* <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Password
@@ -537,7 +581,6 @@ export default function SignUpProvider() {
                         />
                       </Col>
                     </Form.Group> */}
-
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
                         Password
@@ -567,17 +610,16 @@ export default function SignUpProvider() {
                         </span>
                       </Col>
                     </Form.Group>
-
                     <span>
                       By tapping “Sign Up” you accept our{" "}
-                      <Link
-                        to="/terms"
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={navigateToTerms}
                         className="highlighted-text text-decoration-none"
                       >
-                        terms and conditions
-                      </Link>
+                        terms and condition
+                      </span>
                     </span>
-
                     <div className="d-flex justify-content-center align-items-center py-3">
                       <Button
                         onClick={handleSignUp}
