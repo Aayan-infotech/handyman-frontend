@@ -44,7 +44,7 @@ export default function MyProfile() {
   const [logoutModal, setLogoutModal] = useState(false);
   const [aboutText, setAboutText] = useState("");
   const [fileToUpload, setFileToUpload] = useState(null);
-
+const [editShowModal , setEditShowModal] = useState(false);
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -690,7 +690,7 @@ export default function MyProfile() {
                               }}
                               onClick={() => {
                                 setDescription(aboutText);
-                                setShowModal(true);
+                                setEditShowModal(true);
                               }}
                             >
                               Edit About
@@ -722,8 +722,8 @@ export default function MyProfile() {
                           <Modal.Body>
                             <textarea
                               className="form-control"
-                              rows="3"
-                              placeholder="Enter your description (max 150 words)..."
+                              rows="5"
+                              placeholder="Enter your description (max 50 words)..."
                               value={description}
                               onChange={(e) => {
                                 const value = e.target.value;
@@ -741,7 +741,7 @@ export default function MyProfile() {
                                 }
                               }}
                             ></textarea>
-                            <p className="text-muted">
+                            <p className="text-muted mb-0">
                               Word count:{" "}
                               {description.trim()
                                 ? description.trim().split(/\s+/).length
@@ -766,8 +766,8 @@ export default function MyProfile() {
 
                     {/* Modal */}
                     <Modal
-                      show={showModal}
-                      onHide={() => setShowModal(false)}
+                      show={editShowModal}
+                      onHide={() => setEditShowModal(false)}
                       centered
                     >
                       <Modal.Header closeButton>
@@ -776,8 +776,8 @@ export default function MyProfile() {
                       <Modal.Body>
                         <textarea
                           className="form-control"
-                          rows="3"
-                          placeholder="Enter your description (max 150 words)..."
+                           rows="5"
+                          placeholder="Enter your description (max 50 words)..."
                           value={description}
                           onChange={(e) => {
                             const value = e.target.value;
@@ -795,7 +795,7 @@ export default function MyProfile() {
                             }
                           }}
                         ></textarea>
-                        <p className="text-muted">
+                        <p className="text-muted mb-0">
                           Word count:{" "}
                           {description.trim()
                             ? description.trim().split(/\s+/).length
