@@ -183,93 +183,74 @@ export default function JobDetail() {
     }
   };
 
-  const doubleFunction = async () => {
+  console.log("user", user);
+
+  const fetchData = async () => {
     setLoading(true);
     try {
-      await handleReview();
-      await handleJobStatus();
-      await fetchData();
-      await noficationFunctionality();
-      setShow(false);
+      // First get job details
+      const jobRes = await axiosInstance.get(`/jobpost/jobpost-details/${id}`, {
+        headers: {
+          Authorization: `Bearer ${ProviderToken || hunterToken}`,
+        },
+      });
+
+      if (jobRes.status === 200) {
+        setData(jobRes.data.data);
+        const jobData = jobRes.data.data;
+
+        // Set user and receiverId together
+        setUser(jobData.user);
+        setRecieverId(jobData.provider);
+
+        // Only fetch provider if we have both IDs
+        if (jobData.user && jobData.provider) {
+          const providerRes = await axiosInstance.post(
+            "/match/getMatchedData",
+            {
+              jobPostId: id,
+              senderId: jobData.user,
+              receiverId: jobData.provider,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${ProviderToken || hunterToken}`,
+              },
+            }
+          );
+
+          const responseData = providerRes.data.data;
+          if (responseData.sender && responseData.receiver) {
+            // Your provider name logic here
+            let nameToSet = "";
+            if (responseData.sender.name === name) {
+              nameToSet =
+                responseData.receiver.contactName || responseData.sender.name;
+            } else if (
+              responseData.sender.name === name ||
+              responseData.receiver.contactName === name
+            ) {
+              nameToSet = responseData.sender.name;
+            } else {
+              nameToSet =
+                responseData.receiver.contactName || responseData.sender.name;
+            }
+            setProviderName(nameToSet);
+          }
+        }
+      }
     } catch (error) {
-      setLoading(false);
+      console.error("Error fetching data:", error);
+      setToastProps({
+        message: error.message,
+        type: "error",
+        toastKey: Date.now(),
+      });
     } finally {
       setLoading(false);
     }
   };
-
-  console.log("user", user);
-
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // First get job details
-        const jobRes = await axiosInstance.get(
-          `/jobpost/jobpost-details/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${ProviderToken || hunterToken}`,
-            },
-          }
-        );
-
-        if (jobRes.status === 200) {
-          setData(jobRes.data.data);
-          const jobData = jobRes.data.data;
-
-          // Set user and receiverId together
-          setUser(jobData.user);
-          setRecieverId(jobData.provider);
-
-          // Only fetch provider if we have both IDs
-          if (jobData.user && jobData.provider) {
-            const providerRes = await axiosInstance.post(
-              "/match/getMatchedData",
-              {
-                jobPostId: id,
-                senderId: jobData.user,
-                receiverId: jobData.provider,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${ProviderToken || hunterToken}`,
-                },
-              }
-            );
-
-            const responseData = providerRes.data.data;
-            if (responseData.sender && responseData.receiver) {
-              // Your provider name logic here
-              let nameToSet = "";
-              if (responseData.sender.name === name) {
-                nameToSet =
-                  responseData.receiver.contactName || responseData.sender.name;
-              } else if (
-                responseData.sender.name === name ||
-                responseData.receiver.contactName === name
-              ) {
-                nameToSet = responseData.sender.name;
-              } else {
-                nameToSet =
-                  responseData.receiver.contactName || responseData.sender.name;
-              }
-              setProviderName(nameToSet);
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setToastProps({
-          message: error.message,
-          type: "error",
-          toastKey: Date.now(),
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [id]); // Only depend on id which doesn't change
 
@@ -284,8 +265,20 @@ export default function JobDetail() {
 
   if (!data) return <noData />;
 
-  console.log("data", data);
-  console.log("loading", loading);
+  const doubleFunction = async () => {
+    setLoading(true);
+    try {
+      await handleReview();
+      await handleJobStatus();
+      await fetchData();
+      await noficationFunctionality();
+      setShow(false);
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -377,9 +370,11 @@ export default function JobDetail() {
                         <div className="d-flex flex-column gap-2 align-items-start">
                           <span className="text-muted">Location</span>
                           <b className="fw-medium fs-5">
-                            {filterAddressPatterns(
-                              data.jobLocation.jobAddressLine
-                            ) || "N/A"}
+                            {hunterToken
+                              ? data.jobLocation.jobAddressLine
+                              : filterAddressPatterns(
+                                  data.jobLocation.jobAddressLine
+                                )}
                           </b>
                         </div>
                       </div>
