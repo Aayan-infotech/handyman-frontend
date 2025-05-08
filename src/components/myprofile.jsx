@@ -457,9 +457,9 @@ export default function MyProfile() {
       await deleteUserChats(userId);
 
       // Then proceed with account deletion
-      const response = await axiosInstance.delete(`${
-        providerId ? "Prvdr" : "DeleteAccount"
-      }/delete/${userId}`);
+      const response = await axiosInstance.delete(
+        `${providerId ? "Prvdr" : "DeleteAccount"}/delete/${userId}`
+      );
 
       if (response.status === 200) {
         setToastProps({
@@ -1080,7 +1080,7 @@ export default function MyProfile() {
                 </>
               )}
 
-              {userType === "Provider" && (
+              {userType === "Provider" && rating.length > 0 && (
                 <>
                   <div className="mt-4">
                     <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
