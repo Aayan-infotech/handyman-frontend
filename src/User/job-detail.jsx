@@ -191,7 +191,12 @@ export default function JobDetail() {
         },
       });
 
-      if (jobRes.status === 200) {
+      console.log("jobRes", jobRes);
+      if (jobRes.statusCode === 500) {
+        navigate("/error");
+        return;
+      }
+      if (jobRes.statusCode === 200) {
         setData(jobRes.data.data);
         const jobData = jobRes.data.data;
 
@@ -237,6 +242,9 @@ export default function JobDetail() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      if (error.response?.status === 500) {
+        navigate("/error");
+      }
       setToastProps({
         message: error.message,
         type: "error",
@@ -248,7 +256,7 @@ export default function JobDetail() {
   };
   useEffect(() => {
     fetchData();
-  }, [id]); // Only depend on id which doesn't change
+  }, [id]);
 
   const filterAddressPatterns = (address) => {
     if (!address) return address;

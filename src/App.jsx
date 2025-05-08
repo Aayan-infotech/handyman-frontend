@@ -210,7 +210,7 @@ function App() {
           element={<ProtectedRoute element={<ServiceProvider />} />}
         />
         <Route
-          path="/support/chat/:id"
+          path="/support/chat"
           element={<ProtectedRoute element={<AdminChat />} />}
         />
         <Route

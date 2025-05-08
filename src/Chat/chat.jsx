@@ -170,7 +170,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
   const [chatData, setChatData] = useState([]);
-  
+
   const jobId =
     new URLSearchParams(location.search).get("jobId") ||
     messageData?.jobPost?._id ||
@@ -242,10 +242,17 @@ export default function Chat({ messageData, messages, selectedChat }) {
           },
         }
       );
+      if (response.status === 500) {
+        navigate("/error");
+        return;
+      }
       console.log("121212", response);
       setChatData(response?.data?.data);
     } catch (error) {
       console.log(error);
+      if (error.response.status === 500) {
+        navigate("/error");
+      }
     }
   };
 
@@ -332,7 +339,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     );
 
     await handleSendEmail();
-
+    setMsg("");
     // Get the business name and job title
     const businessName = localStorage.getItem("ProviderBusinessName");
 
@@ -354,10 +361,6 @@ export default function Chat({ messageData, messages, selectedChat }) {
         })
       );
     }
-
-    // Call notification with additional details
-
-    setMsg("");
   };
 
   // Handle visibility toggle

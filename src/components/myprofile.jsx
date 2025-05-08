@@ -1258,7 +1258,7 @@ export default function MyProfile() {
                     to={
                       Location.pathname.includes("provider")
                         ? "/provider/admin/chat"
-                        : "/support/chat/1"
+                        : "/support/chat/"
                     }
                   >
                     <div className="card border-0 rounded-5 h-100">

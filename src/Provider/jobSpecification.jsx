@@ -90,12 +90,20 @@ export default function JobSpecification() {
           },
         }
       );
+
+      if (response.status === 500) {
+        navigate("/error");
+        return;
+      }
       if (response.status === 200) {
         setData(response?.data?.data);
       }
       setLoading(false);
     } catch (error) {
       console.log(error);
+      if (error.response?.status === 500) {
+        navigate("/error");
+      }
     }
   };
 
