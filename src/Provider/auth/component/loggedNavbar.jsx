@@ -59,7 +59,7 @@ export default function LoggedHeader() {
 
       setNotifications(response.data.data);
     } catch (error) {
-      console.log(error);
+      ".]"(error);
     }
   };
 
@@ -79,43 +79,47 @@ export default function LoggedHeader() {
       fetchNotifications();
     }
   }, [userType]);
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        let fetchedUser = null;
-        if (hunterToken) {
-          const hunterResponse = await dispatch(getHunterUser());
-          fetchedUser = hunterResponse?.payload?.data;
-        } else if (!fetchedUser && providerToken) {
-          const providerResponse = await dispatch(getProviderUser());
-          fetchedUser = providerResponse?.payload?.data;
-          localStorage.setItem(
-            "PlanType",
-            providerResponse?.payload?.data?.subscriptionType
-          );
-          localStorage.setItem(
-            "ProviderName",
-            providerResponse?.payload?.data?.contactName
-          );
-          if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
-            localStorage.setItem("PlanType", null);
-          }
-          if (fetchedUser === undefined || fetchedUser === null) {
-            localStorage.clear();
-            return;
-          }
-        }
 
-        if (fetchedUser) {
-          setImages(fetchedUser?.images || "");
+  const fetchUserData = async () => {
+    try {
+      let fetchedUser = null;
+      if (hunterToken) {
+        const hunterResponse = await dispatch(getHunterUser());
+        fetchedUser = hunterResponse?.payload?.data;
+      } else if (!fetchedUser && providerToken) {
+        const providerResponse = await dispatch(getProviderUser());
+        fetchedUser = providerResponse?.payload?.data;
+        localStorage.setItem(
+          "PlanType",
+          providerResponse?.payload?.data?.subscriptionType
+        );
+        localStorage.setItem(
+          "ProviderName",
+          providerResponse?.payload?.data?.contactName
+        );
+        if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
+          localStorage.setItem("PlanType", null);
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+        if (fetchedUser === undefined || fetchedUser === null) {
+          localStorage.clear();
+          return;
+        }
       }
-    };
+
+      if (fetchedUser) {
+        setImages(fetchedUser?.images || "");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+  useEffect(() => {
     fetchUserData();
   }, [dispatch]);
-
 
   const handleGuest = () => {
     setToastProps({

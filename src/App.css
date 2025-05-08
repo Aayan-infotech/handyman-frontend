@@ -456,8 +456,14 @@
 .price-detail h2 {
   color: #000;
 }
+.sort-input .MuiInputLabel-animated {
+  top: -9px !important;
+}
 textarea::placeholder {
-  
+  padding: 5px 0;
+}
+textarea {
+  /* padding: 10px 0 !important; */
 }
 textarea:focus-visible {
   outline: none !important;

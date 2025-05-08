@@ -379,6 +379,10 @@ export default function SignUpProvider() {
                           type="text"
                           placeholder="Name"
                           value={name}
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           onChange={(e) => {
                             const cursorPosition = e.target.selectionStart; // Save cursor position
                             const originalValue = e.target.value;
@@ -431,6 +435,10 @@ export default function SignUpProvider() {
                             placeholder="Select a business"
                             getOptionValue={(e) => e.name} // Option Value
                             className="w-100 "
+                            required
+                            onKeyDown={(e) =>
+                              e.key === "Enter" && handleSignUp(e)
+                            }
                           />
                           {/* <Select
                             labelId="demo-multiple-name-label"
@@ -491,6 +499,10 @@ export default function SignUpProvider() {
                           type="text"
                           placeholder="Business name"
                           value={businessName}
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           onChange={(e) => setBusinessName(e.target.value)}
                         />
                       </Col>
@@ -504,6 +516,10 @@ export default function SignUpProvider() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           onChange={(e) =>
                             setEmail(e.target.value.toLowerCase())
                           }
@@ -527,6 +543,10 @@ export default function SignUpProvider() {
                           <Form.Control
                             type="text"
                             placeholder="Phone number"
+                            required
+                            onKeyDown={(e) =>
+                              e.key === "Enter" && handleSignUp(e)
+                            }
                             value={phoneNo}
                             onChange={(e) => {
                               const digitsOnly = e.target.value.replace(
@@ -572,6 +592,10 @@ export default function SignUpProvider() {
                           type="text"
                           placeholder="ABN number"
                           value={registrationNumber}
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           onChange={(e) =>
                             setRegistrationNumber(e.target.value)
                           }
@@ -600,6 +624,8 @@ export default function SignUpProvider() {
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
                           value={password}
+                          required
+                          onKeyDown={(e) => e.key === "Enter" && handleSignUp(e)}
                           onChange={(e) => setPassword(e.target.value)}
                         />
                         <span

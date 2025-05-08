@@ -100,6 +100,10 @@ export default function ForgetPassword() {
                           type="email"
                           placeholder="Email Address"
                           value={email}
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleForgot(e)
+                          }
                           onChange={(e) => setEmail(e.target.value)}
                         />
                       </Col>
