@@ -82,7 +82,6 @@ export default function ServiceProvider() {
     setLoading(true);
     try {
       const response = await dispatch(getHunterUser());
-      console.log(response?.payload?.data?.address);
       if (response?.payload?.status === 200) {
         setLongitude(
           response?.payload?.data?.address?.location?.coordinates[0]

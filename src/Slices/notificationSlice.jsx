@@ -50,19 +50,19 @@ export const completedJobNotification = createNotificationThunk(
 export const reviewJobNotification = createNotificationThunk(
   "reviewNotification",
   "Message from Hunter",
-  "You have received feedback from your Hunter"
+  "You have received feedback"
 );
 
 export const messageNotification = createNotificationThunk(
   "messageHunterNotification",
-  " New Message Alert",
+  " New Message",
   // "You have a new Message from "
   //  `You have a new Message from ${} for the job ${}`
 );
 
 export const messageNotificationProvider = createNotificationThunk(
   "messageHunterNotification",
-  " New Message Alert",
+  " New Message",
   "You have a new Message from "
 );
 

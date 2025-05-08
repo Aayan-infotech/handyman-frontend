@@ -57,15 +57,12 @@ export default function MainProvider() {
     getUploadProfile();
   }, [location.pathname, providerId, dispatch, navigate]);
 
-  console.log(subscriptionStatus);
-
   const handleCoupon = async () => {
     try {
       const response = await axiosInstance.post("/voucher/apply", {
         code: voucher,
         userId: providerId,
       });
-      console.log(response);
       setVoucher("");
       setToastProps({
         message: "Copon Applied Successfully",

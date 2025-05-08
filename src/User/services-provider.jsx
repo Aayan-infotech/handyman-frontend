@@ -31,7 +31,6 @@ export default function ServicesProvider() {
       try {
         const providerResponse = await dispatch(getHunterUser());
         const fetchedUser = providerResponse?.payload?.data;
-        console.log(fetchedUser);
         if (fetchedUser) {
           const lat = fetchedUser?.address?.location?.coordinates[1] || "";
           const lng = fetchedUser?.address?.location?.coordinates[0] || "";
@@ -50,7 +49,6 @@ export default function ServicesProvider() {
     fetchUserData();
   }, [dispatch]);
 
-  console.log(businessType);
   const handleProviderNearby = useCallback(async () => {
     setLoading(true);
     if (!latitude || !longitude || !radius || !businessType) return;

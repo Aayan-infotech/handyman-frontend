@@ -44,16 +44,12 @@ export default function Contact() {
       message: data.message,
     };
 
-    console.log(data); // For debugging: logs form data before submitting
-
-    setLoading(true); // Set loading to true while waiting for the API response
+    setLoading(true);
 
     axiosInstance
-      .post("/contact/send", contactUsData) // Sending form data to the API
+      .post("/contact/send", contactUsData)
       .then((response) => {
-        console.log("Response from API:", response.data);
-        setLoading(false); // Reset loading state
-
+        setLoading(false);
         // Show success toast
         toast.success("Message sent successfully!");
 

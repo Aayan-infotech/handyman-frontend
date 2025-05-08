@@ -52,7 +52,6 @@ export default function PricingProvider() {
         setSubscriptionType(subscriptionData?.type);
         setDescription(subscriptionData?.description);
         setValidity(subscriptionData?.validity);
-        console.log(subscriptionData);
 
         setLoading(false);
       } catch (error) {

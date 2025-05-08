@@ -85,7 +85,6 @@ export default function SignUpProvider() {
   const searchParams = new URLSearchParams(location.search);
   const guestVerify = searchParams.get("type") === "Guest" ? true : false;
   const handleBusinessChange = (selectedOption) => {
-    console.log("Selected Business:", selectedOption);
     setSelectedBusiness(selectedOption || []);
   };
 
@@ -113,8 +112,6 @@ export default function SignUpProvider() {
     };
     handleAllData();
   }, []);
-
-  console.log("guestVerify", guestVerify);
 
   const navigateToTerms = () => {
     localStorage.setItem("signup_name", name);
@@ -170,8 +167,6 @@ export default function SignUpProvider() {
       });
       return;
     }
-
-    console.log("guestVerify", guestVerify);
 
     const formData = new FormData();
     formData.append("name", name);
@@ -277,7 +272,6 @@ export default function SignUpProvider() {
         type: "error",
         toastKey: Date.now(),
       });
-      console.log(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }

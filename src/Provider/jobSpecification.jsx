@@ -90,7 +90,6 @@ export default function JobSpecification() {
           },
         }
       );
-      console.log("data", response?.data?.data);
       if (response.status === 200) {
         setData(response?.data?.data);
       }
@@ -193,8 +192,6 @@ export default function JobSpecification() {
   );
 
   const hasCompletedJob = data.jobStatus === "Completed" ? true : false;
-  console.log("hasCompletedJob", hasCompletedJob);
-
   const handleChat = () => {
     navigate(`/provider/chat/${data.user?._id}?jobId=${data?._id}`);
   };
@@ -216,8 +213,6 @@ export default function JobSpecification() {
 
     return address.replace(pattern, "").trim();
   };
-
-  console.log(data);
 
   return (
     <>

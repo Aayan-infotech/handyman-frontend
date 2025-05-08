@@ -21,7 +21,6 @@ export default function ForgetPassword() {
   const location = useLocation();
   const navigate = useNavigate();
   const ProviderParams = location.pathname.includes("provider");
-  console.log("ProviderParams", ProviderParams);
   const handleForgot = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -58,7 +57,6 @@ export default function ForgetPassword() {
         }
 
         // localStorage.setItem("hunterToken", response?.data?.data?.token);
-        console.log(response);
       }
     } catch (error) {
       console.log(error);

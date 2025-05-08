@@ -150,7 +150,6 @@ export default function JobDetail() {
           },
         }
       );
-      console.log(reponse);
       setLoading(false);
       setShow(false);
     } catch (error) {
@@ -174,7 +173,6 @@ export default function JobDetail() {
           },
         }
       );
-      console.log(reponse);
       setLoading(false);
       setShow(false);
     } catch (error) {
@@ -182,8 +180,6 @@ export default function JobDetail() {
       setLoading(false);
     }
   };
-
-  console.log("user", user);
 
   const fetchData = async () => {
     setLoading(true);

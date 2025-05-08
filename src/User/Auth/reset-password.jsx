@@ -21,7 +21,6 @@ export default function ResetPassword() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const location = useLocation();
   const ProviderParams = location.pathname.includes("provider");
-  console.log("ProviderParams", ProviderParams);
   const navigate = useNavigate();
 
   const handleReset = async (e) => {
@@ -66,7 +65,6 @@ export default function ResetPassword() {
           }, 2000);
         }
       }
-      console.log(response.data);
     } catch (error) {
       console.log(error);
       setLoading(false);

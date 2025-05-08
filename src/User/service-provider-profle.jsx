@@ -160,8 +160,6 @@ export default function ServiceProviderProfile() {
     );
   };
 
-  console.log(data);
-
   return (
     <>
       {loading === true ? (

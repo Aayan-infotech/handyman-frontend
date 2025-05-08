@@ -30,7 +30,6 @@ const VisuallyHiddenInput = styled("input")({
 
 export default function Upload() {
   const location = useLocation();
-  console.log(location.pathname);
   const [loading, setLoading] = useState(false);
   const [document, setDocument] = useState([]);
   const [newDocuments, setNewDocuments] = useState([]); // For newly selected files
@@ -179,7 +178,6 @@ export default function Upload() {
     Array.from(newDocuments).forEach((file) => {
       formData.append("file", file);
     });
-    console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
     setLoading(true);
     try {
       const response = await axiosInstance.post(
@@ -228,8 +226,6 @@ export default function Upload() {
   };
 
   const allDocuments = [...document, ...newDocuments];
-
-  console.log(document);
 
   return (
     <>

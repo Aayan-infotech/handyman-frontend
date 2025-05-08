@@ -33,7 +33,7 @@ export default function JobListing() {
     const handleResponse = async () => {
       setLoading(true);
       const response = await axiosInstance.get("/jobpost/business-type-count");
-      console.log(response);
+    
       if (response.data.success === true || response.data.status === 200) {
         setLoading(false);
         setBusinessData(response?.data?.data);

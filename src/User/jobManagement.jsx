@@ -172,7 +172,6 @@ export default function JobManagement() {
           },
         }
       );
-      console.log("12", res.data);
       if (res.status === 200) {
         setData(res?.data?.jobs);
         setFilteredData(res?.data?.jobs);
@@ -191,7 +190,6 @@ export default function JobManagement() {
           type: "success",
           toastKey: Date.now(),
         });
-        console.log("res.data", res.data);
       }
     } catch (error) {
       setToastProps({
@@ -247,8 +245,7 @@ export default function JobManagement() {
       fetchJobs(1, "");
     }
   };
-  console.log("jobStatus", jobStatus);
-  // useEffect(() => {
+    // useEffect(() => {
   //   let filtered = data;
   //   fetchJobs();
   //   // // Apply job status filter if any statuses are selected
@@ -261,7 +258,6 @@ export default function JobManagement() {
   //   setFilteredData(filtered);
   // }, [ search]);
 
-  console.log("filteredData", data);
 
   const checkUserType = (id) => {
     if (localStorage.getItem("ProviderToken")) {

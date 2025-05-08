@@ -170,6 +170,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
   const [chatData, setChatData] = useState([]);
+  
   const jobId =
     new URLSearchParams(location.search).get("jobId") ||
     messageData?.jobPost?._id ||
@@ -451,6 +452,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       const response = dispatch(
         assignedJobNotification({
           receiverId: receiverId,
+          jobId: jobId,
         })
       );
       if (assignedJobNotification.fulfilled.match(response)) {

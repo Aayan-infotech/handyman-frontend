@@ -124,7 +124,6 @@ export default function LoginProvider() {
         localStorage.removeItem("hunterEmail");
         localStorage.removeItem("hunterName");
         localStorage.removeItem("hunterId");
-        console.log(response);
       }
     } catch (error) {
       console.log(error);

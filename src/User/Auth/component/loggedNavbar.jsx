@@ -87,7 +87,6 @@ export default function LoggedHeader() {
     }
   }, [userType]);
 
-  console.log("notifications", notifications);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -99,7 +98,6 @@ export default function LoggedHeader() {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
         }
-        console.log("fetchedUser", fetchedUser);
         localStorage.setItem(
           "hunterName",
           fetchedUser?.name
