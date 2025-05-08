@@ -144,7 +144,6 @@ export default function NewJob() {
       formData.append("documents", file);
     });
 
-    console.log("FormData to be sent:", Object.fromEntries(formData.entries()));
 
     try {
       const response = await axiosInstance.post("/jobpost/jobpost", formData, {
@@ -175,7 +174,6 @@ export default function NewJob() {
     }
   };
 
-  console.log(businessType);
 
   return (
     <>

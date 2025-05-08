@@ -56,7 +56,6 @@ export default function LoggedHeader() {
       const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${hunterToken || providerToken}` },
       });
-      console.log(response.data.data, "response.data.data");
 
       setNotifications(response.data.data);
     } catch (error) {
@@ -98,7 +97,6 @@ export default function LoggedHeader() {
             "ProviderName",
             providerResponse?.payload?.data?.contactName
           );
-          console.log("1212121", fetchedUser);
           if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
             localStorage.setItem("PlanType", null);
           }
@@ -118,7 +116,6 @@ export default function LoggedHeader() {
     fetchUserData();
   }, [dispatch]);
 
-  console.log("notifications", notifications);
 
   const handleGuest = () => {
     setToastProps({

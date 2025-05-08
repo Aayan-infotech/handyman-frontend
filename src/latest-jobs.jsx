@@ -30,7 +30,7 @@ export default function LatestJobs() {
     const handleResponse = async () => {
       setLoading(true);
       const response = await axiosInstance.get("/jobs");
-      console.log(response);
+    
       if (response.data.success === true || response.data.status === 200) {
         setLoading(false);
         setRecentJob(response?.data?.data?.jobPosts);

@@ -80,7 +80,7 @@ export default function EditProfile() {
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
-        console.log(response?.data);
+       
       } catch (error) {
         console.log(error);
       }
@@ -148,7 +148,6 @@ export default function EditProfile() {
     }
   }, [businessData]);
 
-  console.log(businessType);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -239,7 +238,6 @@ export default function EditProfile() {
     }
   };
 
-  console.log(images);
 
   return (
     <>

@@ -10,7 +10,13 @@ import { Button } from "@mui/material";
 import Pagination from "react-bootstrap/Pagination";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  messageNotification,
+  assignedJobNotification,
+} from "../Slices/notificationSlice";
+import { useDispatch } from "react-redux";
 export default function Notification() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
@@ -37,6 +43,37 @@ export default function Notification() {
     type: "",
     toastKey: 0,
   });
+
+  const handleJobCompletNotify = async ({ id, receiverId, title }) => {
+    setLoading(true);
+    try {
+      const apiResponse = await axiosInstance.put(
+        `/jobPost/notifyCompletion/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (apiResponse.status === 200) {
+        const response = dispatch(
+          messageNotification({
+            receiverId,
+            jobId: id,
+            body: `Provider have completed your job ${title}`,
+          })
+        );
+        await fetchNotifications();
+        if (messageNotification.fulfilled.match(response)) {
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
 
   const handleName = async (notification) => {
     try {
@@ -145,6 +182,13 @@ export default function Notification() {
         }
       );
 
+      await dispatch(
+        assignedJobNotification({
+          receiverId: assignToId,
+          jobId: notification.jobId,
+        })
+      );
+
       setLoading(false);
       setToastProps({
         message: response.data.message || "Job assigned successfully",
@@ -188,7 +232,6 @@ export default function Notification() {
           },
         }
       );
-      console.log(reponse);
       await fetchNotifications();
       setLoading(false);
     } catch (error) {
@@ -471,13 +514,52 @@ export default function Notification() {
                                   </Button>
                                 </div>
                               )}
+                            {providerId &&
+                              notification.jobId &&
+                              (notification?.nameData?.jobPost
+                                ?.completionNotified === false ? (
+                                <div className="col-lg-3 d-flex justify-content-end">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
+                                    onClick={() =>
+                                      handleJobCompletNotify({
+                                        id: notification.jobId,
+                                        receiverId:
+                                          notification.userId === userId
+                                            ? notification.receiverId
+                                            : notification.userId,
+                                        title:
+                                          notification?.nameData?.jobPost
+                                            ?.title,
+                                      })
+                                    }
+                                  >
+                                    Job Completed
+                                  </Button>
+                                </div>
+                              ) : (
+                                <div className="col-lg-3 d-flex justify-content-end">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
+                                    disabled
+                                  >
+                                    Already Notified
+                                  </Button>
+                                </div>
+                              ))}
                             <div className="col-lg-3 d-flex justify-content-end">
                               {notification?.type === "mass" ? (
                                 <Button
                                   variant="outlined"
                                   color="success"
                                   className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                  onClick={() => handleDeleteMass(notification._id)}
+                                  onClick={() =>
+                                    handleDeleteMass(notification._id)
+                                  }
                                 >
                                   Delete Message
                                 </Button>

@@ -77,7 +77,7 @@ function Home() {
     axiosInstance
       .get("/blog/getAll")
       .then((response) => {
-        console.log(response?.data);
+       
         setBlogs(response?.data?.blog);
       })
       .catch((error) => {
@@ -100,7 +100,7 @@ function Home() {
   }, []);
 
   const handleBusinessChange = (selectedOption) => {
-    console.log("Selected Business:", selectedOption);
+   
     setSelectedBusiness(selectedOption);
   };
 

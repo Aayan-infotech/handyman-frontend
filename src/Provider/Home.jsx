@@ -124,8 +124,6 @@ export default function HomeProvider() {
       setLoading(false);
     }
   };
-
-  console.log("pagination", pagination.totalPages);
   useEffect(() => {
     if (providerToken) {
       getUser();
@@ -229,7 +227,6 @@ export default function HomeProvider() {
           },
         }
       );
-      console.log("2323", response.data);
       if (response.status === 200 && response?.data?.data) {
         setToastProps({
           message: response.data.message,

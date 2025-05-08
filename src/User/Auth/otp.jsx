@@ -26,9 +26,7 @@ export default function Otp({ length = 6 }) {
   const email = searchParams.get("email");
   const Provider = searchParams.get("type");
   const ProviderParams = location.pathname.includes("provider");
-  console.log("ProviderParams", ProviderParams);
   const forgetValidation = localStorage.getItem("forgetEmail");
-  console.log(forgetValidation);
 
   const handleChange = (value, index) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -71,7 +69,6 @@ export default function Otp({ length = 6 }) {
   };
   useEffect(() => {
     setOtpValue(otp.join(""));
-    console.log("Updated OTP:", otp.join(""));
   }, [otp]);
 
   const handleOtp = async (e) => {
@@ -191,7 +188,6 @@ export default function Otp({ length = 6 }) {
     }
   };
 
-  console.log("234234", ProviderParams);
 
   return (
     <>

@@ -47,7 +47,7 @@ export default function AllBlogs() {
     axiosInstance
       .get("/blog/getAll")
       .then((response) => {
-        console.log("Blogs response:", response.data);
+       
         setBlogs(response.data.blog);
       })
       .catch((error) => {

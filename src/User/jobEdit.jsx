@@ -138,7 +138,6 @@ export default function JobEdit() {
 
           if (jobResponse.status === 200) {
             const jobData = jobResponse.data.data;
-            console.log(jobData?.jobLocation);
             setTitle(jobData.title);
             setBudget(jobData.estimatedBudget);
             setSelectedRadius(jobData?.jobLocation?.jobRadius / 1000); // Convert back to km
@@ -262,7 +261,6 @@ export default function JobEdit() {
     setDocuments(updatedDocuments);
   };
 
-  console.log(address);
 
   return (
     <>

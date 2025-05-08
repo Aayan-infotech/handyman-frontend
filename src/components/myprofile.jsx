@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import LoggedHeader from "./loggedNavbar";
 import {
   MdMessage,
   MdOutlineWork,
   MdOutlineSupportAgent,
 } from "react-icons/md";
+import { IoIosStar } from "react-icons/io";
+
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay, Navigation } from "swiper/modules";
 import Tooltip from "@mui/material/Tooltip";
 import "swiper/css/navigation";
 import { ref, onValue, off, remove, update, get, set } from "firebase/database";
@@ -82,6 +86,7 @@ export default function MyProfile() {
     type: "",
     toastKey: 0,
   });
+  const [rating, setRating] = useState([]);
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
@@ -124,8 +129,6 @@ export default function MyProfile() {
       toastKey: Date.now(),
     });
     const file = event.target.files[0];
-
-    console.log(file, ".....file");
     if (!file) return;
 
     const allowedExtensions = /\.(jpeg|jpg|png)$/i;
@@ -178,7 +181,28 @@ export default function MyProfile() {
     }
   }, []);
 
-  // Function to handle save (POST request)
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [ratingRes] = await Promise.all([
+        axiosInstance.get(`/rating/getRatings/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("providerToken")}`,
+          },
+        }),
+      ]);
+
+      setRating(ratingRes?.data?.providerRatings || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [providerToken]);
   const handleSave = () => {
     axiosInstance
       .post(`/provider/about/${userId}`, {
@@ -237,7 +261,6 @@ export default function MyProfile() {
         }
       );
 
-      console.log("Upload Response:", response.data);
       setToastProps({
         message: "Image uploaded successfully",
         type: "success",
@@ -295,7 +318,6 @@ export default function MyProfile() {
         if (hunterToken) {
           const hunterResponse = await dispatch(getHunterUser());
           fetchedUser = hunterResponse?.payload?.data;
-          console.log(fetchedUser);
         } else if (providerToken) {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
@@ -567,8 +589,6 @@ export default function MyProfile() {
 
       // Remove user from online status
       await remove(ref(db, `user/${userId}`));
-
-      console.log("Successfully deleted all chat data for user:", userId);
     } catch (error) {
       console.error("Error deleting user chats:", error);
       throw error;
@@ -1058,6 +1078,70 @@ export default function MyProfile() {
                       </Button>
                     </Modal.Footer>
                   </Modal>
+                </>
+              )}
+
+              {userType === "Provider" && (
+                <>
+                  <div className="mt-4">
+                    <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
+                      <h4 className="mb-0 text-center text-lg-start">
+                        Your Job Reviews
+                      </h4>
+                    </div>
+
+                    <div className="row mt-4">
+                      <Swiper
+                        navigation
+                        spaceBetween={50}
+                        modules={[Autoplay, Pagination, Navigation]}
+                        autoplay={{
+                          delay: 4500,
+                          disableOnInteraction: false,
+                        }}
+                        pagination
+                        className="swiper-review-people swiper-services"
+                        breakpoints={{
+                          640: { slidesPerView: 1, spaceBetween: 10 },
+                          768: { slidesPerView: 2, spaceBetween: 20 },
+                          1024: { slidesPerView: 3, spaceBetween: 30 },
+                          1200: { slidesPerView: 4, spaceBetween: 40 },
+                        }}
+                      >
+                        {rating.map((item) => (
+                          <SwiperSlide key={item._id}>
+                            <div className="card border-0 rounded-4">
+                              <div className="card-body">
+                                <div className="d-flex flex-row justify-content-between align-items-center">
+                                  <img
+                                    src={item?.userId?.images || notFound}
+                                    alt="profile"
+                                    className="object-fit-cover"
+                                    style={{
+                                      width: "100px",
+                                      height: "100px",
+                                    }}
+                                  />
+                                  <div className="d-flex flex-row gap-1 align-items-center">
+                                    <p className="m-0">{item?.rating}</p>
+                                    <IoIosStar size={30} />
+                                  </div>
+                                </div>
+                                <b className="mb-0 pt-2 ms-2">
+                                  Name:{" "}
+                                  {item?.providerId?.contactName ||
+                                    item?.userId?.name}
+                                </b>
+                                <p className="fw-bold text-start mx-2">
+                                  {item?.review}
+                                </p>
+                              </div>
+                            </div>
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
+                  </div>
                 </>
               )}
 
