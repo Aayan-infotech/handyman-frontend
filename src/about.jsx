@@ -26,6 +26,9 @@ export default function About() {
   const [businessData, setBusinessData] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const hunterToken = localStorage.getItem("hunterToken");
+  const ProviderToken = localStorage.getItem("ProviderToken");
+  const navCondition = ProviderToken || hunterToken;
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -57,7 +60,8 @@ export default function About() {
       ) : (
         <div className="">
           <div className="">
-            {localStorage.getItem("ProviderToken") || localStorage.getItem("hunterToken") ? (
+            {localStorage.getItem("ProviderToken") ||
+            localStorage.getItem("hunterToken") ? (
               <LoggedHeader />
             ) : (
               <Navbar
@@ -86,11 +90,20 @@ export default function About() {
                     </Nav>
 
                     <Nav>
-                      {/* <Link to="/welcome">
-                <Button variant="contained" color="success">
-                  Get Started <GoArrowRight className="fs-4 ms-1" />
-                </Button>
-              </Link> */}
+                      <Link
+                        to={
+                          navCondition
+                            ? hunterToken
+                              ? "/home"
+                              : "/provider/home"
+                            : "/welcome"
+                        }
+                      >
+                        <Button variant="contained" color="success">
+                          {navCondition ? "Get Back" : "Get Started"}
+                          <GoArrowRight className="fs-4 ms-1" />
+                        </Button>
+                      </Link>
                     </Nav>
                   </Navbar.Collapse>
                 </Container>
@@ -174,7 +187,7 @@ export default function About() {
                     </Col>
                   </Row>
                 </Col>
- <Col md={4} className="mb-4">
+                <Col md={4} className="mb-4">
                   <h6>Download Our app</h6>
                   <img
                     src={playIcon}
