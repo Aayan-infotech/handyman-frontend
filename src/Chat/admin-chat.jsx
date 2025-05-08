@@ -219,7 +219,7 @@ export default function AdminChat() {
           <div className={`input-send ${show ? "input-send-provider" : ""}`}>
             <textarea
               placeholder="Type Message"
-              className="w-100 border-0 px-3 py-2 rounded-5"
+              className="w-100 border-0 px-3 pt-2 pb-0 rounded-5"
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => {

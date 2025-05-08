@@ -105,6 +105,10 @@ export default function ResetPassword() {
                             type={showOldPassword ? "text" : "password"}
                             placeholder="Enter new Password"
                             value={password}
+                            required
+                            onKeyDown={(e) =>
+                              e.key === "Enter" && handleReset(e)
+                            }
                             onChange={(e) => setPassword(e.target.value)}
                           />
                           <span
@@ -126,6 +130,10 @@ export default function ResetPassword() {
                             type={showNewPassword ? "text" : "password"}
                             placeholder="Confirm new password"
                             value={newPassword}
+                            required
+                            onKeyDown={(e) =>
+                              e.key === "Enter" && handleReset(e)
+                            }
                             onChange={(e) => setNewPassword(e.target.value)}
                           />
                           <span

@@ -215,7 +215,6 @@ export default function SignUp() {
     // }
 
     try {
-      
       const response = await axios.post(
         "http://18.209.91.97:7787/api/auth/signup",
 
@@ -223,7 +222,6 @@ export default function SignUp() {
       );
       clearSignupStorage();
       if (response.status === 200 || response.status === 201) {
-        
         // const firebaseUser = await createUserWithEmailAndPassword(
         //   auth,
         //   email,
@@ -349,6 +347,10 @@ export default function SignUp() {
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           type="text"
                           placeholder="Name"
                           value={name}
@@ -403,6 +405,10 @@ export default function SignUp() {
                             type="text"
                             placeholder="Phone number"
                             value={phoneNo}
+                            required
+                            onKeyDown={(e) =>
+                              e.key === "Enter" && handleSignUp(e)
+                            }
                             onChange={(e) => {
                               const digitsOnly = e.target.value.replace(
                                 /\D/g,
@@ -421,6 +427,10 @@ export default function SignUp() {
                       <Col sm="8">
                         <Form.Control
                           type="email"
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           placeholder="Email Address"
                           value={email}
                           onChange={(e) =>
@@ -483,6 +493,10 @@ export default function SignUp() {
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
                           value={password}
+                          required
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           onChange={(e) => setPassword(e.target.value)}
                         />
                         <span

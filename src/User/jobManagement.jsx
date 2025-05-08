@@ -306,7 +306,7 @@ export default function JobManagement() {
                   <Form className="d-flex flex-row gap-2">
                     <IoIosSearch className="mt-1" />
                     <Form.Control
-                      placeholder="search for Title"
+                      placeholder="Search for Title"
                       className="search"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}

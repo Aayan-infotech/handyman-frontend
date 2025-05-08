@@ -311,12 +311,15 @@ export default function Message() {
                                     item?.messages?.timeStamp
                                   ).toLocaleTimeString("en-AU", {
                                     timeZone: "Australia/Sydney",
+                                    weekday: "short",
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
                                     hour: "2-digit",
                                     minute: "2-digit",
                                     hour12: true,
                                   })}{" "}
                                   ago
-                                 
                                 </span>
                               </div>
                             </div>

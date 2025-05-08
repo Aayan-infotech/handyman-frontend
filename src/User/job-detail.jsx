@@ -6,6 +6,8 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import Button from "@mui/material/Button";
+import { Eye } from "lucide-react";
+
 import Rating from "@mui/material/Rating";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -328,12 +330,21 @@ export default function JobDetail() {
                       <div className="row g-2 gy-3">
                         {data?.documents?.length > 0 ? (
                           data?.documents?.map((doc, index) => (
-                            <div className="col-lg-4" key={index}>
-                              <img
-                                src={doc}
-                                alt="document"
-                                className="w-100 h-100 px-1"
-                              />
+                            <div
+                              className="col-lg-4 position-relative"
+                              key={index}
+                            >
+                              <a
+                                className=""
+                                href={doc}
+                                target="_blank"
+                              >
+                                <img
+                                  src={doc}
+                                  alt="document"
+                                  className="w-100 h-100 px-1"
+                                />
+                              </a>
                             </div>
                           ))
                         ) : (

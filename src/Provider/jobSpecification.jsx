@@ -7,6 +7,7 @@ import {
   MdOutlineSupportAgent,
 } from "react-icons/md";
 import Tooltip from "@mui/material/Tooltip";
+import { Eye } from "lucide-react";
 
 import company1 from "./assets/logo/companyLogo.png";
 import Chip from "@mui/material/Chip";
@@ -62,11 +63,13 @@ export default function JobSpecification() {
 
   const noficationFunctionality = async () => {
     setLoading(true);
+    const businessName = localStorage.getItem("ProviderBusinessName");
     try {
       const response = dispatch(
         acceptJobNotification({
           receiverId: data?.user,
           jobId: id,
+          body: `${businessName} is interested in your job ${data?.title}`,
         })
       );
       if (acceptJobNotification.fulfilled.match(response)) {
@@ -328,15 +331,23 @@ export default function JobSpecification() {
                                   return (
                                     <div className="col-lg-4 mb-3" key={index}>
                                       {isImage ? (
-                                        <img
-                                          src={fileUrl}
-                                          alt={fileName}
-                                          className="img-fluid w-100"
-                                          style={{
-                                            height: "150px",
-                                            objectFit: "cover",
-                                          }}
-                                        />
+                                        <div className="position-relative">
+                                          <a
+                                            className=""
+                                            href={fileUrl}
+                                            target="_blank"
+                                          >
+                                            <img
+                                              src={fileUrl}
+                                              alt={fileName}
+                                              className="img-fluid w-100"
+                                              style={{
+                                                height: "150px",
+                                                objectFit: "cover",
+                                              }}
+                                            />
+                                          </a>
+                                        </div>
                                       ) : isPDF ? (
                                         <iframe
                                           src={fileUrl}
