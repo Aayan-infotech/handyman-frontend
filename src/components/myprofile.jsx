@@ -457,10 +457,10 @@ export default function MyProfile() {
       await deleteUserChats(userId);
 
       // Then proceed with account deletion
-      const response = await axiosInstance.delete(
-        `${providerId ? "Prvdr" : "DeleteAccount"}/"delete"
-        /${userId}`
-      );
+      const response = await axiosInstance.delete(`${
+        providerId ? "Prvdr" : "DeleteAccount"
+      }/delete
+        /${userId}`);
 
       if (response.status === 200) {
         setToastProps({
@@ -488,7 +488,7 @@ export default function MyProfile() {
       console.log(error);
       setIsModalVisible(false);
       setToastProps({
-        message: error?.response?.data?.message || "Logout failed",
+        message: error?.response?.data?.message || "Delete Account failed",
         type: "error",
         toastKey: Date.now(),
       });
