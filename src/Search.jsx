@@ -61,14 +61,41 @@ function Search() {
       if (res.data.status === 200) {
         setData(res.data.data);
         setLoading(false);
+        if (res.data.data.length === 0) {
+          setToastProps({
+            message:
+              "No Provider have found in your Search" || res.data.message,
+            type: "info",
+            toastKey: Date.now(),
+          });
+          return;
+        }
         setToastProps({
           message: res.data.message,
           type: "success",
           toastKey: Date.now(),
         });
       }
+      if (res.data.status === 500) {
+        setLoading(false);
+
+        setToastProps({
+          message: "No Provider have found in your Search" || res.data.message,
+          type: "info",
+          toastKey: Date.now(),
+        });
+      }
     } catch (error) {
       setLoading(false);
+      console.log(error.response.data.status);
+      if (error.response.data.status === 500) {
+        setToastProps({
+          message: "No Provider have found in your Search",
+          type: "info",
+          toastKey: Date.now(),
+        });
+        return;
+      }
       setToastProps({
         message: error,
         type: "error",
@@ -152,9 +179,9 @@ function Search() {
                                   <h3 className="mb-0">{job?.businessName}</h3>
                                   <h6>ABN No:{job?.ABN_Number}</h6>
                                   {job?.about && (
-                                      <h6 className="mb-0 text-trun">
-                                        {job?.about}
-                                      </h6>
+                                    <h6 className="mb-0 text-trun">
+                                      {job?.about}
+                                    </h6>
                                   )}
                                 </div>
                               </div>
