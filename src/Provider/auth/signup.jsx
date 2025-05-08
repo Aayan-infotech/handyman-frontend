@@ -643,7 +643,7 @@ export default function SignUpProvider() {
                     <span className="w-100 d-flex justify-content-center">
                       Go back to login page?{" "}
                       <Link
-                        to="/Provider/login"
+                        to="/provider/login"
                         className="highlighted-text text-decoration-none"
                       >
                         Signin
