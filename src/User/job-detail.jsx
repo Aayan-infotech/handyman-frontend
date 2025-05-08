@@ -14,7 +14,7 @@ import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../components/axiosInstance";
 import { CiUser } from "react-icons/ci";
 import Loader from "../Loader";
-import noData from "../assets/no_data_found.gif";
+import NoData from "../assets/no_data_found.gif";
 import { useDispatch, useSelector } from "react-redux";
 import {
   completedJobNotification,
@@ -184,33 +184,30 @@ export default function JobDetail() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // First get job details
       const jobRes = await axiosInstance.get(`/jobpost/jobpost-details/${id}`, {
         headers: {
           Authorization: `Bearer ${ProviderToken || hunterToken}`,
         },
       });
 
-      console.log("jobRes", jobRes);
-      if (jobRes.statusCode === 500) {
-        navigate("/error");
-        return;
-      }
-      if (jobRes.statusCode === 200) {
-        setData(jobRes.data.data);
-        const jobData = jobRes.data.data;
+      console.log("jobRes", jobRes?.data?.data);
+
+      if (jobRes.status === 200) {
+        // Changed from statusCode to status
+        const jobData = jobRes.data.data; // Access data properly
+        setData(jobData);
 
         // Set user and receiverId together
-        setUser(jobData.user);
-        setRecieverId(jobData.provider);
+        setUser(jobData?.user);
+        setRecieverId(jobData?.provider);
 
         // Only fetch provider if we have both IDs
-        if (jobData.user && jobData.provider) {
+        if (jobData?.user && jobData?.provider) {
           const providerRes = await axiosInstance.post(
             "/match/getMatchedData",
             {
               jobPostId: id,
-              senderId: jobData.user,
+              senderId: jobData.user, // Removed optional chaining since we checked it exists
               receiverId: jobData.provider,
             },
             {
@@ -221,8 +218,7 @@ export default function JobDetail() {
           );
 
           const responseData = providerRes.data.data;
-          if (responseData.sender && responseData.receiver) {
-            // Your provider name logic here
+          if (responseData?.sender && responseData?.receiver) {
             let nameToSet = "";
             if (responseData.sender.name === name) {
               nameToSet =
@@ -242,8 +238,9 @@ export default function JobDetail() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      if (error.response?.status === 500) {
+      if (error?.response?.status === 500) {
         navigate("/error");
+        return;
       }
       setToastProps({
         message: error.message,
@@ -267,8 +264,6 @@ export default function JobDetail() {
     return address.replace(pattern, "").trim();
   };
 
-  if (!data) return <noData />;
-
   const doubleFunction = async () => {
     setLoading(true);
     try {
@@ -284,10 +279,16 @@ export default function JobDetail() {
     }
   };
 
+  console.log(data);
   return (
     <>
-      {loading === true ? (
+      {loading ? (
         <Loader />
+      ) : !data ? (
+        <>
+          <LoggedHeader />
+          <img src={NoData} alt="No data found" />
+        </>
       ) : (
         <>
           {" "}
@@ -304,9 +305,9 @@ export default function JobDetail() {
                   <div className="d-flex flex-column gap-4 align-items-start">
                     <div className="d-flex flex-row gap-2 align-items-center">
                       <div className="d-flex flex-column align-items-start gap-1">
-                        <h3 className="mb-0">{data.title || "Job Title"}</h3>
+                        <h3 className="mb-0">{data?.title || "Job Title"}</h3>
                         <h6>
-                          {data.date
+                          {data?.date
                             ? new Date(data.date).toLocaleTimeString("en-AU", {
                                 timeZone: "Australia/Sydney",
                                 hour: "2-digit",
@@ -318,15 +319,15 @@ export default function JobDetail() {
                       </div>
                     </div>
                     <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
-                      {data.businessType?.map((tag, index) => (
+                      {data?.businessType?.map((tag, index) => (
                         <Chip key={index} label={tag} variant="outlined" />
                       ))}
                     </div>
                     <div className="mt-4">
                       <h3>Uploaded Document</h3>
                       <div className="row g-2 gy-3">
-                        {data.documents.length > 0 ? (
-                          data.documents.map((doc, index) => (
+                        {data?.documents?.length > 0 ? (
+                          data?.documents?.map((doc, index) => (
                             <div className="col-lg-4" key={index}>
                               <img
                                 src={doc}
@@ -354,7 +355,7 @@ export default function JobDetail() {
                 </div>
                 <div className="col-lg-5">
                   <h3 className="fw-bold">Job Description</h3>
-                  <p>{data.requirements || "No description available"}</p>
+                  <p>{data?.requirements || "No description available"}</p>
                   <hr />
                   <div className="d-flex flex-column gap-3 align-items-start more-info">
                     <div className="d-flex flex-row gap-4 align-items-start w-100">
@@ -362,7 +363,7 @@ export default function JobDetail() {
                       <div className="d-flex flex-column gap-2 align-items-start">
                         <span className="text-muted">Estimated budget</span>
                         <b className="fw-medium fs-5">
-                          ${data.estimatedBudget || "N/A"}
+                          ${data?.estimatedBudget || "N/A"}
                         </b>
                       </div>
                     </div>
@@ -375,9 +376,9 @@ export default function JobDetail() {
                           <span className="text-muted">Location</span>
                           <b className="fw-medium fs-5">
                             {hunterToken
-                              ? data.jobLocation.jobAddressLine
+                              ? data?.jobLocation?.jobAddressLine
                               : filterAddressPatterns(
-                                  data.jobLocation.jobAddressLine
+                                  data?.jobLocation?.jobAddressLine
                                 )}
                           </b>
                         </div>
@@ -420,7 +421,7 @@ export default function JobDetail() {
                         onClick={handleShow}
                         disabled={data.jobStatus === "Completed"}
                       >
-                        {data.jobStatus === "Completed"
+                        {data?.jobStatus === "Completed"
                           ? "This job has been Completed"
                           : " Mark As Complete"}
                       </Button>

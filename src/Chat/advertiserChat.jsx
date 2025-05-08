@@ -271,7 +271,7 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
               >
                 <textarea
                   placeholder="Type Message"
-                  className="w-100 border-0 px-3 rounded-5"
+                  className="w-100 border-0 px-3 py-2 rounded-5"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => {
