@@ -218,7 +218,7 @@ function Home() {
                           onChange={handleBusinessChange} // Update state on selection
                           isClearable
                           isSearchable
-                          placeholder="Select or type a business"
+                          placeholder="Select by business type"
                           getOptionValue={(e) => e.name} // Option Value
                           className="w-100 custom-design"
                         />
