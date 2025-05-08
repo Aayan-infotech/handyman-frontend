@@ -93,6 +93,9 @@ export default function Contact() {
                     <Link to="/about" style={{ fontWeight: "350" }}>
                       About Us
                     </Link>
+                    <Link to="/contact-us" style={{ fontWeight: "350" }}>
+                      Contact Us
+                    </Link>
                   </Nav>
                   <Nav>
                     <Link to="/welcome">

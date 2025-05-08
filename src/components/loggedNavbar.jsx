@@ -87,7 +87,7 @@ export default function LoggedHeader() {
                   )}
                 </Link>
               ) : (
-                <Link to="/myprofile">
+                <Link to={hunterToken ? "/myprofile" : "/provider/myprofile"}>
                   {!images ? (
                     <FaRegUserCircle className="fs-1" />
                   ) : (
