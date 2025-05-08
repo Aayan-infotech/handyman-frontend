@@ -459,8 +459,7 @@ export default function MyProfile() {
       // Then proceed with account deletion
       const response = await axiosInstance.delete(`${
         providerId ? "Prvdr" : "DeleteAccount"
-      }/delete
-        /${userId}`);
+      }/delete/${userId}`);
 
       if (response.status === 200) {
         setToastProps({
