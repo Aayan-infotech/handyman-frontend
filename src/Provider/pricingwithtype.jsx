@@ -6,7 +6,13 @@ import Loader from "../Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { getProviderUser } from "../Slices/userSlice";
 import Toaster from "../Toaster";
-import { FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 export default function Pricingwithtype() {
   const { id } = useParams();
@@ -28,11 +34,8 @@ export default function Pricingwithtype() {
     toastKey: 0,
   });
 
-
-
   // Fetch subscription plans based on selected type
   useEffect(() => {
-
     const getData = async () => {
       setLoading(true);
       try {
@@ -44,12 +47,14 @@ export default function Pricingwithtype() {
         }
       } catch (error) {
         console.log(error);
+        if (error.response.status === 500) {
+          navigate("/error");
+        }
       }
       setLoading(false);
     };
 
     getData();
-
   }, []);
 
   return (
@@ -69,8 +74,6 @@ export default function Pricingwithtype() {
                       Hello {name}
                     </h5>
                   </div>
-
-              
                 </div>
 
                 <div className="row py-3 gy-4 mt-lg-4">
@@ -82,7 +85,9 @@ export default function Pricingwithtype() {
                       >
                         <div className="h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 py-5">
                           <div className="card-body d-flex flex-column gap-3 align-items-center">
-                            <h3 className="mt-3 text-center">{item.planName || "Plan Name"}</h3>
+                            <h3 className="mt-3 text-center">
+                              {item.planName || "Plan Name"}
+                            </h3>
                             <h5 className="mt-3">${item.amount || "0"}</h5>
                             <h4>KM Radius: {item.kmRadius || "N/A"}</h4>
                             <span className="line-white"></span>

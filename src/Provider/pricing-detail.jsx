@@ -55,6 +55,9 @@ export default function PricingProvider() {
 
         setLoading(false);
       } catch (error) {
+        if (error.response.status === 500) {
+          navigate("/error");
+        }
         console.log(error);
         setLoading(false);
       }

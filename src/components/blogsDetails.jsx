@@ -2,7 +2,7 @@ import { GoArrowRight } from "react-icons/go";
 import { Row, Col, Form } from "react-bootstrap";
 import logo from "./assets/logo.png";
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axiosInstance from "./axiosInstance";
 import Container from "react-bootstrap/Container";
 import Button from "@mui/material/Button";
@@ -24,6 +24,7 @@ export default function BlogDetail() {
   const [blog, setBlog] = useState(null);
   const [relatedBlogs, setRelatedBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -37,13 +38,18 @@ export default function BlogDetail() {
       })
       .catch((error) => {
         console.error("Error fetching blog details:", error);
+        if (error?.response?.data?.statusCode === 500) {
+          navigate("/error");
+          return;
+        }
       })
       .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <Loader />;
-  if (!blog)
-    return <div className="text-center mt-5 text-danger">Blog not found!</div>;
+  if (!blog) {
+    navigate("/error");
+  }
 
   return (
     <>

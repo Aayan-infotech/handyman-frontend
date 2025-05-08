@@ -3,13 +3,12 @@ import LoggedHeader from "./Auth/component/loggedNavbar";
 import { MdMessage, MdEmail, MdOutlineSupportAgent } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Eye } from "lucide-react";
-
 import { IoIosStar } from "react-icons/io";
 import { IoCall } from "react-icons/io5";
 import { RiMessage2Fill } from "react-icons/ri";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, Navigation } from "swiper/modules";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams , useNavigate} from "react-router-dom";
 import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import notFound from "./assets/noprofile.png";
@@ -19,6 +18,7 @@ import "swiper/css/navigation";
 
 export default function ServiceProviderProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
   const [rating, setRating] = useState([]);
@@ -57,6 +57,9 @@ export default function ServiceProviderProfile() {
       setGallery(galleryRes?.data?.data?.files || []);
     } catch (error) {
       console.error("Error fetching data:", error);
+      if (error.response.status === 500) {
+        navigate("/error");
+      }
     } finally {
       setLoading(false);
     }

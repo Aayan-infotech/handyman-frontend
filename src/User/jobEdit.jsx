@@ -162,6 +162,10 @@ export default function JobEdit() {
         }
       } catch (error) {
         console.log(error);
+        if (error?.response?.data?.statusCode === 500) {
+          navigate("/error");
+          return;
+        }
         setToastProps({
           message: "Failed to fetch job details",
           type: "error",
@@ -219,6 +223,10 @@ export default function JobEdit() {
           "Content-Type": "multipart/form-data",
         },
       });
+      if (response?.data?.statusCode === 500) {
+        navigate("/error");
+        return;
+      }
 
       if (response.status === 200 || response.status === 201) {
         setToastProps({
@@ -231,6 +239,10 @@ export default function JobEdit() {
         }, 2000);
       }
     } catch (error) {
+      if (error?.response?.data?.statusCode === 500) {
+        navigate("/error");
+        return;
+      }
       setToastProps({
         message:
           error?.response?.data?.error ||
@@ -260,7 +272,6 @@ export default function JobEdit() {
     updatedDocuments.splice(index, 1);
     setDocuments(updatedDocuments);
   };
-
 
   return (
     <>
