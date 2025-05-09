@@ -603,16 +603,6 @@ export default function MyProfile() {
         <>
           <LoggedHeader />
 
-          {/* <Link
-            to={`/${hunterToken ? "support/chat/1" : "provider/admin/chat/"}`}
-          >
-            <Tooltip title="Admin chat" placement="left-start">
-              <div className="admin-message">
-                <MdOutlineSupportAgent />
-              </div>
-            </Tooltip>
-          </Link> */}
-
           <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
             <Tooltip title="Message" placement="left-start">
               <div className="message">
@@ -624,7 +614,7 @@ export default function MyProfile() {
           <div className="bg-second pb-3">
             <div className="container">
               <div className="profile-container position-relative">
-                <div className="image-shadow">
+                {/* <div className="image-shadow">
                   <img
                     className="w-100 rounded-4 object-fit-cover"
                     src={backgroundImg || notFound}
@@ -653,12 +643,12 @@ export default function MyProfile() {
                       accept="image/*"
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
-              <div className="row gy-4 gx-lg-3">
+              <div className="row gy-4 gx-lg-3 align-items-center pt-lg-3 pt-2 pt-lg-0">
                 <div className="col-lg-3">
                   <div className="position-relative ">
-                    <div className="pos-profile start-0 mx-auto">
+                    <div className="d-flex justify-content-center">
                       <img
                         src={profile || notFound}
                         alt="profile"
@@ -669,7 +659,7 @@ export default function MyProfile() {
                 </div>
 
                 <div className="col-lg-6">
-                  <div className="mt-5 mt-lg-0 text-center text-lg-start">
+                  <div className=" text-center text-lg-start">
                     <h3 className="fw-bold fs-1">{name}</h3>
                     <h5
                       className="text-muted"
@@ -949,7 +939,7 @@ export default function MyProfile() {
 
               <div className="d-flex align-items-lg-center gap-4 gap-lg-5 flex-column flex-lg-row mt-3 flex-wrap">
                 <div className="contact">
-                  <a href={`tel::${number}`} className="text-dark">
+                  <a href={`tel::${number}`} className="text-dark d-flex align-items-center flex-wrap">
                     <IoCallSharp className="me-2" />
                     {number}
                   </a>
@@ -961,9 +951,9 @@ export default function MyProfile() {
                   </a>
                 </div>
                 <div className="contact">
-                  <a href={`mailto:${email}`} className="text-dark">
+                  <a href={`mailto:${email}`} className="text-dark d-flex align-items-center flex-wrap" >
                     <IoMdMail className="me-2" />
-                    {email}
+                    <span>{email}</span>
                   </a>
                 </div>
               </div>

@@ -258,7 +258,7 @@ export default function JobSpecification() {
                             <h3 className="mb-0">{data?.title}</h3>
                             <h6>
                               {data?.date
-                                ? new Date(data.date).toLocaleTimeString(
+                                ? new Date(data.createdAt).toLocaleTimeString(
                                     "en-AU",
                                     {
                                       timeZone: "Australia/Sydney",

@@ -245,7 +245,7 @@ export default function JobManagement() {
       fetchJobs(1, "");
     }
   };
-    // useEffect(() => {
+  // useEffect(() => {
   //   let filtered = data;
   //   fetchJobs();
   //   // // Apply job status filter if any statuses are selected
@@ -257,7 +257,6 @@ export default function JobManagement() {
 
   //   setFilteredData(filtered);
   // }, [ search]);
-
 
   const checkUserType = (id) => {
     if (localStorage.getItem("ProviderToken")) {
@@ -428,15 +427,14 @@ export default function JobManagement() {
                                 </td>
                                 <td>
                                   {" "}
-                                  {new Date(provider?.date).toLocaleDateString(
-                                    "en-AU",
-                                    {
-                                      timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
-                                      day: "2-digit",
-                                      month: "2-digit",
-                                      year: "numeric",
-                                    }
-                                  )}
+                                  {new Date(
+                                    provider?.createdAt
+                                  ).toLocaleDateString("en-AU", {
+                                    timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                  })}
                                 </td>
                                 <td>{provider?.jobStatus}</td>
                                 <td>

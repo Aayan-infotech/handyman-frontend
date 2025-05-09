@@ -99,6 +99,7 @@ export default function HomeProvider() {
           radius,
           page,
           limit: pagination.limit,
+          filter: jobStatus,
         })
       );
 
@@ -149,7 +150,7 @@ export default function HomeProvider() {
           });
         });
     }
-  }, [providerToken]);
+  }, [providerToken , jobStatus]);
 
   useEffect(() => {
     let filtered = data;
@@ -217,35 +218,35 @@ export default function HomeProvider() {
     // }
     navigate(`/provider/jobspecification/${id}`);
   };
-  const handlePlan = async () => {
-    try {
-      const response = await axiosInstance.get(
-        "/pushNotification/expiring-soon",
-        {
-          headers: {
-            Authorization: `Bearer ${providerToken}`,
-          },
-        }
-      );
-      if (response.status === 200 && response?.data?.data) {
-        setToastProps({
-          message: response.data.message,
-          type: "info",
-          toastKey: Date.now(),
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    const providerAlert = localStorage.getItem("ProviderAlert");
+  // const handlePlan = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(
+  //       "/pushNotification/expiring-soon",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${providerToken}`,
+  //         },
+  //       }
+  //     );
+  //     if (response.status === 200 && response?.data?.data) {
+  //       setToastProps({
+  //         message: response.data.message,
+  //         type: "info",
+  //         toastKey: Date.now(),
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   const providerAlert = localStorage.getItem("ProviderAlert");
 
-    if (providerAlert !== "true") {
-      handlePlan();
-      localStorage.setItem("ProviderAlert", "true");
-    }
-  }, []);
+  //   if (providerAlert !== "true") {
+  //     handlePlan();
+  //     localStorage.setItem("ProviderAlert", "true");
+  //   }
+  // }, []);
 
   return (
     <>

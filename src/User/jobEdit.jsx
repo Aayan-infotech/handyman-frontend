@@ -405,6 +405,7 @@ export default function JobEdit() {
                       type="file"
                       className="input1"
                       onChange={(e) => setDocuments(Array.from(e.target.files))}
+                      disabled={documents.length > 0}
                       multiple
                     />
                     {documents.length > 0 && (

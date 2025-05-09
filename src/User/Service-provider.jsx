@@ -51,7 +51,7 @@ export default function ServiceProvider() {
   });
   const [filteredData, setFilteredData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
-  const [providerRadius, setProviderRadius] = useState([]);
+  const [providerRadius, setProviderRadius] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
@@ -110,14 +110,25 @@ export default function ServiceProvider() {
 
     setLoading(true);
     try {
+      const radiusValue = providerRadius
+        ? parseFloat(providerRadius.replace("km", "")) * 1000
+        : radius;
+
+      const payload = {
+        latitude: latitude,
+        longitude: longitude,
+        page: currentPage,
+        radius: radiusValue || radius,
+      };
+
+      // Only add filter to payload if businessType array is not empty
+      if (businessType.length > 0) {
+        payload.filter = businessType; // Send as an array of strings (not comma-separated)
+      }
+
       const response = await axiosInstance.post(
         `/hunter/getNearbyServiceProviders?search=${search}&page=${currentPage}`,
-        {
-          latitude: latitude,
-          longitude: longitude,
-          page: currentPage,
-          radius,
-        },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -129,11 +140,6 @@ export default function ServiceProvider() {
         setData(response?.data?.data || []);
         setFilteredData(response?.data?.data || []);
         setTotalPages(response.data.pagination.totalPage);
-        setToastProps({
-          message: response?.data?.message,
-          type: "success",
-          toastKey: Date.now(),
-        });
       }
     } catch (error) {
       setToastProps({
@@ -144,8 +150,16 @@ export default function ServiceProvider() {
     } finally {
       setLoading(false);
     }
-  }, [latitude, longitude, currentPage, radius, search]);
-
+  }, [
+    latitude,
+    longitude,
+    currentPage,
+    radius,
+    search,
+    businessType,
+    providerRadius,
+    token,
+  ]);
   const handlePageChange = useCallback(
     (page) => {
       queryParams.set("page", page.toString());
@@ -159,26 +173,7 @@ export default function ServiceProvider() {
     if (latitude && longitude) {
       handleAllData();
     }
-  }, [latitude, longitude, currentPage]);
-
-  useEffect(() => {
-    let filtered = data;
-
-    if (businessType.length > 0) {
-      filtered = filtered.filter((provider) =>
-        provider.businessType?.some((type) => businessType.includes(type))
-      );
-    }
-
-    if (providerRadius && providerRadius.length > 0) {
-      const selectedRadius = parseInt(providerRadius.replace(" km", "") * 1000);
-      filtered = filtered.filter(
-        (provider) => provider.distance <= selectedRadius // Convert meters to km before comparison
-      );
-    }
-
-    setFilteredData(filtered);
-  }, [businessType, providerRadius, currentPage]);
+  }, [latitude, longitude, currentPage, providerRadius, businessType]);
 
   const filterAddressPatterns = (address) => {
     if (!address) return address;
@@ -188,6 +183,8 @@ export default function ServiceProvider() {
     return address.replace(pattern, "").trim();
   };
 
+  console.log(providerRadius);
+
   return (
     <>
       {loading === true ? (
@@ -195,13 +192,6 @@ export default function ServiceProvider() {
       ) : (
         <>
           <LoggedHeader />
-          {/* <Link to="/support/chat/1">
-            <Tooltip title="Message" placement="left-start">
-              <div className="admin-message">
-                <MdOutlineSupportAgent />
-              </div>
-            </Tooltip>
-          </Link> */}
           <Link to="/message">
             <Tooltip title="Message" placement="left-start">
               <div className="message">
@@ -243,7 +233,6 @@ export default function ServiceProvider() {
                           labelId="radius-select-label"
                           id="radius-select"
                           value={providerRadius}
-                          onChange={() => {}} // disable default onChange
                           input={
                             <OutlinedInput label="Select Provider Radius" />
                           }
