@@ -310,12 +310,15 @@ export default function JobDetail() {
                         <h3 className="mb-0">{data?.title || "Job Title"}</h3>
                         <h6>
                           {data?.date
-                            ? new Date(data.date).toLocaleTimeString("en-AU", {
-                                timeZone: "Australia/Sydney",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: true,
-                              })
+                            ? new Date(data.createdAt).toLocaleTimeString(
+                                "en-AU",
+                                {
+                                  timeZone: "Australia/Sydney", 
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                }
+                              )
                             : "No date provided"}
                         </h6>
                       </div>
@@ -334,11 +337,7 @@ export default function JobDetail() {
                               className="col-lg-4 position-relative"
                               key={index}
                             >
-                              <a
-                                className=""
-                                href={doc}
-                                target="_blank"
-                              >
+                              <a className="" href={doc} target="_blank">
                                 <img
                                   src={doc}
                                   alt="document"

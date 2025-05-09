@@ -722,6 +722,11 @@ table th {
     height: 130px;
     border: 8px solid white;
   }
+  .search {
+  
+    min-width: auto !important;
+    width: 100%;
+}
   .otp-input input {
     border: 0 !important;
     border-radius: 20px !important;

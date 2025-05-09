@@ -103,7 +103,7 @@ export default function FeaturedJobs() {
       <div className="container jobs my-5">
         <div className="d-flex justify-content-start justify-content-lg-between align-items-lg-end flex-column flex-md-row gap-3">
           <h2 className="mb-0">
-            Featured <span className="text-primary">Business</span>
+            Featured <span className="text-primary">Businesses</span>
           </h2>
           <div className="d-flex flex-row gap-2 align-items-center navbar">
             <TextField

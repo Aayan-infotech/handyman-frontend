@@ -8,7 +8,7 @@ import { IoCall } from "react-icons/io5";
 import { RiMessage2Fill } from "react-icons/ri";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, Navigation } from "swiper/modules";
-import { Link, useParams , useNavigate} from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../components/axiosInstance";
 import Loader from "../Loader";
 import notFound from "./assets/noprofile.png";
@@ -178,33 +178,27 @@ export default function ServiceProviderProfile() {
             </Tooltip>
           </Link> */}
 
-          <Link to="/message">
-            <Tooltip title="Message" placement="left-start">
-              <div className="message">
-                <MdMessage />
-              </div>
-            </Tooltip>
-          </Link>
-
           <div className="bg-second pb-3">
             <div className="container">
-              <div className="image-shadow">
+              {/* <div className="image-shadow">
                 <img
                   src={backgroundImg || notFound}
                   alt="background"
                   className="w-100"
                 />
-              </div>
+              </div> */}
 
-              <div className="d-flex justify-content-between align-items-start mt-4 flex-column gap-3 flex-lg-row pb-lg-3">
-                <div className="mw-40 order-2 order-lg-1 mt-5 mt-lg-0 text-center text-lg-start">
-                  <h3 className="fw-bold fs-1">{data?.contactName}</h3>
-                  <h6>{data?.businessName}</h6>
+              <div className="d-flex justify-content-between align-items-center pt-3 flex-column gap-3 flex-lg-row pb-lg-3">
+                <div className="mw-40 order-2 mt-2 mt-lg-0 text-center text-lg-start">
+                  <h3 className="fw-bold fs-1">{data?.businessName}</h3>
+                  <h6>{data?.contactName}</h6>
                   <h6>ABN NO:{data?.ABN_Number}</h6>
                 </div>
 
-                <div className="position-relative order-1 order-lg-2">
-                  <div className="pos-profile service-profile">
+                <div className="position-relative order-1">
+                  <div className=" ">
+                    {" "}
+                    {/* pos-profile service-profile*/}
                     <img
                       src={data?.images || notFound}
                       alt="profile"
@@ -269,6 +263,14 @@ export default function ServiceProviderProfile() {
               {renderRatings()}
             </div>
           </div>
+
+          <Link to="/message">
+            <Tooltip title="Message" placement="left-start">
+              <div className="message">
+                <MdMessage />
+              </div>
+            </Tooltip>
+          </Link>
         </>
       )}
     </>

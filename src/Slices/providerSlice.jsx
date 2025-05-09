@@ -36,7 +36,7 @@ export const getProviderNearbyJobs = createAsyncThunk(
 export const getProviderJobs = createAsyncThunk(
   "/Provider/getProviderJobs",
   async (
-    { businessType, latitude, longitude, radius , page,
+    { businessType, latitude, longitude, radius , page, filter,
       limit },
     { rejectWithValue }
   ) => {
@@ -49,7 +49,8 @@ export const getProviderJobs = createAsyncThunk(
           latitude,
           radius,
           page,
-          limit
+          limit,
+          filter
         },
         {
           headers: {
