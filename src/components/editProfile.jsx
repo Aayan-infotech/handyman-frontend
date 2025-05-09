@@ -23,7 +23,7 @@ import {
 import { ref, set } from "firebase/database";
 import { FaPen } from "react-icons/fa";
 import { auth, db } from "../Chat/lib/firestore";
-import axios from "axios"
+import axios from "axios";
 import {
   collection,
   query,
@@ -48,7 +48,6 @@ export default function EditProfile() {
   const providerToken = localStorage.getItem("ProviderToken");
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
-  const [phonePrefix, setPhonePrefix] = useState("+0");
 
   const providerUid = localStorage.getItem("ProviderUId");
   const hunterUid = localStorage.getItem("hunterUId");
@@ -80,7 +79,6 @@ export default function EditProfile() {
         if (response.status === 200) {
           setBusinessData(response?.data?.data);
         }
-       
       } catch (error) {
         console.log(error);
       }
@@ -106,15 +104,7 @@ export default function EditProfile() {
           setImages(fetchedUser?.images || "");
           const phoneNumber = fetchedUser?.phoneNo || "";
           if (phoneNumber.startsWith("+61")) {
-            setPhonePrefix("+61");
             setNumber(phoneNumber.substring(3)); // Remove +61 prefix
-          } else if (phoneNumber.startsWith("+0")) {
-            setPhonePrefix("+0");
-            setNumber(phoneNumber.substring(2)); // Remove +0 prefix
-          } else {
-            // Default case if no prefix matches
-            setPhonePrefix("+0");
-            setNumber(phoneNumber);
           }
           setEmail(fetchedUser?.email || "");
           setAddress(fetchedUser?.address?.addressLine || "");
@@ -148,7 +138,6 @@ export default function EditProfile() {
     }
   }, [businessData]);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -159,7 +148,7 @@ export default function EditProfile() {
         ? formData.append("contactName", name)
         : formData.append("name", name);
     }
-    formData.append("phoneNo", `${phonePrefix}${number}`);
+    formData.append("phoneNo", `+61${number}`);
     formData.append("email", email);
     formData.append("addressLine", address);
     formData.append("latitude", latitude);
@@ -237,7 +226,6 @@ export default function EditProfile() {
       setPreviewImage(URL.createObjectURL(file)); // Create a preview URL
     }
   };
-
 
   return (
     <>
@@ -342,27 +330,26 @@ export default function EditProfile() {
                     </Form.Group>
                     <div className="row mb-3">
                       <Form.Label column sm="4">
-                        Name
+                        Phone No
                       </Form.Label>
                       <div className="col-8">
                         <div className="d-flex align-items-center gap-1">
-                          <Form.Select
-                            value={phonePrefix}
-                            onChange={(e) => setPhonePrefix(e.target.value)}
-                            style={{ width: "80px", marginRight: "10px" }}
-                          >
-                            <option value="+0">+0</option>
-                            <option value="+61">+61</option>
-                          </Form.Select>
                           <Form.Control
                             type="text"
                             placeholder="Phone number"
                             value={number}
                             onChange={(e) => {
-                              const digitsOnly = e.target.value.replace(
+                              let digitsOnly = e.target.value.replace(
                                 /\D/g,
                                 ""
                               );
+                              // Remove leading 0 if present
+                              if (
+                                digitsOnly.length > 0 &&
+                                digitsOnly.charAt(0) === "0"
+                              ) {
+                                digitsOnly = digitsOnly.substring(1);
+                              }
                               setNumber(digitsOnly);
                             }}
                           />

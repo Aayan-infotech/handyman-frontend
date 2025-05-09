@@ -58,9 +58,6 @@ export default function SignUp() {
   const [longitude, setLongitude] = useState(
     localStorage.getItem("signup_longitude") || null
   );
-  const [phonePrefix, setPhonePrefix] = useState(
-    localStorage.getItem("signup_phonePrefix") || "+0"
-  );
   const [images, setImages] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -110,7 +107,6 @@ export default function SignUp() {
     localStorage.setItem("signup_address", address);
     localStorage.setItem("signup_latitude", latitude);
     localStorage.setItem("signup_longitude", longitude);
-    localStorage.setItem("signup_phonePrefix", phonePrefix);
     navigate("/terms", {
       state: {
         name,
@@ -135,7 +131,6 @@ export default function SignUp() {
     localStorage.removeItem("signup_latitude");
     localStorage.removeItem("signup_longitude");
     localStorage.removeItem("signup_previewImage");
-    localStorage.removeItem("signup_phonePrefix");
   };
 
   const handleSignUp = async (e) => {
@@ -145,7 +140,7 @@ export default function SignUp() {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
-    formData.append("phoneNo", `${phonePrefix}${phoneNo}`);
+    formData.append("phoneNo", `+61${phoneNo}`);
     formData.append("addressLine", address);
     formData.append("password", password);
     formData.append("latitude", latitude);
@@ -393,14 +388,6 @@ export default function SignUp() {
                       </Form.Label>
                       <Col sm="8">
                         <div className="d-flex">
-                          <Form.Select
-                            value={phonePrefix}
-                            onChange={(e) => setPhonePrefix(e.target.value)}
-                            style={{ width: "80px", marginRight: "10px" }}
-                          >
-                            <option value="+0">+0</option>
-                            <option value="+61">+61</option>
-                          </Form.Select>
                           <Form.Control
                             type="text"
                             placeholder="Phone number"
@@ -410,10 +397,17 @@ export default function SignUp() {
                               e.key === "Enter" && handleSignUp(e)
                             }
                             onChange={(e) => {
-                              const digitsOnly = e.target.value.replace(
+                              let digitsOnly = e.target.value.replace(
                                 /\D/g,
                                 ""
                               );
+                              // Remove leading 0 if present
+                              if (
+                                digitsOnly.length > 0 &&
+                                digitsOnly.charAt(0) === "0"
+                              ) {
+                                digitsOnly = digitsOnly.substring(1);
+                              }
                               setPhoneNo(digitsOnly);
                             }}
                           />
