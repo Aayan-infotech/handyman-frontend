@@ -63,9 +63,7 @@ export default function SignUpProvider() {
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
   const [images, setImages] = useState(null);
-  const [phonePrefix, setPhonePrefix] = useState(
-    localStorage.getItem("signup_phonePrefix") || "+0"
-  );
+
 
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -122,7 +120,6 @@ export default function SignUpProvider() {
     localStorage.setItem("signup_registrationNumber", registrationNumber);
     localStorage.setItem("signup_latitude", latitude);
     localStorage.setItem("signup_longitude", longitude);
-    localStorage.setItem("signup_phonePrefix", phonePrefix);
 
     navigate("/terms");
   };
@@ -137,7 +134,6 @@ export default function SignUpProvider() {
     localStorage.removeItem("signup_registrationNumber", registrationNumber);
     localStorage.removeItem("signup_latitude", latitude);
     localStorage.removeItem("signup_longitude", longitude);
-    localStorage.removeItem("signup_phonePrefix", phonePrefix);
   };
 
   const handleSignUp = async (e) => {
@@ -172,7 +168,7 @@ export default function SignUpProvider() {
     formData.append("name", name);
     formData.append("businessName", businessName);
     formData.append("email", email);
-    formData.append("phoneNo", `${phonePrefix}${phoneNo}`);
+    formData.append("phoneNo", `+61${phoneNo}`);
     formData.append("addressLine", address);
     formData.append("password", password);
     selectedBusiness.forEach((type) => {
@@ -532,14 +528,7 @@ export default function SignUpProvider() {
                       </Form.Label>
                       <Col sm="7">
                         <div className="d-flex">
-                          <Form.Select
-                            value={phonePrefix}
-                            onChange={(e) => setPhonePrefix(e.target.value)}
-                            style={{ width: "80px", marginRight: "10px" }}
-                          >
-                            <option value="+0">+0</option>
-                            <option value="+61">+61</option>
-                          </Form.Select>
+                      
                           <Form.Control
                             type="text"
                             placeholder="Phone number"
@@ -549,10 +538,17 @@ export default function SignUpProvider() {
                             }
                             value={phoneNo}
                             onChange={(e) => {
-                              const digitsOnly = e.target.value.replace(
+                              let digitsOnly = e.target.value.replace(
                                 /\D/g,
                                 ""
                               );
+                              // Remove leading 0 if present
+                              if (
+                                digitsOnly.length > 0 &&
+                                digitsOnly.charAt(0) === "0"
+                              ) {
+                                digitsOnly = digitsOnly.substring(1);
+                              }
                               setPhoneNo(digitsOnly);
                             }}
                           />
@@ -625,7 +621,9 @@ export default function SignUpProvider() {
                           placeholder="Password"
                           value={password}
                           required
-                          onKeyDown={(e) => e.key === "Enter" && handleSignUp(e)}
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleSignUp(e)
+                          }
                           onChange={(e) => setPassword(e.target.value)}
                         />
                         <span
