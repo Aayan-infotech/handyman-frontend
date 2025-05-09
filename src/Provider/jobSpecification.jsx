@@ -257,14 +257,15 @@ export default function JobSpecification() {
                           <div className="d-flex flex-column align-items-start gap-1">
                             <h3 className="mb-0">{data?.title}</h3>
                             <h6>
+                              Booking date:
                               {data?.date
                                 ? new Date(data.createdAt).toLocaleTimeString(
                                     "en-AU",
                                     {
                                       timeZone: "Australia/Sydney",
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      hour12: true,
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "numeric",
                                     }
                                   )
                                 : "No date provided"}
@@ -391,6 +392,17 @@ export default function JobSpecification() {
                     <div className="col-lg-6">
                       <h3 className="fw-bold">Job Description</h3>
                       <p>{data?.requirements}</p>
+                      <h6>Scheduled for</h6>
+                      <h6>
+                        {data?.date
+                          ? new Date(data.date).toLocaleTimeString("en-AU", {
+                              timeZone: "Australia/Sydney",
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            })
+                          : "No date provided"}
+                      </h6>
                       <hr />
                       <div className="d-flex flex-column gap-3 align-items-start more-info">
                         <div className="row gy-4 w-100">
