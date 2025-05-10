@@ -378,7 +378,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       navigate(`/job-detail/${jobId}`);
       return;
     }
-    navigate(`/provider/jobspecification/${jobId}`);
+    navigate(`/provider/home`);
   };
 
   console.log("storedUserId", storedUserId);

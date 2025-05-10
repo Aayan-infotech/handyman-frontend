@@ -77,7 +77,6 @@ function Home() {
     axiosInstance
       .get("/blog/getAll")
       .then((response) => {
-       
         setBlogs(response?.data?.blog);
       })
       .catch((error) => {
@@ -100,7 +99,6 @@ function Home() {
   }, []);
 
   const handleBusinessChange = (selectedOption) => {
-   
     setSelectedBusiness(selectedOption);
   };
 
@@ -336,7 +334,7 @@ function Home() {
               to="/featured-business"
               className="text-decoration-none custom-text-success"
             >
-              Show All Bussiness <GoArrowRight className="fs-4 ms-1" />
+              Show All Businesses <GoArrowRight className="fs-4 ms-1" />
             </Link>
           </div>
           <div className="row gy-4 mt-4">
@@ -361,7 +359,7 @@ function Home() {
                       <b>{item?.businessName}</b>
                       <div className="d-flex justify-content-start align-items-start flex-row my-2 flex-column">
                         <span>{item?.contactName}</span>
-                      
+
                         <span>
                           {filterAddressState(item?.address?.addressLine)}
                         </span>

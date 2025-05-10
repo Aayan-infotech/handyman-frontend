@@ -91,7 +91,7 @@ export default function LoggedHeader() {
         fetchedUser = providerResponse?.payload?.data;
         localStorage.setItem(
           "PlanType",
-          providerResponse?.payload?.data?.subscriptionType
+          providerResponse?.payload?.data?.subscriptionType || providerResponse?.payload?.data?.subscriptionStatus
         );
         localStorage.setItem(
           "ProviderName",

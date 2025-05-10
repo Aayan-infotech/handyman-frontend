@@ -85,7 +85,7 @@ export default function PaymentDetail() {
     const paymentData = {
       userId: providerId,
       subscriptionPlanId: id,
-      Amount: data?.amount,
+      Amount: data?.amount * 100,
       Customer: {
         FirstName: firstName,
         LastName: lastName,
@@ -99,7 +99,7 @@ export default function PaymentDetail() {
         },
       },
       Payment: {
-        TotalAmount: data?.amount,
+        TotalAmount: data?.amount * 100,
         CurrencyCode: "AUD",
       },
     };

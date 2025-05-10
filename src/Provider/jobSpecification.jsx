@@ -129,7 +129,7 @@ export default function JobSpecification() {
       );
 
       if (response.status === 200) {
-        setShow(true);
+        // setShow(true);
         noficationFunctionality();
         handleJob();
         setToastProps({
@@ -144,7 +144,7 @@ export default function JobSpecification() {
           `/provider/acceptCount/${ProviderId}`
         );
         if (response.status === 200) {
-          setShow(true);
+          // setShow(true);
           // noficationFunctionality();
           setToastProps({
             message: response.message,
@@ -257,7 +257,7 @@ export default function JobSpecification() {
                           <div className="d-flex flex-column align-items-start gap-1">
                             <h3 className="mb-0">{data?.title}</h3>
                             <h6>
-                              Booking date:
+                              Date Poster:
                               {data?.date
                                 ? new Date(data.createdAt).toLocaleTimeString(
                                     "en-AU",
@@ -392,7 +392,7 @@ export default function JobSpecification() {
                     <div className="col-lg-6">
                       <h3 className="fw-bold">Job Description</h3>
                       <p>{data?.requirements}</p>
-                      <h6>Scheduled for</h6>
+                      {/* <h6>Scheduled for</h6>
                       <h6>
                         {data?.date
                           ? new Date(data.date).toLocaleTimeString("en-AU", {
@@ -402,7 +402,7 @@ export default function JobSpecification() {
                               year: "numeric",
                             })
                           : "No date provided"}
-                      </h6>
+                      </h6> */}
                       <hr />
                       <div className="d-flex flex-column gap-3 align-items-start more-info">
                         <div className="row gy-4 w-100">
@@ -463,7 +463,7 @@ export default function JobSpecification() {
                           {hasAcceptedJob && (
                             <Button
                               variant="contained"
-                              onClick={() => setShow(true)}
+                              onClick={handleChat}
                               className="custom-green bg-green-custom rounded-5 py-3 w-100"
                               style={{ maxWidth: "160px" }}
                             >
