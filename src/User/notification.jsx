@@ -465,14 +465,14 @@ export default function Notification() {
                                             notification.userId === userId
                                               ? notification.receiverId
                                               : notification.userId
-                                          }?jobId=${notification.jobId}`
+                                          }?jobId=${notification.jobId}&path=notification`
                                         )
                                       : navigate(
                                           `/provider/chat/${
                                             notification.userId === userId
                                               ? notification.receiverId
                                               : notification.userId
-                                          }?jobId=${notification.jobId}`
+                                          }?jobId=${notification.jobId}&path=notification`
                                         );
                                   }}
                                   className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
