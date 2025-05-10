@@ -939,7 +939,10 @@ export default function MyProfile() {
 
               <div className="d-flex align-items-lg-center gap-4 gap-lg-5 flex-column flex-lg-row mt-3 flex-wrap">
                 <div className="contact">
-                  <a href={`tel::${number}`} className="text-dark d-flex align-items-center flex-wrap">
+                  <a
+                    href={`tel::${number}`}
+                    className="text-dark d-flex align-items-center flex-wrap"
+                  >
                     <IoCallSharp className="me-2" />
                     {number}
                   </a>
@@ -951,7 +954,10 @@ export default function MyProfile() {
                   </a>
                 </div>
                 <div className="contact">
-                  <a href={`mailto:${email}`} className="text-dark d-flex align-items-center flex-wrap" >
+                  <a
+                    href={`mailto:${email}`}
+                    className="text-dark d-flex align-items-center flex-wrap"
+                  >
                     <IoMdMail className="me-2" />
                     <span>{email}</span>
                   </a>
@@ -1117,9 +1123,7 @@ export default function MyProfile() {
                                   </div>
                                 </div>
                                 <b className="mb-0 pt-2 ms-2">
-                                  Name:{" "}
-                                  {item?.providerId?.contactName ||
-                                    item?.userId?.name}
+                                  Name: {item?.userId?.name}
                                 </b>
                                 <p className="fw-bold text-start mx-2">
                                   {item?.review}

@@ -13,6 +13,8 @@ import TextField from "@mui/material/TextField";
 import Pagination from "react-bootstrap/Pagination";
 import appleIcon from "./assets/apple.png";
 import playIcon from "./assets/google.png";
+import Select from "react-select";
+
 import {
   FaFacebook,
   FaInstagram,
@@ -30,7 +32,19 @@ export default function FeaturedJobs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [businessData, setBusinessData] = useState([]);
+  const [allBusinessData, setAllBusinessData] = useState([]);
 
+  const handleBusinessChange = (selectedOption) => {
+    setSearchQuery(selectedOption);
+  };
+  useEffect(() => {
+    axiosInstance.get("/jobpost/business-type-count").then((res) => {
+      const limitedData = res?.data?.data?.slice(0, 8) || []; // Ensure only 8 items
+      setBusinessData(limitedData);
+      setAllBusinessData(res?.data?.data);
+    });
+  }, []);
   const fetchProviders = async (page = 1, query = "") => {
     setLoading(true);
     try {
@@ -58,7 +72,7 @@ export default function FeaturedJobs() {
   }, []);
 
   const handleSearch = () => {
-    fetchProviders(1, searchQuery);
+    fetchProviders(1, searchQuery.name);
   };
 
   const filterAddressState = (address) => {
@@ -106,14 +120,19 @@ export default function FeaturedJobs() {
             Featured <span className="text-primary">Businesses</span>
           </h2>
           <div className="d-flex flex-row gap-2 align-items-center navbar">
-            <TextField
-              id="standard-basic"
-              label="Search by Business Type"
-              variant="standard"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-              }}
+            <Select
+              options={allBusinessData.sort((a, b) =>
+                a.name.localeCompare(b.name)
+              )} // Sorted Business Names
+              getOptionLabel={(e) => e.name} // Display Business Name
+              value={searchQuery} // Show selected business in input box
+              onChange={handleBusinessChange} // Update state on selection
+              isClearable
+              isSearchable
+              placeholder="Select by business type"
+              getOptionValue={(e) => e.name} // Option Value
+              className=" custom-design min-w-200"
+              
             />
 
             <Button variant="contained" color="success" onClick={handleSearch}>

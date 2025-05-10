@@ -207,7 +207,7 @@ export default function JobEdit() {
       } else if (file.url) {
         // If it's an existing file from server, you might want to handle differently
         // Maybe send the URL or ID to keep it
-        formData.append("existingDocuments[]", file.url);
+        formData.append("documents", file);
       }
     });
 

@@ -377,7 +377,7 @@ export default function ServiceProvider() {
                             <tbody>
                               {filteredData?.map((provider, index) => (
                                 <tr key={provider._id} className="text-center">
-                                  <td>{index + 1}</td>
+                                  <td>{index + 1 + (currentPage - 1) * 10}</td>
                                   <td>
                                     {" "}
                                     <Link

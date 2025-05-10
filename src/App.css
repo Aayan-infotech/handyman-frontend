@@ -715,7 +715,9 @@ table th {
 .css-5dycmn.Mui-selected {
   background-color: rgb(75 215 142 / 55%) !important;
 }
-
+.min-w-200 {
+  min-width: 300px;
+}
 @media screen and (max-width: 768px) {
   .profile-img {
     width: 130px;
@@ -723,10 +725,9 @@ table th {
     border: 8px solid white;
   }
   .search {
-  
     min-width: auto !important;
     width: 100%;
-}
+  }
   .otp-input input {
     border: 0 !important;
     border-radius: 20px !important;

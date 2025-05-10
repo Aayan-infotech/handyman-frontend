@@ -290,13 +290,13 @@ export default function JobManagement() {
             </Tooltip>
           </Link> */}
 
-          <Link to={`${hunterToken ? "/message" : "/provider/message"}`}>
+          {/* <Link to={`${hunterToken ? "/message" : "/provider/message"}`}>
             <Tooltip title="Message" placement="left-start">
               <div className="message">
                 <MdMessage />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <div className="bg-second py-3">
             <div className="container">
@@ -414,7 +414,7 @@ export default function JobManagement() {
                           <tbody>
                             {filteredData?.map((provider, index) => (
                               <tr key={provider._id} className="text-center">
-                                <td>{index + 1}</td>
+                                <td>{index + 1 + (currentPage - 1) * 10}</td>
                                 <td> {provider?.title}</td>
                                 <td className={`text-start flex-wrap`}>
                                   ${provider?.estimatedBudget || "00"}

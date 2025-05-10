@@ -86,22 +86,21 @@ export default function ServiceProviderProfile() {
                 key={index}
                 className="col-md-3 col-6 mb-3 position-relative"
               >
-                <img
-                  src={image?.url}
-                  alt="Gallery Item"
-                  className="rounded-5 position-relative"
-                  style={{
-                    width: "100%",
-                    height: "150px",
-                    objectFit: "cover",
-                  }}
-                />
                 <a
                   className="position-absolute bottom-0 end-0"
                   href={image?.url}
                   target="_blank"
                 >
-                  <Eye />
+                  <img
+                    src={image?.url}
+                    alt="Gallery Item"
+                    className="rounded-5 position-relative"
+                    style={{
+                      width: "100%",
+                      height: "150px",
+                      objectFit: "cover",
+                    }}
+                  />
                 </a>
               </div>
             ))}

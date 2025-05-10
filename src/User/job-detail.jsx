@@ -224,15 +224,15 @@ export default function JobDetail() {
             let nameToSet = "";
             if (responseData.sender.name === name) {
               nameToSet =
-                responseData.receiver.contactName || responseData.sender.name;
+                responseData.receiver.businessName || responseData.sender.name;
             } else if (
               responseData.sender.name === name ||
-              responseData.receiver.contactName === name
+              responseData.receiver.businessName === name
             ) {
               nameToSet = responseData.sender.name;
             } else {
               nameToSet =
-                responseData.receiver.contactName || responseData.sender.name;
+                responseData.receiver.businessName || responseData.sender.name;
             }
             setProviderName(nameToSet);
           }
@@ -308,7 +308,7 @@ export default function JobDetail() {
                     <div className="d-flex flex-row gap-2 align-items-center">
                       <div className="d-flex flex-column align-items-start gap-1">
                         <h3 className="mb-0">{data?.title || "Job Title"}</h3>
-                        <h6>Booking date:
+                        <h6>Date Poster:
                           {data?.date
                             ? new Date(data.createdAt).toLocaleTimeString(
                                 "en-AU",
@@ -342,6 +342,7 @@ export default function JobDetail() {
                                   src={doc}
                                   alt="document"
                                   className="w-100 h-100 px-1"
+                                  style={{maxHeight: "200px", objectFit: "cover"}}
                                 />
                               </a>
                             </div>
@@ -366,7 +367,7 @@ export default function JobDetail() {
                 <div className="col-lg-5">
                   <h3 className="fw-bold">Job Description</h3>
                   <p>{data?.requirements || "No description available"}</p>
-                  <h6>Scheduled for</h6>
+                  {/* <h6>Scheduled for</h6>
                   <h6>
                     {data?.date
                       ? new Date(data.date).toLocaleTimeString("en-AU", {
@@ -376,7 +377,7 @@ export default function JobDetail() {
                           year: "numeric",
                         })
                       : "No date provided"}
-                  </h6>
+                  </h6> */}
                   <hr />
                   <div className="d-flex flex-column gap-3 align-items-start more-info">
                     <div className="d-flex flex-row gap-4 align-items-start w-100">
