@@ -197,7 +197,7 @@ export default function Message() {
     const timeB = b.messages?.timeStamp || 0;
     return timeB - timeA;
   });
-  console.log("messageData", messageData, "selectedChat ", selectedChat);
+  console.log("messageData", sortedMessages, "selectedChat ", selectedChat);
 
   return (
     <>
@@ -288,8 +288,8 @@ export default function Message() {
                                 className="w-100"
                                 style={{ height: "82px", width: "82px" }}
                               >
-                                {item.displayUser?.contactName?.[0] ||
-                                  item.displayUser?.name?.[0]}
+                                {item.displayUser?.businessName?.[0] ||
+                                  item.displayUser?.contactName?.[0]}
                               </Avatar>
                             </div>
 
@@ -300,8 +300,8 @@ export default function Message() {
                             >
                               <div className="d-flex flex-column gap-1">
                                 <h5 className="mb-0 fw-bold fs-5 text-dark">
-                                  {item.displayUser?.contactName ||
-                                    item.displayUser?.name}
+                                  {item.displayUser?.businessName ||
+                                    item.displayUser?.contactName}
                                 </h5>
                                 <p className="mb-0 fw-medium fs-6 text-dark">
                                   {item?.messages?.msg}

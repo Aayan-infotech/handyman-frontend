@@ -87,7 +87,7 @@ export default function ServiceProviderProfile() {
                 className="col-md-3 col-6 mb-3 position-relative"
               >
                 <a
-                  className="position-absolute bottom-0 end-0"
+                  className=""
                   href={image?.url}
                   target="_blank"
                 >
@@ -97,7 +97,7 @@ export default function ServiceProviderProfile() {
                     className="rounded-5 position-relative"
                     style={{
                       width: "100%",
-                      height: "150px",
+                      height: "200px",
                       objectFit: "cover",
                     }}
                   />

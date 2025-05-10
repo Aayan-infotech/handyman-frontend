@@ -7,13 +7,13 @@ import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import FormGroup from "@mui/material/FormGroup";
-import Pagination from "react-bootstrap/Pagination";
 import { getHunterUser } from "../Slices/userSlice";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import Tooltip from "@mui/material/Tooltip";
-
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -421,20 +421,36 @@ export default function ServiceProvider() {
                               ))}
                             </tbody>
                           </Table>
-                          <Pagination className="justify-content-center pagination-custom">
-                            {Array.from(
-                              { length: totalPages },
-                              (_, i) => i + 1
-                            ).map((page) => (
-                              <Pagination.Item
-                                key={page}
-                                active={page === currentPage}
-                                onClick={() => handlePageChange(page)}
-                              >
-                                {page}
-                              </Pagination.Item>
-                            ))}
-                          </Pagination>
+                          <Stack
+                            spacing={2}
+                            sx={{ mt: 4, alignItems: "center" }}
+                          >
+                            <Pagination
+                              count={totalPages}
+                              page={currentPage}
+                              onChange={(event, page) => handlePageChange(page)}
+                              color="primary"
+                              size="large"
+                              variant="outlined"
+                              shape="rounded"
+                              sx={{
+                                "& .MuiPaginationItem-root": {
+                                  color: "#4CAF50",
+                                  borderColor: "#4CAF50",
+                                  "&:hover": {
+                                    backgroundColor: "#E8F5E9",
+                                  },
+                                },
+                                "& .Mui-selected": {
+                                  backgroundColor: "#4CAF50",
+                                  color: "#fff",
+                                  "&:hover": {
+                                    backgroundColor: "#388E3C",
+                                  },
+                                },
+                              }}
+                            />
+                          </Stack>
                         </div>
                       </div>
                     </div>

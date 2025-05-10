@@ -305,7 +305,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
         {
           jobTitle: chatData?.jobPost?.title || selectedChat?.jobData?.title,
           name:
-            localStorage.getItem("ProviderName") ||
+            localStorage.getItem("ProviderBusinessName") ||
             localStorage.getItem("hunterName"),
           receverEmail: selectedChat?.displayUser?.email || userChat?.email,
         },
@@ -506,11 +506,11 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     ? filteredMessage?.name.toUpperCase().charAt(0)
                     : ""} */}
                   {selectedChat?.displayUser?.name?.toUpperCase().charAt(0) ||
-                    selectedChat?.displayUser?.contactName
+                    selectedChat?.displayUser?.businessName
                       .toUpperCase()
                       .charAt(0) ||
                     userChat?.name?.toUpperCase().charAt(0) ||
-                    userChat?.contactName?.toUpperCase().charAt(0)}
+                    userChat?.businessName?.toUpperCase().charAt(0)}
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
                   <h5
@@ -527,9 +527,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     }}
                   >
                     {selectedChat?.displayUser?.name ||
-                      selectedChat?.displayUser?.contactName ||
+                      selectedChat?.displayUser?.businessName ||
                       userChat?.name ||
-                      userChat?.contactName}
+                      userChat?.businessName}
                   </h5>
                   {/* {!show ? (
                     <span className="text-muted fs-6">2m ago</span>
@@ -544,8 +544,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
           </div>
         </div>
         {hunterId &&
-          (selectedChat?.jobData?.jobStatus === "Pending" ||
-            chatData?.jobPost?.jobStatus === "Pending") &&
+          (selectedChat?.jobData?.jobStatus === "Pending") &&
           !jobShow && (
             <div className="container-fluid">
               <div className="row">

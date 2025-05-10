@@ -27,8 +27,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import FormControl from "@mui/material/FormControl";
 import axiosInstance from "../components/axiosInstance";
-import Pagination from "react-bootstrap/Pagination";
-
+import Pagination from "@mui/material/Pagination";
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -150,7 +149,7 @@ export default function HomeProvider() {
           });
         });
     }
-  }, [providerToken , jobStatus]);
+  }, [providerToken, jobStatus]);
 
   useEffect(() => {
     let filtered = data;
@@ -437,40 +436,33 @@ export default function HomeProvider() {
             </div>
           )}
           {pagination.totalPages > 1 && (
-            <Pagination className="justify-content-center pagination-custom mt-4">
-              <Pagination.Prev
-                disabled={pagination.page === 1}
-                onClick={() => handlePageChange(pagination.page - 1)}
+            <Stack spacing={2} sx={{ mt: 4, alignItems: "center" }}>
+              <Pagination
+                count={pagination.totalPages}
+                page={pagination.page}
+                onChange={(event, page) => handlePageChange(page)}
+                color="primary"
+                size="large"
+                variant="outlined"
+                shape="rounded"
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    color: "#4CAF50",
+                    borderColor: "#4CAF50",
+                    "&:hover": {
+                      backgroundColor: "#E8F5E9",
+                    },
+                  },
+                  "& .Mui-selected": {
+                    backgroundColor: "#4CAF50",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#388E3C",
+                    },
+                  },
+                }}
               />
-              {Array.from(
-                { length: Math.min(5, pagination.totalPages) },
-                (_, i) => {
-                  let pageNum;
-                  if (pagination.totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (pagination.page <= 3) {
-                    pageNum = i + 1;
-                  } else if (pagination.page >= pagination.totalPages - 2) {
-                    pageNum = pagination.totalPages - 4 + i;
-                  } else {
-                    pageNum = pagination.page - 2 + i;
-                  }
-                  return (
-                    <Pagination.Item
-                      key={pageNum}
-                      active={pageNum === pagination.page}
-                      onClick={() => handlePageChange(pageNum)}
-                    >
-                      {pageNum}
-                    </Pagination.Item>
-                  );
-                }
-              )}
-              <Pagination.Next
-                disabled={pagination.page === pagination.totalPages}
-                onClick={() => handlePageChange(pagination.page + 1)}
-              />
-            </Pagination>
+            </Stack>
           )}
         </div>
       </div>
