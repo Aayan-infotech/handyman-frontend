@@ -177,6 +177,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
     selectedChat?.users?.jobId ||
     null;
 
+  const notification = new URLSearchParams(location.search).get("path");
+  console.log("notification", notification);
+
   console.log("job id in chat", receiverId);
   useEffect(() => {
     const storedUserId = location.pathname.includes("/provider")
@@ -374,10 +377,17 @@ export default function Chat({ messageData, messages, selectedChat }) {
   };
 
   const handleBack = () => {
+    const path = new URLSearchParams(location.search).get("path");
+
+    if (path) {
+      navigate(`/notification`);
+      return;
+    }
     if (hunterId) {
       navigate(`/job-detail/${jobId}`);
       return;
     }
+
     navigate(`/provider/home`);
   };
 
@@ -544,7 +554,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
           </div>
         </div>
         {hunterId &&
-          (selectedChat?.jobData?.jobStatus === "Pending") &&
+          selectedChat?.jobData?.jobStatus === "Pending" &&
           !jobShow && (
             <div className="container-fluid">
               <div className="row">
