@@ -10,7 +10,8 @@ import logoWhite from "./assets/logo-white.png";
 import { Row, Col } from "react-bootstrap";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
-import Pagination from "react-bootstrap/Pagination";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import appleIcon from "./assets/apple.png";
 import playIcon from "./assets/google.png";
 import Select from "react-select";
@@ -132,7 +133,6 @@ export default function FeaturedJobs() {
               placeholder="Select by business type"
               getOptionValue={(e) => e.name} // Option Value
               className=" custom-design min-w-200"
-              
             />
 
             <Button variant="contained" color="success" onClick={handleSearch}>
@@ -191,25 +191,35 @@ export default function FeaturedJobs() {
       </div>
 
       {totalPages > 1 && (
-        <Pagination className="justify-content-center pagination-custom mt-4">
-          <Pagination.Prev
-            disabled={currentPage === 1}
-            onClick={() => fetchProviders(currentPage - 1, searchQuery)}
+        <Stack spacing={2} sx={{ mt: 4, mb: 4, alignItems: "center" }}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, page) => fetchProviders(page, searchQuery)}
+            color="primary"
+            size="large"
+            variant="outlined"
+            shape="rounded"
+            siblingCount={1}
+            boundaryCount={1}
+            className="pagination-custom"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "#fff",
+                backgroundColor: "#4CAF50",
+                "&:hover": {
+                  backgroundColor: "#388E3C",
+                },
+              },
+              "& .Mui-selected": {
+                backgroundColor: "#2E7D32",
+                "&:hover": {
+                  backgroundColor: "#1B5E20",
+                },
+              },
+            }}
           />
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <Pagination.Item
-              key={page}
-              active={page === currentPage}
-              onClick={() => fetchProviders(page, searchQuery)}
-            >
-              {page}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next
-            disabled={currentPage === totalPages}
-            onClick={() => fetchProviders(currentPage + 1, searchQuery)}
-          />
-        </Pagination>
+        </Stack>
       )}
 
       <footer className="footer text-light">

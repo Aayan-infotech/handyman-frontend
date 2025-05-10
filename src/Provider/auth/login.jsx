@@ -288,7 +288,7 @@ export default function LoginProvider() {
                   </Button>
                 </Link>
 
-                <Button
+                {/* <Button
                   variant="text"
                   color="success"
                   className="fw-semibold w-100 rounded-5 fs-5 mb-2"
@@ -296,7 +296,7 @@ export default function LoginProvider() {
                   onClick={handleGuest}
                 >
                   Continue As Guest
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>

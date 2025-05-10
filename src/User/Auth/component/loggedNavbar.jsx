@@ -23,6 +23,7 @@ export default function LoggedHeader() {
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
   const [notifications, setNotifications] = useState([]);
+  const [unRead, setUnRead] = useState(0);
   const handleName = async (notification) => {
     try {
       const response = await axiosInstance.post(
@@ -65,6 +66,7 @@ export default function LoggedHeader() {
       // );
 
       setNotifications(response.data.data);
+      setUnRead(response.data.unreadCount);
     } catch (error) {
       console.log(error);
     }
@@ -98,10 +100,7 @@ export default function LoggedHeader() {
           const providerResponse = await dispatch(getProviderUser());
           fetchedUser = providerResponse?.payload?.data;
         }
-        localStorage.setItem(
-          "hunterName",
-          fetchedUser?.name
-        );
+        localStorage.setItem("hunterName", fetchedUser?.name);
         if (fetchedUser === undefined || fetchedUser === null) {
           localStorage.clear();
           return;
@@ -142,7 +141,7 @@ export default function LoggedHeader() {
                   className="notification position-relative"
                   to="/notification"
                 >
-                  {notifications[0]?.isRead === false && (
+                  {unRead > 0 && (
                     <span
                       className="position-absolute translate-middle p-1 bg-danger border border-light rounded-circle"
                       style={{ left: "80%", top: "4%" }}

@@ -20,7 +20,8 @@ import InputLabel from "@mui/material/InputLabel";
 import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
-import Pagination from "react-bootstrap/Pagination";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import axiosInstance from "../components/axiosInstance";
 const ITEM_HEIGHT = 40;
@@ -209,7 +210,7 @@ export default function JobManagement() {
     fetchJobs(currentPage);
   }, [currentPage, jobStatus]); // Add search to dependencies
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (event, page) => {
     queryParams.set("page", page.toString());
     if (jobStatus) {
       queryParams.set("jobStatus", jobStatus);
@@ -485,25 +486,38 @@ export default function JobManagement() {
                           </tbody>
                         </Table>
                         {totalJobs >= 10 && (
-                          <Pagination className="justify-content-center pagination-custom">
-                            <Pagination.Prev
-                              disabled={currentPage === 1}
-                              onClick={() => handlePageChange(currentPage - 1)}
+                          <Stack
+                            spacing={2}
+                            sx={{ mt: 3, alignItems: "center" }}
+                          >
+                            <Pagination
+                              count={totalPages}
+                              page={currentPage}
+                              onChange={handlePageChange}
+                              color="primary"
+                              size="large"
+                              variant="outlined"
+                              shape="rounded"
+                              siblingCount={1}
+                              boundaryCount={1}
+                              className="pagination-custom"
+                              sx={{
+                                "& .MuiPaginationItem-root": {
+                                  color: "#fff",
+                                  backgroundColor: "#4CAF50",
+                                  "&:hover": {
+                                    backgroundColor: "#388E3C",
+                                  },
+                                },
+                                "& .Mui-selected": {
+                                  backgroundColor: "#2E7D32",
+                                  "&:hover": {
+                                    backgroundColor: "#1B5E20",
+                                  },
+                                },
+                              }}
                             />
-                            {[...Array(totalPages)].map((_, index) => (
-                              <Pagination.Item
-                                key={index + 1}
-                                active={index + 1 === currentPage}
-                                onClick={() => handlePageChange(index + 1)}
-                              >
-                                {index + 1}
-                              </Pagination.Item>
-                            ))}
-                            <Pagination.Next
-                              disabled={currentPage === totalPages}
-                              onClick={() => handlePageChange(currentPage + 1)}
-                            />
-                          </Pagination>
+                          </Stack>
                         )}
                       </div>
                     </div>

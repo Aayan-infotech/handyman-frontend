@@ -699,7 +699,9 @@ textarea:focus-visible {
 .pagination-custom a {
   color: #000 !important;
 }
-
+.pagination-custom svg {
+  color: #fff !important;
+}
 .pagination-custom .active span {
   background-color: rgba(50, 222, 132, 1) !important;
   color: #fff !important;

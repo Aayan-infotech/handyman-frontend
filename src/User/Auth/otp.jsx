@@ -188,7 +188,6 @@ export default function Otp({ length = 6 }) {
     }
   };
 
-
   return (
     <>
       {loading === true ? (
@@ -236,6 +235,7 @@ export default function Otp({ length = 6 }) {
                         </Col>
                       ))}
                   </Row>
+
                   <div className="d-flex justify-content-center flex-column align-items-center pt-4 gap-4">
                     <Button
                       variant="contained"
@@ -254,6 +254,9 @@ export default function Otp({ length = 6 }) {
                     >
                       Resend OTP
                     </Button>
+                    <p className="text-secondary pt-2 text-center">
+                      Please check your spam folder if you don't receive OTP
+                    </p>
                   </div>
                 </div>
               </div>

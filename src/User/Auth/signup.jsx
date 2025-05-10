@@ -391,24 +391,40 @@ export default function SignUp() {
                           <Form.Control
                             type="text"
                             placeholder="Phone number"
-                            value={phoneNo}
+                            value={`+61${phoneNo}`} 
                             required
                             onKeyDown={(e) =>
                               e.key === "Enter" && handleSignUp(e)
                             }
                             onChange={(e) => {
-                              let digitsOnly = e.target.value.replace(
+                              let inputValue = e.target.value;
+
+                              // Always ensure +61 is present
+                              if (!inputValue.startsWith("+61")) {
+                                inputValue =
+                                  "+61" + inputValue.replace(/^\+61/, "");
+                              }
+
+                              // Get the part after +61
+                              let digitsAfterPrefix = inputValue.substring(3);
+
+                              // Remove all non-digit characters
+                              digitsAfterPrefix = digitsAfterPrefix.replace(
                                 /\D/g,
                                 ""
                               );
-                              // Remove leading 0 if present
+
+                              // Ensure first digit after +61 is not 0
                               if (
-                                digitsOnly.length > 0 &&
-                                digitsOnly.charAt(0) === "0"
+                                digitsAfterPrefix.length > 0 &&
+                                digitsAfterPrefix.charAt(0) === "0"
                               ) {
-                                digitsOnly = digitsOnly.substring(1);
+                                digitsAfterPrefix =
+                                  digitsAfterPrefix.substring(1);
                               }
-                              setPhoneNo(digitsOnly);
+
+                             
+                              setPhoneNo(digitsAfterPrefix);
                             }}
                           />
                         </div>

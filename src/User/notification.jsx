@@ -7,9 +7,10 @@ import Toaster from "../Toaster";
 import "./user.css";
 import noData from "../assets/no_data_found.gif";
 import { Button } from "@mui/material";
-import Pagination from "react-bootstrap/Pagination";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import {
   messageNotification,
   assignedJobNotification,
@@ -350,6 +351,7 @@ export default function Notification() {
   }, [userType]);
 
   console.log("Notifications:", notifications);
+  console.log("pagination:", pagination);
 
   return (
     <>
@@ -453,6 +455,10 @@ export default function Notification() {
                                   variant="outlined"
                                   color="success"
                                   onClick={() => {
+                                    handleMarkAsRead(
+                                      notification?._id,
+                                      notification?.type
+                                    );
                                     userType === "hunter"
                                       ? navigate(
                                           `/chat/${
@@ -582,28 +588,35 @@ export default function Notification() {
                 )}
               </div>
               {pagination.totalPages > 1 && (
-                <Pagination className="justify-content-center pagination-custom mt-4">
-                  <Pagination.Prev
-                    disabled={pagination.page === 1}
-                    onClick={() => handlePageChange(pagination.page - 1)}
+                <Stack spacing={2} sx={{ mt: 4, pb: 4, alignItems: "center" }}>
+                  <Pagination
+                    count={pagination.totalPages}
+                    page={pagination.page}
+                    onChange={(event, page) => handlePageChange(page)}
+                    color="primary"
+                    size="large"
+                    variant="outlined"
+                    shape="rounded"
+                    siblingCount={1}
+                    boundaryCount={1}
+                    className="pagination-custom"
+                    sx={{
+                      "& .MuiPaginationItem-root": {
+                        color: "#fff",
+                        backgroundColor: "#4CAF50",
+                        "&:hover": {
+                          backgroundColor: "#388E3C",
+                        },
+                      },
+                      "& .Mui-selected": {
+                        backgroundColor: "#2E7D32",
+                        "&:hover": {
+                          backgroundColor: "#1B5E20",
+                        },
+                      },
+                    }}
                   />
-                  {Array.from(
-                    { length: pagination.totalPages },
-                    (_, i) => i + 1
-                  ).map((page) => (
-                    <Pagination.Item
-                      key={page}
-                      active={page === pagination.page}
-                      onClick={() => handlePageChange(page)}
-                    >
-                      {page}
-                    </Pagination.Item>
-                  ))}
-                  <Pagination.Next
-                    disabled={pagination.page === pagination.totalPages}
-                    onClick={() => handlePageChange(pagination.page + 1)}
-                  />
-                </Pagination>
+                </Stack>
               )}
             </div>
           </div>
