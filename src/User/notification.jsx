@@ -386,8 +386,8 @@ export default function Notification() {
                         } border-0 rounded-4`}
                       >
                         <div className="card-body px-3">
-                          <div className="d-flex flex-wrap justify-content-center flex-column flex-lg-row justify-content-lg-between align-items-center gap-2">
-                            <h5 className="mb-0 text-center text-lg-start">
+                          <div className="d-flex flex-wrap justify-content-center flex-column flex-lg-row justify-content-lg-end align-items-center gap-2">
+                            {/* <h5 className="mb-0 text-center text-lg-start">
                               {notification.nameData?.sender?.contactName
                                 ? notification.nameData.sender.contactName
                                     .charAt(0)
@@ -403,7 +403,7 @@ export default function Notification() {
                                     .toUpperCase() +
                                   notification.nameData.sender.name.slice(1)
                                 : ""}
-                            </h5>
+                            </h5> */}
 
                             <div>
                               <FaRegClock className="me-1" />
@@ -465,14 +465,18 @@ export default function Notification() {
                                             notification.userId === userId
                                               ? notification.receiverId
                                               : notification.userId
-                                          }?jobId=${notification.jobId}&path=notification`
+                                          }?jobId=${
+                                            notification.jobId
+                                          }&path=notification`
                                         )
                                       : navigate(
                                           `/provider/chat/${
                                             notification.userId === userId
                                               ? notification.receiverId
                                               : notification.userId
-                                          }?jobId=${notification.jobId}&path=notification`
+                                          }?jobId=${
+                                            notification.jobId
+                                          }&path=notification`
                                         );
                                   }}
                                   className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
@@ -490,9 +494,13 @@ export default function Notification() {
                                     <Button
                                       variant="outlined"
                                       color="success"
-                                      onClick={() =>
-                                        handleJobAccept(notification)
-                                      }
+                                      onClick={() => {
+                                        handleMarkAsRead(
+                                          notification?._id,
+                                          notification?.type
+                                        );
+                                        handleJobAccept(notification);
+                                      }}
                                       className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
                                     >
                                       Assign job
@@ -509,11 +517,15 @@ export default function Notification() {
                                     variant="outlined"
                                     color="success"
                                     className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
-                                    onClick={() =>
+                                    onClick={() => {
+                                      handleMarkAsRead(
+                                        notification?._id,
+                                        notification?.type
+                                      );
                                       navigate(
                                         `/job-detail/${notification.jobId}`
-                                      )
-                                    }
+                                      );
+                                    }}
                                     disabled={markingAsRead}
                                   >
                                     Mark as completed
@@ -529,7 +541,11 @@ export default function Notification() {
                                     variant="outlined"
                                     color="success"
                                     className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                    onClick={() =>
+                                    onClick={() => {
+                                      handleMarkAsRead(
+                                        notification?._id,
+                                        notification?.type
+                                      );
                                       handleJobCompletNotify({
                                         id: notification.jobId,
                                         receiverId:
@@ -539,8 +555,8 @@ export default function Notification() {
                                         title:
                                           notification?.nameData?.jobPost
                                             ?.title,
-                                      })
-                                    }
+                                      });
+                                    }}
                                   >
                                     Job Completed
                                   </Button>
@@ -563,9 +579,13 @@ export default function Notification() {
                                   variant="outlined"
                                   color="success"
                                   className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                  onClick={() =>
-                                    handleDeleteMass(notification._id)
-                                  }
+                                  onClick={() => {
+                                    handleMarkAsRead(
+                                      notification?._id,
+                                      notification?.type
+                                    )
+                                    handleDeleteMass(notification._id);
+                                  }}
                                 >
                                   Delete Message
                                 </Button>

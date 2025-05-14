@@ -308,7 +308,7 @@ export default function JobDetail() {
                     <div className="d-flex flex-row gap-2 align-items-center">
                       <div className="d-flex flex-column align-items-start gap-1">
                         <h3 className="mb-0">{data?.title || "Job Title"}</h3>
-                        <h6>Date Poster:
+                        <h6>Date Posted:
                           {data?.date
                             ? new Date(data.createdAt).toLocaleTimeString(
                                 "en-AU",
