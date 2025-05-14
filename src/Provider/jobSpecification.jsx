@@ -130,7 +130,7 @@ export default function JobSpecification() {
 
       if (response.status === 200) {
         // setShow(true);
-        noficationFunctionality();
+        // noficationFunctionality();
         handleJob();
         setToastProps({
           message: response.message,

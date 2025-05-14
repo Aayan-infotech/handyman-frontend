@@ -289,7 +289,7 @@ export default function Message() {
                                 style={{ height: "82px", width: "82px" }}
                               >
                                 {item.displayUser?.businessName?.[0] ||
-                                  item.displayUser?.contactName?.[0]}
+                                  item.displayUser?.name?.[0]}
                               </Avatar>
                             </div>
 
@@ -301,7 +301,7 @@ export default function Message() {
                               <div className="d-flex flex-column gap-1">
                                 <h5 className="mb-0 fw-bold fs-5 text-dark">
                                   {item.displayUser?.businessName ||
-                                    item.displayUser?.contactName}
+                                    item.displayUser?.name}
                                 </h5>
                                 <p className="mb-0 fw-medium fs-6 text-dark">
                                   {item?.messages?.msg}
@@ -319,7 +319,6 @@ export default function Message() {
                                     minute: "2-digit",
                                     hour12: true,
                                   })}{" "}
-                                  ago
                                 </span>
                               </div>
                             </div>
