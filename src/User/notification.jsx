@@ -405,7 +405,7 @@ export default function Notification() {
                                 : ""}
                             </h5> */}
 
-                            <div>
+                            {/* <div>
                               <FaRegClock className="me-1" />
                               <span>
                                 {new Date(
@@ -421,14 +421,14 @@ export default function Notification() {
                                   hour12: true,
                                 })}
                               </span>
-                            </div>
+                            </div> */}
                           </div>
                           <div className="row gy-2 align-items-end">
                             <div
                               className={
                                 notification.isRead === false
-                                  ? `col-lg-12`
-                                  : `col-lg-12`
+                                  ? `col-lg-8`
+                                  : `col-lg-8`
                               }
                             >
                               <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">
@@ -448,6 +448,26 @@ export default function Notification() {
                                     }`
                                   : notification.body}
                               </p>
+                            </div>
+
+                            <div className="col-lg-4">
+                              <div className="text-end">
+                                <FaRegClock className="me-1" />
+                                <span>
+                                  {new Date(
+                                    notification.createdAt
+                                  ).toLocaleString("en-AU", {
+                                    timeZone: "Australia/Sydney",
+                                    weekday: "short",
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })}
+                                </span>
+                              </div>
                             </div>
                             {notification?.type != "mass" && (
                               <div className="col-lg-3 d-flex justify-content-end">
@@ -583,7 +603,7 @@ export default function Notification() {
                                     handleMarkAsRead(
                                       notification?._id,
                                       notification?.type
-                                    )
+                                    );
                                     handleDeleteMass(notification._id);
                                   }}
                                 >

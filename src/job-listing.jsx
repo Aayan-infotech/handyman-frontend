@@ -158,24 +158,15 @@ export default function JobListing() {
                     </Col>
                     <Col>
                       <h6>Resources</h6>
-                      <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                     <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                         <li>
-                          <a href="#help-docs" className="text-light">
-                            Help Docs
+                          <a href="/guide" className="text-light">
+                            Guide & Updates
                           </a>
                         </li>
+
                         <li>
-                          <a href="#guide" className="text-light">
-                            Guide
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#updates" className="text-light">
-                            Updates
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#contact" className="text-light">
+                          <a href="/contact-us" className="text-light">
                             Contact Us
                           </a>
                         </li>

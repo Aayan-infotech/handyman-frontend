@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logo from "../../../assets/logo.png";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -11,7 +11,7 @@ import Toaster from "../../../Toaster";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../../../components/axiosInstance";
 import { getHunterUser, getProviderUser } from "../../../Slices/userSlice";
-
+import { io } from "socket.io-client";
 export default function LoggedHeader() {
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -19,6 +19,7 @@ export default function LoggedHeader() {
     toastKey: 0,
   });
   const location = useLocation();
+  const socketRef = useRef(null);
   const guestCondition = JSON.parse(localStorage.getItem("Guest")) || false;
   const dispatch = useDispatch();
   const Location = useLocation();
@@ -31,6 +32,87 @@ export default function LoggedHeader() {
   const userId = hunterId || providerId;
   const [notifications, setNotifications] = useState([]);
   const [unRead, setUnRead] = useState(0);
+  const notificationLengthRef = useRef(0);
+
+  const [initialNotificationsLoaded, setInitialNotificationsLoaded] =
+    useState(false);
+  useEffect(() => {
+    if (!userId) return;
+
+    if (!socketRef.current || socketRef.current.disconnected) {
+      const newSocket = io("http://18.209.91.97:7787", {
+        auth: {
+          token: hunterToken || providerToken,
+          userId,
+          userType,
+        },
+        transports: ["websocket"],
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        autoConnect: true,
+      });
+
+      socketRef.current = newSocket;
+
+      newSocket.on("connect", () => {
+        console.log("Socket.IO connected", newSocket.id);
+      });
+
+      newSocket.on("disconnect", (reason) => {
+        console.log("Socket.IO disconnected", reason);
+        if (reason === "io server disconnect") {
+          setTimeout(() => newSocket.connect(), 1000);
+        }
+      });
+
+      newSocket.on("connect_error", (error) => {
+        console.error("Socket.IO connection error:", error);
+      });
+
+      newSocket.on("newNotification", async (notification) => {
+        await fetchNotifications();
+        handleNewNotification(notification);
+      });
+
+      newSocket.onAny((event, ...args) => {
+        console.log(`Received socket event: ${event}`, args);
+      });
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.off("connect");
+        socketRef.current.off("disconnect");
+        socketRef.current.off("connect_error");
+        socketRef.current.off("newNotification");
+        socketRef.current.offAny();
+
+        setTimeout(() => {
+          if (socketRef.current?.connected) {
+            socketRef.current.disconnect();
+          }
+        }, 1000);
+      }
+    };
+  }, [userId, hunterToken, providerToken, userType]);
+
+  const handleNewNotification = (notification) => {
+    const newLength = notifications.length + 1;
+
+    // Update list and unread count
+    setNotifications((prev) => [notification, ...prev]);
+    setUnRead((prev) => prev + 1);
+
+    // Only show toast if newLength > storedLength
+    if (newLength > notificationLengthRef.current) {
+      setToastProps({
+        message: notification.message || "You have received a new notification",
+        type: "info",
+        toastKey: Date.now(),
+      });
+      notificationLengthRef.current = newLength;
+    }
+  };
 
   const handleName = async (notification) => {
     try {
@@ -55,14 +137,18 @@ export default function LoggedHeader() {
     if (!userId) return;
     try {
       const url = `/pushNotification/get-notification/${userType}`;
+
       const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${hunterToken || providerToken}` },
       });
+      const notificationsList = response.data.data || [];
 
       setNotifications(response.data.data);
       setUnRead(response.data.unreadCount);
+      setInitialNotificationsLoaded(true);
+      notificationLengthRef.current = notificationsList.length;
     } catch (error) {
-      ".]"(error);
+      console.log(error);
     }
   };
 
@@ -81,6 +167,11 @@ export default function LoggedHeader() {
     if (isNotificationEnabled) {
       fetchNotifications();
     }
+
+    // Reset initial load state when user changes
+    return () => {
+      setInitialNotificationsLoaded(false);
+    };
   }, [userType]);
 
   const fetchUserData = async () => {
