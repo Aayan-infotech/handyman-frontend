@@ -38,6 +38,7 @@ export default function LoggedHeader() {
 
   const [initialNotificationsLoaded, setInitialNotificationsLoaded] =
     useState(false);
+
   useEffect(() => {
     if (!userId) return;
 
@@ -72,12 +73,22 @@ export default function LoggedHeader() {
       });
 
       newSocket.on("newNotification", async (notification) => {
+        // First fetch the latest notifications
         await fetchNotifications();
+
+        // Then handle the new notification (which will check if we should show toast)
         handleNewNotification(notification);
       });
 
       newSocket.onAny((event, ...args) => {
         console.log(`Received socket event: ${event}`, args);
+        if (args[0]?.receiverId === userId) {
+          setToastProps({
+            message: "You have received a new notification",
+            type: "info",
+            toastKey: Date.now(),
+          });
+        }
       });
     }
 
@@ -97,23 +108,26 @@ export default function LoggedHeader() {
       }
     };
   }, [userId, hunterToken, providerToken, userType]);
-
   const handleNewNotification = (notification) => {
-    const newLength = notifications.length + 1;
+    console.log("notifications.length", notifications);
+    // Get the current length before updating state
+    const currentLength = notifications.length;
 
     // Update list and unread count
     setNotifications((prev) => [notification, ...prev]);
     setUnRead((prev) => prev + 1);
 
-    // Only show toast if newLength > storedLength
-    if (newLength > notificationLengthRef.current) {
-      setToastProps({
-        message: notification.message || "You have received a new notification",
-        type: "info",
-        toastKey: Date.now(),
-      });
-      notificationLengthRef.current = newLength;
-    }
+    // Only show toast if current length is greater than the stored reference
+    // if (currentLength >= notificationLengthRef.current) {
+    //   setToastProps({
+    //     message: notification.message || "You have received a new notification",
+    //     type: "info",
+    //     toastKey: Date.now(),
+    //   });
+    // }
+
+    // Update the reference to the new length
+    notificationLengthRef.current = currentLength + 1;
   };
   const handleName = async (notification) => {
     try {
@@ -138,26 +152,18 @@ export default function LoggedHeader() {
     if (!userId) return;
     try {
       const url = `/pushNotification/get-notification/${userType}`;
+
       const response = await axiosInstance.get(url, {
         headers: { Authorization: `Bearer ${hunterToken || providerToken}` },
       });
+      const notificationsList = response.data.data || [];
 
-      // const notifList = response.data.data || [];
-
-      // const updatedList = await Promise.all(
-      //   notifList.map(async (notification) => {
-      //     try {
-      //       const nameData = await handleName(notification);
-      //       return { ...notification, nameData };
-      //     } catch (error) {
-      //       console.error("Error processing notification:", error);
-      //       return notification;
-      //     }
-      //   })
-      // );
-
-      setNotifications(response.data.data);
+      setNotifications(notificationsList);
       setUnRead(response.data.unreadCount);
+      setInitialNotificationsLoaded(true);
+
+      // Update the reference with the initial length
+      notificationLengthRef.current = notificationsList.length;
     } catch (error) {
       console.log(error);
     }
