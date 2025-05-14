@@ -86,11 +86,7 @@ export default function ServiceProviderProfile() {
                 key={index}
                 className="col-md-3 col-6 mb-3 position-relative"
               >
-                <a
-                  className=""
-                  href={image?.url}
-                  target="_blank"
-                >
+                <a className="" href={image?.url} target="_blank">
                   <img
                     src={image?.url}
                     alt="Gallery Item"
@@ -150,7 +146,7 @@ export default function ServiceProviderProfile() {
                     </div>
                   </div>
                   <b className="mb-0 pt-2 ms-2">
-                    Name: {item?.providerId?.contactName || item?.userId?.name}
+                    Name: {item?.userId?.name || item?.providerId?.contactName}
                   </b>
                   <p className="fw-bold text-start mx-2">{item?.review}</p>
                 </div>
