@@ -375,7 +375,7 @@ export default function HomeProvider() {
                               </div>
                               <div className="col-lg-7">
                                 <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
-                                  <div className="d-flex flex-row gap-2 align-items-center">
+                                  <div className="d-flex flex-row gap-2 align-items-center" style={{minWidth: "150px"}}>
                                     <BiCoinStack />
                                     <h5 className="mb-0">
                                       ${job.estimatedBudget || "00"}

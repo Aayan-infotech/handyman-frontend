@@ -271,19 +271,44 @@ export default function Notification() {
     }
   };
 
+  const handleCompletedJob = async (notification) => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.post(
+        `/provider/completedCount/${notification?.userId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setLoading(false);
+      console.log(response);
+      setToastProps({
+        message: response.message,
+        type: "success",
+        toastKey: Date.now(),
+      });
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setToastProps({
+        message: error,
+        type: "error",
+        toastKey: Date.now(),
+      });
+    }
+  };
+
   const handleDelete = async (id) => {
     try {
       await axiosInstance.delete(`/pushNotification/deleteNotification/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Update local state instead of refetching
-      setNotifications((prev) => prev.filter((notif) => notif._id !== id));
-      setPagination((prev) => ({
-        ...prev,
-        total: prev.total - 1,
-        totalPages: Math.ceil((prev.total - 1) / prev.limit),
-      }));
+      await fetchNotifications();
+
       setToastProps({
         message: "Notification deleted successfully",
         type: "success",
@@ -520,6 +545,7 @@ export default function Notification() {
                                           notification?.type
                                         );
                                         handleJobAccept(notification);
+                                        handleCompletedJob(notification);
                                       }}
                                       className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
                                     >
