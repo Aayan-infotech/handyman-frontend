@@ -58,6 +58,7 @@ export default function ServiceProvider() {
   const radiusOptions = ["10", "20", "40", "80", "160"];
   const queryParams = new URLSearchParams(location.search);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalData , setTotalData] = useState(0);
 
   const [currentPage, setCurrentPage] = useState(
     parseInt(queryParams.get("page")) || 1
@@ -140,6 +141,7 @@ export default function ServiceProvider() {
         setData(response?.data?.data || []);
         setFilteredData(response?.data?.data || []);
         setTotalPages(response.data.pagination.totalPage);
+        setTotalData(response.data.pagination.totalRecords);
       }
     } catch (error) {
       setToastProps({
@@ -183,7 +185,7 @@ export default function ServiceProvider() {
     return address.replace(pattern, "").trim();
   };
 
-  console.log(providerRadius);
+  console.log(totalData);
 
   return (
     <>
@@ -377,7 +379,7 @@ export default function ServiceProvider() {
                             <tbody>
                               {filteredData?.map((provider, index) => (
                                 <tr key={provider._id} className="text-center">
-                                  <td>{index + 1 + (currentPage - 1) * 10}</td>
+                                 <td>{totalData - (index + (currentPage - 1) * 10)}</td>
                                   <td>
                                     {" "}
                                     <Link

@@ -340,22 +340,18 @@ export default function JobManagement() {
                           selected || "Select Job Status"
                         }
                       >
-                        {[
-                          "Completed",
-                          "Pending",
-                          "Assigned",
-                          "Deleted",
-                          "InProgress",
-                        ].map((status) => (
-                          <MenuItem key={status} value={status}>
-                            <Checkbox
-                              checked={jobStatus === status}
-                              // Prevent the checkbox from intercepting clicks
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                            <ListItemText primary={status} />
-                          </MenuItem>
-                        ))}
+                        {["Completed", "Pending", "Assigned", "Deleted"].map(
+                          (status) => (
+                            <MenuItem key={status} value={status}>
+                              <Checkbox
+                                checked={jobStatus === status}
+                                // Prevent the checkbox from intercepting clicks
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              <ListItemText primary={status} />
+                            </MenuItem>
+                          )
+                        )}
                       </Select>
                     </FormControl>
                     {jobStatus && (
@@ -415,7 +411,9 @@ export default function JobManagement() {
                           <tbody>
                             {filteredData?.map((provider, index) => (
                               <tr key={provider._id} className="text-center">
-                             <td>{totalJobs - (index + (currentPage - 1) * 10)}</td>
+                                <td>
+                                  {totalJobs - (index + (currentPage - 1) * 10)}
+                                </td>
                                 <td> {provider?.title}</td>
                                 <td className={`text-start flex-wrap`}>
                                   ${provider?.estimatedBudget || "00"}

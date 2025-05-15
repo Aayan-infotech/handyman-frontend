@@ -107,15 +107,15 @@ export default function Notification() {
       });
 
       const notifList = response.data.data || [];
-      const { data, total, page: currentPage, limit } = response.data;
+      const {  currentPage, total, totalPages } = response.data.pagination;
+      console.log("total", total, "page", currentPage, "totalPages", totalPages);
 
       // Update pagination state with new page
       setPagination((prev) => ({
         ...prev,
         total,
         page: currentPage,
-        limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages
       }));
 
       const updatedList = await Promise.all(
@@ -555,7 +555,7 @@ export default function Notification() {
                                 </>
                               )}
 
-                            {notification?.nameData?.jobPost?.jobStatus !==
+                            {notification?.type != "mass" &&notification?.nameData?.jobPost?.jobStatus !==
                               "Completed" &&
                               hunterId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
