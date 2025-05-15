@@ -448,7 +448,7 @@ export default function Notification() {
                               </span>
                             </div> */}
                           </div>
-                          <div className="row gy-2 align-items-end">
+                          <div className="row gy-2 align-items-start">
                             <div
                               className={
                                 notification.isRead === false
@@ -456,7 +456,7 @@ export default function Notification() {
                                   : `col-lg-8`
                               }
                             >
-                              <p className="mt-3 mb-0 text-center text-lg-start mb-3 mb-lg-0">
+                              <p className=" mb-0 text-center text-lg-start mb-3 mb-lg-0 fs-5">
                                 {providerId
                                   ? `${notification.body} ${
                                       notification?.type !== "mass" &&
