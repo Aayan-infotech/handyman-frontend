@@ -406,7 +406,7 @@ function Home() {
                           <h6 className="mb-0">{item?.title}</h6>
                         </div>
 
-                        <div className="d-flex justify-content-start align-items-center flex-row  flex-wrap">
+                        <div className="d-flex justify-content-start align-items-start flex-column  flex-wrap">
                           <span className="text-muted">{item?.user?.name}</span>
                           <span className="text-muted">
                             {filterAddressPatterns(
