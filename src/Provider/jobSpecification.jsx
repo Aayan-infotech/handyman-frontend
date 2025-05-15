@@ -437,7 +437,8 @@ export default function JobSpecification() {
                         </div>
                       </div>
                       <hr />
-                      {handleAccept && (
+                      {/* Button rendering logic */}
+                      {data?.jobAcceptCount?.length >= 4 && !hasAcceptedJob ? (
                         <Button
                           variant="outlined"
                           color="secondary"
@@ -445,46 +446,47 @@ export default function JobSpecification() {
                         >
                           This job limit has been Reached
                         </Button>
-                      )}
-                      {!handleAccept && hasCompletedJob === false ? (
-                        <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-2 align-items-center w-100">
-                          {/* <Button
-                          variant="contained"
-                          className="custom-green bg-red-outline rounded-5 py-3 w-50"
-                        >
-                          Reject
-                        </Button> */}
-
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              if (checkGuestCondition()) return;
-                              handleJobStatus();
-                            }}
-                            disabled={hasAcceptedJob}
-                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                          >
-                            {hasAcceptedJob
-                              ? "You have accepted to quote this job"
-                              : "Quote"}
-                          </Button>
-
-                          {hasAcceptedJob && (
-                            <Button
-                              variant="contained"
-                              onClick={handleChat}
-                              className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                              style={{ maxWidth: "160px" }}
-                            >
-                              Quick Message
-                            </Button>
-                          )}
-                        </div>
                       ) : null}
-                      {!handleAccept && hasCompletedJob === true ? (
+
+                      {data?.jobAcceptCount?.length < 4 &&
+                      !hasAcceptedJob &&
+                      !hasCompletedJob ? (
                         <Button
                           variant="contained"
-                          disabled={hasCompletedJob}
+                          onClick={() => {
+                            if (checkGuestCondition()) return;
+                            handleJobStatus();
+                          }}
+                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                        >
+                          Quote
+                        </Button>
+                      ) : null}
+
+                      {hasAcceptedJob && !hasCompletedJob ? (
+                        <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-2 align-items-center w-100">
+                          <Button
+                            variant="contained"
+                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            disabled
+                          >
+                            You have accepted to quote this job
+                          </Button>
+                          <Button
+                            variant="contained"
+                            onClick={handleChat}
+                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            style={{ maxWidth: "160px" }}
+                          >
+                            Quick Message
+                          </Button>
+                        </div>
+                      ) : null}
+
+                      {hasCompletedJob ? (
+                        <Button
+                          variant="contained"
+                          disabled
                           className="custom-green bg-green-custom rounded-5 py-3 w-100"
                         >
                           You have completed this Job
