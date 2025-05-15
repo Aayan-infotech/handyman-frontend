@@ -11,6 +11,7 @@ import { Row, Col, Form } from "react-bootstrap";
 import axiosInstance from "./components/axiosInstance";
 import Loader from "./Loader";
 import Chip from "@mui/material/Chip";
+import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import appleIcon from "./assets/apple.png";
 import playIcon from "./assets/google.png";
@@ -25,17 +26,34 @@ import {
 export default function LatestJobs() {
   const [recentJob, setRecentJob] = useState([]);
   const [loading, setLoading] = useState(false);
+ const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+  });
 
-  useEffect(() => {
-    const handleResponse = async () => {
+   const handlePageChange = async(page) => {
+    if (page !== pagination.page) {
+      setPagination((prev) => ({ ...prev, page }));
+      await handleResponse(page);
+    }
+  };
+
+
+  console.log("pagination", pagination);
+   const handleResponse = async (page = pagination.page) => {
       setLoading(true);
-      const response = await axiosInstance.get("/jobs");
-    
+      const response = await axiosInstance.get("/jobs?page=" + page);
+
       if (response.data.success === true || response.data.status === 200) {
         setLoading(false);
         setRecentJob(response?.data?.data?.jobPosts);
+        setPagination(response?.data?.data?.pagination);
       }
     };
+  useEffect(() => {
+   
     handleResponse();
   }, []);
 
@@ -91,7 +109,7 @@ export default function LatestJobs() {
               </Container>
             </Navbar>
           </div>
-          <div className="latest-job pt-5">
+          <div className="latest-job job-design-nonre pt-5">
             <div className="container jobs my-5">
               <div className="d-flex justify-content-start justify-content-lg-between align-items-lg-end flex-column flex-md-row gap-3">
                 <h2 className="mb-0">
@@ -142,6 +160,37 @@ export default function LatestJobs() {
                   </div>
                 ))}
               </div>
+              {pagination.totalPages > 1 && (
+                <Stack spacing={2} sx={{ mt: 4, pb: 4, alignItems: "center" }}>
+                  <Pagination
+                    count={pagination.totalPages}
+                    page={pagination.currentPage}
+                    onChange={(event, page) => handlePageChange(page)}
+                    color="primary"
+                    size="large"
+                    variant="outlined"
+                    shape="rounded"
+                    siblingCount={1}
+                    boundaryCount={1}
+                    className="pagination-custom"
+                    sx={{
+                      "& .MuiPaginationItem-root": {
+                        color: "#fff",
+                        backgroundColor: "#4CAF50",
+                        "&:hover": {
+                          backgroundColor: "#388E3C",
+                        },
+                      },
+                      "& .Mui-selected": {
+                        backgroundColor: "#2E7D32",
+                        "&:hover": {
+                          backgroundColor: "#1B5E20",
+                        },
+                      },
+                    }}
+                  />
+                </Stack>
+              )}
             </div>
           </div>
           <footer className="footer text-light">
@@ -191,7 +240,7 @@ export default function LatestJobs() {
                     </Col>
                     <Col>
                       <h6>Resources</h6>
-                     <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                      <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                         <li>
                           <a href="/guide" className="text-light">
                             Guide & Updates

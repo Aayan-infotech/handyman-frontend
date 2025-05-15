@@ -247,6 +247,7 @@ export default function HomeProvider() {
   //   }
   // }, []);
 
+  console.log(filteredData);
   return (
     <>
       <LoggedHeader />
@@ -345,6 +346,8 @@ export default function HomeProvider() {
                       (accept) => accept.providerId === providerId
                     );
 
+                    const handleAccept = job?.jobAcceptCount.length === 4;
+
                     return (
                       <div className="col-lg-12 management" key={job._id}>
                         <div className="card border-0 rounded-3 px-4">
@@ -375,7 +378,10 @@ export default function HomeProvider() {
                               </div>
                               <div className="col-lg-7">
                                 <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-lg-center">
-                                  <div className="d-flex flex-row gap-2 align-items-center" style={{minWidth: "150px"}}>
+                                  <div
+                                    className="d-flex flex-row gap-2 align-items-center"
+                                    style={{ minWidth: "150px" }}
+                                  >
                                     <BiCoinStack />
                                     <h5 className="mb-0">
                                       ${job.estimatedBudget || "00"}
@@ -393,22 +399,33 @@ export default function HomeProvider() {
                               </div>
 
                               <div className="col-lg-2">
-                                {hasAcceptedJob ? (
-                                  <Button
-                                    variant="outlined"
-                                    color="success"
-                                    className="rounded-5 w-100 py-3"
-                                    onClick={() => navTest(job._id)}
-                                  >
-                                    Quoted
-                                  </Button>
+                                {!handleAccept ? (
+                                  hasAcceptedJob ? (
+                                    <Button
+                                      variant="outlined"
+                                      color="success"
+                                      className="rounded-5 w-100 py-3"
+                                      onClick={() => navTest(job._id)}
+                                    >
+                                      Quoted
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      variant="contained"
+                                      className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                                      onClick={() => navTest(job._id)}
+                                    >
+                                      Contact
+                                    </Button>
+                                  )
                                 ) : (
                                   <Button
-                                    variant="contained"
-                                    className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                                    variant="outlined"
+                                    color="secondary"
+                                    className="rounded-5 w-100 py-3 seconday-button"
                                     onClick={() => navTest(job._id)}
                                   >
-                                    Contact
+                                    Limit reached
                                   </Button>
                                 )}
                               </div>

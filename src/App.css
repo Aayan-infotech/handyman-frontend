@@ -699,8 +699,16 @@ textarea:focus-visible {
 .pagination-custom a {
   color: #000 !important;
 }
+.seconday-button {
+  color: #fff !important;
+  background-color: #979797 !important;
+  border-color: #979797 !important;
+}
 .pagination-custom svg {
   color: #fff !important;
+}
+.job-design-nonre::before {
+  display: none !important;
 }
 .pagination-custom .active span {
   background-color: rgba(50, 222, 132, 1) !important;

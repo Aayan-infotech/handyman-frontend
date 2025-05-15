@@ -202,6 +202,7 @@ export default function JobSpecification() {
     (job) => job.providerId === providerIdToMatch
   );
 
+  const handleAccept = data?.jobAcceptCount?.length === 4;
   const hasCompletedJob = data.jobStatus === "Completed" ? true : false;
   const handleChat = () => {
     navigate(`/provider/chat/${data.user?._id}?jobId=${data?._id}`);
@@ -224,7 +225,6 @@ export default function JobSpecification() {
 
     return address.replace(pattern, "").trim();
   };
-
   return (
     <>
       {loading === true ? (
@@ -437,7 +437,16 @@ export default function JobSpecification() {
                         </div>
                       </div>
                       <hr />
-                      {hasCompletedJob === false ? (
+                      {handleAccept && (
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          className="rounded-5 w-100 py-3 seconday-button"
+                        >
+                          This job limit has been Reached
+                        </Button>
+                      )}
+                      {!handleAccept && hasCompletedJob === false ? (
                         <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-2 align-items-center w-100">
                           {/* <Button
                           variant="contained"
@@ -472,7 +481,7 @@ export default function JobSpecification() {
                           )}
                         </div>
                       ) : null}
-                      {hasCompletedJob === true ? (
+                      {!handleAccept && hasCompletedJob === true ? (
                         <Button
                           variant="contained"
                           disabled={hasCompletedJob}
