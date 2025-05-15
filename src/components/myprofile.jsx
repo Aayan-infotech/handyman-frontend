@@ -274,6 +274,7 @@ export default function MyProfile() {
   };
 
   const fetchGallery = async () => {
+     setLoading(true);
     try {
       const response = await axiosInstance.get(
         `/providerPhoto/${providerId}` // Adjust API endpoint
@@ -282,11 +283,14 @@ export default function MyProfile() {
       if (response.data && response.data.data.files) {
         const files = response.data.data.files;
         setGallery(files); // Set the gallery state with URLs
+        setLoading(false);
       } else {
         console.error("No images found in the response.");
+        setLoading(false);
       }
     } catch (error) {
       console.error("Failed to fetch gallery:", error);
+      setLoading(false);
     }
   };
 
@@ -597,7 +601,7 @@ export default function MyProfile() {
   const Location = useLocation();
   return (
     <>
-      {loading ? (
+      {loading && !name ? (
         <Loader />
       ) : (
         <>
