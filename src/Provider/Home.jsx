@@ -399,8 +399,10 @@ export default function HomeProvider() {
                               </div>
 
                               <div className="col-lg-2">
-                                {!handleAccept ? (
+                                {job?.jobAcceptCount.length === 4 ? (
+                                  // If jobAcceptCount length is 4 (limit reached)
                                   hasAcceptedJob ? (
+                                    // If current provider is one of the accepted providers
                                     <Button
                                       variant="outlined"
                                       color="success"
@@ -410,22 +412,35 @@ export default function HomeProvider() {
                                       Quoted
                                     </Button>
                                   ) : (
+                                    // If current provider is NOT one of the accepted providers
                                     <Button
-                                      variant="contained"
-                                      className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                                      variant="outlined"
+                                      color="secondary"
+                                      className="rounded-5 w-100 py-3 seconday-button"
                                       onClick={() => navTest(job._id)}
                                     >
-                                      Contact
+                                      Limit reached
                                     </Button>
                                   )
-                                ) : (
+                                ) : // If jobAcceptCount length is less than 4
+                                hasAcceptedJob ? (
+                                  // If current provider has already accepted
                                   <Button
                                     variant="outlined"
-                                    color="secondary"
-                                    className="rounded-5 w-100 py-3 seconday-button"
+                                    color="success"
+                                    className="rounded-5 w-100 py-3"
                                     onClick={() => navTest(job._id)}
                                   >
-                                    Limit reached
+                                    Quoted
+                                  </Button>
+                                ) : (
+                                  // If current provider hasn't accepted yet
+                                  <Button
+                                    variant="contained"
+                                    className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                                    onClick={() => navTest(job._id)}
+                                  >
+                                    Contact
                                   </Button>
                                 )}
                               </div>
