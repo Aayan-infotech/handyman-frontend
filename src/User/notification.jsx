@@ -555,7 +555,7 @@ export default function Notification() {
                                 </>
                               )}
 
-                            {notification?.nameData?.jobPost?.jobStatus !==
+                            {notification?.type != "mass" &&notification?.nameData?.jobPost?.jobStatus !==
                               "Completed" &&
                               hunterId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
