@@ -24,7 +24,7 @@ import Toaster from "../Toaster";
 import { useDispatch, useSelector } from "react-redux";
 import { getGuestProviderJobId } from "../Slices/providerSlice";
 import { acceptJobNotification } from "../Slices/notificationSlice";
-
+import { messageNotification } from "../Slices/notificationSlice";
 export default function JobSpecification() {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
@@ -107,6 +107,38 @@ export default function JobSpecification() {
       if (error.response?.status === 500) {
         navigate("/error");
       }
+    }
+  };
+
+  const handleJobCompletNotify = async ({ id, receiverId, title }) => {
+    setLoading(true);
+    try {
+      const apiResponse = await axiosInstance.put(
+        `/jobPost/notifyCompletion/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken}`,
+          },
+        }
+      );
+      if (apiResponse.status === 200) {
+        await handleJob();
+        setLoading(false);
+        const response = dispatch(
+          messageNotification({
+            receiverId,
+            jobId: id,
+            body: `Provider have completed your job ${title}`,
+          })
+        );
+        // if (messageNotification.fulfilled.match(response)) {
+
+        // }
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
     }
   };
 
@@ -239,13 +271,13 @@ export default function JobSpecification() {
               </div>
             </Tooltip>
           </Link> */}
-          <div className="message">
+          {/* <div className="message">
             <Tooltip title="Message" placement="left-start">
               <Link to="/provider/message">
                 <MdMessage />
               </Link>
             </Tooltip>
-          </div>
+          </div> */}
           <div className="bg-second py-5">
             <div className="container">
               <div className="row gy-4 gx-lg-2 management">
@@ -464,22 +496,52 @@ export default function JobSpecification() {
                       ) : null}
 
                       {hasAcceptedJob && !hasCompletedJob ? (
-                        <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-2 align-items-center w-100">
-                          <Button
-                            variant="contained"
-                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                            disabled
-                          >
-                            You have accepted to quote this job
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={handleChat}
-                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                            style={{ maxWidth: "160px" }}
-                          >
-                            Quick Message
-                          </Button>
+                        <div className="row gy-4 w-100">
+                          <div className="col-lg-12">
+                            <Button
+                              variant="contained"
+                              className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                              disabled
+                            >
+                              You have accepted to quote this job
+                            </Button>
+                          </div>
+                          <div className="col-lg-6">
+                            <Button
+                              variant="contained"
+                              onClick={handleChat}
+                              className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            >
+                              Quick Message
+                            </Button>
+                          </div>
+                          <div className="col-lg-6">
+                            {data?.completionNotified === false ? (
+                              <Button
+                                variant="contained"
+                                onClick={() =>
+                                  handleJobCompletNotify({
+                                    id: id,
+                                    receiverId:
+                                      localStorage.getItem("ProviderId"),
+                                    title: data?.title,
+                                  })
+                                }
+                                className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                              >
+                                Mark As Completed
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outlined"
+                                color="success"
+                                className="custom-green h-100 py-3 bg-green-custom rounded-5 text-light border-light w-100"
+                                disabled
+                              >
+                                Already Notified
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ) : null}
 

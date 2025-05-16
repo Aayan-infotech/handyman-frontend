@@ -280,13 +280,13 @@ export default function HomeProvider() {
           </div>
         </Tooltip>
       </Link> */}
-      <Link to="/provider/message">
+      {/* <Link to="/provider/message">
         <Tooltip title="Message" placement="left-start">
           <div className="message">
             <MdMessage />
           </div>
         </Tooltip>
-      </Link>
+      </Link> */}
 
       <div className="bg-second py-3">
         <div className="container top-section-main">
@@ -416,10 +416,10 @@ export default function HomeProvider() {
                                     <Button
                                       variant="outlined"
                                       color="secondary"
-                                      className="rounded-5 w-100 py-3 seconday-button"
+                                      className="rounded-5 w-100 py-3 seconday-button px-0"
                                       onClick={() => navTest(job._id)}
                                     >
-                                      Limit reached
+                                      Quote Limit reached
                                     </Button>
                                   )
                                 ) : // If jobAcceptCount length is less than 4

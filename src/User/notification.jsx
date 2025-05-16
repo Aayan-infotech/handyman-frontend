@@ -83,7 +83,7 @@ export default function Notification() {
         {
           senderId: notification.userId,
           receiverId: notification.receiverId,
-          jobPostId: notification.jobId || null,
+          jobPostId: notification.job._id || null,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -171,7 +171,7 @@ export default function Notification() {
     setLoading(true);
     try {
       const response = await axiosInstance.post(
-        `/jobpost/changeJobStatus/${notification.jobId}`,
+        `/jobpost/changeJobStatus/${notification.job._id}`,
         {
           jobStatus: "Assigned",
           providerId: assignToId,
@@ -186,7 +186,7 @@ export default function Notification() {
       await dispatch(
         assignedJobNotification({
           receiverId: assignToId,
-          jobId: notification.jobId,
+          jobId: notification.job._id,
         })
       );
 
@@ -222,7 +222,7 @@ export default function Notification() {
     setLoading(true);
     try {
       const reponse = await axiosInstance.post(
-        `/jobPost/changeJobStatus/${notification.jobId}`,
+        `/jobPost/changeJobStatus/${notification.job._id}`,
         {
           jobStatus: " Completed",
           providerId: assignToId,
@@ -511,7 +511,7 @@ export default function Notification() {
                                               ? notification.receiverId
                                               : notification.userId
                                           }?jobId=${
-                                            notification.jobId
+                                            notification.job._id
                                           }&path=notification`
                                         )
                                       : navigate(
@@ -520,7 +520,7 @@ export default function Notification() {
                                               ? notification.receiverId
                                               : notification.userId
                                           }?jobId=${
-                                            notification.jobId
+                                            notification.job._id
                                           }&path=notification`
                                         );
                                   }}
@@ -569,7 +569,7 @@ export default function Notification() {
                                         notification?.type
                                       );
                                       navigate(
-                                        `/job-detail/${notification.jobId}`
+                                        `/job-detail/${notification.job._id}`
                                       );
                                     }}
                                     disabled={markingAsRead}
@@ -579,7 +579,7 @@ export default function Notification() {
                                 </div>
                               )}
                             {providerId &&
-                              notification.jobId &&
+                              notification.job._id &&
                               (notification?.nameData?.jobPost
                                 ?.completionNotified === false ? (
                                 <div className="col-lg-3 d-flex justify-content-end">
@@ -593,7 +593,7 @@ export default function Notification() {
                                         notification?.type
                                       );
                                       handleJobCompletNotify({
-                                        id: notification.jobId,
+                                        id: notification.job._id,
                                         receiverId:
                                           notification.userId === userId
                                             ? notification.receiverId

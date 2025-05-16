@@ -5,6 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { IoIosSearch, IoMdNotificationsOutline } from "react-icons/io";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import "../../user.css";
 import { FaRegUserCircle } from "react-icons/fa";
 import axios from "axios";
@@ -234,6 +235,13 @@ export default function LoggedHeader() {
 
             <div className="   d-flex justify-content-between align-items-center gap-5">
               <div className=" d-flex justify-content-between align-items-center gap-2">
+                <Link to="/message">
+                  {/* <Tooltip title="Message" placement="left-start"> */}
+                    <div className="message">
+                      <MdMessage />{" "}
+                    </div>
+                  {/* </Tooltip> */}
+                </Link>
                 <Link
                   className="notification position-relative"
                   to="/notification"
