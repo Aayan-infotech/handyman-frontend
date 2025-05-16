@@ -607,13 +607,13 @@ export default function MyProfile() {
         <>
           <LoggedHeader />
 
-          <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
+          {/* <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
             <Tooltip title="Message" placement="left-start">
               <div className="message">
                 <MdMessage />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <div className="bg-second pb-3">
             <div className="container">

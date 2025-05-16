@@ -288,13 +288,13 @@ export default function JobEdit() {
             </Tooltip>
           </Link> */}
 
-          <Link to="/message">
+          {/* <Link to="/message">
             <Tooltip title="Admin chat" placement="left-start">
               <div className="message">
                 <MdMessage />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <div className="bg-second py-3">
             <div className="container">

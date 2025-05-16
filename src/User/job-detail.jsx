@@ -295,11 +295,11 @@ export default function JobDetail() {
         <>
           {" "}
           <LoggedHeader />
-          <div className="message">
+          {/* <div className="message">
             <Link to="/message">
               <MdMessage />
             </Link>
-          </div>
+          </div> */}
           <div className="bg-second py-5">
             <div className="container">
               <div className="row gy-4 gx-lg-2 management">

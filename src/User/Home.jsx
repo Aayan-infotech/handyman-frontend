@@ -138,13 +138,13 @@ export default function Main() {
             </Tooltip>
           </Link> */}
 
-          <Link to="/message">
+          {/* <Link to="/message">
             <Tooltip title="Message" placement="left-start">
               <div className="message">
                 <MdMessage />{" "}
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <div className="bg-second">
             <div className="container">

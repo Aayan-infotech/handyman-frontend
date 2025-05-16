@@ -194,13 +194,13 @@ export default function ServiceProvider() {
       ) : (
         <>
           <LoggedHeader />
-          <Link to="/message">
+          {/* <Link to="/message">
             <Tooltip title="Message" placement="left-start">
               <div className="message">
                 <MdMessage />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
           <div className="bg-second py-3">
             <div className="container">
               <div className="row gy-4">

@@ -107,13 +107,13 @@ export default function ServicesProvider() {
             </Tooltip>
           </Link> */}
 
-          <Link to="/message">
+          {/* <Link to="/message">
             <Tooltip title="Message" placement="left-start">
               <div className="message">
                 <MdMessage />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
 
           <div className="container">
             <div className="row gy-4 my-4">

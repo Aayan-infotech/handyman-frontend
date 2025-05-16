@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import axiosInstance from "../../../components/axiosInstance";
 import { getHunterUser, getProviderUser } from "../../../Slices/userSlice";
 import { io } from "socket.io-client";
+import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
+
 export default function LoggedHeader() {
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -265,6 +267,13 @@ export default function LoggedHeader() {
             )}
 
             <div className="d-flex justify-content-between align-items-center gap-2">
+              <Link to="/message">
+                {/* <Tooltip title="Message" placement="left-start"> */}
+                <div className="message">
+                  <MdMessage />{" "}
+                </div>
+                {/* </Tooltip> */}
+              </Link>
               <Link
                 className="notification position-relative"
                 to="/notification"
