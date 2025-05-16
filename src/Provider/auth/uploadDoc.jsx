@@ -165,7 +165,7 @@ export default function Upload() {
   };
 
   const handleUpload = async () => {
-    if (!document || document.length === 0) {
+    if (allDocuments.length === 0) {
       setToastProps({
         message: "No files uploaded",
         type: "error",
@@ -175,7 +175,7 @@ export default function Upload() {
     }
 
     const formData = new FormData();
-    Array.from(newDocuments).forEach((file) => {
+    Array.from(allDocuments).forEach((file) => {
       formData.append("file", file);
     });
     setLoading(true);
@@ -268,7 +268,7 @@ export default function Upload() {
                             size="large"
                             className="custom-green-outline fs-6 w-100 rounded-4 bg-green-custom"
                             color="success"
-                            disabled={!filesAdded || document.length === 0}
+                            // disabled={document.length === 0 || !filesAdded}
                           >
                             Submit
                           </Button>
