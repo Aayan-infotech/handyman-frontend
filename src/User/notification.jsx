@@ -107,6 +107,7 @@ export default function Notification() {
       });
 
       const notifList = response.data.data || [];
+      console.log("notifList", notifList);
       const {  currentPage, total, totalPages } = response.data.pagination;
       console.log("total", total, "page", currentPage, "totalPages", totalPages);
 
@@ -129,7 +130,7 @@ export default function Notification() {
           }
         })
       );
-      setNotifications(updatedList);
+      setNotifications(notifList);
     } catch (error) {
       setToastProps({
         message: "Failed to fetch notifications",

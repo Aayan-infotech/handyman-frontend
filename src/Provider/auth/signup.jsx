@@ -413,7 +413,7 @@ export default function SignUpProvider() {
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="5">
-                        Business Industry
+                        Business Type
                       </Form.Label>
                       <Col sm="7">
                         <FormControl className="w-100 select-ion">
