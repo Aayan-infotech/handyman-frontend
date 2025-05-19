@@ -162,8 +162,8 @@ export default function ManageSubscription() {
                       </div>
                     </div>
                   </div>
-                  <div className="row py-3 gy-2 mt-lg-4">
-                    {voucher && voucher.length > 0 && (
+                  {voucher && voucher.length > 0 && (
+                    <div className="row py-3 gy-2 mt-lg-4">
                       <>
                         <h3 className="text-center text-lg-start mb-1">
                           Your Voucher Plan
@@ -210,8 +210,8 @@ export default function ManageSubscription() {
                           </div>
                         ))}
                       </>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <div className="row py-3 gy-2 mt-lg-4 mb-4">
                     {/* Active Subscriptions Section */}
                     {activeSubscriptions.length > 0 && (
@@ -228,7 +228,7 @@ export default function ManageSubscription() {
                               }`}{" "}
                               Plan
                             </h3>
-                            <div className="w-100 h-100 card price-card border-0 rounded-5 position-relative overflow-hidden px-4 pt-5 pb-3">
+                            <div className="w-100 card price-card border-0 rounded-5 position-relative px-4 pb-4 pt-4">
                               <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
                                 <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start ">
                                   <h6>
