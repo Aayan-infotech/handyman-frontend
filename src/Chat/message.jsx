@@ -31,9 +31,8 @@ export default function Message() {
   const userFinder = location.pathname.includes("/provider");
 
   useEffect(() => {
-    const storedUserId = location.pathname.includes("/provider")
-      ? localStorage.getItem("ProviderId")
-      : localStorage.getItem("hunterId");
+    const storedUserId =
+      localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
 
     if (storedUserId) {
       setCurrentUser(storedUserId);
@@ -212,6 +211,7 @@ export default function Message() {
     return timeB - timeA;
   });
   console.log("messageData", sortedMessages, "selectedChat ", selectedChat);
+  console.log(currentUser);
 
   return (
     <>

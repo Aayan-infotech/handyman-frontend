@@ -330,16 +330,25 @@ export default function Upload() {
                                 (file.path &&
                                   file.path.match(/\.(jpg|jpeg|png|gif)$/i)) ? (
                                 <>
-                                  <img
-                                    src={
+                                  <a
+                                    href={
                                       file instanceof File
                                         ? URL.createObjectURL(file)
                                         : file.path
                                     }
-                                    alt="docImage"
-                                    className="object-fit-contain w-100 rounded-4"
-                                    height={100}
-                                  />
+                                    target="_blank"
+                                  >
+                                    <img
+                                      src={
+                                        file instanceof File
+                                          ? URL.createObjectURL(file)
+                                          : file.path
+                                      }
+                                      alt="docImage"
+                                      className="object-fit-contain w-100 rounded-4"
+                                      height={100}
+                                    />
+                                  </a>
                                   <button
                                     className="btn btn-danger position-absolute top-0 end-0"
                                     onClick={() =>

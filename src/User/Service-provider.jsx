@@ -5,6 +5,8 @@ import { getAddress } from "../Slices/addressSlice";
 import LoggedHeader from "./Auth/component/loggedNavbar";
 import { IoIosSearch } from "react-icons/io";
 import Form from "react-bootstrap/Form";
+import { IoEyeSharp, IoTrashOutline, IoPencil } from "react-icons/io5";
+
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 import FormGroup from "@mui/material/FormGroup";
 import { getHunterUser } from "../Slices/userSlice";
@@ -58,7 +60,7 @@ export default function ServiceProvider() {
   const radiusOptions = ["10", "20", "40", "80", "160"];
   const queryParams = new URLSearchParams(location.search);
   const [totalPages, setTotalPages] = useState(0);
-  const [totalData , setTotalData] = useState(0);
+  const [totalData, setTotalData] = useState(0);
 
   const [currentPage, setCurrentPage] = useState(
     parseInt(queryParams.get("page")) || 1
@@ -374,20 +376,26 @@ export default function ServiceProvider() {
                                 <th className="green-card-important py-3 text-center">
                                   Address
                                 </th>
+                                <th className="green-card-important py-3 text-center">
+                                  Action
+                                </th>
                               </tr>
                             </thead>
                             <tbody>
                               {filteredData?.map((provider, index) => (
                                 <tr key={provider._id} className="text-center">
-                                 <td>{totalData - (index + (currentPage - 1) * 10)}</td>
+                                  <td>
+                                    {totalData -
+                                      (index + (currentPage - 1) * 10)}
+                                  </td>
                                   <td>
                                     {" "}
-                                    <Link
+                                    {/* <Link
                                       to={`/service-profile/${provider._id}`}
                                       className="text-dark"
-                                    >
-                                      {provider.businessName}
-                                    </Link>
+                                    > */}
+                                    {provider.businessName}
+                                    {/* </Link> */}
                                   </td>
                                   <td>
                                     <tr
@@ -418,6 +426,14 @@ export default function ServiceProvider() {
                                     {filterAddressPatterns(
                                       provider.address.addressLine
                                     )}
+                                  </td>
+                                  <td>
+                                    <Link
+                                      to={`/service-profile/${provider._id}`}
+                                      style={{ height: "25px" }}
+                                    >
+                                      <IoEyeSharp />
+                                    </Link>
                                   </td>
                                 </tr>
                               ))}
