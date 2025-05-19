@@ -257,7 +257,7 @@ export default function LoggedHeader() {
                   <IoMdNotificationsOutline className="fs-4" />
                 </Link>
                 {providerToken ? (
-                  <Link to="/provider/myprofile">
+                  <Link to="/provider/myprofile" className="myprofile">
                     {!images ? (
                       <FaRegUserCircle className="fs-1" />
                     ) : (
@@ -265,7 +265,7 @@ export default function LoggedHeader() {
                     )}
                   </Link>
                 ) : (
-                  <Link to="/myprofile">
+                  <Link to="/myprofile" className="myprofile">
                     {!images ? (
                       <FaRegUserCircle className="fs-1" />
                     ) : (

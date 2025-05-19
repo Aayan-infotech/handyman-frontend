@@ -67,7 +67,7 @@
   color: #32de84;
 }
 
-.loggedheader .justify-content-between .justify-content-between img {
+.myprofile img , .myprofile svg {
   width: 45px;
   height: 45px;
   border-radius: 50%;

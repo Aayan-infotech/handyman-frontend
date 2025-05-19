@@ -249,15 +249,14 @@ export default function LoggedHeader() {
         className="position-relative z-1 loggedheader"
       >
         <Container fluid>
-          <Link to="/provider/home" className="py-1">
-            <img src={logo} alt="logo" />
-          </Link>
+          <div className=" d-flex justify-content-between align-items-center w-100">
+            <Link to="/provider/home" className="py-1">
+              <img src={logo} alt="logo" />
+            </Link>
 
-          {location.pathname === "/post-new-job" && (
-            <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
-          )}
-
-          <div className=" d-flex justify-content-between align-items-center gap-5">
+            {location.pathname === "/post-new-job" && (
+              <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
+            )}
             {(location.pathname === "/post-new-job" ||
               location.pathname === "/home") && (
               <div className="position-relative icon">
@@ -290,7 +289,7 @@ export default function LoggedHeader() {
               </Link>
 
               {location.pathname.includes("provider") ? (
-                <Link to="/provider/myprofile">
+                <Link to="/provider/myprofile" className="myprofile">
                   {!images ? (
                     <FaRegUserCircle className="fs-1" />
                   ) : (
@@ -298,7 +297,7 @@ export default function LoggedHeader() {
                   )}
                 </Link>
               ) : (
-                <Link to="/myprofile">
+                <Link to="/myprofile" className="myprofile">
                   {!images ? (
                     <FaRegUserCircle className="fs-1" />
                   ) : (
