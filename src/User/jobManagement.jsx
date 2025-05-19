@@ -178,6 +178,7 @@ export default function JobManagement() {
         setFilteredData(res?.data?.jobs);
         setSearch("");
         setTotalPages(res?.data?.pagination?.totalPages);
+           setTotalJobs(res.data.pagination.totalJobs);
         if (res?.data?.length === 0) {
           setToastProps({
             message: "No jobs history yet",
