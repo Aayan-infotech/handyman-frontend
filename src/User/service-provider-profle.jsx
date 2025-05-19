@@ -259,13 +259,13 @@ export default function ServiceProviderProfile() {
             </div>
           </div>
 
-          <Link to="/message">
+          {/* <Link to="/message">
             <Tooltip title="Message" placement="left-start">
               <div className="message">
                 <MdMessage />
               </div>
             </Tooltip>
-          </Link>
+          </Link> */}
         </>
       )}
     </>

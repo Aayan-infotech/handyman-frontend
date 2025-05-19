@@ -88,7 +88,7 @@ export default function LoggedHeader() {
                 <IoMdNotificationsOutline className="fs-4" />
               </Link>
               {location.pathname.includes("provider") ? (
-                <Link to="/provider/myprofile">
+                <Link to="/provider/myprofile" className="myprofile">
                   {!images ? (
                     <FaRegUserCircle className="fs-1" />
                   ) : (
@@ -96,7 +96,7 @@ export default function LoggedHeader() {
                   )}
                 </Link>
               ) : (
-                <Link to={hunterToken ? "/myprofile" : "/provider/myprofile"}>
+                <Link to={hunterToken ? "/myprofile" : "/provider/myprofile"} className="myprofile">
                   {!images ? (
                     <FaRegUserCircle className="fs-1" />
                   ) : (
