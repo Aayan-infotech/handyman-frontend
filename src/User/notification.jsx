@@ -573,8 +573,9 @@ export default function Notification() {
                               )}
                             {providerId &&
                               notification.job._id &&
-                              (notification?.job
-                                ?.completionNotified === false ? (
+                              notification?.job?.jobStatus === "Assigned" &&
+                              (notification?.job?.completionNotified ===
+                              false ? (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button
                                     variant="outlined"
