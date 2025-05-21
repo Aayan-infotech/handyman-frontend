@@ -593,7 +593,7 @@ export default function Notification() {
                                             ? notification.receiverId
                                             : notification.userId,
                                         title:
-                                          notification?.nameData?.jobPost
+                                          notification?.job
                                             ?.title,
                                       });
                                     }}
