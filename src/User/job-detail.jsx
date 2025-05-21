@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   completedJobNotification,
   reviewJobNotification,
+  messageNotification,
 } from "../Slices/notificationSlice";
 
 export default function JobDetail() {
@@ -183,6 +184,38 @@ export default function JobDetail() {
     }
   };
 
+  const handleJobCompletNotify = async ({ id, receiverId, title }) => {
+    setLoading(true);
+    try {
+      const apiResponse = await axiosInstance.put(
+        `/jobPost/notifyCompletion/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken}`,
+          },
+        }
+      );
+      if (apiResponse.status === 200) {
+        await fetchData();
+        setLoading(false);
+        const response = dispatch(
+          messageNotification({
+            receiverId,
+            jobId: id,
+            body: `Provider have completed your job ${title}`,
+          })
+        );
+        // if (messageNotification.fulfilled.match(response)) {
+
+        // }
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -308,9 +341,10 @@ export default function JobDetail() {
                     <div className="d-flex flex-row gap-2 align-items-center">
                       <div className="d-flex flex-column align-items-start gap-1">
                         <h3 className="mb-0">{data?.title || "Job Title"}</h3>
-                        <h6>Date Posted:
-                          {data?.date
-                            ? new Date(data.date).toLocaleTimeString(
+                        <h6>
+                          Date Posted:
+                          {data?.createdAt
+                            ? new Date(data.createdAt).toLocaleTimeString(
                                 "en-AU",
                                 {
                                   timeZone: "Australia/Sydney",
@@ -319,6 +353,17 @@ export default function JobDetail() {
                                   year: "numeric",
                                 }
                               )
+                            : "No date provided"}
+                        </h6>
+                        <h6>
+                          Date Required:
+                          {data?.date
+                            ? new Date(data.date).toLocaleTimeString("en-AU", {
+                                timeZone: "Australia/Sydney",
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                              })
                             : "No date provided"}
                         </h6>
                       </div>
@@ -342,7 +387,10 @@ export default function JobDetail() {
                                   src={doc}
                                   alt="document"
                                   className="w-100 h-100 px-1"
-                                  style={{maxHeight: "200px", objectFit: "cover"}}
+                                  style={{
+                                    maxHeight: "200px",
+                                    objectFit: "cover",
+                                  }}
                                 />
                               </a>
                             </div>
@@ -364,7 +412,7 @@ export default function JobDetail() {
                 </ul> */}
                   </div>
                 </div>
-                <div className="col-lg-5">
+                <div className="col-lg-6">
                   <h3 className="fw-bold">Job Description</h3>
                   <p>{data?.requirements || "No description available"}</p>
                   {/* <h6>Scheduled for</h6>
@@ -406,6 +454,39 @@ export default function JobDetail() {
                         </div>
                       </div>
                     </div>
+                    {localStorage.getItem("ProviderToken") &&
+                      location.pathname.search("type=history")&& (
+                        <div className="row gy-4 w-100">
+                          <div className="col-lg-12">
+                            {data?.completionNotified === false ? (
+                              <Button
+                                variant="contained"
+                                onClick={() =>
+                                  handleJobCompletNotify({
+                                    id: id,
+                                    receiverId:
+                                      localStorage.getItem("ProviderId"),
+                                    title: data?.title,
+                                  })
+                                }
+                                className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                              >
+                                Mark As Completed
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outlined"
+                                color="success"
+                                className="custom-green h-100 py-3 bg-green-custom rounded-5 text-light border-light w-100"
+                                disabled
+                              >
+                                Already Notified
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                     {receiverId && localStorage.getItem("hunterToken") && (
                       <>
                         <div className="row gy-4 gx-4 w-100 align-items-center">

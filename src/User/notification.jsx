@@ -106,49 +106,38 @@ export default function Notification() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const notifList = response.data.data || [];
-      console.log("notifList", notifList);
-      const { currentPage, total, totalPages } = response.data.pagination;
-      console.log(
-        "total",
-        total,
-        "page",
-        currentPage,
-        "totalPages",
-        totalPages
-      );
+      console.log("Full API response:", response); // Debug log
 
-      // Update pagination state with new page
-      setPagination((prev) => ({
-        ...prev,
-        total,
-        page: currentPage,
-        totalPages,
-      }));
+      const notifList = response?.data?.data || [];
+      console.log("Notifications data:", notifList); // Debug log
 
-      // const updatedList = await Promise.all(
-      //   notifList.map(async (notification) => {
-      //     try {
-      //       const nameData = await handleName(notification);
-      //       return { ...notification, nameData };
-      //     } catch (error) {
-      //       console.error("Error processing notification:", error);
-      //       return notification;
-      //     }
-      //   })
-      // );
+      // Update state
       setNotifications(notifList);
+
+      // Update pagination if it exists in response
+      if (response.data.pagination) {
+        setPagination({
+          total: response.data.pagination.total,
+          page: response.data.pagination.currentPage,
+          limit: pagination.limit, // Keep existing limit
+          totalPages: response.data.pagination.totalPages,
+        });
+      }
     } catch (error) {
+      console.error("Fetch error:", error);
       setToastProps({
         message: "Failed to fetch notifications",
         type: "error",
         toastKey: Date.now(),
       });
+      setNotifications([]); // Ensure empty state on error
     } finally {
       setLoading(false);
       setMarkingAsRead(false);
     }
   };
+
+  console.log("notifications", notifications);
 
   const handlePageChange = (page) => {
     if (page !== pagination.page) {
@@ -179,7 +168,7 @@ export default function Notification() {
     setLoading(true);
     try {
       const response = await axiosInstance.post(
-        `/jobpost/changeJobStatus/${notification.job._id}`,
+        `/jobpost/changeJobStatus/${notification.jobDetails._id}`,
         {
           jobStatus: "Assigned",
           providerId: assignToId,
@@ -193,9 +182,9 @@ export default function Notification() {
 
       await dispatch(
         assignedJobNotification({
-          body: `You have been assigned for this job ${notification?.job?.title}`,
+          body: `You have been assigned for this job ${notification?.jobDetails?.title}`,
           receiverId: assignToId,
-          jobId: notification.job._id,
+          jobId: notification.jobDetails._id,
         })
       );
 
@@ -231,7 +220,7 @@ export default function Notification() {
     setLoading(true);
     try {
       const reponse = await axiosInstance.post(
-        `/jobPost/changeJobStatus/${notification.job._id}`,
+        `/jobPost/changeJobStatus/${notification.jobDetails._id}`,
         {
           jobStatus: " Completed",
           providerId: assignToId,
@@ -506,7 +495,7 @@ export default function Notification() {
                                               ? notification.receiverId
                                               : notification.userId
                                           }?jobId=${
-                                            notification.job._id
+                                            notification.jobDetails._id
                                           }&path=notification`
                                         )
                                       : navigate(
@@ -515,7 +504,7 @@ export default function Notification() {
                                               ? notification.receiverId
                                               : notification.userId
                                           }?jobId=${
-                                            notification.job._id
+                                            notification.jobDetails._id
                                           }&path=notification`
                                         );
                                   }}
@@ -526,7 +515,8 @@ export default function Notification() {
                               </div>
                             )}
 
-                            {notification?.job?.jobStatus === "Pending" &&
+                            {notification?.jobDetails?.jobStatus ===
+                              "Pending" &&
                               hunterId && (
                                 <>
                                   <div className="col-lg-3 d-flex justify-content-end">
@@ -550,7 +540,8 @@ export default function Notification() {
                               )}
 
                             {notification?.type != "mass" &&
-                              notification?.job?.jobStatus !== "Completed" &&
+                              notification?.jobDetails?.jobStatus !==
+                                "Completed" &&
                               hunterId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button
@@ -563,7 +554,7 @@ export default function Notification() {
                                         notification?.type
                                       );
                                       navigate(
-                                        `/job-detail/${notification.job._id}`
+                                        `/job-detail/${notification.jobDetails._id}`
                                       );
                                     }}
                                     disabled={markingAsRead}
@@ -573,9 +564,10 @@ export default function Notification() {
                                 </div>
                               )}
                             {providerId &&
-                              notification.job._id &&
-                              notification?.job?.jobStatus === "Assigned" &&
-                              (notification?.job?.completionNotified ===
+                              notification?.jobDetails?._id &&
+                              notification?.jobDetails?.jobStatus ===
+                                "Assigned" &&
+                              (notification?.jobDetails?.completionNotified ===
                               false ? (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button
@@ -588,11 +580,11 @@ export default function Notification() {
                                         notification?.type
                                       );
                                       handleJobCompletNotify({
-                                        id: notification.job._id,
+                                        id: notification?.jobDetails?._id,
                                         receiverId:
                                           notification.userId === userId
-                                            ? notification.receiverId
-                                            : notification.userId,
+                                            ? notification?.receiverId
+                                            : notification?.userId,
                                         title: notification?.job?.title,
                                       });
                                     }}
@@ -633,7 +625,7 @@ export default function Notification() {
                                   variant="outlined"
                                   color="success"
                                   className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                  onClick={() => handleDelete(notification._id)}
+                                  onClick={() => handleDelete(notification?._id)}
                                 >
                                   Delete Message
                                 </Button>

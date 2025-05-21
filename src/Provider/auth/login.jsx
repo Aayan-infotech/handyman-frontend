@@ -86,7 +86,7 @@ export default function LoginProvider() {
           return;
         }
         setTimeout(() => {
-          navigate("/provider/upload");
+          navigate("/provider/home");
         }, 2000);
         localStorage.setItem("ProviderToken", response?.data?.data?.token);
         localStorage.setItem(
