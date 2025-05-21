@@ -53,7 +53,8 @@ export default function FeaturedJobs() {
         params: {
           page,
           limit: 9,
-          ...(query && { search: query }),
+          query,
+          // ...(query && { search: query }),
         },
       });
       if (response.status === 200) {
