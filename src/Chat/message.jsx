@@ -268,6 +268,7 @@ export default function Message() {
   };
 
   const handleDelete = async (chatId) => {
+      setOpen(false);
     setLoading(true);
     try {
       const success = await deleteChat(chatId, currentUser);
@@ -413,7 +414,10 @@ export default function Message() {
                               <div className="col-lg-1 text-end px-0 ms-auto">
                                 <button
                                   className="btn btn-danger p-2 py-1"
-                                  onClick={() => handleDelete(item.chatId)}
+                                  onClick={() => {
+                                  
+                                    handleDelete(item.chatId);
+                                  }}
                                 >
                                   <FaTrash />
                                 </button>
