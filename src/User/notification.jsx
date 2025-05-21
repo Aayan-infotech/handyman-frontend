@@ -76,25 +76,25 @@ export default function Notification() {
     }
   };
 
-  const handleName = async (notification) => {
-    try {
-      const response = await axios.post(
-        "http://18.209.91.97:7787/api/match/getMatchedData",
-        {
-          senderId: notification.userId,
-          receiverId: notification.receiverId,
-          jobPostId: notification.job._id || null,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error("Error fetching name:", error);
-      return null;
-    }
-  };
+  // const handleName = async (notification) => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://18.209.91.97:7787/api/match/getMatchedData",
+  //       {
+  //         senderId: notification.userId,
+  //         receiverId: notification.receiverId,
+  //         jobPostId: notification.job._id || null,
+  //       },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     return response.data.data;
+  //   } catch (error) {
+  //     console.error("Error fetching name:", error);
+  //     return null;
+  //   }
+  // };
 
   const fetchNotifications = async (page = pagination.page) => {
     if (!userId) return;
@@ -108,28 +108,35 @@ export default function Notification() {
 
       const notifList = response.data.data || [];
       console.log("notifList", notifList);
-      const {  currentPage, total, totalPages } = response.data.pagination;
-      console.log("total", total, "page", currentPage, "totalPages", totalPages);
+      const { currentPage, total, totalPages } = response.data.pagination;
+      console.log(
+        "total",
+        total,
+        "page",
+        currentPage,
+        "totalPages",
+        totalPages
+      );
 
       // Update pagination state with new page
       setPagination((prev) => ({
         ...prev,
         total,
         page: currentPage,
-        totalPages
+        totalPages,
       }));
 
-      const updatedList = await Promise.all(
-        notifList.map(async (notification) => {
-          try {
-            const nameData = await handleName(notification);
-            return { ...notification, nameData };
-          } catch (error) {
-            console.error("Error processing notification:", error);
-            return notification;
-          }
-        })
-      );
+      // const updatedList = await Promise.all(
+      //   notifList.map(async (notification) => {
+      //     try {
+      //       const nameData = await handleName(notification);
+      //       return { ...notification, nameData };
+      //     } catch (error) {
+      //       console.error("Error processing notification:", error);
+      //       return notification;
+      //     }
+      //   })
+      // );
       setNotifications(notifList);
     } catch (error) {
       setToastProps({
@@ -458,21 +465,7 @@ export default function Notification() {
                               }
                             >
                               <p className=" mb-0 text-center text-lg-start mb-3 mb-lg-0 fs-5">
-                                {providerId
-                                  ? `${notification.body} ${
-                                      notification?.type !== "mass" &&
-                                      ((isGuest &&
-                                        notification.nameData?.sender
-                                          ?.contactName) ||
-                                        notification.nameData?.sender?.name)
-                                        ? `from ${
-                                            notification.nameData?.sender
-                                              ?.contactName ||
-                                            notification.nameData?.sender?.name
-                                          }`
-                                        : ""
-                                    }`
-                                  : notification.body}
+                                {notification.body}
                               </p>
                             </div>
 
@@ -532,8 +525,7 @@ export default function Notification() {
                               </div>
                             )}
 
-                            {notification?.nameData?.jobPost?.jobStatus ===
-                              "Pending" &&
+                            {notification?.job?.jobStatus === "Pending" &&
                               hunterId && (
                                 <>
                                   <div className="col-lg-3 d-flex justify-content-end">
@@ -556,8 +548,8 @@ export default function Notification() {
                                 </>
                               )}
 
-                            {notification?.type != "mass" &&notification?.nameData?.jobPost?.jobStatus !==
-                              "Completed" &&
+                            {notification?.type != "mass" &&
+                              notification?.job?.jobStatus !== "Completed" &&
                               hunterId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button
@@ -581,7 +573,7 @@ export default function Notification() {
                               )}
                             {providerId &&
                               notification.job._id &&
-                              (notification?.nameData?.jobPost
+                              (notification?.job
                                 ?.completionNotified === false ? (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button

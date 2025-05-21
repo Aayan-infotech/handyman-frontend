@@ -310,7 +310,7 @@ export default function JobDetail() {
                         <h3 className="mb-0">{data?.title || "Job Title"}</h3>
                         <h6>Date Posted:
                           {data?.date
-                            ? new Date(data.createdAt).toLocaleTimeString(
+                            ? new Date(data.date).toLocaleTimeString(
                                 "en-AU",
                                 {
                                   timeZone: "Australia/Sydney",

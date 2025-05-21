@@ -200,9 +200,8 @@ export default function Upload() {
         setTimeout(
           () =>
             navigate(
-              location.pathname === "/provider/upload"
-                ? "/provider/pricing"
-                : "/provider/home"
+              location.pathname === "/provider/upload" && "/provider/home"
+              // : "/provider/home"
             ),
           2000
         );
