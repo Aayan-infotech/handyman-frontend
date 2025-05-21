@@ -144,7 +144,6 @@ export default function NewJob() {
       formData.append("documents", file);
     });
 
-
     try {
       const response = await axiosInstance.post("/jobpost/jobpost", formData, {
         headers: {
@@ -173,7 +172,6 @@ export default function NewJob() {
       setLoading(false);
     }
   };
-
 
   return (
     <>
@@ -341,7 +339,20 @@ export default function NewJob() {
                             shouldDisableDate={(date) =>
                               date.isBefore(dayjs(), "day")
                             }
-                            onChange={(newValue) => setTime(newValue)}
+                            onChange={(newValue) => {
+                              if (newValue) {
+                                // Convert to Australian time format
+                                const australianDate = newValue
+                                  .toDate()
+                                  .toLocaleDateString("en-AU", {
+                                    timeZone: "Australia/Sydney",
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                  });
+                                setTime(australianDate);
+                              }
+                            }}
                             renderInput={(params) => <TextField {...params} />}
                           />
                         </LocalizationProvider>

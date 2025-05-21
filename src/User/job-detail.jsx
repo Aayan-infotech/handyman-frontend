@@ -455,7 +455,7 @@ export default function JobDetail() {
                       </div>
                     </div>
                     {localStorage.getItem("ProviderToken") &&
-                      location.pathname.search("type=history")&& (
+                      location.pathname.includes("type=history")&& (
                         <div className="row gy-4 w-100">
                           <div className="col-lg-12">
                             {data?.completionNotified === false ? (
