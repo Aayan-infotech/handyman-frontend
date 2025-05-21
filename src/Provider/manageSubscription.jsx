@@ -281,9 +281,9 @@ export default function ManageSubscription() {
                               <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
                                 <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start">
                                   <h6>
-                                    Valid From: {formatDate(item?.startDate)}
+                                    Valid From: {formatDate(item?.subscriptionStartDate)}
                                   </h6>
-                                  <h6>Valid To: {formatDate(item?.endDate)}</h6>
+                                  <h6>Valid To: {formatDate(item?.subscriptionEndDate)}</h6>
                                 </div>
                                 <h3 className="mt-3 text-start">
                                   {item.subscriptionPlanId.planName}
