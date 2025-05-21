@@ -169,7 +169,7 @@ export default function Notification() {
 
     if (!assignToId) {
       setToastProps({
-        message: "No valid user to assign job to",
+        message: "No valid user to assign job ",
         type: "error",
         toastKey: Date.now(),
       });

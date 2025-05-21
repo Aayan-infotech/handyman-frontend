@@ -289,9 +289,9 @@ export default function JobSpecification() {
                           <div className="d-flex flex-column align-items-start gap-1">
                             <h3 className="mb-0">{data?.title}</h3>
                             <h6>
-                              Date Poster:
+                              Date Posted:
                               {data?.date
-                                ? new Date(data.createdAt).toLocaleTimeString(
+                                ? new Date(data.date).toLocaleTimeString(
                                     "en-AU",
                                     {
                                       timeZone: "Australia/Sydney",
