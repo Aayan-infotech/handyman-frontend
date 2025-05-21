@@ -38,6 +38,9 @@ export default function FeaturedJobs() {
 
   const handleBusinessChange = (selectedOption) => {
     setSearchQuery(selectedOption);
+    if (!selectedOption) {
+      fetchProviders(1, "");
+    }
   };
   useEffect(() => {
     axiosInstance.get("/jobpost/business-type-count").then((res) => {
@@ -53,7 +56,7 @@ export default function FeaturedJobs() {
         params: {
           page,
           limit: 9,
-          query,
+          search: query.name,
           // ...(query && { search: query }),
         },
       });
@@ -74,7 +77,7 @@ export default function FeaturedJobs() {
   }, []);
 
   const handleSearch = () => {
-    fetchProviders(1, searchQuery.name);
+    fetchProviders(1, searchQuery.name || "");
   };
 
   const filterAddressState = (address) => {
@@ -253,19 +256,19 @@ export default function FeaturedJobs() {
                 </Col>
                 <Col>
                   <h6>Resources</h6>
-                 <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
-                        <li>
-                          <a href="/guide" className="text-light">
-                            Guide & Updates
-                          </a>
-                        </li>
+                  <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                    <li>
+                      <a href="/guide" className="text-light">
+                        Guide & Updates
+                      </a>
+                    </li>
 
-                        <li>
-                          <a href="/contact-us" className="text-light">
-                            Contact Us
-                          </a>
-                        </li>
-                      </ul>
+                    <li>
+                      <a href="/contact-us" className="text-light">
+                        Contact Us
+                      </a>
+                    </li>
+                  </ul>
                 </Col>
               </Row>
             </Col>
