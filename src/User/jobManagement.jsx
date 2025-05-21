@@ -428,7 +428,7 @@ export default function JobManagement() {
                                 <td>
                                   {" "}
                                   {new Date(
-                                    provider?.createdAt
+                                    provider?.date
                                   ).toLocaleDateString("en-AU", {
                                     timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
                                     day: "2-digit",

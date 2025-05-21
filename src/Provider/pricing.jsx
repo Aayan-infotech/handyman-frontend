@@ -63,7 +63,7 @@ export default function MainProvider() {
         code: voucher,
         userId: providerId,
       });
-      setVoucher("");
+      // setVoucher("");
       setToastProps({
         message: "Copon Applied Successfully",
         type: "success",
@@ -149,12 +149,38 @@ export default function MainProvider() {
                       justifyContent="center"
                     >
                       {/* Voucher Dropdown */}
-                      <Form.Control
+                      {/* <Form.Select
+                        aria-label="Default select example"
+                        value={voucher}
+                        onChange={(e) => setVoucher(e.target.value)}
+                      >
+                        <option>Select Our Free Coupon</option>
+                        <option value="SIGNUPBONUS">SIGNUPBONUS</option>
+                      </Form.Select> */}
+                      <FormControl
+                        fullWidth
+                        size="small"
+                        sx={{ minWidth: 200, mr: 1 }}
+                      >
+                        <InputLabel id="voucher-select-label">
+                          Select Coupon
+                        </InputLabel>
+                        <Select
+                          labelId="voucher-select-label"
+                          id="voucher-select"
+                          value={voucher}
+                          label="Select Coupon"
+                          onChange={(e) => setVoucher(e.target.value)}
+                        >
+                          <MenuItem value="SIGNUPBONUS">SIGNUPBONUS</MenuItem>
+                        </Select>
+                      </FormControl>
+                      {/* <Form.Control
                         placeholder="  Do you have any voucher?"
                         value={voucher}
                         onChange={(e) => setVoucher(e.target.value)}
                         style={{ borderRadius: "20px 0px 0px 20px" }}
-                      />
+                      /> */}
                       <Button
                         variant="contained"
                         color="success"

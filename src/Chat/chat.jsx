@@ -344,7 +344,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     await handleSendEmail();
     setMsg("");
     // Get the business name and job title
-    const businessName = localStorage.getItem("ProviderBusinessName");
+    const businessName = localStorage.getItem("ProviderBusinessName") || localStorage.getItem("hunterName");
 
     console.log(userChat, selectedChat);
     const jobTitle = chatData?.jobPost?.title || selectedChat?.jobData?.title;
@@ -553,7 +553,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
             </div>
           </div>
         </div>
-        {hunterId &&
+        {/* {hunterId &&
           selectedChat?.jobData?.jobStatus === "Pending" &&
           !jobShow && (
             <div className="container-fluid">
@@ -590,7 +590,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
         <div
           className={`position-relative container${
