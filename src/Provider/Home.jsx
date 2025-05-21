@@ -350,7 +350,7 @@ export default function HomeProvider() {
 
                     return (
                       <div className="col-lg-12 management" key={job._id}>
-                        <div className="card border-0 rounded-3 px-4">
+                        <div className="card border-0 rounded-3 px-lg-4">
                           <div className="card-body">
                             <div className="row gy-4 gx-1 align-items-center">
                               <div className="col-lg-3">

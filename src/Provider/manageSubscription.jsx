@@ -255,13 +255,14 @@ export default function ManageSubscription() {
                                       : "Month"}
                                   </h5>
                                 </div>
-                                <div className=" d-flex flex-row gap-3 justify-content-between align-items-start w-100">
+                                <div className=" d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start w-100">
                                   <h6>
-                                    Payment Method: {item.payment.paymentSource}
+                                    Payment Method:{" "}
+                                    {item?.payment?.paymentSource}
                                   </h6>
                                   <h6>
                                     Subscription Id:{" "}
-                                    {item.subscriptionPlanId._id}
+                                    {item?.subscriptionPlanId?._id}
                                   </h6>
                                 </div>
                               </div>
@@ -281,9 +282,13 @@ export default function ManageSubscription() {
                               <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
                                 <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start">
                                   <h6>
-                                    Valid From: {formatDate(item?.subscriptionStartDate)}
+                                    Valid From:{" "}
+                                    {formatDate(item?.subscriptionStartDate)}
                                   </h6>
-                                  <h6>Valid To: {formatDate(item?.subscriptionEndDate)}</h6>
+                                  <h6>
+                                    Valid To:{" "}
+                                    {formatDate(item?.subscriptionEndDate)}
+                                  </h6>
                                 </div>
                                 <h3 className="mt-3 text-start">
                                   {item.subscriptionPlanId.planName}
@@ -299,8 +304,14 @@ export default function ManageSubscription() {
                                     : "Month"}
                                 </h3>
                                 <div className=" d-flex flex-column  gap-3 justify-content-start align-items-start">
-                                  <h6>Payment Method: {item.paymentMethod}</h6>
-                                  <h6>Transaction Id: {item.transactionId}</h6>
+                                  <h6>
+                                    Payment Method:{" "}
+                                    {item?.payment?.paymentSource}
+                                  </h6>
+                                  <h6>
+                                    Transaction Id:{" "}
+                                    {item?.subscriptionPlanId?._id}
+                                  </h6>
                                 </div>
                                 <span className="line-white"></span>
                                 <div
