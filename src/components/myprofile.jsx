@@ -274,7 +274,7 @@ export default function MyProfile() {
   };
 
   const fetchGallery = async () => {
-     setLoading(true);
+    setLoading(true);
     try {
       const response = await axiosInstance.get(
         `/providerPhoto/${providerId}` // Adjust API endpoint
@@ -1029,16 +1029,18 @@ export default function MyProfile() {
                                       <FaTrash />
                                     </button>
                                   </div>
-                                  <img
-                                    src={image?.url}
-                                    alt="Gallery Item"
-                                    className="rounded-5"
-                                    style={{
-                                      width: "100%",
-                                      height: "200px",
-                                      objectFit: "cover",
-                                    }}
-                                  />
+                                  <a href={image?.url} target="_blank">
+                                    <img
+                                      src={image?.url}
+                                      alt="Gallery Item"
+                                      className="rounded-5"
+                                      style={{
+                                        width: "100%",
+                                        height: "200px",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                  </a>
                                 </div>
                               );
                             })
