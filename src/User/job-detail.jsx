@@ -48,7 +48,8 @@ export default function JobDetail() {
   const { id } = useParams();
   const [receiverId, setRecieverId] = useState(null);
   const navigate = useNavigate();
-
+  const searchParams = new URLSearchParams(location.search);
+  const isHistoryType = searchParams.get("type") === "history";
   const handleProviderJobs = async () => {
     setLoading(true);
     try {
@@ -454,38 +455,37 @@ export default function JobDetail() {
                         </div>
                       </div>
                     </div>
-                    {localStorage.getItem("ProviderToken") &&
-                      location.pathname.includes("type=history")&& (
-                        <div className="row gy-4 w-100">
-                          <div className="col-lg-12">
-                            {data?.completionNotified === false ? (
-                              <Button
-                                variant="contained"
-                                onClick={() =>
-                                  handleJobCompletNotify({
-                                    id: id,
-                                    receiverId:
-                                      localStorage.getItem("ProviderId"),
-                                    title: data?.title,
-                                  })
-                                }
-                                className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                              >
-                                Mark As Completed
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="outlined"
-                                color="success"
-                                className="custom-green h-100 py-3 bg-green-custom rounded-5 text-light border-light w-100"
-                                disabled
-                              >
-                                Already Notified
-                              </Button>
-                            )}
-                          </div>
+                    {localStorage.getItem("ProviderToken") && isHistoryType && (
+                      <div className="row gy-4 w-100">
+                        <div className="col-lg-12">
+                          {data?.completionNotified === false ? (
+                            <Button
+                              variant="contained"
+                              onClick={() =>
+                                handleJobCompletNotify({
+                                  id: id,
+                                  receiverId:
+                                    localStorage.getItem("ProviderId"),
+                                  title: data?.title,
+                                })
+                              }
+                              className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            >
+                              Mark As Completed
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              color="success"
+                              className="custom-green h-100 py-3 bg-green-custom rounded-5 text-light border-light w-100"
+                              disabled
+                            >
+                              Already Notified
+                            </Button>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    )}
 
                     {receiverId && localStorage.getItem("hunterToken") && (
                       <>

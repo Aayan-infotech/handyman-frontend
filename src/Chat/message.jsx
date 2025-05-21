@@ -316,9 +316,7 @@ export default function Message() {
               </div>
             )}
             <div className="row gy-3 gx-2">
-              <div
-                className={open ? "d-none " : "col-lg-12"}
-              >
+              <div className={open ? "d-none " : "col-lg-12"}>
                 <div className="d-flex flex-column gap-3 message-box limit-design">
                   {sortedMessages.length === 0 ? (
                     <div className="d-flex justify-content-center">
@@ -356,74 +354,88 @@ export default function Message() {
                   ) : (
                     <>
                       {sortedMessages.map((item) => (
-                        <Link
-                          className="text-decoration-none"
-                          onClick={() => handleSendMessage(item)} // Pass chat data to handleSendMessage
-                          key={item.chatId}
-                        >
-                          <div className="user-card">
-                            <div className="row align-items-center">
-                              <div
-                                className={
-                                  open
-                                    ? "col-lg-2 px-0"
-                                    : "col-lg-1 px-lg-0 col-3 px-0 px-lg-2"
-                                }
-                              >
-                                <Avatar
-                                  alt="Image"
-                                  src={item?.displayUser?.images}
-                                  className="w-100"
-                                  style={{ height: "82px", width: "82px" }}
-                                >
-                                  {item?.displayUser?.businessName?.[0] ||
-                                    item?.displayUser?.name?.[0]}
-                                </Avatar>
-                              </div>
+                        <>
+                          <div className="d-flex flex-row gap-1 w-100">
+                            <Link
+                              className="text-decoration-none w-100"
+                              onClick={() => handleSendMessage(item)} // Pass chat data to handleSendMessage
+                              key={item.chatId}
+                            >
+                              <div className="user-card">
+                                <div className="row align-items-center">
+                                  <div
+                                    className={
+                                      open
+                                        ? "col-lg-2 px-0"
+                                        : "col-lg-1 px-lg-0 col-3 px-0"
+                                    }
+                                  >
+                                    <Avatar
+                                      alt="Image"
+                                      src={item?.displayUser?.images}
+                                      className="w-100"
+                                      style={{ height: "82px", width: "82px" }}
+                                    >
+                                      {item?.displayUser?.businessName?.[0] ||
+                                        item?.displayUser?.name?.[0]}
+                                    </Avatar>
+                                  </div>
 
-                              <div
-                                className={
-                                  open ? "col-lg-9" : "col-lg-9 ps-lg-2 col-8"
-                                }
-                              >
-                                <div className="d-flex flex-column gap-1">
-                                  <h5 className="mb-0 fw-bold fs-5 text-dark">
-                                    {item?.displayUser?.businessName ||
-                                      item?.displayUser?.name}
-                                  </h5>
-                                  <p className="mb-0 fw-medium fs-6 text-dark">
-                                    {item?.messages?.msg}
-                                  </p>
-                                  <span className="text-muted">
-                                    {new Date(
-                                      item?.messages?.timeStamp
-                                    ).toLocaleTimeString("en-AU", {
-                                      timeZone: "Australia/Sydney",
-                                      weekday: "short",
-                                      day: "numeric",
-                                      month: "short",
-                                      year: "numeric",
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      hour12: true,
-                                    })}{" "}
-                                  </span>
-                                </div>
-                              </div>
+                                  <div
+                                    className={
+                                      open
+                                        ? "col-lg-9"
+                                        : "col-lg-9 ps-lg-2 col-8"
+                                    }
+                                  >
+                                    <div className="d-flex flex-column gap-1">
+                                      <h5 className="mb-0 fw-bold fs-5 text-dark">
+                                        {item?.displayUser?.businessName ||
+                                          item?.displayUser?.name}
+                                      </h5>
+                                      <p className="mb-0 fw-medium fs-6 text-dark">
+                                        {item?.messages?.msg}
+                                      </p>
+                                      <span className="text-muted">
+                                        {new Date(
+                                          item?.messages?.timeStamp
+                                        ).toLocaleTimeString("en-AU", {
+                                          timeZone: "Australia/Sydney",
+                                          weekday: "short",
+                                          day: "numeric",
+                                          month: "short",
+                                          year: "numeric",
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                          hour12: true,
+                                        })}{" "}
+                                      </span>
+                                    </div>
+                                  </div>
 
-                              <div className="col-1 text-end px-0 ms-auto">
+                                  {/* <div className="col-1 text-end px-0 ms-auto">
                                 <button
-                                  className="btn btn-danger p-2 py-1"
+                                  className="btn btn-danger p-2 py-1 z-1"
                                   onClick={() => {
                                     handleDelete(item.chatId);
                                   }}
                                 >
                                   <FaTrash />
                                 </button>
+                              </div> */}
+                                </div>
                               </div>
-                            </div>
+                            </Link>
+                            <button
+                              className="btn btn-danger p-2 py-1 z-1"
+                              onClick={() => {
+                                handleDelete(item.chatId);
+                              }}
+                            >
+                              <FaTrash />
+                            </button>
                           </div>
-                        </Link>
+                        </>
                       ))}
                       {allMessages.length > visibleChats && (
                         <div className="text-center mt-3">
