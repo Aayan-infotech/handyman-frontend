@@ -268,14 +268,17 @@ export default function Message() {
   };
 
   const handleDelete = async (chatId) => {
+    setLoading(true);
     try {
       const success = await deleteChat(chatId, currentUser);
       window.location.reload();
       if (success) {
         getChatList(currentUser);
       }
+      setLoading(false);
     } catch (error) {
       console.error("Failed to delete chat:", error);
+      setLoading(false);
     }
   };
 
