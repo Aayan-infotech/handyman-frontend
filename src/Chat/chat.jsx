@@ -182,9 +182,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   console.log("job id in chat", receiverId);
   useEffect(() => {
-    const storedUserId = location.pathname.includes("/provider")
-      ? localStorage.getItem("ProviderId")
-      : localStorage.getItem("hunterId");
+    const storedUserId =
+      localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
     setCurrentUser(storedUserId || "");
   }, [location]);
 
@@ -344,7 +343,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
     await handleSendEmail();
     setMsg("");
     // Get the business name and job title
-    const businessName = localStorage.getItem("ProviderBusinessName") || localStorage.getItem("hunterName");
+    const businessName =
+      localStorage.getItem("ProviderBusinessName") ||
+      localStorage.getItem("hunterName");
 
     console.log(userChat, selectedChat);
     const jobTitle = chatData?.jobPost?.title || selectedChat?.jobData?.title;
@@ -464,6 +465,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
     try {
       const response = dispatch(
         assignedJobNotification({
+          body: `You have been assigned for this job ${
+            selectedChat?.jobData?.title || chatData?.jobPost?.title
+          }`,
           receiverId: receiverId,
           jobId: jobId,
         })
@@ -487,6 +491,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
   console.log("messageData in chat", userChat);
 
   const messages1 = messages || messagesPeople || [];
+
+  console.log("currentUser", currentUser);
+
+  console.log("messages1", messages1);
 
   if (loading) return <Loader />;
 

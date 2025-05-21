@@ -193,6 +193,7 @@ export default function Notification() {
 
       await dispatch(
         assignedJobNotification({
+          body: `You have been assigned for this job ${notification?.job?.title}`,
           receiverId: assignToId,
           jobId: notification.job._id,
         })
@@ -592,9 +593,7 @@ export default function Notification() {
                                           notification.userId === userId
                                             ? notification.receiverId
                                             : notification.userId,
-                                        title:
-                                          notification?.job
-                                            ?.title,
+                                        title: notification?.job?.title,
                                       });
                                     }}
                                   >
