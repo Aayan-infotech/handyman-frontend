@@ -268,7 +268,7 @@ export default function Message() {
   };
 
   const handleDelete = async (chatId) => {
-      setOpen(false);
+    setOpen(false);
     setLoading(true);
     try {
       const success = await deleteChat(chatId, currentUser);
@@ -317,7 +317,7 @@ export default function Message() {
             )}
             <div className="row gy-3 gx-2">
               <div
-                className={open ? "col-lg-6 d-none d-lg-block" : "col-lg-12"}
+                className={open ? "d-none " : "col-lg-12"}
               >
                 <div className="d-flex flex-column gap-3 message-box limit-design">
                   {sortedMessages.length === 0 ? (
@@ -367,7 +367,7 @@ export default function Message() {
                                 className={
                                   open
                                     ? "col-lg-2 px-0"
-                                    : "col-lg-1 px-lg-0 col-4"
+                                    : "col-lg-1 px-lg-0 col-3 px-0 px-lg-2"
                                 }
                               >
                                 <Avatar
@@ -411,11 +411,10 @@ export default function Message() {
                                 </div>
                               </div>
 
-                              <div className="col-lg-1 text-end px-0 ms-auto">
+                              <div className="col-1 text-end px-0 ms-auto">
                                 <button
                                   className="btn btn-danger p-2 py-1"
                                   onClick={() => {
-                                  
                                     handleDelete(item.chatId);
                                   }}
                                 >
@@ -443,7 +442,7 @@ export default function Message() {
                 </div>
               </div>
               {open && (
-                <div className="col-lg-6">
+                <div className="col-lg-12">
                   <div className="message-box">
                     {localStorage.getItem("PlanType") === "Advertising" ||
                     (selectedChat &&
