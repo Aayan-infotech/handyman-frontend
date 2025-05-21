@@ -515,7 +515,7 @@ export default function JobSpecification() {
                               Quick Message
                             </Button>
                           </div>
-                          <div className="col-lg-6">
+                          {/* <div className="col-lg-6">
                             {data?.completionNotified === false ? (
                               <Button
                                 variant="contained"
@@ -541,7 +541,7 @@ export default function JobSpecification() {
                                 Already Notified
                               </Button>
                             )}
-                          </div>
+                          </div> */}
                         </div>
                       ) : null}
 

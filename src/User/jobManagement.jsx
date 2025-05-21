@@ -178,7 +178,7 @@ export default function JobManagement() {
         setFilteredData(res?.data?.jobs);
         setSearch("");
         setTotalPages(res?.data?.pagination?.totalPages);
-           setTotalJobs(res.data.pagination.totalJobs);
+        setTotalJobs(res.data.pagination.totalJobs);
         if (res?.data?.length === 0) {
           setToastProps({
             message: "No jobs history yet",
@@ -428,7 +428,7 @@ export default function JobManagement() {
                                 <td>
                                   {" "}
                                   {new Date(
-                                    provider?.date
+                                    provider?.createdAt
                                   ).toLocaleDateString("en-AU", {
                                     timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
                                     day: "2-digit",
@@ -455,7 +455,15 @@ export default function JobManagement() {
                                       )}
 
                                     <td>
-                                      <Link to={`/job-detail/${provider._id}`}>
+                                      <Link
+                                        to={
+                                          location.pathname.includes(
+                                            "job-history"
+                                          )
+                                            ? `/job-detail/${provider._id}?type=history`
+                                            : `/job-detail/${provider._id}`
+                                        }
+                                      >
                                         <IoEyeSharp
                                           style={{ height: "30px" }}
                                         />

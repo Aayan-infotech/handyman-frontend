@@ -4,11 +4,20 @@ import Form from "react-bootstrap/Form";
 import { IoIosSearch } from "react-icons/io";
 import { FaArrowLeft } from "react-icons/fa";
 import Button from "@mui/material/Button";
-
+import { FaTrash } from "react-icons/fa";
+import {
+  ref,
+  onValue,
+  off,
+  remove,
+  update,
+  get,
+  set,
+  child,
+} from "firebase/database";
+import { realtimeDb } from "../Chat/lib/firestore";
 import { Link, useLocation } from "react-router-dom";
 import Chat from "./chat";
-import { ref, onValue, off } from "firebase/database";
-import { realtimeDb } from "./lib/firestore";
 import Loader from "../Loader";
 import noData from "../assets/no_data_found.gif";
 import axiosInstance from "../components/axiosInstance";
@@ -210,6 +219,66 @@ export default function Message() {
     const timeB = b.messages?.timeStamp || 0;
     return timeB - timeA;
   });
+
+  const deleteChat = async (chatId, currentUser) => {
+    try {
+      if (!currentUser || !chatId) {
+        console.error("Missing currentUser or chatId");
+        return;
+      }
+
+      // Get a reference to the user's chatList
+      const userChatListRef = ref(realtimeDb, `chatList/${currentUser}`);
+
+      // Fetch the user's chatList data
+      const snapshot = await get(userChatListRef);
+
+      if (!snapshot.exists()) {
+        console.log("No chats found for this user");
+        return;
+      }
+
+      let found = false;
+      const updates = {};
+
+      // Iterate through all receiverIds
+      snapshot.forEach((receiverSnapshot) => {
+        const receiverId = receiverSnapshot.key;
+
+        // Check if this receiver has the chatId we want to delete
+        if (receiverSnapshot.val()[chatId]) {
+          found = true;
+          updates[`${currentUser}/${receiverId}/${chatId}`] = null; // Mark for deletion
+        }
+      });
+
+      if (found) {
+        // Perform the deletion
+        await update(ref(realtimeDb, "chatList"), updates);
+        console.log("Chat deleted successfully");
+        return true;
+      } else {
+        console.log("Chat not found for this user");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error deleting chat:", error);
+      throw error;
+    }
+  };
+
+  const handleDelete = async (chatId) => {
+    try {
+      const success = await deleteChat(chatId, currentUser);
+      window.location.reload();
+      if (success) {
+        getChatList(currentUser);
+      }
+    } catch (error) {
+      console.error("Failed to delete chat:", error);
+    }
+  };
+
   console.log("messageData", sortedMessages, "selectedChat ", selectedChat);
   console.log(currentUser);
 
@@ -310,7 +379,7 @@ export default function Message() {
 
                               <div
                                 className={
-                                  open ? "col-lg-10" : "col-lg-9 ps-lg-2 col-8"
+                                  open ? "col-lg-9" : "col-lg-9 ps-lg-2 col-8"
                                 }
                               >
                                 <div className="d-flex flex-column gap-1">
@@ -336,6 +405,15 @@ export default function Message() {
                                     })}{" "}
                                   </span>
                                 </div>
+                              </div>
+
+                              <div className="col-lg-1 text-end px-0 ms-auto">
+                                <button
+                                  className="btn btn-danger p-2 py-1"
+                                  onClick={() => handleDelete(item.chatId)}
+                                >
+                                  <FaTrash />
+                                </button>
                               </div>
                             </div>
                           </div>

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
 
-import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import { MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../components/axiosInstance";
@@ -25,6 +27,11 @@ export default function MainProvider() {
   const user = useSelector((state) => state?.user?.user?.data);
   const navigate = useNavigate();
   const location = useLocation();
+  const [selectedBusiness, setSelectedBusiness] = useState(null); // Manage selected business
+  const [couponData, setCouponData] = useState([
+    { id: 1, name: "SIGNUPBONUS", value: "SIGNUPBONUS" },
+  ]);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
   const providerId = localStorage.getItem("ProviderId");
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -82,6 +89,31 @@ export default function MainProvider() {
     }
   };
 
+  const handleBusinessChange = (selectedOption) => {
+    setSelectedBusiness(selectedOption);
+  };
+
+  const handleCouponChange = (selectedOption) => {
+    setSelectedCoupon(selectedOption);
+    setVoucher(selectedOption?.value || "");
+  };
+
+  const handleCreateCoupon = (inputValue) => {
+    const newCoupon = {
+      id: couponData.length + 1,
+      name: inputValue,
+      value: inputValue.toUpperCase().replace(/\s+/g, ""),
+    };
+
+    setCouponData((prev) => [...prev, newCoupon]);
+    setSelectedCoupon({
+      value: newCoupon.value,
+      label: newCoupon.name,
+      ...newCoupon,
+    });
+    setVoucher(newCoupon.value);
+  };
+
   // Fetch voucher options from the API
   useEffect(() => {
     const fetchVouchers = async () => {
@@ -97,6 +129,14 @@ export default function MainProvider() {
 
     fetchVouchers();
   }, []);
+
+  const formatCouponOptions = (coupons) => {
+    return coupons.map((coupon) => ({
+      value: coupon.value || coupon.name,
+      label: coupon.name,
+      ...coupon,
+    }));
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -142,7 +182,7 @@ export default function MainProvider() {
                     </h5>
                   </div>
 
-                  <div className="col-lg-4 ms-auto">
+                  <div className="col-lg-5 ms-auto">
                     <Box
                       display="flex"
                       alignItems="center"
@@ -157,30 +197,34 @@ export default function MainProvider() {
                         <option>Select Our Free Coupon</option>
                         <option value="SIGNUPBONUS">SIGNUPBONUS</option>
                       </Form.Select> */}
-                      <FormControl
-                        fullWidth
-                        size="small"
-                        sx={{ minWidth: 200, mr: 1 }}
-                      >
-                        <InputLabel id="voucher-select-label">
-                          Select Coupon
-                        </InputLabel>
-                        <Select
-                          labelId="voucher-select-label"
-                          id="voucher-select"
-                          value={voucher}
-                          label="Select Coupon"
-                          onChange={(e) => setVoucher(e.target.value)}
-                        >
-                          <MenuItem value="SIGNUPBONUS">SIGNUPBONUS</MenuItem>
-                        </Select>
-                      </FormControl>
-                      {/* <Form.Control
-                        placeholder="  Do you have any voucher?"
-                        value={voucher}
-                        onChange={(e) => setVoucher(e.target.value)}
-                        style={{ borderRadius: "20px 0px 0px 20px" }}
-                      /> */}
+
+                      <CreatableSelect
+                        options={formatCouponOptions(couponData)}
+                        value={selectedCoupon}
+                        onChange={handleCouponChange}
+                        onCreateOption={handleCreateCoupon}
+                        isClearable
+                        isSearchable
+                        placeholder="Select or create coupon"
+                        formatCreateLabel={(inputValue) =>
+                          `Create "${inputValue}"`
+                        }
+                        noOptionsMessage={({ inputValue }) =>
+                          inputValue
+                            ? "No matching coupons found"
+                            : "No coupons available"
+                        }
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            borderRadius: "20px 0 0 20px",
+                            height: "40px",
+                            minHeight: "40px",
+                            minWidth: "250px",
+                          }),
+                        }}
+                      />
+
                       <Button
                         variant="contained"
                         color="success"
