@@ -173,6 +173,7 @@ export default function NewJob() {
     }
   };
 
+  console.log(time);
   return (
     <>
       {loading === true ? (
@@ -341,16 +342,7 @@ export default function NewJob() {
                             }
                             onChange={(newValue) => {
                               if (newValue) {
-                                // Convert to Australian time format
-                                const australianDate = newValue
-                                  .toDate()
-                                  .toLocaleDateString("en-AU", {
-                                    timeZone: "Australia/Sydney",
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  });
-                                setTime(australianDate);
+                                setTime(newValue); // Keep it as a dayjs object
                               }
                             }}
                             renderInput={(params) => <TextField {...params} />}
