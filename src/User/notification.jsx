@@ -35,7 +35,7 @@ export default function Notification() {
   const token =
     localStorage.getItem("ProviderToken") ||
     localStorage.getItem("hunterToken");
-
+  const providerName = localStorage.getItem("ProviderName");
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [markingAsRead, setMarkingAsRead] = useState(false);
@@ -536,6 +536,29 @@ export default function Notification() {
                               notification?.jobDetails?.jobStatus !==
                                 "Completed" &&
                               hunterId && (
+                                <div className="col-lg-3 d-flex justify-content-end">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                    onClick={() => {
+                                      handleMarkAsRead(
+                                        notification?._id,
+                                        notification?.type
+                                      );
+                                      navigate(
+                                        `/job-detail/${notification.jobDetails._id}`
+                                      );
+                                    }}
+                                    disabled={markingAsRead}
+                                  >
+                                    Mark as completed
+                                  </Button>
+                                </div>
+                              )}
+                            {notification?.type != "mass" &&
+                              notification?.userName !== "Admin" &&
+                              providerId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button
                                     variant="outlined"
