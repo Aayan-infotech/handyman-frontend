@@ -209,7 +209,7 @@ export default function ServiceProviderProfile() {
                         <div className="d-flex flex-column gap-3">
                           <h5 className="mb-0">Available</h5>
                           <p className="mb-0">
-                            Served {data?.jobCompleteCount}+ Clients
+                            Served {data?.jobCompleteCount}+ Jobs
                           </p>
                         </div>
                         <BsThreeDotsVertical />
