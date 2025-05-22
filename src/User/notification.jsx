@@ -530,6 +530,7 @@ export default function Notification() {
                               )}
 
                             {notification?.type != "mass" &&
+                              notification?.jobDetails?.jobStatus &&
                               notification?.jobDetails?.jobStatus !==
                                 "Completed" &&
                               hunterId && (
