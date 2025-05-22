@@ -291,6 +291,20 @@ export default function JobSpecification() {
                             <h6>
                               Date Posted:
                               {data?.date
+                                ? new Date(data.createdAt).toLocaleTimeString(
+                                    "en-AU",
+                                    {
+                                      timeZone: "Australia/Sydney",
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "numeric",
+                                    }
+                                  )
+                                : "No date provided"}
+                            </h6>
+                                 <h6>
+                              Date Required:
+                              {data?.date
                                 ? new Date(data.date).toLocaleTimeString(
                                     "en-AU",
                                     {

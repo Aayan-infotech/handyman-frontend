@@ -83,10 +83,18 @@ export default function JobDetail() {
     setLoading(true);
     try {
       const response1 = await dispatch(
-        completedJobNotification({ receiverId })
+        completedJobNotification({
+          receiverId,
+          body: `You have completed the job ${data?.title}`,
+        })
       );
 
-      const response2 = await dispatch(reviewJobNotification({ receiverId }));
+      const response2 = await dispatch(
+        reviewJobNotification({
+          receiverId,
+          body: `You have received feedback for ${data?.title} from ${name} `,
+        })
+      );
 
       if (
         completedJobNotification.fulfilled.match(response1) &&
@@ -464,8 +472,7 @@ export default function JobDetail() {
                               onClick={() =>
                                 handleJobCompletNotify({
                                   id: id,
-                                  receiverId:
-                                    localStorage.getItem("ProviderId"),
+                                  receiverId: data?.user,
                                   title: data?.title,
                                 })
                               }

@@ -78,7 +78,7 @@ export default function LoggedHeader() {
         await fetchNotifications();
 
         // Then handle the new notification (which will check if we should show toast)
-        handleNewNotification(notification);
+        // handleNewNotification(notification);
       });
 
       newSocket.onAny((event, ...args) => {
@@ -109,27 +109,27 @@ export default function LoggedHeader() {
       }
     };
   }, [userId, hunterToken, providerToken, userType]);
-  const handleNewNotification = (notification) => {
-    console.log("notifications.length", notifications);
-    // Get the current length before updating state
-    const currentLength = notifications.length;
+  // const handleNewNotification = (notification) => {
+  //   console.log("notifications.length", notifications);
+  //   // Get the current length before updating state
+  //   const currentLength = notifications.length;
 
-    // Update list and unread count
-    setNotifications((prev) => [notification, ...prev]);
-    setUnRead((prev) => prev + 1);
+  //   // Update list and unread count
+  //   setNotifications((prev) => [notification, ...prev]);
+  //   setUnRead((prev) => prev + 1);
 
-    // Only show toast if current length is greater than the stored reference
-    // if (currentLength >= notificationLengthRef.current) {
-    //   setToastProps({
-    //     message: notification.message || "You have received a new notification",
-    //     type: "info",
-    //     toastKey: Date.now(),
-    //   });
-    // }
+  //   // Only show toast if current length is greater than the stored reference
+  //   // if (currentLength >= notificationLengthRef.current) {
+  //   //   setToastProps({
+  //   //     message: notification.message || "You have received a new notification",
+  //   //     type: "info",
+  //   //     toastKey: Date.now(),
+  //   //   });
+  //   // }
 
-    // Update the reference to the new length
-    notificationLengthRef.current = currentLength + 1;
-  };
+  //   // Update the reference to the new length
+  //   notificationLengthRef.current = currentLength + 1;
+  // };
   const handleName = async (notification) => {
     try {
       const response = await axiosInstance.post(

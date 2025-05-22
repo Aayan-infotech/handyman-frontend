@@ -252,18 +252,8 @@ export default function Notification() {
           notif._id === notificationId ? { ...notif, isRead: true } : notif
         )
       );
-      setToastProps({
-        message: "Notification Mark as Read successfully",
-        type: "success",
-        toastKey: Date.now(),
-      });
     } catch (error) {
       console.log(error);
-      setToastProps({
-        message: "error marking notification as read",
-        type: "error",
-        toastKey: Date.now(),
-      });
     } finally {
       setMarkingAsRead(false);
     }
@@ -625,7 +615,9 @@ export default function Notification() {
                                   variant="outlined"
                                   color="success"
                                   className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                  onClick={() => handleDelete(notification?._id)}
+                                  onClick={() =>
+                                    handleDelete(notification?._id)
+                                  }
                                 >
                                   Delete Message
                                 </Button>
