@@ -468,45 +468,47 @@ export default function Notification() {
                                 </span>
                               </div>
                             </div>
-                            {notification?.type != "mass" && (
-                              <div className="col-lg-3 d-flex justify-content-end">
-                                <Button
-                                  variant="outlined"
-                                  color="success"
-                                  onClick={() => {
-                                    handleMarkAsRead(
-                                      notification?._id,
-                                      notification?.type
-                                    );
-                                    userType === "hunter"
-                                      ? navigate(
-                                          `/chat/${
-                                            notification.userId === userId
-                                              ? notification.receiverId
-                                              : notification.userId
-                                          }?jobId=${
-                                            notification.jobDetails._id
-                                          }&path=notification`
-                                        )
-                                      : navigate(
-                                          `/provider/chat/${
-                                            notification.userId === userId
-                                              ? notification.receiverId
-                                              : notification.userId
-                                          }?jobId=${
-                                            notification.jobDetails._id
-                                          }&path=notification`
-                                        );
-                                  }}
-                                  className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
-                                >
-                                  View Message
-                                </Button>
-                              </div>
-                            )}
+                            {notification?.type != "mass" &&
+                              notification?.jobDetails?._id && (
+                                <div className="col-lg-3 d-flex justify-content-end">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={() => {
+                                      handleMarkAsRead(
+                                        notification?._id,
+                                        notification?.type
+                                      );
+                                      userType === "hunter"
+                                        ? navigate(
+                                            `/chat/${
+                                              notification.userId === userId
+                                                ? notification.receiverId
+                                                : notification.userId
+                                            }?jobId=${
+                                              notification.jobDetails._id
+                                            }&path=notification`
+                                          )
+                                        : navigate(
+                                            `/provider/chat/${
+                                              notification.userId === userId
+                                                ? notification.receiverId
+                                                : notification.userId
+                                            }?jobId=${
+                                              notification.jobDetails._id
+                                            }&path=notification`
+                                          );
+                                    }}
+                                    className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                  >
+                                    View Message
+                                  </Button>
+                                </div>
+                              )}
 
                             {notification?.jobDetails?.jobStatus ===
                               "Pending" &&
+                              notification?.jobDetails?.jobStatus &&
                               hunterId && (
                                 <>
                                   <div className="col-lg-3 d-flex justify-content-end">
