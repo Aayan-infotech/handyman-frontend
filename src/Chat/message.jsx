@@ -355,7 +355,7 @@ export default function Message() {
                     <>
                       {sortedMessages.map((item) => (
                         <>
-                          <div className="d-flex flex-row gap-1 w-100">
+                          <div className="d-flex flex-row gap-1 w-100 position-relative">
                             <Link
                               className="text-decoration-none w-100"
                               onClick={() => handleSendMessage(item)} // Pass chat data to handleSendMessage
@@ -427,7 +427,7 @@ export default function Message() {
                               </div>
                             </Link>
                             <button
-                              className="btn btn-danger p-2 py-1 z-1"
+                              className="btn btn-danger p-2 py-1 z-1 delete-msg-btn"
                               onClick={() => {
                                 handleDelete(item.chatId);
                               }}

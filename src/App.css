@@ -710,6 +710,12 @@ textarea:focus-visible {
 .job-design-nonre::before {
   display: none !important;
 }
+.delete-msg-btn{
+  position: absolute;
+  top: 10px;
+  z-index: 1;
+  right: 15px;
+}
 .pagination-custom .active span {
   background-color: rgba(50, 222, 132, 1) !important;
   color: #fff !important;
@@ -763,7 +769,12 @@ table th {
     font-size: 15px !important;
     width: 80%;
   }
-
+.delete-msg-btn{
+  position: absolute;
+  top: 10px;
+  z-index: 1;
+  right: 15px;
+}
   .error-100vh {
     height: 100%;
     min-height: 100vh !important;
