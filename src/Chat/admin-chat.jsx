@@ -99,7 +99,7 @@ export default function AdminChat() {
           name:
             localStorage.getItem("ProviderName") ||
             localStorage.getItem("hunterName"),
-          receverEmail: "rishabh.sharma@aayaninfotech.com",
+          receverEmail: "tradehunters2025@gmail.com",
         },
         {
           headers: {
