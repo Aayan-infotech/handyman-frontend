@@ -197,6 +197,7 @@ export default function Upload() {
           type: "success",
           toastKey: Date.now(),
         });
+        window.reload();
         setTimeout(
           () =>
             navigate(
