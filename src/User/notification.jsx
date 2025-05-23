@@ -574,7 +574,7 @@ export default function Notification() {
                                   }}
                                   disabled={markingAsRead}
                                 >
-                                  Mark as completed
+                                  Mark as Read
                                 </Button>
                               </div>
                             )}
