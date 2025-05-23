@@ -557,7 +557,8 @@ export default function Notification() {
                                 </div>
                               )}
                             {(notification?.type === "mass" ||
-                              notification?.userName === "Admin") && (
+                              notification?.userName === "Admin" ||
+                              !notification?.jobDetails?._id) && (
                               <div className="col-lg-3 d-flex justify-content-end">
                                 <Button
                                   variant="outlined"
@@ -568,9 +569,9 @@ export default function Notification() {
                                       notification?._id,
                                       notification?.type
                                     );
-                                    navigate(
-                                      `/job-detail/${notification.jobDetails._id}`
-                                    );
+                                    // navigate(
+                                    //   `/job-detail/${notification.jobDetails._id}`
+                                    // );
                                   }}
                                   disabled={markingAsRead}
                                 >
@@ -580,8 +581,8 @@ export default function Notification() {
                             )}
                             {providerId &&
                               notification?.jobDetails?._id &&
-                              notification?.jobDetails?.jobStatus ===
-                                "Assigned" &&
+                              // notification?.jobDetails?.jobStatus ===
+                              //   "Assigned" &&
                               (notification?.jobDetails?.completionNotified ===
                               false ? (
                                 <div className="col-lg-3 d-flex justify-content-end">
