@@ -31,6 +31,8 @@ export default function MainProvider() {
   const [couponData, setCouponData] = useState([
     { id: 1, name: "SIGNUPBONUS", value: "SIGNUPBONUS" },
   ]);
+  const hunterId = localStorage.getItem("hunterId");
+
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const providerId = localStorage.getItem("ProviderId");
   const [toastProps, setToastProps] = useState({
@@ -116,6 +118,10 @@ export default function MainProvider() {
 
   // Fetch voucher options from the API
   useEffect(() => {
+    if (hunterId) {
+      navigate("/error");
+      return;
+    }
     const fetchVouchers = async () => {
       setLoading(true);
       try {

@@ -33,7 +33,13 @@ export default function PricingProvider() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
+  const hunterId = localStorage.getItem("hunterId");
+
   useEffect(() => {
+    if (hunterId) {
+      navigate("/error");
+      return;
+    }
     const getData = async () => {
       setLoading(true);
       try {

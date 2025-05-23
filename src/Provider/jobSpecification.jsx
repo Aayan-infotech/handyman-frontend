@@ -38,6 +38,7 @@ export default function JobSpecification() {
   const handleClose = () => setShow(false);
   const ProviderToken = localStorage.getItem("ProviderToken");
   const ProviderId = localStorage.getItem("ProviderId");
+  const hunterId = localStorage.getItem("hunterId");
   const navigate = useNavigate();
   const { id } = useParams();
   // const guestCondition = () => {
@@ -241,6 +242,9 @@ export default function JobSpecification() {
   };
 
   useEffect(() => {
+    if (hunterId) {
+      navigate("/error");
+    }
     const isGuest = localStorage.getItem("Guest") === "true";
     if (isGuest) {
       handleGuestJob();
@@ -302,7 +306,7 @@ export default function JobSpecification() {
                                   )
                                 : "No date provided"}
                             </h6>
-                                 <h6>
+                            <h6>
                               Date Required:
                               {data?.date
                                 ? new Date(data.date).toLocaleTimeString(

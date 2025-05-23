@@ -57,7 +57,7 @@ export default function ServiceProviderProfile() {
       setGallery(galleryRes?.data?.data?.files || []);
     } catch (error) {
       console.error("Error fetching data:", error);
-      if (error.response.status === 500) {
+      if (error.response.status === 500 || error.response.status === 404) {
         navigate("/error");
       }
     } finally {

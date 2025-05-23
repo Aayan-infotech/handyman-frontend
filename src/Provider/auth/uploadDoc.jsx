@@ -110,6 +110,10 @@ export default function Upload() {
   }, [location.pathname]);
 
   useEffect(() => {
+    if (!providerId) {
+      navigate("/error");
+      return;
+    }
     getUploadProfile();
   }, []);
 

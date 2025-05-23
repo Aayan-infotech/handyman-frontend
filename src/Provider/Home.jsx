@@ -68,6 +68,7 @@ export default function HomeProvider() {
   const [alertMessages, setAlertMessages] = useState([]); // Store alerts
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
+  const hunterToken = localStorage.getItem("hunterToken");
   const planType = localStorage.getItem("PlanType");
   const guestCondition = localStorage.getItem("Guest") === "true";
   const dispatch = useDispatch();
@@ -125,6 +126,10 @@ export default function HomeProvider() {
     }
   };
   useEffect(() => {
+    if (hunterToken) {
+      navigate("/error");
+    }
+
     if (providerToken) {
       getUser();
     } else {
@@ -149,7 +154,7 @@ export default function HomeProvider() {
           });
         });
     }
-  }, [providerToken, jobStatus]);
+  }, [providerToken, jobStatus, hunterToken]);
 
   useEffect(() => {
     let filtered = data;
