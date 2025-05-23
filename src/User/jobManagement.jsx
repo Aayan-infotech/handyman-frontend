@@ -201,18 +201,10 @@ export default function JobManagement() {
           });
           return;
         }
-        setToastProps({
-          message: res.data.message,
-          type: "success",
-          toastKey: Date.now(),
-        });
+      
       }
     } catch (error) {
-      setToastProps({
-        message: error.message,
-        type: "error",
-        toastKey: Date.now(),
-      });
+      console.log(error);
     } finally {
       setLoading(false);
     }

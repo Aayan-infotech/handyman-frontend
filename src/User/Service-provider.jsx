@@ -70,6 +70,12 @@ export default function ServiceProvider() {
   const handleChange = (event) => {
     setBusinessType(event.target.value);
   };
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/error");
+    }
+  }, []);
   useEffect(() => {
     dispatch(getAddress());
   }, [dispatch]);
