@@ -328,7 +328,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   const handleSend = async () => {
     if (msg.trim() === "" || !chatId || !currentUser) return;
-
+    setMsg("");
     await sendMessage(
       "text",
       msg,
@@ -341,7 +341,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     );
 
     await handleSendEmail();
-    setMsg("");
+
     // Get the business name and job title
     const businessName =
       localStorage.getItem("ProviderBusinessName") ||

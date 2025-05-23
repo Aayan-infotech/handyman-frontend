@@ -557,6 +557,7 @@ export default function Notification() {
                                 </div>
                               )}
                             {notification?.type != "mass" &&
+                            !notification?.jobDetails?._id &&
                               notification?.userName !== "Admin" &&
                               providerId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
