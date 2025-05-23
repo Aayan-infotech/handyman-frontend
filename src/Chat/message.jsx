@@ -120,8 +120,16 @@ export default function Message() {
               users: data[receiverId][chatId].users || {},
             }))
           );
-          setAllMessages(formattedChatList);
-          setMessages(formattedChatList.slice(0, visibleChats)); // Only show initial batch
+
+          // Sort by most recent message timestamp
+          const sorted = formattedChatList.sort((a, b) => {
+            const timeA = a.messages?.timeStamp || 0;
+            const timeB = b.messages?.timeStamp || 0;
+            return timeB - timeA; // Newest first
+          });
+
+          setAllMessages(sorted);
+          setMessages(sorted.slice(0, visibleChats));
           setMessageLoader(false);
         } else {
           setAllMessages([]);
@@ -133,7 +141,7 @@ export default function Message() {
       return () => off(chatListRef, listener);
     },
     [visibleChats]
-  ); // Add visibleChats as dependency
+  );
 
   const loadMoreChats = () => {
     const newVisibleChats = visibleChats + 5;
@@ -214,10 +222,19 @@ export default function Message() {
     };
   });
 
+  const getNewestMessageTime = (messages) => {
+    if (!messages) return 0;
+    const messageTimes = Object.values(messages).map(
+      (msg) => msg.timeStamp || 0
+    );
+    return Math.max(...messageTimes);
+  };
+
+  // Then use it in your sort functions:
   const sortedMessages = [...filteredMessages].sort((a, b) => {
-    const timeA = a.messages?.timeStamp || 0;
-    const timeB = b.messages?.timeStamp || 0;
-    return timeB - timeA;
+    const newestA = getNewestMessageTime(a.messages);
+    const newestB = getNewestMessageTime(b.messages);
+    return newestB - newestA;
   });
 
   const deleteChat = async (chatId, currentUser) => {
