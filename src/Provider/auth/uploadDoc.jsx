@@ -31,8 +31,8 @@ const VisuallyHiddenInput = styled("input")({
 export default function Upload() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const [document, setDocument] = useState([]);
-  const [newDocuments, setNewDocuments] = useState([]); // For newly selected files
+  const [existingDocuments, setExistingDocuments] = useState([]); // Files from API
+  const [newDocuments, setNewDocuments] = useState([]); // Newly selected files
 
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -56,9 +56,7 @@ export default function Upload() {
         const result = await dispatch(getProviderUser());
         if (result.payload?.status === 200) {
           const { files } = result.payload.data;
-          setDocument(files);
-        } else {
-          throw new Error("Failed to fetch user data.");
+          setExistingDocuments(files);
         }
       }
     } catch (error) {
@@ -68,6 +66,15 @@ export default function Upload() {
         type: "error",
         toastKey: Date.now(),
       });
+    }
+  };
+
+  // Update handleFileChange to append new files rather than replace
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    if (files.length > 0) {
+      setNewDocuments((prev) => [...prev, ...Array.from(files)]);
+      setFilesAdded(true);
     }
   };
 
@@ -106,11 +113,6 @@ export default function Upload() {
     getUploadProfile();
   }, []);
 
-  const handleFileChange = (event) => {
-    const files = event.target.files;
-    setNewDocuments(files.length > 0 ? Array.from(files) : []);
-    setFilesAdded(files.length > 0);
-  };
   const navTest = () => {
     const isGuest = localStorage.getItem("Guest") === "false";
     const planType = localStorage.getItem("PlanType");
@@ -125,49 +127,32 @@ export default function Upload() {
     navigate("/provider/home");
   };
 
-  const handleDeleteGallery = async (imageId) => {
+  const handleDeleteGallery = async (deleteId) => {
+    setLoading(true);
     try {
       const response = await axiosInstance.delete(
-        `/provider/deleteFile/${imageId}`
+        `/provider/deleteFile/${deleteId}`
       );
       if (response.status === 200) {
         setDeleteModal(false);
-        await getUploadProfile();
-      }
-    } catch (error) {
-      console.error("Failed to delete image:", error);
-    }
-  };
-  const handleDelete = async (id) => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.delete(`/provider/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
-        },
-      });
-      if (response.status === 200) {
+        await getUploadProfile(); // Refresh the list
         setLoading(false);
-        setToastProps({
-          message: response.message,
-          type: "success",
-          toastKey: Date.now(),
-        });
       }
     } catch (error) {
+      console.error("Failed to delete file:", error);
       setLoading(false);
-      setToastProps({
-        message: error || "Something went wrong",
-        type: "error",
-        toastKey: Date.now(),
-      });
     }
   };
 
+  // Add a function to remove a new document before upload
+  const removeNewDocument = (index) => {
+    setNewDocuments((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleUpload = async () => {
-    if (allDocuments.length === 0) {
+    if (newDocuments.length === 0) {
       setToastProps({
-        message: "No files uploaded",
+        message: "No new files to upload",
         type: "error",
         toastKey: Date.now(),
       });
@@ -175,9 +160,10 @@ export default function Upload() {
     }
 
     const formData = new FormData();
-    Array.from(allDocuments).forEach((file) => {
+    newDocuments.forEach((file) => {
       formData.append("file", file);
     });
+
     setLoading(true);
     try {
       const response = await axiosInstance.post(
@@ -197,35 +183,17 @@ export default function Upload() {
           type: "success",
           toastKey: Date.now(),
         });
-        window.reload();
-        setTimeout(
-          () =>
-            navigate(
-              location.pathname === "/provider/upload" && "/provider/home"
-              // : "/provider/home"
-            ),
-          2000
-        );
-        setLoading(false);
-      } else {
-        setLoading(false);
-        setToastProps({
-          message: response.data.message,
-          type: "error",
-          toastKey: Date.now(),
-        });
+        setNewDocuments([]); // Clear new documents after successful upload
+        await getUploadProfile(); // Refresh the existing documents
       }
     } catch (error) {
+      // error handling
+    } finally {
       setLoading(false);
-      setToastProps({
-        message: error || "Something went wrong",
-        type: "error",
-        toastKey: Date.now(),
-      });
     }
   };
 
-  const allDocuments = [...document, ...newDocuments];
+  const allDocumentsToDisplay = [...existingDocuments, ...newDocuments];
 
   return (
     <>
@@ -242,7 +210,7 @@ export default function Upload() {
                   <h2 className="text-center fw-bold fs-1">Upload Documents</h2>
                   <p className="text-center mt-3 mb-4">Let’s Get Started</p>
                   <div className="row gx-2 gy-4">
-                    {allDocuments.length > 0 ? (
+                    {allDocumentsToDisplay.length > 0 ? (
                       <>
                         <div className="col-lg-9">
                           <Button
@@ -295,81 +263,107 @@ export default function Upload() {
                     )}
                   </div>
 
-                  {allDocuments && allDocuments.length > 0 && (
-                    <div direction="row" className=" row gy-4">
-                      {Array.from(allDocuments).map((file, index) => (
-                        <div className="col-lg-4 py-1" key={index}>
-                          <div className="card p-3 w-100">
-                            <div className="card-body p-0 position-relative">
-                              {file.type?.includes("pdf") ||
-                              file.name?.toLowerCase().endsWith(".pdf") ||
-                              (file.path &&
-                                file.path.toLowerCase().endsWith(".pdf")) ? (
-                                <>
-                                  <iframe
-                                    src={
-                                      file instanceof File
-                                        ? URL.createObjectURL(file)
-                                        : file.path
-                                    }
-                                    className="w-100 rounded-4 "
-                                    height={100}
-                                    title={`PDF Preview ${index}`}
-                                  />
-                                  <button
-                                    className="btn btn-danger position-absolute top-0 end-0"
-                                    onClick={() =>
-                                      handleNotificationToggle(file._id)
-                                    }
-                                  >
-                                    <FaTrash />
-                                  </button>
-                                </>
-                              ) : file.type?.includes("image") ||
-                                file.name?.match(/\.(jpg|jpeg|png|gif)$/i) ||
-                                (file.path &&
-                                  file.path.match(/\.(jpg|jpeg|png|gif)$/i)) ? (
-                                <>
-                                  <a
-                                    href={
-                                      file instanceof File
-                                        ? URL.createObjectURL(file)
-                                        : file.path
-                                    }
-                                    target="_blank"
-                                  >
-                                    <img
-                                      src={
-                                        file instanceof File
-                                          ? URL.createObjectURL(file)
-                                          : file.path
+                  {allDocumentsToDisplay &&
+                    allDocumentsToDisplay.length > 0 && (
+                      <div direction="row" className=" row gy-4">
+                        {allDocumentsToDisplay.map((file, index) => (
+                          <div className="col-lg-4 py-1" key={index}>
+                            <div className="card p-3 w-100">
+                              <div className="card-body p-0 position-relative">
+                                {/* For existing documents (from API) */}
+                                {file._id ? (
+                                  <>
+                                    {file.path
+                                      ?.toLowerCase()
+                                      .endsWith(".pdf") ? (
+                                      <iframe
+                                        src={file.path}
+                                        className="w-100 rounded-4"
+                                        height={100}
+                                        title={`PDF Preview ${index}`}
+                                      />
+                                    ) : file.path?.match(
+                                        /\.(jpg|jpeg|png|gif)$/i
+                                      ) ? (
+                                      <a
+                                        href={file.path}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        <img
+                                          src={file.path}
+                                          alt="doc"
+                                          className="object-fit-contain w-100 rounded-4"
+                                          height={100}
+                                        />
+                                      </a>
+                                    ) : (
+                                      <p className="text-center">
+                                        Unsupported file type:{" "}
+                                        {file.path?.split("/").pop()}
+                                      </p>
+                                    )}
+                                    <button
+                                      className="btn btn-danger position-absolute top-0 end-0"
+                                      onClick={() =>
+                                        handleNotificationToggle(file._id)
                                       }
-                                      alt="docImage"
-                                      className="object-fit-contain w-100 rounded-4"
-                                      height={100}
-                                    />
-                                  </a>
-                                  <button
-                                    className="btn btn-danger position-absolute top-0 end-0"
-                                    onClick={() =>
-                                      handleNotificationToggle(file._id)
-                                    }
-                                  >
-                                    <FaTrash />
-                                  </button>
-                                </>
-                              ) : (
-                                <p className="text-center">
-                                  Unsupported file type:{" "}
-                                  {file.name || file.path?.split("/").pop()}
-                                </p>
-                              )}
+                                    >
+                                      <FaTrash />
+                                    </button>
+                                  </>
+                                ) : (
+                                  /* For new documents (File objects) */
+                                  <>
+                                    {file.type?.includes("pdf") ||
+                                    file.name
+                                      ?.toLowerCase()
+                                      .endsWith(".pdf") ? (
+                                      <iframe
+                                        src={URL.createObjectURL(file)}
+                                        className="w-100 rounded-4"
+                                        height={100}
+                                        title={`PDF Preview ${index}`}
+                                      />
+                                    ) : file.type?.includes("image") ||
+                                      file.name?.match(
+                                        /\.(jpg|jpeg|png|gif)$/i
+                                      ) ? (
+                                      <a
+                                        href={URL.createObjectURL(file)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        <img
+                                          src={URL.createObjectURL(file)}
+                                          alt="doc"
+                                          className="object-fit-contain w-100 rounded-4"
+                                          height={100}
+                                        />
+                                      </a>
+                                    ) : (
+                                      <p className="text-center">
+                                        Unsupported file type: {file.name}
+                                      </p>
+                                    )}
+                                    <button
+                                      className="btn btn-danger position-absolute top-0 end-0"
+                                      onClick={() =>
+                                        removeNewDocument(
+                                          index - existingDocuments.length
+                                        )
+                                      }
+                                    >
+                                      <FaTrash />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    )}
 
                   <div className="d-flex justify-content-center gap-2 mt-5 align-items-center">
                     {location.pathname === "/provider/upload" ? (
