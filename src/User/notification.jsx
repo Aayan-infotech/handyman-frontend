@@ -556,30 +556,28 @@ export default function Notification() {
                                   </Button>
                                 </div>
                               )}
-                            {notification?.type != "mass" &&
-                            !notification?.jobDetails?._id &&
-                              notification?.userName !== "Admin" &&
-                              providerId && (
-                                <div className="col-lg-3 d-flex justify-content-end">
-                                  <Button
-                                    variant="outlined"
-                                    color="success"
-                                    className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
-                                    onClick={() => {
-                                      handleMarkAsRead(
-                                        notification?._id,
-                                        notification?.type
-                                      );
-                                      navigate(
-                                        `/job-detail/${notification.jobDetails._id}`
-                                      );
-                                    }}
-                                    disabled={markingAsRead}
-                                  >
-                                    Mark as completed
-                                  </Button>
-                                </div>
-                              )}
+                            {(notification?.type === "mass" ||
+                              notification?.userName === "Admin") && (
+                              <div className="col-lg-3 d-flex justify-content-end">
+                                <Button
+                                  variant="outlined"
+                                  color="success"
+                                  className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                  onClick={() => {
+                                    handleMarkAsRead(
+                                      notification?._id,
+                                      notification?.type
+                                    );
+                                    navigate(
+                                      `/job-detail/${notification.jobDetails._id}`
+                                    );
+                                  }}
+                                  disabled={markingAsRead}
+                                >
+                                  Mark as completed
+                                </Button>
+                              </div>
+                            )}
                             {providerId &&
                               notification?.jobDetails?._id &&
                               notification?.jobDetails?.jobStatus ===
