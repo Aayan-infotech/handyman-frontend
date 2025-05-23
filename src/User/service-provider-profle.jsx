@@ -66,8 +66,12 @@ export default function ServiceProviderProfile() {
   }, [id]);
 
   useEffect(() => {
+    const token = localStorage.getItem("hunterToken");
+    if (!token) {
+      navigate("/error");
+    }
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   const renderGallery = () => {
     if (gallery.length === 0) return null;

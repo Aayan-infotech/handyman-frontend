@@ -108,6 +108,9 @@ export default function JobEdit() {
 
   // Fetch job details and business types
   useEffect(() => {
+     if(!token) {
+      window.location.href = "/error";
+    }
     const fetchData = async () => {
       try {
         setLoading(true);

@@ -100,6 +100,9 @@ export default function Main() {
   // }, []);
 
   useEffect(() => {
+    if(!hunterToken) {
+      window.location.href = "/error";
+    }
     const handleJobs = async () => {
       setLoading(true);
       try {

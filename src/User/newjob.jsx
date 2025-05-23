@@ -97,6 +97,9 @@ export default function NewJob() {
   };
 
   useEffect(() => {
+    if(!token) {
+      navigate("/error");
+    }
     const handleAllData = async () => {
       try {
         const response = await axiosInstance.get("/service/getAllServices", {
