@@ -30,6 +30,7 @@ export default function PaymentDetail() {
   const providerId = localStorage.getItem("ProviderId");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState();
+  const hunterId = localStorage.getItem("hunterId");
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -57,6 +58,11 @@ export default function PaymentDetail() {
   });
 
   useEffect(() => {
+    if (hunterId) {
+      navigate("/error");
+      return;
+    }
+
     const getData = async () => {
       setLoading(true);
       try {

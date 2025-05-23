@@ -159,14 +159,28 @@ export default function JobManagement() {
     }
   };
 
+  const handleStatusChange = (event) => {
+    const newStatus = event.target.value;
+    setJobStatus(newStatus === jobStatus ? "" : newStatus);
+
+    const queryParams = new URLSearchParams(location.search);
+    if (newStatus === jobStatus) {
+      queryParams.delete("jobStatus");
+    } else {
+      queryParams.set("jobStatus", newStatus);
+    }
+    queryParams.set("page", "1");
+    navigate(`?${queryParams.toString()}`);
+  };
   const fetchJobsHistory = async (
     page = currentPage,
-    searchTerm = queryParams.get("search") || ""
+    searchTerm = queryParams.get("search") || "",
+    status = jobStatus
   ) => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(
-        `/jobpost/myAcceptedJobs?search=${search}&page=${currentPage}`,
+        `/jobpost/myAcceptedJobs?search=${search}&page=${currentPage}&jobStatus=${status}`,
         {
           headers: {
             Authorization: `Bearer ${ProviderToken || hunterToken}`,
@@ -205,11 +219,11 @@ export default function JobManagement() {
   };
   useEffect(() => {
     if (location.pathname.includes("job-history")) {
-      fetchJobsHistory(currentPage);
+      fetchJobsHistory(currentPage, search, jobStatus);
       return;
     }
     fetchJobs(currentPage);
-  }, [currentPage, jobStatus]); // Add search to dependencies
+  }, [currentPage, jobStatus, location.search]);
 
   const handlePageChange = (event, page) => {
     queryParams.set("page", page.toString());
@@ -247,18 +261,6 @@ export default function JobManagement() {
       fetchJobs(1, "");
     }
   };
-  // useEffect(() => {
-  //   let filtered = data;
-  //   fetchJobs();
-  //   // // Apply job status filter if any statuses are selected
-  //   // if (jobStatus.length > 0) {
-  //   //   filtered = filtered.filter((provider) =>
-  //   //     jobStatus.includes(provider.jobStatus)
-  //   //   );
-  //   // }
-
-  //   setFilteredData(filtered);
-  // }, [ search]);
 
   const checkUserType = (id) => {
     if (localStorage.getItem("ProviderToken")) {
@@ -323,26 +325,72 @@ export default function JobManagement() {
                     )}
                   </Form>
                 </div>
-                {!location.pathname.includes("job-history") && (
-                  <div className="d-flex flex-row gap-2 w-100 justify-content-end align-items-center">
-                    <FormControl className="sort-input" sx={{ m: 1 }}>
-                      <InputLabel id="job-status-select-label">
-                        Job status
-                      </InputLabel>
+                {!location.pathname.includes("job-history") ? (
+                  <>
+                    <div className="d-flex flex-row gap-2 w-100 justify-content-end align-items-center">
+                      <FormControl className="sort-input" sx={{ m: 1 }}>
+                        <InputLabel id="job-status-select-label">
+                          Job status
+                        </InputLabel>
 
-                      <Select
-                        labelId="job-status-select-label"
-                        id="job-status-select"
-                        value={jobStatus}
-                        onChange={handleChange}
-                        input={<OutlinedInput label="Select Job Status" />}
-                        MenuProps={MenuProps}
-                        renderValue={(selected) =>
-                          selected || "Select Job Status"
-                        }
-                      >
-                        {["Completed", "Pending", "Assigned", "Deleted"].map(
-                          (status) => (
+                        <Select
+                          labelId="job-status-select-label"
+                          id="job-status-select"
+                          value={jobStatus}
+                          onChange={handleChange}
+                          input={<OutlinedInput label="Select Job Status" />}
+                          MenuProps={MenuProps}
+                          renderValue={(selected) =>
+                            selected || "Select Job Status"
+                          }
+                        >
+                          {["Completed", "Pending", "Assigned", "Deleted"].map(
+                            (status) => (
+                              <MenuItem key={status} value={status}>
+                                <Checkbox
+                                  checked={jobStatus === status}
+                                  // Prevent the checkbox from intercepting clicks
+                                  onClick={(e) => e.stopPropagation()}
+                                />
+                                <ListItemText primary={status} />
+                              </MenuItem>
+                            )
+                          )}
+                        </Select>
+                      </FormControl>
+                      {jobStatus && (
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => {
+                            navigate("/job-management");
+                            window.location.reload();
+                          }}
+                        >
+                          Reset
+                        </button>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="d-flex flex-row gap-2 w-100 justify-content-end align-items-center">
+                      <FormControl className="sort-input" sx={{ m: 1 }}>
+                        <InputLabel id="job-status-select-label">
+                          Job status
+                        </InputLabel>
+
+                        <Select
+                          labelId="job-status-select-label"
+                          id="job-status-select"
+                          value={jobStatus}
+                          onChange={handleStatusChange}
+                          input={<OutlinedInput label="Select Job Status" />}
+                          MenuProps={MenuProps}
+                          renderValue={(selected) =>
+                            selected || "Select Job Status"
+                          }
+                        >
+                          {["Completed", "Assigned"].map((status) => (
                             <MenuItem key={status} value={status}>
                               <Checkbox
                                 checked={jobStatus === status}
@@ -351,22 +399,24 @@ export default function JobManagement() {
                               />
                               <ListItemText primary={status} />
                             </MenuItem>
-                          )
-                        )}
-                      </Select>
-                    </FormControl>
-                    {jobStatus && (
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => {
-                          navigate("/job-management");
-                          window.location.reload();
-                        }}
-                      >
-                        Reset
-                      </button>
-                    )}
-                  </div>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      {jobStatus && (
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => {
+                            setJobStatus("");
+                            const params = new URLSearchParams(location.search);
+                            params.delete("jobStatus");
+                            navigate(`?${params.toString()}`);
+                          }}
+                        >
+                          Reset
+                        </button>
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
               <div className="row mt-4 gy-4 management">

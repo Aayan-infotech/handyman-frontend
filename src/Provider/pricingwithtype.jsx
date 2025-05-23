@@ -27,6 +27,7 @@ export default function Pricingwithtype() {
   const navigate = useNavigate();
   const location = useLocation();
   const providerId = localStorage.getItem("ProviderId");
+  const hunterId = localStorage.getItem("hunterId");
 
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -36,6 +37,10 @@ export default function Pricingwithtype() {
 
   // Fetch subscription plans based on selected type
   useEffect(() => {
+    if (hunterId) {
+      navigate("/error");
+      return;
+    }
     const getData = async () => {
       setLoading(true);
       try {

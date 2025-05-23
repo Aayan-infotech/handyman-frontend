@@ -15,6 +15,7 @@ export default function ManageSubscription() {
   const [loading, setLoading] = useState(false);
   const name = localStorage.getItem("ProviderName");
   const providerId = localStorage.getItem("ProviderId");
+  const hunterId = localStorage.getItem("hunterId");
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -22,6 +23,9 @@ export default function ManageSubscription() {
   });
 
   useEffect(() => {
+    if(hunterId){
+      navigate("/error");
+    }
     const getData = async () => {
       setLoading(true);
       try {
