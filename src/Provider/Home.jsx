@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { IoIosSearch } from "react-icons/io";
 import { MdMessage, MdOutlineSupportAgent } from "react-icons/md";
+
 import { BiCoinStack } from "react-icons/bi";
 import { PiBag } from "react-icons/pi";
 import Button from "@mui/material/Button";
@@ -12,6 +13,7 @@ import LoggedHeader from "./auth/component/loggedNavbar";
 import { getProviderJobs, getGuestProviderJobs } from "../Slices/providerSlice";
 import { getProviderUser } from "../Slices/userSlice";
 import Tooltip from "@mui/material/Tooltip";
+import { io } from "socket.io-client";
 
 import Toaster from "../Toaster";
 import { Alert, Stack } from "@mui/material";
@@ -65,6 +67,8 @@ export default function HomeProvider() {
     toastKey: 0,
   });
   const [jobStatus, setJobStatus] = useState([]);
+  const [socket, setSocket] = useState(null);
+
   const [alertMessages, setAlertMessages] = useState([]); // Store alerts
   const name = localStorage.getItem("ProviderName") || "Guest";
   const providerToken = localStorage.getItem("ProviderToken");
@@ -72,6 +76,65 @@ export default function HomeProvider() {
   const planType = localStorage.getItem("PlanType");
   const guestCondition = localStorage.getItem("Guest") === "true";
   const dispatch = useDispatch();
+  const socketRef = useRef(null);
+  useEffect(() => {
+    if (!providerToken) {
+      console.log("No provider token, skipping socket setup");
+      return;
+    }
+
+    console.log("Attempting to connect to socket...");
+    const newSocket = io("http://18.209.91.97:7787", {
+      auth: {
+        token: providerToken,
+      },
+      transports: ["websocket"],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    socketRef.current = newSocket;
+
+    newSocket.on("connect", () => {
+      console.log("✅ Socket connected successfully");
+      handleAllData(pagination.page);
+    });
+
+    newSocket.on("disconnect", (reason) => {
+      console.log("❌ Socket disconnected:", reason);
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.log("❌ Socket connection error:", error.message);
+    });
+
+    newSocket.on("newJob", (jobData) => {
+      console.log("🔔 Received newJob event:", jobData);
+      handleAllData(pagination.page);
+    });
+
+    newSocket.on("jobUpdate", (updatedJob) => {
+      console.log("🔔 Received jobUpdate event:", updatedJob);
+      handleAllData(pagination.page);
+    });
+
+    newSocket.onAny((event, ...args) => {
+      console.log(`Received socket event: ${event}`, args);
+      if (event === "new Job") {
+        // setToastProps({
+        //   message: "You have received a new job",
+        //   type: "info",
+        //   toastKey: Date.now(),
+        // });
+        handleAllData();
+      }
+    });
+
+    return () => {
+      console.log("Cleaning up socket connection");
+      newSocket.disconnect();
+    };
+  }, [providerToken]);
 
   const handleChange = (event) => {
     setJobStatus(event.target.value);
@@ -100,10 +163,13 @@ export default function HomeProvider() {
           page,
           limit: pagination.limit,
           filter: jobStatus,
+          providerId,
         })
       );
 
       if (getProviderJobs.fulfilled.match(result)) {
+        const jobs = result.payload?.data || [];
+        setData(jobs);
         setData(result.payload?.data || []);
         setPagination({
           total: result.payload?.pagination?.totalJobs || 0,
@@ -111,6 +177,12 @@ export default function HomeProvider() {
           totalPages: result.payload?.pagination?.totalPages || 1,
           limit: pagination.limit,
         });
+        // if (socket && jobs.length > 0) {
+        //   socket.emit(
+        //     "subscribeToJobs",
+        //     jobs.map((job) => job._id)
+        //   );
+        // }
       } else {
         throw new Error(result.payload?.message || "Error fetching jobs.");
       }

@@ -51,6 +51,7 @@ const sendMessage = async (
       chatId,
     };
 
+    
     const users = {
       receiverId,
       senderId,
@@ -85,10 +86,12 @@ const sendMessage = async (
     //   ref(realtimeDb, `chatList/${senderId}/${receiverId}/${chatId}`),
     //   chatMap
     // );
-    await set(
-      ref(realtimeDb, `chatList/${receiverId}/${senderId}/${chatId}`),
-      chatMap
-    );
+    const updates = {
+      [`chatList/${senderId}/${receiverId}/${chatId}`]: chatMap,
+      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap,
+    };
+
+    await update(ref(realtimeDb), updates);
 
     // Step 5: If receiver is offline, mark as unread
     if (!isReceiverOnline) {
@@ -189,12 +192,13 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   useEffect(() => {
     if (!chatId) return;
+    console.log("Fetching messages for chatId:", chatId);
 
     const chatMessagesRef = ref(
       realtimeDb,
-      `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`
+      jobId ? `chats/${jobId}/${chatId}/messages` : `chats/${chatId}/messages`
     );
-
+    console.log("Fetching messages for chatMessagesRef:", chatMessagesRef);
     const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
       if (snapshot.exists()) {
         const messagesData = snapshot.val();
@@ -225,7 +229,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     });
 
     return () => unsubscribe();
-  }, [chatId, jobId]);
+  }, [chatId]);
 
   console.log("messages1", messages);
   console.log("messagesPeople", messagesPeople);
@@ -276,7 +280,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     // Ensure chatId is always a string
     const generatedChatId = [currentUser, receiverId]
       .sort()
-      .join(`__${jobId}__`);
+      .join(`__${jobId}__` || `_chat_`);
 
     setChatId(generatedChatId);
   }, [currentUser, receiverId]);
@@ -490,13 +494,16 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   console.log("messageData in chat", userChat);
 
-  const messages1 = messages || messagesPeople || [];
+  const messages1 = messages;
 
   console.log("currentUser", currentUser);
 
-  console.log("messages1", messages1);
+  console.log("messages", messages);
+  console.log("messagesPeople", messagesPeople);
 
   if (loading) return <Loader />;
+
+  console.log("selectedChat", selectedChat, messageData, messages);
 
   return (
     <>

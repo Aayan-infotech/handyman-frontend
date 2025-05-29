@@ -61,7 +61,7 @@ export default function ServiceProvider() {
   const queryParams = new URLSearchParams(location.search);
   const [totalPages, setTotalPages] = useState(0);
   const [totalData, setTotalData] = useState(0);
-
+  const [businessData, setBusinessData] = useState([]);
   const [currentPage, setCurrentPage] = useState(
     parseInt(queryParams.get("page")) || 1
   );
@@ -71,6 +71,12 @@ export default function ServiceProvider() {
     setBusinessType(event.target.value);
   };
 
+  useEffect(() => {
+    axiosInstance.get("/jobpost/business-type-count").then((res) => {
+      const limitedData = res?.data?.data; // Ensure only 8 items
+      setBusinessData(limitedData);
+    });
+  }, []);
   useEffect(() => {
     if (!token) {
       navigate("/error");
@@ -157,6 +163,7 @@ export default function ServiceProvider() {
         type: "error",
         toastKey: Date.now(),
       });
+      setFilteredData([]);
     } finally {
       setLoading(false);
     }
@@ -287,7 +294,7 @@ export default function ServiceProvider() {
                           MenuProps={MenuProps}
                           placeholder="Select Business Type"
                         >
-                          {Array.from(
+                          {/* {Array.from(
                             new Set(
                               data.flatMap((provider) => provider.businessType)
                             )
@@ -295,6 +302,18 @@ export default function ServiceProvider() {
                             <MenuItem key={index} value={type}>
                               <Checkbox checked={businessType.includes(type)} />
                               <ListItemText primary={type} />
+                            </MenuItem>
+                          ))} */}
+                          {businessData.map((business, index) => (
+                            <MenuItem key={index} value={business.name}>
+                              {" "}
+                              {/* or business.type depending on your API response structure */}
+                              <Checkbox
+                                checked={businessType.includes(business.name)}
+                              />
+                              <ListItemText
+                                primary={`${business.name}`} // Display the type and count
+                              />
                             </MenuItem>
                           ))}
                         </Select>
@@ -445,36 +464,40 @@ export default function ServiceProvider() {
                               ))}
                             </tbody>
                           </Table>
-                          <Stack
-                            spacing={2}
-                            sx={{ mt: 4, alignItems: "center" }}
-                          >
-                            <Pagination
-                              count={totalPages}
-                              page={currentPage}
-                              onChange={(event, page) => handlePageChange(page)}
-                              color="primary"
-                              size="large"
-                              variant="outlined"
-                              shape="rounded"
-                              sx={{
-                                "& .MuiPaginationItem-root": {
-                                  color: "#4CAF50",
-                                  borderColor: "#4CAF50",
-                                  "&:hover": {
-                                    backgroundColor: "#E8F5E9",
+                          {totalPages > 1 && (
+                            <Stack
+                              spacing={2}
+                              sx={{ mt: 4, alignItems: "center" }}
+                            >
+                              <Pagination
+                                count={totalPages}
+                                page={currentPage}
+                                onChange={(event, page) =>
+                                  handlePageChange(page)
+                                }
+                                color="primary"
+                                size="large"
+                                variant="outlined"
+                                shape="rounded"
+                                sx={{
+                                  "& .MuiPaginationItem-root": {
+                                    color: "#4CAF50",
+                                    borderColor: "#4CAF50",
+                                    "&:hover": {
+                                      backgroundColor: "#E8F5E9",
+                                    },
                                   },
-                                },
-                                "& .Mui-selected": {
-                                  backgroundColor: "#4CAF50",
-                                  color: "#fff",
-                                  "&:hover": {
-                                    backgroundColor: "#388E3C",
+                                  "& .Mui-selected": {
+                                    backgroundColor: "#4CAF50",
+                                    color: "#fff",
+                                    "&:hover": {
+                                      backgroundColor: "#388E3C",
+                                    },
                                   },
-                                },
-                              }}
-                            />
-                          </Stack>
+                                }}
+                              />
+                            </Stack>
+                          )}
                         </div>
                       </div>
                     </div>

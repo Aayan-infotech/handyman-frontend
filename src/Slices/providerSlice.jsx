@@ -36,8 +36,16 @@ export const getProviderNearbyJobs = createAsyncThunk(
 export const getProviderJobs = createAsyncThunk(
   "/Provider/getProviderJobs",
   async (
-    { businessType, latitude, longitude, radius , page, filter,
-      limit },
+    {
+      businessType,
+      latitude,
+      longitude,
+      radius,
+      page,
+      filter,
+      limit,
+      providerId,
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -50,7 +58,8 @@ export const getProviderJobs = createAsyncThunk(
           radius,
           page,
           limit,
-          filter
+          filter,
+          providerId,
         },
         {
           headers: {
@@ -95,7 +104,7 @@ export const getGuestProviderJobId = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/provider/getJobByIdForGuest/${id}` , 
+        `/provider/getJobByIdForGuest/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,

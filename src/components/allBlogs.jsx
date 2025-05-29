@@ -205,7 +205,8 @@ export default function AllBlogs() {
 
             <Col md={4} className="mb-4">
               <h6>Download Our app</h6>
-              <img
+               <div className="d-flex flex-column">
+                <img
                 src={playIcon}
                 alt="play store icon"
                 className="rounded-4 mb-4"
@@ -217,6 +218,8 @@ export default function AllBlogs() {
                 className=" rounded-4"
                 style={{ height: "60px", width: "200px" }}
               />
+               </div>
+              
             </Col>
           </Row>
 

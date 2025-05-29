@@ -143,6 +143,32 @@ export default function JobSpecification() {
     }
   };
 
+  const handleJobStatusChange = async () => {
+    setLoading(true);
+    try {
+      const reponse = await axiosInstance.post(
+        `/jobPost/changeJobStatus/${id}`,
+        {
+          jobStatus: "Quoted",
+          providerId: ProviderId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ||
+              localStorage.getItem("ProviderToken")
+            }`,
+          },
+        }
+      );
+      setLoading(false);
+      // setShow(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
   const handleJobStatus = async () => {
     setLoading(true);
     try {
@@ -164,7 +190,8 @@ export default function JobSpecification() {
       if (response.status === 200) {
         // setShow(true);
         // noficationFunctionality();
-        handleJob();
+        await handleJob();
+        await handleJobStatusChange();
         setToastProps({
           message: response.message,
           type: "success",
@@ -295,7 +322,7 @@ export default function JobSpecification() {
                             <h6>
                               Date Posted:
                               {data?.date
-                                ? new Date(data.createdAt).toLocaleTimeString(
+                                ? new Date(data.createdAt).toLocaleDateString(
                                     "en-AU",
                                     {
                                       timeZone: "Australia/Sydney",
@@ -309,7 +336,7 @@ export default function JobSpecification() {
                             <h6>
                               Date Required:
                               {data?.date
-                                ? new Date(data.date).toLocaleTimeString(
+                                ? new Date(data.date).toLocaleDateString(
                                     "en-AU",
                                     {
                                       timeZone: "Australia/Sydney",

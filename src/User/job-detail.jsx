@@ -36,7 +36,7 @@ export default function JobDetail() {
     toastKey: 0,
   });
   const [show, setShow] = useState(false);
-
+  const providerbusinessName = localStorage.getItem("ProviderBusinessName");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [loading, setLoading] = useState(false);
@@ -176,7 +176,7 @@ export default function JobDetail() {
       const reponse = await axiosInstance.post(
         `/jobPost/changeJobStatus/${id}`,
         {
-          jobStatus: " Completed",
+          jobStatus: "Completed",
           providerId: receiverId,
         },
         {
@@ -212,7 +212,7 @@ export default function JobDetail() {
           messageNotification({
             receiverId,
             jobId: id,
-            body: `Provider have completed your job ${title}`,
+            body: `${providerbusinessName} have completed your job ${title}`,
           })
         );
         // if (messageNotification.fulfilled.match(response)) {
@@ -353,7 +353,7 @@ export default function JobDetail() {
                         <h6>
                           Date Posted:
                           {data?.createdAt
-                            ? new Date(data.createdAt).toLocaleTimeString(
+                            ? new Date(data.createdAt).toLocaleDateString(
                                 "en-AU",
                                 {
                                   timeZone: "Australia/Sydney",
@@ -367,7 +367,7 @@ export default function JobDetail() {
                         <h6>
                           Date Required:
                           {data?.date
-                            ? new Date(data.date).toLocaleTimeString("en-AU", {
+                            ? new Date(data.date).toLocaleDateString("en-AU", {
                                 timeZone: "Australia/Sydney",
                                 day: "2-digit",
                                 month: "2-digit",
@@ -466,30 +466,32 @@ export default function JobDetail() {
                     {localStorage.getItem("ProviderToken") && isHistoryType && (
                       <div className="row gy-4 w-100">
                         <div className="col-lg-12">
-                          {data?.completionNotified === false ? (
-                            <Button
-                              variant="contained"
-                              onClick={() =>
-                                handleJobCompletNotify({
-                                  id: id,
-                                  receiverId: data?.user,
-                                  title: data?.title,
-                                })
-                              }
-                              className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                            >
-                              Mark As Completed
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="outlined"
-                              color="success"
-                              className="custom-green h-100 py-3 bg-green-custom rounded-5 text-light border-light w-100"
-                              disabled
-                            >
-                              Already Notified
-                            </Button>
-                          )}
+                          {data?.jobStatus !== "Completed" &&
+                            (data?.completionNotified === false ? (
+                              <Button
+                                variant="contained"
+                                onClick={() =>
+                                  handleJobCompletNotify({
+                                    id: id,
+                                    receiverId: data?.user,
+                                    title: data?.title,
+                                  })
+                                }
+                                className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                              >
+                                Mark As Completed
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outlined"
+                                color="success"
+                                className="custom-green h-100 py-3 bg-green-custom rounded-5 text-light border-light w-100"
+                                disabled
+                              >
+                                Already Notified
+                              </Button>
+                            ))}
+                          {}
                         </div>
                       </div>
                     )}

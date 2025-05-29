@@ -115,7 +115,7 @@ export default function ServiceProviderProfile() {
 
     return (
       <>
-        <h4 className="text-muted mt-4">Previous Rating</h4>
+        <h4 className="text-muted mt-4">Hunters Reviews</h4>
         <Swiper
           navigation
           spaceBetween={50}
@@ -129,8 +129,8 @@ export default function ServiceProviderProfile() {
           breakpoints={{
             640: { slidesPerView: 1, spaceBetween: 10 },
             768: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 30 },
-            1200: { slidesPerView: 4, spaceBetween: 40 },
+
+            1200: { slidesPerView: 3, spaceBetween: 40 },
           }}
         >
           {rating.map((item) => (
@@ -145,8 +145,17 @@ export default function ServiceProviderProfile() {
                       style={{ width: "100px", height: "100px" }}
                     />
                     <div className="d-flex flex-row gap-1 align-items-center">
-                      <p className="m-0">{item?.rating}</p>
-                      <IoIosStar size={30} />
+                      <div className="flex">
+                        {[...Array(Math.floor(item?.rating || 0))].map(
+                          (_, i) => (
+                            <IoIosStar
+                              key={i}
+                              size={30}
+                              style={{ color: "#ebeb13" }}
+                            />
+                          )
+                        )}
+                      </div>
                     </div>
                   </div>
                   <b className="mb-0 pt-2 ms-2">
@@ -213,7 +222,7 @@ export default function ServiceProviderProfile() {
                         <div className="d-flex flex-column gap-3">
                           <h5 className="mb-0">Available</h5>
                           <p className="mb-0">
-                            Served {data?.jobCompleteCount}+ Jobs
+                            Completed {data?.jobCompleteCount}+ Jobs
                           </p>
                         </div>
                         <BsThreeDotsVertical />
@@ -242,13 +251,13 @@ export default function ServiceProviderProfile() {
                       <MdEmail />
                     </a>
                   </div>
-                  {data?.subscriptionType === "Advertising" && (
+                  {/* {data?.subscriptionType === "Advertising" && ( */}
                     <div className="contact">
                       <Link to={`/advertiser/chat/${id}`}>
                         <RiMessage2Fill />
                       </Link>
                     </div>
-                  )}
+                  {/* )} */}
 
                   <div className="contact">
                     <a href={`tel:${data.phoneNo}`}>

@@ -204,18 +204,20 @@ export default function BlogDetail() {
 
             <Col md={4} className="mb-4">
               <h6>Download Our app</h6>
-              <img
-                src={playIcon}
-                alt="play store icon"
-                className="rounded-4 mb-4"
-                style={{ height: "60px", width: "200px" }}
-              />
-              <img
-                src={appleIcon}
-                alt="apple store icon"
-                className=" rounded-4"
-                style={{ height: "60px", width: "200px" }}
-              />
+              <div className="d-flex flex-column">
+                <img
+                  src={playIcon}
+                  alt="play store icon"
+                  className="rounded-4 mb-4"
+                  style={{ height: "60px", width: "200px" }}
+                />
+                <img
+                  src={appleIcon}
+                  alt="apple store icon"
+                  className=" rounded-4"
+                  style={{ height: "60px", width: "200px" }}
+                />
+              </div>
             </Col>
           </Row>
 

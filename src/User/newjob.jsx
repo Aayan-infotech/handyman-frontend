@@ -97,7 +97,7 @@ export default function NewJob() {
   };
 
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate("/error");
     }
     const handleAllData = async () => {
@@ -248,7 +248,7 @@ export default function NewJob() {
                     />
                   </div>
                   <div className="col-lg-4">
-                    <FormControl className="w-100 mt-lg-2">
+                    <FormControl className="w-100">
                       <Select
                         className="input1 bg-white p-1"
                         id="demo-multiple-radius"
@@ -285,7 +285,7 @@ export default function NewJob() {
                     </FormControl>
                   </div>
                   <div className="col-lg-4">
-                    <FormControl className="w-100 mt-lg-2">
+                    <FormControl className="w-100">
                       <Select
                         className="input1 bg-white p-1"
                         id="demo-multiple-name"
@@ -322,6 +322,38 @@ export default function NewJob() {
                       </Select>
                     </FormControl>
                   </div>
+
+                  <div className="col-lg-4">
+                    {/* <div className="card outline-card-none">
+                          <div className="card-body d-flex flex-column align-items-center"> */}
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <MobileDatePicker
+                        defaultValue={dayjs()}
+                        className="standard-input w-100"
+                        shouldDisableDate={(date) =>
+                          date.isBefore(dayjs(), "day")
+                        }
+                        onChange={(newValue) => {
+                          if (newValue) {
+                            setTime(newValue); // Keep it as a dayjs object
+                          }
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                    {/* </div>
+                        </div> */}
+                  </div>
+                  <div className="col-lg-4">
+                    <Form.Control
+                      as="textarea"
+                      value={requirements}
+                      onChange={(e) => setRequirements(e.target.value)}
+                      rows={3}
+                      placeholder="requirements ......."
+                    />
+                  </div>
                   <div className="col-lg-4">
                     <Form.Control
                       type="file"
@@ -330,31 +362,8 @@ export default function NewJob() {
                       multiple
                     />
                   </div>
-                  <div className="col-lg-4">
-                    <div className="card outline-card-none">
-                      <div className="card-body d-flex flex-column align-items-center">
-                        <label className="text-secondary mb-2 fs-6 text-center w-100">
-                          Choose Date
-                        </label>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <MobileDatePicker
-                            defaultValue={dayjs()}
-                            className="standard-input"
-                            shouldDisableDate={(date) =>
-                              date.isBefore(dayjs(), "day")
-                            }
-                            onChange={(newValue) => {
-                              if (newValue) {
-                                setTime(newValue); // Keep it as a dayjs object
-                              }
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
-                          />
-                        </LocalizationProvider>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-4">
+
+                  {/* <div className="col-lg-4">
                     <div className="card outline-card-none">
                       <div className="card-body">
                         <label className="text-secondary mb-2 fs-6 text-center w-100">
@@ -384,18 +393,9 @@ export default function NewJob() {
                         </LocalizationProvider>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-lg-4">
-                    <Form.Control
-                      as="textarea"
-                      value={requirements}
-                      onChange={(e) => setRequirements(e.target.value)}
-                      rows={3}
-                      placeholder="requirements ......."
-                    />
-                  </div>
+                  </div> */}
 
-                  <div className="col-lg-4 mx-auto pt-4">
+                  <div className="col-lg-4 mx-auto">
                     <Button
                       variant="contained"
                       color="success"

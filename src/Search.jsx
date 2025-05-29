@@ -13,6 +13,8 @@ import Navbar from "react-bootstrap/Navbar";
 import logo from "./assets/logo.png";
 import { GoArrowRight } from "react-icons/go";
 import { useNavigate, useLocation } from "react-router-dom";
+import Chip from "@mui/material/Chip";
+
 import {
   FaFacebook,
   FaDribbble,
@@ -156,7 +158,7 @@ function Search() {
               </Navbar.Collapse>
             </Container>
           </Navbar>
-          <div className="bg-second py-3">
+          <div className=" py-3">
             <div className="container top-section-main">
               <div className="row gy-4 management">
                 {filteredJobs?.length === 0 ? (
@@ -169,8 +171,8 @@ function Search() {
                   </div>
                 ) : (
                   filteredJobs.map((job) => (
-                    <div className="col-lg-6" key={job._id}>
-                      <div className="card border-0 rounded-5 shadow px-4">
+                    <div className="col-lg-4" key={job._id}>
+                      <div className="card h-100">
                         <div className="card-body">
                           <div className="row gy-4 gx-1 align-items-center">
                             <div className="col-lg-12">
@@ -186,7 +188,7 @@ function Search() {
                                 </div>
                               </div>
                             </div>
-                            <div className="col-lg-12">
+                            <div className="col-lg-12 mt-1">
                               <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-4 align-items-start">
                                 <div className="d-flex flex-column gap-2 align-items-start flex-wrap w-100">
                                   <div className="d-flex flex-row gap-2 align-items-center">
@@ -196,6 +198,15 @@ function Search() {
                                         job?.address?.addressLine
                                       )}
                                     </h5>
+                                  </div>
+                                  <div className="d-flex flex-row flex-wrap gap-2">
+                                    {job?.businessType?.map((text, index) => (
+                                      <Chip
+                                        key={index}
+                                        label={text}
+                                        className="green-line"
+                                      />
+                                    ))}
                                   </div>
                                 </div>
                               </div>

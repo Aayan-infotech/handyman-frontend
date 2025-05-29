@@ -22,7 +22,6 @@ const sendMessage = async (
   name,
   setMessages
 ) => {
-  console.log("function working");
   if (!chatId) {
     console.error("Chat ID is missing");
     return;
@@ -62,7 +61,7 @@ export default function AdminChat() {
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   const currentUserName =
-    localStorage.getItem("ProviderName") || localStorage.getItem("hunterName");
+    localStorage.getItem("ProviderBusinessName") || localStorage.getItem("hunterName");
 
   console.log("currentUseradmin", currentUser);
 
@@ -97,7 +96,7 @@ export default function AdminChat() {
         "/hunter/send-job-email",
         {
           name:
-            localStorage.getItem("ProviderName") ||
+            localStorage.getItem("ProviderBusinessName") ||
             localStorage.getItem("hunterName"),
           receverEmail: "tradehunters2025@gmail.com",
         },

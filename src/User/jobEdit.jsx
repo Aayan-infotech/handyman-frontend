@@ -108,7 +108,7 @@ export default function JobEdit() {
 
   // Fetch job details and business types
   useEffect(() => {
-     if(!token) {
+    if (!token) {
       window.location.href = "/error";
     }
     const fetchData = async () => {
@@ -429,15 +429,13 @@ export default function JobEdit() {
                     )}
                   </div>
                   <div className="col-lg-4">
-                    <div className="card outline-card-none">
-                      <div className="card-body d-flex flex-column align-items-center">
-                        <label className="text-secondary mb-2 fs-6 text-center w-100">
-                          Choose Date
-                        </label>
+                    {/* <div className="card outline-card-none">
+                      <div className="card-body d-flex flex-column align-items-center"> */}
+                        
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <MobileDatePicker
                             value={time}
-                            className="standard-input"
+                            className="standard-input w-100"
                             shouldDisableDate={(date) =>
                               date.isBefore(dayjs(), "day")
                             }
@@ -445,40 +443,10 @@ export default function JobEdit() {
                             renderInput={(params) => <TextField {...params} />}
                           />
                         </LocalizationProvider>
-                      </div>
-                    </div>
+                      {/* </div>
+                    </div> */}
                   </div>
-                  <div className="col-lg-4">
-                    <div className="card outline-card-none">
-                      <div className="card-body">
-                        <label className="text-secondary mb-2 fs-6 text-center w-100">
-                          TimeStamp
-                        </label>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <Stack
-                            spacing={2}
-                            direction="row"
-                            className="standard-input"
-                          >
-                            <MobileTimePicker
-                              value={startTime}
-                              onChange={(newValue) => setStartTime(newValue)}
-                              renderInput={(params) => (
-                                <TextField {...params} />
-                              )}
-                            />
-                            <MobileTimePicker
-                              value={endTime}
-                              onChange={(newValue) => setEndTime(newValue)}
-                              renderInput={(params) => (
-                                <TextField {...params} />
-                              )}
-                            />
-                          </Stack>
-                        </LocalizationProvider>
-                      </div>
-                    </div>
-                  </div>
+
                   <div className="col-lg-4">
                     <Form.Control
                       as="textarea"
@@ -489,7 +457,7 @@ export default function JobEdit() {
                     />
                   </div>
 
-                  <div className="col-lg-4 mx-auto pt-4">
+                  <div className="col-lg-4 mx-auto">
                     <Button
                       variant="contained"
                       color="success"
