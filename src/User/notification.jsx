@@ -469,7 +469,7 @@ export default function Notification() {
                               </div>
                             </div>
                             {notification?.type != "mass" &&
-                              notification?.jobDetails?._id && (
+                              notification?.jobId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button
                                     variant="outlined"
@@ -486,7 +486,7 @@ export default function Notification() {
                                                 ? notification.receiverId
                                                 : notification.userId
                                             }?jobId=${
-                                              notification.jobDetails._id
+                                              notification.jobId
                                             }&path=notification`
                                           )
                                         : navigate(
@@ -507,7 +507,7 @@ export default function Notification() {
                               )}
 
                             {notification?.jobDetails?.jobStatus ===
-                              "Pending" &&
+                              "Quoted" &&
                               notification?.jobDetails?.jobStatus &&
                               hunterId && (
                                 <>
@@ -608,18 +608,17 @@ export default function Notification() {
                                     Job Completed
                                   </Button>
                                 </div>
-                              ) : (
-                                <div className="col-lg-3 d-flex justify-content-end">
-                                  <Button
-                                    variant="outlined"
-                                    color="success"
-                                    className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                    disabled
-                                  >
-                                    Already Notified
-                                  </Button>
-                                </div>
-                              ))}
+                              ) : // <div className="col-lg-3 d-flex justify-content-end">
+                              //   <Button
+                              //     variant="outlined"
+                              //     color="success"
+                              //     className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
+                              //     disabled
+                              //   >
+                              //     Already Notified
+                              //   </Button>
+                              // </div>
+                              null)}
                             <div className="col-lg-3 d-flex justify-content-end">
                               {notification?.type === "mass" ? (
                                 <Button

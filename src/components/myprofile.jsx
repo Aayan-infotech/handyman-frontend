@@ -203,18 +203,19 @@ export default function MyProfile() {
   useEffect(() => {
     fetchData();
   }, [providerToken]);
-  const handleSave = () => {
-    axiosInstance
-      .post(`/provider/about/${userId}`, {
+  const handleSave = async () => {
+    try {
+      const response = await axiosInstance.post(`/provider/about/${userId}`, {
         about: description,
-      })
-      .then((response) => {
-        if (response.data.success) {
-          setAboutText(response.data.data[0].about); // Set new about text
-          setShowModal(false); // Close modal
-        }
-      })
-      .catch((error) => console.error("Error updating about:", error));
+      });
+      console.log("Response:", response);
+      if (response.data.status === 200) {
+        setAboutText(response.data.data[0].about); // Set new about text
+        setEditShowModal(false); // Close modal
+      }
+    } catch (error) {
+      console.error("Error updating about:", error);
+    }
   };
   // Handle file change and trigger upload
   const handleFileChange = (event) => {
@@ -1105,8 +1106,8 @@ export default function MyProfile() {
                         breakpoints={{
                           640: { slidesPerView: 1, spaceBetween: 10 },
                           768: { slidesPerView: 2, spaceBetween: 20 },
-                          1024: { slidesPerView: 3, spaceBetween: 30 },
-                          1200: { slidesPerView: 4, spaceBetween: 40 },
+
+                          1200: { slidesPerView: 3, spaceBetween: 40 },
                         }}
                       >
                         {rating.map((item) => (
@@ -1124,8 +1125,17 @@ export default function MyProfile() {
                                     }}
                                   />
                                   <div className="d-flex flex-row gap-1 align-items-center">
-                                    <p className="m-0">{item?.rating}</p>
-                                    <IoIosStar size={30} />
+                                    <div className="flex">
+                                      {[
+                                        ...Array(Math.floor(item?.rating || 0)),
+                                      ].map((_, i) => (
+                                        <IoIosStar
+                                          key={i}
+                                          size={30}
+                                          style={{ color: "#ebeb13" }}
+                                        />
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
                                 <b className="mb-0 pt-2 ms-2">

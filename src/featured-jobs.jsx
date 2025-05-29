@@ -36,6 +36,7 @@ export default function FeaturedJobs() {
   const [businessData, setBusinessData] = useState([]);
   const [allBusinessData, setAllBusinessData] = useState([]);
 
+  console.log("searchQuery", searchQuery.name);
   const handleBusinessChange = (selectedOption) => {
     setSearchQuery(selectedOption);
     if (!selectedOption) {
@@ -56,7 +57,7 @@ export default function FeaturedJobs() {
         params: {
           page,
           limit: 9,
-          search: query.name,
+          search: searchQuery?.name,
           // ...(query && { search: query }),
         },
       });
@@ -243,6 +244,11 @@ export default function FeaturedJobs() {
                   <h6>About</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                     <li>
+                      <a href="allblogs" className="text-light">
+                        Blogs
+                      </a>
+                    </li>
+                    <li>
                       <a href="terms" className="text-light">
                         Terms
                       </a>
@@ -275,18 +281,20 @@ export default function FeaturedJobs() {
 
             <Col md={4} className="mb-4">
               <h6>Download Our app</h6>
-              <img
-                src={playIcon}
-                alt="play store icon"
-                className="rounded-4 mb-4"
-                style={{ height: "60px", width: "200px" }}
-              />
-              <img
-                src={appleIcon}
-                alt="apple store icon"
-                className=" rounded-4"
-                style={{ height: "60px", width: "200px" }}
-              />
+              <div className="d-flex flex-column">
+                <img
+                  src={playIcon}
+                  alt="play store icon"
+                  className="rounded-4 mb-4"
+                  style={{ height: "60px", width: "200px" }}
+                />
+                <img
+                  src={appleIcon}
+                  alt="apple store icon"
+                  className=" rounded-4"
+                  style={{ height: "60px", width: "200px" }}
+                />
+              </div>
             </Col>
           </Row>
 

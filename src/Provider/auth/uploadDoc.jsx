@@ -271,7 +271,7 @@ export default function Upload() {
                     allDocumentsToDisplay.length > 0 && (
                       <div direction="row" className=" row gy-4">
                         {allDocumentsToDisplay.map((file, index) => (
-                          <div className="col-lg-4 py-1" key={index}>
+                          <div className="col-lg-6 py-1" key={index}>
                             <div className="card p-3 w-100">
                               <div className="card-body p-0 position-relative">
                                 {/* For existing documents (from API) */}
@@ -280,12 +280,26 @@ export default function Upload() {
                                     {file.path
                                       ?.toLowerCase()
                                       .endsWith(".pdf") ? (
-                                      <iframe
-                                        src={file.path}
-                                        className="w-100 rounded-4"
-                                        height={100}
-                                        title={`PDF Preview ${index}`}
-                                      />
+                                      <div className="w-100 position-relative">
+                                        <iframe
+                                          src={file.path}
+                                          className="w-100 rounded-4"
+                                          height={100}
+                                          title={`PDF Preview ${index}`}
+                                        />
+                                        <a
+                                          href={file.path}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          <Chip
+                                            label="Link to Document"
+                                            size="small"
+                                            color="primary"
+                                            className="position-absolute bottom-0 end-0 m-2"
+                                          />
+                                        </a>
+                                      </div>
                                     ) : file.path?.match(
                                         /\.(jpg|jpeg|png|gif)$/i
                                       ) ? (
@@ -323,12 +337,26 @@ export default function Upload() {
                                     file.name
                                       ?.toLowerCase()
                                       .endsWith(".pdf") ? (
-                                      <iframe
-                                        src={URL.createObjectURL(file)}
-                                        className="w-100 rounded-4"
-                                        height={100}
-                                        title={`PDF Preview ${index}`}
-                                      />
+                                      <div className="w-100 position-relative">
+                                        <iframe
+                                          src={URL.createObjectURL(file)}
+                                          className="w-100 rounded-4"
+                                          height={100}
+                                          title={`PDF Preview ${index}`}
+                                        />
+                                        <a
+                                          href={URL.createObjectURL(file)}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          <Chip
+                                            label="Link to Document"
+                                            size="small"
+                                            color="primary"
+                                            className="position-absolute bottom-0 end-0 m-2"
+                                          />
+                                        </a>
+                                      </div>
                                     ) : file.type?.includes("image") ||
                                       file.name?.match(
                                         /\.(jpg|jpeg|png|gif)$/i

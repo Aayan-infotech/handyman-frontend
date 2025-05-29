@@ -221,6 +221,11 @@ export default function LatestJobs() {
                         Pricing
                       </a>
                     </li> */}
+                    <li>
+                      <a href="allblogs" className="text-light">
+                        Blogs
+                      </a>
+                    </li>
                         <li>
                           <a href="terms" className="text-light">
                             Terms
@@ -258,7 +263,8 @@ export default function LatestJobs() {
                 </Col>
                 <Col md={4} className="mb-4">
                   <h6>Download Our app</h6>
-                  <img
+                    <div className="d-flex flex-column">
+                       <img
                     src={playIcon}
                     alt="play store icon"
                     className="rounded-4 mb-4"
@@ -270,6 +276,8 @@ export default function LatestJobs() {
                     className=" rounded-4"
                     style={{ height: "60px", width: "200px" }}
                   />
+                    </div>
+                 
                 </Col>
                 {/* Right Section: Subscription */}
                 {/* <Col md={4} className="mb-4">

@@ -42,6 +42,7 @@ export default function Contact() {
       name: data.name,
       email: data.email,
       message: data.message,
+      userType: data.userType,
     };
 
     setLoading(true);
@@ -114,19 +115,36 @@ export default function Contact() {
                   onSubmit={handleSubmit(onSubmit)}
                   className="contact-form"
                 >
-                  <Form.Group controlId="name" className="mb-4">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Your Name"
-                      {...register("name", { required: "Name is required" })}
-                      isInvalid={!!errors.name}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.name?.message}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-
+                  <div className="d-flex flex-row gap-2 align-items-center">
+                    <Form.Group controlId="name" className="mb-4  w-100">
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Your Name"
+                        {...register("name", { required: "Name is required" })}
+                        isInvalid={!!errors.name}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.name?.message}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="userType" className="mb-4 w-100">
+                      <Form.Label>User Type</Form.Label>
+                      <Form.Select
+                        {...register("userType", {
+                          required: "User type is required",
+                        })}
+                        isInvalid={!!errors.userType}
+                      >
+                        <option value="">Select User Type</option>
+                        <option value="hunter">Hunter</option>
+                        <option value="provider">Provider</option>
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.userType?.message}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </div>
                   <Form.Group controlId="email" className="mb-4">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
@@ -195,6 +213,11 @@ export default function Contact() {
                     <Col>
                       <h6 className="">About</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                        <li>
+                          <a href="allblogs" className="text-light">
+                            Blogs
+                          </a>
+                        </li>
                         {/* <li>
                       <a href="#companies" className="text-light">
                         Companies
@@ -224,7 +247,7 @@ export default function Contact() {
                     </Col>
                     <Col>
                       <h6>Resources</h6>
-                     <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                      <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                         <li>
                           <a href="/guide" className="text-light">
                             Guide & Updates
@@ -242,18 +265,20 @@ export default function Contact() {
                 </Col>
                 <Col md={4} className="mb-4">
                   <h6>Download Our app</h6>
-                  <img
-                    src={playIcon}
-                    alt="play store icon"
-                    className="rounded-4 mb-4"
-                    style={{ height: "60px", width: "200px" }}
-                  />
-                  <img
-                    src={appleIcon}
-                    alt="apple store icon"
-                    className=" rounded-4"
-                    style={{ height: "60px", width: "200px" }}
-                  />
+                  <div className="d-flex flex-column">
+                    <img
+                      src={playIcon}
+                      alt="play store icon"
+                      className="rounded-4 mb-4"
+                      style={{ height: "60px", width: "200px" }}
+                    />
+                    <img
+                      src={appleIcon}
+                      alt="apple store icon"
+                      className=" rounded-4"
+                      style={{ height: "60px", width: "200px" }}
+                    />
+                  </div>
                 </Col>
 
                 {/* Right Section: Subscription */}

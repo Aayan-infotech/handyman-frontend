@@ -5,6 +5,8 @@ import { IoIosSearch } from "react-icons/io";
 import { FaArrowLeft } from "react-icons/fa";
 import Button from "@mui/material/Button";
 import { FaTrash } from "react-icons/fa";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import {
   ref,
   onValue,
@@ -23,7 +25,6 @@ import noData from "../assets/no_data_found.gif";
 import axiosInstance from "../components/axiosInstance";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
 import AdvertiserChat from "./advertiserChat";
 export default function Message() {
   const [open, setOpen] = useState(false);
@@ -365,6 +366,18 @@ export default function Message() {
                             className="mb-3 rounded-4"
                             height={80}
                           />
+                          <Skeleton
+                            variant="rounded"
+                            animation="wave"
+                            className="mb-3 rounded-4"
+                            height={80}
+                          />
+                          <Skeleton
+                            variant="rounded"
+                            animation="wave"
+                            className="mb-3 rounded-4"
+                            height={80}
+                          />
                         </div>
                       </Stack>
                     </>
@@ -473,12 +486,8 @@ export default function Message() {
               {open && (
                 <div className="col-lg-12">
                   <div className="message-box">
-                    {localStorage.getItem("PlanType") === "Advertising" ||
-                    (selectedChat &&
-                      messageData[selectedChat.chatId]?.receiver
-                        ?.subscriptionType === "Advertising") ||
-                    messageData[selectedChat.chatId]?.sender
-                      ?.subscriptionType === "Advertising" ? (
+                    {selectedChat &&
+                    messageData[selectedChat.chatId]?.jobData === null ? (
                       <AdvertiserChat
                         messageData={messageData}
                         messages={chatMessages}

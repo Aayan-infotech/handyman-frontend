@@ -150,6 +150,7 @@ export default function LoggedHeader() {
   };
 
   const fetchNotifications = async () => {
+    if (!hunterToken) return;
     if (!userId) return;
     try {
       const url = `/pushNotification/get-notification/${userType}`;
@@ -171,7 +172,6 @@ export default function LoggedHeader() {
   };
 
   useEffect(() => {
-    // Get the stored notification setting (parsed as boolean)
     const isNotificationEnabled =
       userType === "provider"
         ? JSON.parse(
@@ -180,8 +180,6 @@ export default function LoggedHeader() {
         : JSON.parse(
             localStorage.getItem("notificationEnableHunter") ?? "true"
           );
-
-    // Only fetch notifications if enabled
     if (isNotificationEnabled) {
       fetchNotifications();
     }
@@ -237,9 +235,9 @@ export default function LoggedHeader() {
               <div className=" d-flex justify-content-between align-items-center gap-2">
                 <Link to="/message">
                   {/* <Tooltip title="Message" placement="left-start"> */}
-                    <div className="message">
-                      <MdMessage />{" "}
-                    </div>
+                  <div className="message">
+                    <MdMessage />{" "}
+                  </div>
                   {/* </Tooltip> */}
                 </Link>
                 <Link

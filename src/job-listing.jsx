@@ -129,26 +129,31 @@ export default function JobListing() {
                     <Col>
                       <h6 className="">About</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
-                        <li>
+                        {/* <li>
                           <a href="#companies" className="text-light">
                             Companies
                           </a>
-                        </li>
-                        <li>
+                        </li> */}
+                        {/* <li>
                           <a href="#pricing" className="text-light">
                             Pricing
                           </a>
-                        </li>
+                        </li> */}
+                        <li>
+                      <a href="allblogs" className="text-light">
+                        Blogs
+                      </a>
+                    </li>
                         <li>
                           <a href="#terms" className="text-light">
                             Terms
                           </a>
                         </li>
-                        <li>
+                        {/* <li>
                           <a href="#advice" className="text-light">
                             Advice
                           </a>
-                        </li>
+                        </li> */}
                         <li>
                           <Link to="/privacy" className="text-light">
                             Privacy Policy
@@ -177,7 +182,8 @@ export default function JobListing() {
 
                 <Col md={4} className="mb-4">
                   <h6>Download Our app</h6>
-                  <img
+                   <div className="d-flex flex-column">
+                      <img
                     src={playIcon}
                     alt="play store icon"
                     className="rounded-4 mb-4"
@@ -189,6 +195,8 @@ export default function JobListing() {
                     className=" rounded-4"
                     style={{ height: "60px", width: "200px" }}
                   />
+                   </div>
+                
                 </Col>
                 {/* Right Section: Subscription */}
                 {/* <Col md={4} className="mb-4">

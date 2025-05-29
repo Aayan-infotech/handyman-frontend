@@ -350,13 +350,17 @@
 
 .form-post-job .input1,
 .form-post-job select,
-.form-post-job textarea {
+.form-post-job textarea ,
+.form-post-job .standard-input input{
   border: 1px solid #32de84;
   border-radius: 40px;
   padding: 22px 30px;
   color: #979797;
+      background: white;
 }
-
+.form-post-job .standard-input .MuiInputBase-root{
+  padding-right: 0;
+}
 .standard-input fieldset {
   border: 1px solid #32de84;
   border-radius: 40px;
@@ -404,7 +408,7 @@
 }
 
 .text-trun {
-  width: 300px;
+  width: 275px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -415,9 +419,9 @@
   font-weight: 600 !important;
 }
 
-.management .col-lg-4 {
+/* .management .col-lg-4 {
   padding: 0 !important;
-}
+} */
 
 .management .w-40 {
   width: 33% !important;

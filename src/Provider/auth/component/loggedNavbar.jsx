@@ -150,6 +150,7 @@ export default function LoggedHeader() {
   };
 
   const fetchNotifications = async () => {
+    if (!providerToken) return;
     if (!userId) return;
     try {
       const url = `/pushNotification/get-notification/${userType}`;
@@ -198,8 +199,7 @@ export default function LoggedHeader() {
         fetchedUser = providerResponse?.payload?.data;
         localStorage.setItem(
           "PlanType",
-          providerResponse?.payload?.data?.subscriptionType ||
-            providerResponse?.payload?.data?.subscriptionStatus
+          fetchedUser?.subscriptionType || fetchedUser?.subscriptionStatus
         );
         localStorage.setItem(
           "ProviderBusinessName",
@@ -209,7 +209,15 @@ export default function LoggedHeader() {
           "ProviderName",
           providerResponse?.payload?.data?.contactName
         );
-        if (providerResponse?.payload?.data?.subscriptionStatus === 0) {
+         localStorage.setItem(
+          "ProviderEmail",
+          providerResponse?.payload?.data?.email
+        );
+         localStorage.setItem(
+          "ProviderId",
+          fetchedUser?._id
+        );
+        if (providerResponse?.payload?.data?.subscriptionStatus === 0 && providerResponse?.payload?.data?.subscriptionType === null) {
           localStorage.setItem("PlanType", null);
         }
         if (fetchedUser === undefined || fetchedUser === null) {

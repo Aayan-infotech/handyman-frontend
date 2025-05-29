@@ -6,10 +6,11 @@ import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation, useParams } from "react-router-dom";
 import { realtimeDb } from "./lib/firestore";
-import { ref, push, set, onValue } from "firebase/database";
+import { ref, push, set, onValue, update } from "firebase/database";
 import Avatar from "@mui/material/Avatar";
 import axiosInstance from "../components/axiosInstance";
-
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
 const sendMessage = async (
   msgType,
   msg,
@@ -45,14 +46,21 @@ const sendMessage = async (
       messages: chat,
       users,
     };
-    await set(
-      ref(
-        realtimeDb,
-        `chatList/${receiverId}/${senderId}/${chatId}` ||
-          `chatList/${senderId}/${receiverId}/${chatId}`
-      ),
-      chatMap
-    );
+    // await set(
+    //   ref(
+    //     realtimeDb,
+    //     `chatList/${receiverId}/${senderId}/${chatId}` ||
+    //       `chatList/${senderId}/${receiverId}/${chatId}`
+    //   ),
+    //   chatMap
+    // );
+
+    const updates = {
+      [`chatList/${senderId}/${receiverId}/${chatId}`]: chatMap,
+      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap,
+    };
+
+    await update(ref(realtimeDb), updates);
   } catch (error) {
     console.error("Firebase Error:", error.message);
   }
@@ -151,11 +159,15 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
   }, [id]);
 
   useEffect(() => {
+    console.log("currentUser", currentUser);
+    console.log("receiverId", receiverId);
+
     if (!currentUser || !receiverId) return;
 
-    const newChatId = generateChatId();
-    setChatId(newChatId);
-    localStorage.setItem("chatId", newChatId);
+    // Ensure chatId is always a string
+    const generatedChatId = [currentUser, receiverId].sort().join(`_chat_`);
+
+    setChatId(generatedChatId);
   }, [currentUser, receiverId]);
 
   const handleProvider = () => {
@@ -192,9 +204,9 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       ? chatData[0]?.receiver
       : chatData[0]?.sender;
 
-  const displayName = otherUser?.name || otherUser?.contactName || "User";
+  const displayName = otherUser?.name || otherUser?.businessName || "User";
   const avatarContent =
-    otherUser?.name?.charAt(0) || otherUser?.contactName?.charAt(0) || "U";
+    otherUser?.name?.charAt(0) || otherUser?.businessName?.charAt(0) || "U";
 
   console.log("messages", messages);
 
@@ -224,7 +236,52 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       </div>
 
       {loading ? (
-        <div className="text-center py-4">Loading messages...</div>
+        <Stack spacing={1} className="d-block">
+          <div className="fl-left">
+            <Skeleton
+              variant="rounded"
+              className="mb-3"
+              animation="wave"
+              width={210}
+              height={20}
+            />
+            <Skeleton
+              variant="rounded"
+              className="mb-3"
+              animation="wave"
+              width={150}
+              height={20}
+            />
+            <Skeleton
+              variant="rounded"
+              animation="wave"
+              width={110}
+              height={20}
+            />
+          </div>
+          <div className="fl-right">
+            <Skeleton
+              variant="rounded"
+              className="mb-3"
+              animation="wave"
+              width={210}
+              height={20}
+            />
+            <Skeleton
+              variant="rounded"
+              className="mb-3"
+              animation="wave"
+              width={150}
+              height={20}
+            />
+            <Skeleton
+              variant="rounded"
+              animation="wave"
+              width={110}
+              height={20}
+            />
+          </div>
+        </Stack>
       ) : (
         <>
           <div
