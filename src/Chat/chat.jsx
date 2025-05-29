@@ -494,7 +494,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   console.log("messageData in chat", userChat);
 
-  const messages1 = messages;
+  const messages1 = messages || messagesPeople;
 
   console.log("currentUser", currentUser);
 
