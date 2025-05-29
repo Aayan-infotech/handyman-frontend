@@ -82,9 +82,25 @@ export default function LoggedHeader() {
 
       newSocket.onAny((event, ...args) => {
         console.log(`Received socket event: ${event}`, args);
-        if (args[0]?.receiverId === userId) {
+        console.log("12122" , args[0]?.jobId)
+
+        // if (args[0]?.notificationType === "admin_message") {
+        //   setToastProps({
+        //     message: "You have received a new message from a Trade Hunter",
+        //     type: "info",
+        //     toastKey: Date.now(),
+        //   });
+        //   return;
+        // }
+        if (args[0]?.jobId) {
           setToastProps({
             message: "You have received a new notification",
+            type: "info",
+            toastKey: Date.now(),
+          });
+        } else {
+          setToastProps({
+            message: "You have received a new message from a Trade Hunter",
             type: "info",
             toastKey: Date.now(),
           });
@@ -209,15 +225,15 @@ export default function LoggedHeader() {
           "ProviderName",
           providerResponse?.payload?.data?.contactName
         );
-         localStorage.setItem(
+        localStorage.setItem(
           "ProviderEmail",
           providerResponse?.payload?.data?.email
         );
-         localStorage.setItem(
-          "ProviderId",
-          fetchedUser?._id
-        );
-        if (providerResponse?.payload?.data?.subscriptionStatus === 0 && providerResponse?.payload?.data?.subscriptionType === null) {
+        localStorage.setItem("ProviderId", fetchedUser?._id);
+        if (
+          providerResponse?.payload?.data?.subscriptionStatus === 0 &&
+          providerResponse?.payload?.data?.subscriptionType === null
+        ) {
           localStorage.setItem("PlanType", null);
         }
         if (fetchedUser === undefined || fetchedUser === null) {
