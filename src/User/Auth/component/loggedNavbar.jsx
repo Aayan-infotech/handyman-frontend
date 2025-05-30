@@ -98,6 +98,14 @@ export default function LoggedHeader() {
             toastKey: Date.now(),
           });
         }
+
+        if (args[0]?.userType === "hunter") {
+          setToastProps({
+            message: "You have received a new Notification from a Trade Hunter",
+            type: "info",
+            toastKey: Date.now(),
+          });
+        }
       });
     }
 
