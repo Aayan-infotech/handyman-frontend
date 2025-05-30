@@ -462,9 +462,13 @@ export default function MyProfile() {
       await deleteUserChats(userId);
 
       // Then proceed with account deletion
+      // const response = await axiosInstance.delete(
+      //   `${providerId ? "Prvdr" : "DeleteAccount"}/delete/${userId}`
+      // );
+
       const response = await axiosInstance.delete(
-        `${providerId ? "Prvdr" : "DeleteAccount"}/delete/${userId}`
-      );
+         `DeleteAccount/${providerId ? "provider" : "hunter"}/${userId}`
+       );
 
       if (response.status === 200) {
         setToastProps({

@@ -30,6 +30,8 @@ import { FaPersonCircleExclamation } from "react-icons/fa6";
 function Search() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  const [isExpanded, setIsExpanded] = useState(true);
+
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -181,9 +183,24 @@ function Search() {
                                   <h3 className="mb-0">{job?.businessName}</h3>
                                   <h6>ABN No:{job?.ABN_Number}</h6>
                                   {job?.about && (
-                                    <h6 className="mb-0 text-trun">
-                                      {job?.about}
-                                    </h6>
+                                    <div>
+                                      <h6
+                                        className={`mb-0 ${
+                                          isExpanded ? "text-trun" : ""
+                                        }`}
+                                      >
+                                        {job?.about}
+                                      </h6>
+
+                                      <button
+                                        onClick={() =>
+                                          setIsExpanded(!isExpanded)
+                                        }
+                                        className="btn btn-link p-0 text-primary text-decoration-none"
+                                      >
+                                        {isExpanded ? "See Less" : "See More"}
+                                      </button>
+                                    </div>
                                   )}
                                 </div>
                               </div>

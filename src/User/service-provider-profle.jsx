@@ -24,6 +24,7 @@ export default function ServiceProviderProfile() {
   const [rating, setRating] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [backgroundImg, setBackgroundImg] = useState(null);
+  const [avgRating, setAvgRating] = useState(0);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -53,7 +54,8 @@ export default function ServiceProviderProfile() {
 
       setData(profileRes?.data?.data || {});
       setBackgroundImg(bgRes?.data?.data[0]?.backgroundImg || null);
-      setRating(ratingRes?.data?.providerRatings || []);
+      setRating(ratingRes?.data?.data?.providerRatings || []);
+      setAvgRating(ratingRes?.data?.data || 0);
       setGallery(galleryRes?.data?.data?.files || []);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -111,7 +113,7 @@ export default function ServiceProviderProfile() {
   };
 
   const renderRatings = () => {
-    if (rating.length === 0) return null;
+    if (rating?.providerRatings?.length === 0) return null;
 
     return (
       <>
@@ -216,6 +218,25 @@ export default function ServiceProviderProfile() {
                 </div>
 
                 <div className="mw-40 w-100 order-3">
+                  {" "}
+                  {avgRating?.avgRating !== 0 && (
+                    <div className="d-flex justify-content-start align-items-center mb-3">
+                      <IoIosStar size={30} style={{ color: "#ebeb13" }} />
+                      <h3 className="mb-0 me-1" style={{ lineHeight: "31px" }}>
+                        {avgRating?.avgRating}.0
+                      </h3>
+
+                      {/* <div className="d-flex flex-row gap-1 align-items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <IoIosStar
+                            key={i}
+                            size={30}
+                            style={{ color: "#ebeb13" }}
+                          />
+                        ))}
+                      </div> */}
+                    </div>
+                  )}
                   <div className="card green-card border-0 rounded-4 w-100">
                     <div className="card-body">
                       <div className="d-flex justify-content-between align-items-center">
@@ -252,11 +273,11 @@ export default function ServiceProviderProfile() {
                     </a>
                   </div>
                   {/* {data?.subscriptionType === "Advertising" && ( */}
-                    <div className="contact">
-                      <Link to={`/advertiser/chat/${id}`}>
-                        <RiMessage2Fill />
-                      </Link>
-                    </div>
+                  <div className="contact">
+                    <Link to={`/advertiser/chat/${id}`}>
+                      <RiMessage2Fill />
+                    </Link>
+                  </div>
                   {/* )} */}
 
                   <div className="contact">

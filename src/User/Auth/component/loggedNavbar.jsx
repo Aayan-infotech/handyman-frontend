@@ -83,9 +83,17 @@ export default function LoggedHeader() {
 
       newSocket.onAny((event, ...args) => {
         console.log(`Received socket event: ${event}`, args);
-        if (args[0]?.receiverId === userId) {
+        if (event === "newNotification" && args[0]?.receiverId === userId) {
           setToastProps({
             message: "You have received a new notification",
+            type: "info",
+            toastKey: Date.now(),
+          });
+        }
+
+        if (event === "Admin Notification" && args[0]?.receiverId === userId) {
+          setToastProps({
+            message: "You have received a new message from a Trade Hunter",
             type: "info",
             toastKey: Date.now(),
           });
