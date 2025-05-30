@@ -36,7 +36,6 @@ export default function FeaturedJobs() {
   const [businessData, setBusinessData] = useState([]);
   const [allBusinessData, setAllBusinessData] = useState([]);
 
-  console.log("searchQuery", searchQuery.name);
   const handleBusinessChange = (selectedOption) => {
     setSearchQuery(selectedOption);
     if (!selectedOption) {
