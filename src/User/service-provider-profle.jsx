@@ -223,7 +223,7 @@ export default function ServiceProviderProfile() {
                     <div className="d-flex justify-content-start align-items-center mb-3">
                       <IoIosStar size={30} style={{ color: "#ebeb13" }} />
                       <h3 className="mb-0 me-1" style={{ lineHeight: "31px" }}>
-                        {avgRating?.avgRating}.0
+                        {avgRating?.avgRating?.toFixed(1)}
                       </h3>
 
                       {/* <div className="d-flex flex-row gap-1 align-items-center">

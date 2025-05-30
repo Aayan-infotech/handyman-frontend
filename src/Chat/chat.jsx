@@ -311,6 +311,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   };
 
   const handleSendEmail = async () => {
+    console.log("Sending email for job application");
     try {
       const response = await axiosInstance.post(
         "/hunter/send-job-email",

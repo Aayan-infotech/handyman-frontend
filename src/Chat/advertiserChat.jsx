@@ -11,6 +11,12 @@ import Avatar from "@mui/material/Avatar";
 import axiosInstance from "../components/axiosInstance";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  assignedJobNotification,
+  messageNotification,
+  messageNotificationProvider,
+} from "../Slices/notificationSlice";
 const sendMessage = async (
   msgType,
   msg,
@@ -75,6 +81,7 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
   const [chatData, setChatData] = useState([]);
   const [filteredChatData, setFilteredChatData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   const [chatId, setChatId] = useState(selectedChat?.chatId || null);
 
@@ -82,7 +89,8 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   const currentUserName =
-    localStorage.getItem("ProviderName") || localStorage.getItem("hunterName");
+    localStorage.getItem("ProviderBusinessName") ||
+    localStorage.getItem("hunterName");
   const chatMessage = selectedChat?.messages;
   console.log("chatId", chatId);
   const receiverId =
@@ -178,10 +186,37 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       setShow(!show);
     }
   };
+console.log("chatData", chatData);
+  const handleSendEmail = async () => {
+    try {
+      const response = await axiosInstance.post(
+        "/hunter/send-job-email",
+        {
+          jobTitle:
+            chatData?.jobPost?.title || selectedChat?.jobData?.title || "",
+          name:
+            localStorage.getItem("ProviderBusinessName") ||
+            localStorage.getItem("hunterName"),
+          receverEmail: selectedChat?.displayUser?.email || chatData[0]?.receiver?.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("hunterToken") ||
+              localStorage.getItem("ProviderToken")
+            }`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSend = async () => {
     if (text.trim() === "" || !chatId || !currentUser) return;
-
+    setText("");
     await sendMessage(
       userType,
       text,
@@ -191,7 +226,15 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       currentUserName,
       setMessages
     );
-    setText("");
+
+    await handleSendEmail();
+    dispatch(
+      messageNotification({
+        receiverId: receiverId,
+
+        body: `You have a new message from ${currentUserName}`,
+      })
+    );
   };
 
   useEffect(() => {

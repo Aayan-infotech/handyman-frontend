@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../components/axiosInstance";
 import LoggedHeader from "./Auth/component/loggedNavbar";
-import LoggedHeader1 from "../Provider/auth/component/loggedNavbar"
+import LoggedHeader1 from "../Provider/auth/component/loggedNavbar";
 import { FaRegClock } from "react-icons/fa";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
@@ -37,6 +37,7 @@ export default function Notification() {
     localStorage.getItem("ProviderToken") ||
     localStorage.getItem("hunterToken");
   const providerName = localStorage.getItem("ProviderName");
+  const providerBusinessName = localStorage.getItem("ProviderBusinessName");
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [markingAsRead, setMarkingAsRead] = useState(false);
@@ -46,7 +47,7 @@ export default function Notification() {
     toastKey: 0,
   });
 
-  const handleJobCompletNotify = async ({ id, receiverId, title }) => {
+  const handleJobCompletNotify = async ({ id, receiverId, title, body }) => {
     setLoading(true);
     try {
       const apiResponse = await axiosInstance.put(
@@ -63,7 +64,8 @@ export default function Notification() {
           messageNotification({
             receiverId,
             jobId: id,
-            body: `Provider have completed your job ${title}`,
+            body,
+            // body: `Provider have completed your job ${title}`,
           })
         );
         await fetchNotifications();
@@ -373,8 +375,8 @@ export default function Notification() {
         <Loader />
       ) : (
         <>
-        {hunterId ?   <LoggedHeader /> : <LoggedHeader1 />}
-        
+          {hunterId ? <LoggedHeader /> : <LoggedHeader1 />}
+
           <div className="bg-second">
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">
@@ -603,6 +605,7 @@ export default function Notification() {
                                             ? notification?.receiverId
                                             : notification?.userId,
                                         title: notification?.job?.title,
+                                        body: `${providerBusinessName} has completed the job ${notification?.jobDetails?.title}`,
                                       });
                                     }}
                                   >
