@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import LoggedHeader from "./loggedNavbar";
+import LoggedHeader from "../Provider/auth/component/loggedNavbar";
+import LoggedHeader1 from "../User/Auth/component/loggedNavbar";
+
 import {
   MdMessage,
   MdOutlineWork,
@@ -467,8 +469,8 @@ export default function MyProfile() {
       // );
 
       const response = await axiosInstance.delete(
-         `DeleteAccount/${providerId ? "provider" : "hunter"}/${userId}`
-       );
+        `DeleteAccount/${providerId ? "provider" : "hunter"}/${userId}`
+      );
 
       if (response.status === 200) {
         setToastProps({
@@ -610,7 +612,7 @@ export default function MyProfile() {
         <Loader />
       ) : (
         <>
-          <LoggedHeader />
+          {hunterToken ? <LoggedHeader1 /> : <LoggedHeader />}
 
           {/* <Link to={`/${hunterToken ? "message" : "provider/message"}`}>
             <Tooltip title="Message" placement="left-start">
