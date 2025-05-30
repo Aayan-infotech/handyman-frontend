@@ -198,7 +198,7 @@ function Search() {
                                         }
                                         className="btn btn-link p-0 text-primary text-decoration-none"
                                       >
-                                        {isExpanded ? "See Less" : "See More"}
+                                        {isExpanded ? "See More" : "See Less"}
                                       </button>
                                     </div>
                                   )}
