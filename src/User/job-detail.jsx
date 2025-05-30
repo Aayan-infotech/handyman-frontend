@@ -82,12 +82,12 @@ export default function JobDetail() {
   const noficationFunctionality = async () => {
     setLoading(true);
     try {
-      const response1 = await dispatch(
-        completedJobNotification({
-          receiverId,
-          body: `You have completed the job ${data?.title}`,
-        })
-      );
+      // const response1 = await dispatch(
+      //   completedJobNotification({
+      //     receiverId,
+      //     body: `You have completed the job ${data?.title}`,
+      //   })
+      // );
 
       const response2 = await dispatch(
         reviewJobNotification({
@@ -97,7 +97,7 @@ export default function JobDetail() {
       );
 
       if (
-        completedJobNotification.fulfilled.match(response1) &&
+        // completedJobNotification.fulfilled.match(response1) &&
         reviewJobNotification.fulfilled.match(response2)
       ) {
         setLoading(false);

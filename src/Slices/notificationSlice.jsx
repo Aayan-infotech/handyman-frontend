@@ -62,7 +62,7 @@ export const messageNotification = createNotificationThunk(
 export const messageNotificationProvider = createNotificationThunk(
   "messageHunterNotification",
   " New message from Hunter",
-  "You have a new Message from "
+  // "You have a new Message from "
 );
 
 const notificationSlice = createSlice({

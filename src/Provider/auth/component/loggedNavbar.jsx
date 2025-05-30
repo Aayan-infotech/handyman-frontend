@@ -93,7 +93,7 @@ export default function LoggedHeader() {
         //   return;
         // }
         // if (args[0]?.jobId) {
-        if (event === "newNotification") {
+        if (event === "newNotification" && args[0]?.receiverId === userId) {
           setToastProps({
             message: "You have received a new notification",
             type: "info",
@@ -101,7 +101,7 @@ export default function LoggedHeader() {
           });
         }
 
-        if (event === "Admin Notification") {
+        if (event === "Admin Notification" && args[0]?.receiverId === userId) {
           setToastProps({
             message: "You have received a new message from a Trade Hunter",
             type: "info",

@@ -51,7 +51,6 @@ const sendMessage = async (
       chatId,
     };
 
-    
     const users = {
       receiverId,
       senderId,
@@ -167,10 +166,17 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   console.log("Filtered messageData:", validMessageData);
   const hunterId = localStorage.getItem("hunterId");
-  const receiverId = id || chatMessage?.senderId;
+
   const senderId = id || chatMessage?.receiverId;
   const [jobShow, setJobShow] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(
+    localStorage.getItem("ProviderId") || localStorage.getItem("hunterId")
+  );
+  const receiverId =
+    id ||
+    (chatMessage?.senderId === currentUser
+      ? chatMessage?.receiverId
+      : chatMessage?.senderId);
   const location = useLocation();
   const [chatData, setChatData] = useState([]);
 
@@ -188,7 +194,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     const storedUserId =
       localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
     setCurrentUser(storedUserId || "");
-  }, [location]);
+  }, []);
 
   useEffect(() => {
     if (!chatId) return;
@@ -332,6 +338,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   const handleSend = async () => {
     if (msg.trim() === "" || !chatId || !currentUser) return;
+
     setMsg("");
     await sendMessage(
       "text",
@@ -361,14 +368,16 @@ export default function Chat({ messageData, messages, selectedChat }) {
           body: `You have a new message from ${businessName} for the job ${jobTitle}`,
         })
       );
-    } else {
-      dispatch(
-        messageNotificationProvider({
-          receiverId: receiverId,
-          jobId: jobId,
-        })
-      );
     }
+    // else {
+    //   dispatch(
+    //     messageNotificationProvider({
+    //       receiverId: receiverId,
+    //       jobId: jobId,
+    //       body: `You have a new message from  for the job ${jobTitle}`,
+    //     })
+    //   );
+    // }
   };
 
   // Handle visibility toggle
