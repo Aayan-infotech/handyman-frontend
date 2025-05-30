@@ -158,11 +158,12 @@ export default function ServiceProvider() {
         setTotalData(response.data.pagination.totalRecords);
       }
     } catch (error) {
-      setToastProps({
-        message: error?.response?.data?.error || error.response?.data?.message,
-        type: "error",
-        toastKey: Date.now(),
-      });
+      // setToastProps({
+      //   message: error?.response?.data?.error || error.response?.data?.message,
+      //   type: "error",
+      //   toastKey: Date.now(),
+      // });
+      console.log(error)
       setFilteredData([]);
     } finally {
       setLoading(false);

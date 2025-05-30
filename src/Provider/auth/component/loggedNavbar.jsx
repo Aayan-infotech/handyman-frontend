@@ -82,7 +82,7 @@ export default function LoggedHeader() {
 
       newSocket.onAny((event, ...args) => {
         console.log(`Received socket event: ${event}`, args);
-        console.log("12122" , args[0]?.jobId)
+        console.log("12122", args[0]?.jobId);
 
         // if (args[0]?.notificationType === "admin_message") {
         //   setToastProps({
@@ -92,13 +92,16 @@ export default function LoggedHeader() {
         //   });
         //   return;
         // }
-        if (args[0]?.jobId) {
+        // if (args[0]?.jobId) {
+        if (event === "newNotification") {
           setToastProps({
             message: "You have received a new notification",
             type: "info",
             toastKey: Date.now(),
           });
-        } else {
+        }
+
+        if (event === "Admin Notification") {
           setToastProps({
             message: "You have received a new message from a Trade Hunter",
             type: "info",
