@@ -110,26 +110,27 @@ export default function JobManagement() {
         setTotalPages(res.data.pagination.totalPages);
         setTotalJobs(res.data.pagination.totalJobs);
 
-        if (res.data.data.length === 0) {
-          setToastProps({
-            message: "No jobs posted yet",
-            type: "info",
-            toastKey: Date.now(),
-          });
-          return;
-        }
-        setToastProps({
-          message: res.data.message,
-          type: "success",
-          toastKey: Date.now(),
-        });
+        // if (res.data.data.length === 0) {
+        //   setToastProps({
+        //     message: "No jobs posted yet",
+        //     type: "info",
+        //     toastKey: Date.now(),
+        //   });
+        //   return;
+        // }
+        // setToastProps({
+        //   message: res.data.message,
+        //   type: "success",
+        //   toastKey: Date.now(),
+        // });
       }
     } catch (error) {
-      setToastProps({
-        message: error.message,
-        type: "error",
-        toastKey: Date.now(),
-      });
+      // setToastProps({
+      //   message: error.message,
+      //   type: "error",
+      //   toastKey: Date.now(),
+      // });
+      console.log(error)
     } finally {
       setLoading(false);
     }
