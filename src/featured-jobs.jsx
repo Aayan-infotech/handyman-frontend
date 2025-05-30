@@ -36,13 +36,12 @@ export default function FeaturedJobs() {
   const [businessData, setBusinessData] = useState([]);
   const [allBusinessData, setAllBusinessData] = useState([]);
 
-
-
   const handleBusinessChange = (selectedOption) => {
     setSearchQuery(selectedOption);
     if (!selectedOption) {
-      fetchProviders(1, "");
+      fetchProviders(1, selectedOption?.name || "");
     }
+    // Fetch providers immediately when selection changes (including when cleared)
   };
   useEffect(() => {
     axiosInstance.get("/jobpost/business-type-count").then((res) => {
@@ -58,8 +57,8 @@ export default function FeaturedJobs() {
         params: {
           page,
           limit: 9,
-          search: searchQuery?.name,
-          // ...(query && { search: query }),
+          // search: searchQuery?.name || "",
+          ...(query && { search: query }),
         },
       });
       if (response.status === 200) {
