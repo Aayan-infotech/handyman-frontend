@@ -271,6 +271,8 @@ export default function HomeProvider() {
       // addAlert("Error fetching user data", "error");
     }
   };
+
+  console.log("businessType", businessType);
   const handlePageChange = (page) => {
     if (page !== pagination.page) {
       setPagination((prev) => ({ ...prev, page }));
@@ -389,9 +391,7 @@ export default function HomeProvider() {
                     MenuProps={MenuProps}
                     placeholder="Select Business Type"
                   >
-                    {Array.from(
-                      new Set(data.flatMap((provider) => provider.businessType))
-                    ).map((type, index) => (
+                    {businessType.map((type, index) => (
                       <MenuItem key={index} value={type}>
                         <Checkbox checked={jobStatus.includes(type)} />
                         <ListItemText primary={type} />

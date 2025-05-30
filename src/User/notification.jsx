@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../components/axiosInstance";
 import LoggedHeader from "./Auth/component/loggedNavbar";
+import LoggedHeader1 from "../Provider/auth/component/loggedNavbar"
 import { FaRegClock } from "react-icons/fa";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
@@ -316,7 +317,7 @@ export default function Notification() {
 
   const handleDeleteMass = async (id) => {
     try {
-      await axiosInstance.delete(`/massNotification/delete/${id}`, {
+      await axiosInstance.delete(`/massNotification/deleteforUser/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -372,7 +373,8 @@ export default function Notification() {
         <Loader />
       ) : (
         <>
-          <LoggedHeader />
+        {hunterId ?   <LoggedHeader /> : <LoggedHeader1 />}
+        
           <div className="bg-second">
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">
@@ -506,8 +508,7 @@ export default function Notification() {
                                 </div>
                               )}
 
-                            {notification?.jobDetails?.jobStatus ===
-                              "Quoted" &&
+                            {notification?.jobDetails?.jobStatus === "Quoted" &&
                               notification?.jobDetails?.jobStatus &&
                               hunterId && (
                                 <>
