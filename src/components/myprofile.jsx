@@ -83,6 +83,8 @@ export default function MyProfile() {
   const providerToken = localStorage.getItem("ProviderToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [avgRating, setAvgRating] = useState(0);
+
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -194,7 +196,8 @@ export default function MyProfile() {
         }),
       ]);
 
-      setRating(ratingRes?.data?.providerRatings || []);
+      setRating(ratingRes?.data?.data?.providerRatings || []);
+      setAvgRating(ratingRes?.data?.data || 0);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -1091,6 +1094,26 @@ export default function MyProfile() {
 
               {userType === "Provider" && rating.length > 0 && (
                 <>
+                  {avgRating?.avgRating !== 0 && (
+                    <div className="d-flex justify-content-start align-items-center mb-3 mt-4">
+                      <h5 className="mb-0 me-1">Your Average Review</h5>
+                      <IoIosStar size={30} style={{ color: "#ebeb13" }} />
+
+                      <h3 className="mb-0 me-1" style={{ lineHeight: "31px" }}>
+                        {avgRating?.avgRating?.toFixed(1)}
+                      </h3>
+
+                      {/* <div className="d-flex flex-row gap-1 align-items-center">
+                                        {[...Array(5)].map((_, i) => (
+                                          <IoIosStar
+                                            key={i}
+                                            size={30}
+                                            style={{ color: "#ebeb13" }}
+                                          />
+                                        ))}
+                                      </div> */}
+                    </div>
+                  )}
                   <div className="mt-4">
                     <div className="d-flex align-items-center justify-content-between flex-column flex-lg-row gap-2">
                       <h4 className="mb-0 text-center text-lg-start">
