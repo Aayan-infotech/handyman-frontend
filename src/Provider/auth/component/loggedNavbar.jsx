@@ -109,7 +109,7 @@ export default function LoggedHeader() {
           });
         }
 
-        if ( args[0]?.userType === "provider") {
+        if (args[0]?.userType === "provider") {
           setToastProps({
             message: "You have received a new Notification from a Trade Hunter",
             type: "info",
@@ -323,23 +323,16 @@ export default function LoggedHeader() {
                 <IoMdNotificationsOutline className="fs-4" />
               </Link>
 
-              {location.pathname.includes("provider") ? (
-                <Link to="/provider/myprofile" className="myprofile">
-                  {!images ? (
-                    <FaRegUserCircle className="fs-1" />
-                  ) : (
-                    <img src={images} alt="profile" />
-                  )}
-                </Link>
-              ) : (
-                <Link to="/myprofile" className="myprofile">
-                  {!images ? (
-                    <FaRegUserCircle className="fs-1" />
-                  ) : (
-                    <img src={images} alt="profile" />
-                  )}
-                </Link>
-              )}
+              <Link
+                to={`${providerToken ? "/provider/myprofile" : "/myprofile"}`}
+                className="myprofile"
+              >
+                {!images ? (
+                  <FaRegUserCircle className="fs-1" />
+                ) : (
+                  <img src={images} alt="profile" />
+                )}
+              </Link>
             </div>
           </div>
         </Container>

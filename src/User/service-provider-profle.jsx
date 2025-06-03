@@ -117,58 +117,63 @@ export default function ServiceProviderProfile() {
 
     return (
       <>
-        <h4 className="text-muted mt-4">Hunters Reviews</h4>
-        <Swiper
-          navigation
-          spaceBetween={50}
-          modules={[Autoplay, Pagination, Navigation]}
-          autoplay={{
-            delay: 4500,
-            disableOnInteraction: false,
-          }}
-          pagination
-          className="swiper-review-people swiper-services mb-5"
-          breakpoints={{
-            640: { slidesPerView: 1, spaceBetween: 10 },
-            768: { slidesPerView: 2, spaceBetween: 20 },
+        {rating?.providerRatings?.length > 0 && (
+          <>
+            <h4 className="text-muted mt-4">Hunters Reviews</h4>
+            <Swiper
+              navigation
+              spaceBetween={50}
+              modules={[Autoplay, Pagination, Navigation]}
+              autoplay={{
+                delay: 4500,
+                disableOnInteraction: false,
+              }}
+              pagination
+              className="swiper-review-people swiper-services mb-5"
+              breakpoints={{
+                640: { slidesPerView: 1, spaceBetween: 10 },
+                768: { slidesPerView: 2, spaceBetween: 20 },
 
-            1200: { slidesPerView: 3, spaceBetween: 40 },
-          }}
-        >
-          {rating.map((item) => (
-            <SwiperSlide key={item._id}>
-              <div className="card border-0 rounded-4">
-                <div className="card-body">
-                  <div className="d-flex flex-row justify-content-between align-items-center">
-                    <img
-                      src={item?.userId?.images || notFound}
-                      alt="profile"
-                      className="object-fit-cover"
-                      style={{ width: "100px", height: "100px" }}
-                    />
-                    <div className="d-flex flex-row gap-1 align-items-center">
-                      <div className="flex">
-                        {[...Array(Math.floor(item?.rating || 0))].map(
-                          (_, i) => (
-                            <IoIosStar
-                              key={i}
-                              size={30}
-                              style={{ color: "#ebeb13" }}
-                            />
-                          )
-                        )}
+                1200: { slidesPerView: 3, spaceBetween: 40 },
+              }}
+            >
+              {rating.map((item) => (
+                <SwiperSlide key={item._id}>
+                  <div className="card border-0 rounded-4">
+                    <div className="card-body">
+                      <div className="d-flex flex-row justify-content-between align-items-center">
+                        <img
+                          src={item?.userId?.images || notFound}
+                          alt="profile"
+                          className="object-fit-cover"
+                          style={{ width: "100px", height: "100px" }}
+                        />
+                        <div className="d-flex flex-row gap-1 align-items-center">
+                          <div className="flex">
+                            {[...Array(Math.floor(item?.rating || 0))].map(
+                              (_, i) => (
+                                <IoIosStar
+                                  key={i}
+                                  size={30}
+                                  style={{ color: "#ebeb13" }}
+                                />
+                              )
+                            )}
+                          </div>
+                        </div>
                       </div>
+                      <b className="mb-0 pt-2 ms-2">
+                        Name:{" "}
+                        {item?.userId?.name || item?.providerId?.contactName}
+                      </b>
+                      <p className="fw-bold text-start mx-2">{item?.review}</p>
                     </div>
                   </div>
-                  <b className="mb-0 pt-2 ms-2">
-                    Name: {item?.userId?.name || item?.providerId?.contactName}
-                  </b>
-                  <p className="fw-bold text-start mx-2">{item?.review}</p>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </>
+        )}
       </>
     );
   };

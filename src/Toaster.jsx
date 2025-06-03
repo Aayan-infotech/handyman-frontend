@@ -27,7 +27,7 @@ const Toaster = ({ message, type, toastKey }) => {
 
   return (
     <ToastContainer
-      autoClose={5000}
+      autoClose={3000}
       hideProgressBar
       closeOnClick
       draggable
