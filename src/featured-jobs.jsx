@@ -57,6 +57,7 @@ export default function FeaturedJobs() {
         params: {
           page,
           limit: 9,
+          total:20,
           // search: searchQuery?.name || "",
           ...(query && { search: query }),
         },
