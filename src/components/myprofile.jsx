@@ -39,6 +39,9 @@ import Toaster from "../Toaster";
 import notFound from "./assets/noprofile.png";
 import { Modal } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
 export default function MyProfile() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
@@ -62,14 +65,16 @@ export default function MyProfile() {
     whiteSpace: "nowrap",
     width: 1,
   });
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState([]);
   const [gallery, setGallery] = useState([]);
 
   const userId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId"); //new
   const userType = localStorage.getItem("hunterToken") ? "Hunter" : "Provider"; // new
   const [isModalVisible, setIsModalVisible] = useState(false); // Renamed state
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info"); // can be 'error', 'warning', 'info', 'success'
   const [email, setEmail] = useState("");
   const [address, setAdress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -110,6 +115,13 @@ export default function MyProfile() {
       fetchBackgroundImage();
     }
   }, [userId]);
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
 
   const fetchBackgroundImage = async () => {
     try {
@@ -224,38 +236,33 @@ export default function MyProfile() {
   };
   // Handle file change and trigger upload
   const handleFileChange = (event) => {
-    setToastProps({
-      message: "Image uploading",
-      type: "info",
-      toastKey: Date.now(),
-    });
-    const file = event.target.files[0];
+    setSnackbarMessage("Image uploading...");
+    setSnackbarSeverity("info");
+    setSnackbarOpen(true);
+    const files = event.target.files;
+    console.log(files);
+    if (!files || files.length === 0) return;
 
-    const allowedExtensions = /\.(jpeg|jpg|png)$/i;
-    if (!allowedExtensions.test(file.name)) {
-      setToastProps({
-        message: "Invalid file type. Only JPEG, JPG, and PNG are allowed.",
-        type: "error",
-        toastKey: Date.now(),
-      });
-
-      return;
-    }
-
-    if (file) {
-      setSelectedFile(file);
-      handleUpload(file); // Trigger upload on file selection
+    if (files) {
+      setSelectedFile(files);
+      handleUpload(files); // Trigger upload on file selection
     }
   };
   // Handle file upload to the server
-  const handleUpload = async (file) => {
-    if (!file) {
-      alert("Please select a file first.");
+  const handleUpload = async (files) => {
+    if (!files) {
+      setSnackbarMessage("Please select a file first.");
+      setSnackbarSeverity("warning");
+      setSnackbarOpen(true);
       return;
     }
 
     const formData = new FormData();
-    formData.append("files", file);
+    Array.from(files).forEach((file) => {
+      formData.append("files", file); // Same field name for each file
+    });
+
+    // formData.append("files", files);
     formData.append("userId", providerId); // Replace with actual providerId
 
     try {
@@ -267,15 +274,21 @@ export default function MyProfile() {
         }
       );
 
-      setToastProps({
-        message: "Image uploaded successfully",
-        type: "success",
-        toastKey: Date.now(),
-      });
+      setSnackbarMessage(`${files.length} file(s) uploaded successfully!`);
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        setSnackbarOpen(false);
+      }, 2000);
       fetchGallery(); // Fetch the gallery after successful upload
     } catch (error) {
       console.error("Upload Failed:", error);
-      alert("Upload Failed!");
+      setSnackbarMessage("Upload failed!");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        setSnackbarOpen(false);
+      }, 2000);
     }
   };
 
@@ -1016,7 +1029,9 @@ export default function MyProfile() {
                             Upload files
                             <VisuallyHiddenInput
                               type="file"
+                              multiple
                               onChange={handleFileChange}
+                              accept="image/jpeg, image/jpg, image/png"
                             />
                           </Button2>
                         </div>
@@ -1523,6 +1538,22 @@ export default function MyProfile() {
           </div>
         </>
       )}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       <Toaster
         message={toastProps.message}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "../User/user.css";
 import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation, useParams } from "react-router-dom";
 import { realtimeDb } from "./lib/firestore";
@@ -11,12 +10,14 @@ import Avatar from "@mui/material/Avatar";
 import axiosInstance from "../components/axiosInstance";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import { FaArrowLeft } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
   assignedJobNotification,
   messageNotification,
   messageNotificationProvider,
 } from "../Slices/notificationSlice";
+import {useNavigate} from "react-router-dom";
 const sendMessage = async (
   msgType,
   msg,
@@ -73,6 +74,7 @@ const sendMessage = async (
 };
 
 export default function AdvertiserChat({ messageData, selectedChat }) {
+  const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const [show, setShow] = useState(false);
@@ -166,6 +168,10 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
     handleData();
   }, [id]);
 
+    const goBack = () => {
+    navigate(-1); // Goes back one page in history
+    // or navigate('/specific-path') to go to a specific route
+  };
   useEffect(() => {
     console.log("currentUser", currentUser);
     console.log("receiverId", receiverId);
@@ -259,6 +265,14 @@ console.log("chatData", chatData);
         <div className="card-body p-2">
           <div className="d-flex flex-row gap-2 align-items-center justify-content-between">
             <div className="d-flex flex-row align-items-center gap-2 profile-icon">
+               {(
+                  location.pathname.startsWith("/advertiser/")) && (
+                  <FaArrowLeft
+                    className="fs-4"
+                    style={{ cursor: "pointer" }}
+                    onClick={goBack}
+                  />
+                )}
               <Avatar
                 alt="Image"
                 src={otherUser?.images}
