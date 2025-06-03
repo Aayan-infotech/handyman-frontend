@@ -28,7 +28,7 @@ export default function LatestJobs() {
   const [loading, setLoading] = useState(false);
  const [pagination, setPagination] = useState({
     total: 0,
-    page: 1,
+    currentPage: 1,
     limit: 10,
     totalPages: 1,
   });
@@ -42,9 +42,9 @@ export default function LatestJobs() {
 
 
   console.log("pagination", pagination);
-   const handleResponse = async (page = pagination.page) => {
+   const handleResponse = async (page = pagination?.currentPage) => {
       setLoading(true);
-      const response = await axiosInstance.get("/jobs?page=" + page);
+      const response = await axiosInstance.get(`/jobs?page=${page}&total=${10}` );
 
       if (response.data.success === true || response.data.status === 200) {
         setLoading(false);
