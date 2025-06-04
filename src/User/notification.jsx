@@ -102,20 +102,20 @@ export default function Notification() {
   const formatNotificationBody = (text) => {
     if (!text) return null;
 
-    // Split by newlines first
     return text.split("\n").map((line, index) => {
-      // Add <br /> before "--" if it exists in the line
-      const parts = line.split(/(?=--)/g); // Split before "--"
+      // Split the line by "--" and join with <br />
+      const parts = line.split("--");
 
       return (
         <React.Fragment key={index}>
           {parts.map((part, partIndex) => (
             <React.Fragment key={partIndex}>
-              {partIndex > 0 && <br />}
+              {partIndex > 0 && <br />} {/* Insert <br /> where "--" was */}
               {part}
             </React.Fragment>
           ))}
-          {index < text.split("\n").length - 1 && <br />}
+          {index < text.split("\n").length - 1 && <br />}{" "}
+          {/* Keep original line breaks */}
         </React.Fragment>
       );
     });
