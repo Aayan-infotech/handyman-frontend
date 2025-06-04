@@ -1042,7 +1042,7 @@ export default function MyProfile() {
                               return (
                                 <div
                                   key={index}
-                                  className="col-md-3 col-6 mb-3 position-relative"
+                                  className="col-md-2 col-6 mb-3 position-relative"
                                 >
                                   <div className="position-absolute top-0 end-0 me-4 mt-3">
                                     <button
@@ -1061,7 +1061,7 @@ export default function MyProfile() {
                                       className="rounded-5"
                                       style={{
                                         width: "100%",
-                                        height: "200px",
+                                        height: "150px",
                                         objectFit: "cover",
                                       }}
                                     />
