@@ -99,6 +99,27 @@ export default function Notification() {
   //   }
   // };
 
+  const formatNotificationBody = (text) => {
+    if (!text) return null;
+
+    // Split by newlines first
+    return text.split("\n").map((line, index) => {
+      // Add <br /> before "--" if it exists in the line
+      const parts = line.split(/(?=--)/g); // Split before "--"
+
+      return (
+        <React.Fragment key={index}>
+          {parts.map((part, partIndex) => (
+            <React.Fragment key={partIndex}>
+              {partIndex > 0 && <br />}
+              {part}
+            </React.Fragment>
+          ))}
+          {index < text.split("\n").length - 1 && <br />}
+        </React.Fragment>
+      );
+    });
+  };
   const fetchNotifications = async (page = pagination.page) => {
     if (!userId) return;
 
@@ -479,7 +500,7 @@ export default function Notification() {
                               }
                             >
                               <p className=" mb-0 text-center text-lg-start mb-3 mb-lg-0 fs-5">
-                                {notification.body}
+                                {formatNotificationBody(notification.body)}
                               </p>
                             </div>
 
