@@ -101,11 +101,15 @@ export default function MyProfile() {
   const hunterId = localStorage.getItem("hunterId");
   const Guest = JSON.parse(localStorage.getItem("Guest")); // Converts "false" to boolean false
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const [notificationSetting, setNotificationSetting] = useState(
-    providerToken
-      ? localStorage.getItem("notificationEnableProvider") === "true"
-      : localStorage.getItem("notificationEnableHunter") === "true"
-  );
+  const [notificationSetting, setNotificationSetting] = useState(() => {
+    if (providerToken) {
+      const setting = localStorage.getItem("notificationEnableProvider");
+      return setting === null ? true : setting === "true";
+    } else {
+      const setting = localStorage.getItem("notificationEnableHunter");
+      return setting === null ? true : setting === "true";
+    }
+  });
 
   const handleClose = () => setIsModalVisible(false);
   const handleShow = () => setIsModalVisible(true);
