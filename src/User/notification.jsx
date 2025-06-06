@@ -38,6 +38,7 @@ export default function Notification() {
     localStorage.getItem("hunterToken");
   const providerName = localStorage.getItem("ProviderName");
   const providerBusinessName = localStorage.getItem("ProviderBusinessName");
+  const hunterName = localStorage.getItem("hunterName");
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [markingAsRead, setMarkingAsRead] = useState(false);
@@ -206,7 +207,7 @@ export default function Notification() {
 
       await dispatch(
         assignedJobNotification({
-          body: `You have been assigned for this job ${notification?.jobDetails?.title}`,
+          body: `${hunterName} have been assigned for this job ${notification?.jobDetails?.title}`,
           receiverId: assignToId,
           jobId: notification.jobDetails._id,
         })
