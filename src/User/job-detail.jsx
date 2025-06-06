@@ -92,7 +92,7 @@ export default function JobDetail() {
       const response2 = await dispatch(
         reviewJobNotification({
           receiverId,
-          body: `You have received feedback for ${data?.title} from ${name} `,
+          body: `${name} has submitted Feedback for the job ${data?.title}   `,
         })
       );
 

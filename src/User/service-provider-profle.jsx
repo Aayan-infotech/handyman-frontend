@@ -54,7 +54,7 @@ export default function ServiceProviderProfile() {
 
       setData(profileRes?.data?.data || {});
       setBackgroundImg(bgRes?.data?.data[0]?.backgroundImg || null);
-      setRating(ratingRes?.data?.data?.providerRatings || []);
+      setRating(ratingRes?.data?.data?.providerRatings);
       setAvgRating(ratingRes?.data?.data || 0);
       setGallery(galleryRes?.data?.data?.files || []);
     } catch (error) {
@@ -74,6 +74,8 @@ export default function ServiceProviderProfile() {
     }
     fetchData();
   }, []);
+
+  console.log(rating)
 
   const renderGallery = () => {
     if (gallery.length === 0) return null;
@@ -117,7 +119,7 @@ export default function ServiceProviderProfile() {
 
     return (
       <>
-        {rating?.providerRatings?.length > 0 && (
+        {rating?.length > 0 && (
           <>
             <h4 className="text-muted mt-4">Hunters Reviews</h4>
             <Swiper

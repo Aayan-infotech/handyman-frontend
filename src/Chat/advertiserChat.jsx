@@ -17,7 +17,7 @@ import {
   messageNotification,
   messageNotificationProvider,
 } from "../Slices/notificationSlice";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const sendMessage = async (
   msgType,
   msg,
@@ -48,23 +48,20 @@ const sendMessage = async (
       receiverId,
       senderId,
     };
-
     const chatMap = {
       messages: chat,
       users,
     };
-    // await set(
-    //   ref(
-    //     realtimeDb,
-    //     `chatList/${receiverId}/${senderId}/${chatId}` ||
-    //       `chatList/${senderId}/${receiverId}/${chatId}`
-    //   ),
-    //   chatMap
-    // );
+
+    const chatMap1 = {
+      messages: chat,
+      unread: 1,
+      users,
+    };
 
     const updates = {
       [`chatList/${senderId}/${receiverId}/${chatId}`]: chatMap,
-      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap,
+      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap1,
     };
 
     await update(ref(realtimeDb), updates);
@@ -168,7 +165,7 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
     handleData();
   }, [id]);
 
-    const goBack = () => {
+  const goBack = () => {
     navigate(-1); // Goes back one page in history
     // or navigate('/specific-path') to go to a specific route
   };
@@ -192,7 +189,7 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       setShow(!show);
     }
   };
-console.log("chatData", chatData);
+  console.log("chatData", chatData);
   const handleSendEmail = async () => {
     try {
       const response = await axiosInstance.post(
@@ -203,7 +200,8 @@ console.log("chatData", chatData);
           name:
             localStorage.getItem("ProviderBusinessName") ||
             localStorage.getItem("hunterName"),
-          receverEmail: selectedChat?.displayUser?.email || chatData[0]?.receiver?.email,
+          receverEmail:
+            selectedChat?.displayUser?.email || chatData[0]?.receiver?.email,
         },
         {
           headers: {
@@ -238,7 +236,7 @@ console.log("chatData", chatData);
       messageNotification({
         receiverId: receiverId,
 
-        body: `You have a new message from ${currentUserName}`,
+        body: ` ${currentUserName} sent you a message `,
       })
     );
   };
@@ -265,14 +263,13 @@ console.log("chatData", chatData);
         <div className="card-body p-2">
           <div className="d-flex flex-row gap-2 align-items-center justify-content-between">
             <div className="d-flex flex-row align-items-center gap-2 profile-icon">
-               {(
-                  location.pathname.startsWith("/advertiser/")) && (
-                  <FaArrowLeft
-                    className="fs-4"
-                    style={{ cursor: "pointer" }}
-                    onClick={goBack}
-                  />
-                )}
+              {location.pathname.startsWith("/advertiser/") && (
+                <FaArrowLeft
+                  className="fs-4"
+                  style={{ cursor: "pointer" }}
+                  onClick={goBack}
+                />
+              )}
               <Avatar
                 alt="Image"
                 src={otherUser?.images}

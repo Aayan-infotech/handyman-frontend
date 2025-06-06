@@ -60,7 +60,12 @@ const sendMessage = async (
     const chatMap = {
       messages: chat,
       users,
-      unRead: isReceiverOnline ? 0 : 1,
+    };
+
+    const chatMap1 = {
+      messages: chat,
+      unread: 1,
+      users,
     };
     console.log("CHAT MAP =>", chatMap);
 
@@ -87,7 +92,7 @@ const sendMessage = async (
     // );
     const updates = {
       [`chatList/${senderId}/${receiverId}/${chatId}`]: chatMap,
-      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap,
+      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap1,
     };
 
     await update(ref(realtimeDb), updates);
@@ -199,7 +204,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   useEffect(() => {
     if (!chatId) return;
     console.log("Fetching messages for chatId:", chatId);
-
+    setLoading(true);
     const chatMessagesRef = ref(
       realtimeDb,
       jobId ? `chats/${jobId}/${chatId}/messages` : `chats/${chatId}/messages`
@@ -229,8 +234,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
         });
 
         setMessagesPeople(uniqueMessages);
+        setLoading(false);
       } else {
         setMessagesPeople([]);
+        setLoading(false);
       }
     });
 
@@ -366,7 +373,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
         messageNotification({
           receiverId: receiverId,
           jobId: jobId,
-          body: `You have a new message from ${businessName} for the job ${jobTitle}`,
+          body: `${businessName}  sent you a message regarding your job ${jobTitle} -- Please go to messages section to view.`,
         })
       );
     }
@@ -508,7 +515,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
   console.log("currentUser", currentUser);
 
-  console.log("messages", messages);
+  console.log("messages1", messages1);
   console.log("messagesPeople", messagesPeople);
 
   if (loading) return <Loader />;
@@ -625,7 +632,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
           <div className={`d-block mh-100vh ${show ? "container my-4" : ""}`}>
             {messages1?.length === 0 ? (
               <>
-                {show ? null : (
+                {!loading ? (
+                  <div className="text-center py-4">No messages yet</div>
+                ) : (
                   <>
                     <Stack spacing={1} className="d-block">
                       <div className="fl-left">

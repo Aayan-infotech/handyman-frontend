@@ -117,7 +117,7 @@ export default function Message() {
             Object.keys(data[receiverId]).map((chatId) => ({
               chatId,
               messages: data[receiverId][chatId].messages || {},
-              unRead: data[receiverId][chatId].unRead || 0,
+              unRead: data[receiverId][chatId].unread || 0,
               users: data[receiverId][chatId].users || {},
             }))
           );
@@ -204,11 +204,31 @@ export default function Message() {
   }, [handleChat]);
 
   // Updated handleSendMessage to accept chat data
-  const handleSendMessage = (chat) => {
-    setSelectedChat({ ...chat, jobData: messageData[chat.chatId]?.jobData }); // Set the selected chat
-    setOpen(!open); // Toggle the chat window
-  };
+  const handleSendMessage = async (chat) => {
+    try {
+      // Get the other user's ID (the one who is not the current user)
+      const otherUserId =
+        chat.users.senderId === currentUser
+          ? chat.users.receiverId
+          : chat.users.senderId;
 
+      // Reference to the specific chat in chatList
+      const chatRef = ref(
+        realtimeDb,
+        `chatList/${currentUser}/${otherUserId}/${chat.chatId}`
+      );
+
+      // Update the unRead count to 0
+      await update(chatRef, {
+        unread: 0,
+      });
+
+      setSelectedChat({ ...chat, jobData: messageData[chat.chatId]?.jobData });
+      setOpen(!open);
+    } catch (error) {
+      console.error("Error resetting unread count:", error);
+    }
+  };
   console.log("selectedChat", selectedChat);
 
   if (loading) return <Loader />;
@@ -220,6 +240,7 @@ export default function Message() {
       displayUser: isSender
         ? messageData[item.chatId]?.receiver
         : messageData[item.chatId]?.sender,
+      jobData: messageData[item.chatId]?.jobData,
     };
   });
 
@@ -391,20 +412,23 @@ export default function Message() {
                               onClick={() => handleSendMessage(item)} // Pass chat data to handleSendMessage
                               key={item.chatId}
                             >
-                              <div className="user-card">
+                              <div className={`${item?.unRead == 1 && "unread"} user-card`}>
                                 <div className="row align-items-center">
                                   <div
                                     className={
                                       open
                                         ? "col-lg-2 px-0"
-                                        : "col-lg-1 px-lg-0 col-3 px-0"
+                                        : "col-lg-2 px-lg-4 col-3 px-0"
                                     }
                                   >
                                     <Avatar
                                       alt="Image"
                                       src={item?.displayUser?.images}
                                       className="w-100"
-                                      style={{ height: "82px", width: "82px" }}
+                                      style={{
+                                        height: "120px",
+                                        width: "120px",
+                                      }}
                                     >
                                       {item?.displayUser?.businessName?.[0] ||
                                         item?.displayUser?.name?.[0]}
@@ -419,6 +443,13 @@ export default function Message() {
                                     }
                                   >
                                     <div className="d-flex flex-column gap-1">
+                                      <h6 className="mb-0 fw-bold fs-5 text-dark">
+                                        {item?.jobData && (
+                                          <div>
+                                            Job Title: {item?.jobData?.title}
+                                          </div>
+                                        )}
+                                      </h6>
                                       <h5 className="mb-0 fw-bold fs-5 text-dark">
                                         {item?.displayUser?.businessName ||
                                           item?.displayUser?.name}
