@@ -8,12 +8,25 @@ export default function Error() {
 
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
+  const handleNavigate = () => {
+    if (providerId) {
+      navigate("/provider/home");
+    } else if (hunterId) {
+      navigate("/home");
+    } else {
+      navigate("/welcome"); // or whatever your welcome page route is
+    }
+  };
   return (
     <div className="error bg-second error-100vh">
       <div className="container error-100vh">
         <div className="row align-items-lg-center gx-lg-5 error-100vh">
           <div className="col-lg-6">
-            <img src={error} alt="404" className="w-100 h-100 object-fit-cover" />
+            <img
+              src={error}
+              alt="404"
+              className="w-100 h-100 object-fit-cover"
+            />
           </div>
           <div className="col-lg-6">
             <div className="d-flex justify-content-center">
@@ -37,11 +50,7 @@ export default function Error() {
               color="success"
               className="fw-semibold custom-green-outline w-100 rounded-5 fs-5 mt-4"
               size="small"
-              onClick={
-                providerId
-                  ? () => navigate(`/provider/home`)
-                  : () => navigate(`/home`)
-              }
+              onClick={handleNavigate}
             >
               Back to Home Page
             </Button>
