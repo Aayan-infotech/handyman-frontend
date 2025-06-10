@@ -635,46 +635,38 @@ export default function Notification() {
                               </div>
                             )}
                             {providerId &&
-                              notification?.jobDetails?._id &&
-                              // notification?.jobDetails?.jobStatus ===
-                              //   "Assigned" &&
-                              (notification?.jobDetails?.completionNotified ===
-                              false ? (
-                                <div className="col-lg-3 d-flex justify-content-end">
-                                  <Button
-                                    variant="outlined"
-                                    color="success"
-                                    className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                                    onClick={() => {
-                                      handleMarkAsRead(
-                                        notification?._id,
-                                        notification?.type
-                                      );
-                                      handleJobCompletNotify({
-                                        id: notification?.jobDetails?._id,
-                                        receiverId:
-                                          notification.userId === userId
-                                            ? notification?.receiverId
-                                            : notification?.userId,
-                                        title: notification?.job?.title,
-                                        body: `${providerBusinessName} has completed the job ${notification?.jobDetails?.title}`,
-                                      });
-                                    }}
-                                  >
-                                    Job Completed
-                                  </Button>
-                                </div>
-                              ) : // <div className="col-lg-3 d-flex justify-content-end">
-                              //   <Button
-                              //     variant="outlined"
-                              //     color="success"
-                              //     className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
-                              //     disabled
-                              //   >
-                              //     Already Notified
-                              //   </Button>
-                              // </div>
-                              null)}
+                            notification?.jobDetails?._id &&
+                            // notification?.jobDetails?.jobStatus ===
+                            //   "Assigned" &&
+                            notification?.jobDetails?.completionNotified ===
+                              false &&
+                            notification?.jobDetails?.jobStatus !==
+                              "Completed" ? (
+                              <div className="col-lg-3 d-flex justify-content-end">
+                                <Button
+                                  variant="outlined"
+                                  color="success"
+                                  className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
+                                  onClick={() => {
+                                    handleMarkAsRead(
+                                      notification?._id,
+                                      notification?.type
+                                    );
+                                    handleJobCompletNotify({
+                                      id: notification?.jobDetails?._id,
+                                      receiverId:
+                                        notification.userId === userId
+                                          ? notification?.receiverId
+                                          : notification?.userId,
+                                      title: notification?.job?.title,
+                                      body: `${providerBusinessName} has completed the job ${notification?.jobDetails?.title}`,
+                                    });
+                                  }}
+                                >
+                                  Job Completed
+                                </Button>
+                              </div>
+                            ) : null}
                             <div className="col-lg-3 d-flex justify-content-end">
                               {notification?.type === "mass" ? (
                                 <Button

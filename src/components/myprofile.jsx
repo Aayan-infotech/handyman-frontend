@@ -99,7 +99,7 @@ export default function MyProfile() {
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
   const hunterId = localStorage.getItem("hunterId");
-  const Guest = JSON.parse(localStorage.getItem("Guest")); // Converts "false" to boolean false
+  const Guest = JSON.parse(localStorage.getItem("Guest"));
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [notificationSetting, setNotificationSetting] = useState(() => {
     if (providerToken) {
