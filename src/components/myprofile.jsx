@@ -232,7 +232,8 @@ export default function MyProfile() {
       console.log("Response:", response);
       if (response.data.status === 200) {
         setAboutText(response.data.data[0].about); // Set new about text
-        setEditShowModal(false); // Close modal
+        setEditShowModal(false);
+        setShowModal(false);
       }
     } catch (error) {
       console.error("Error updating about:", error);
