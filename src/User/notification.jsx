@@ -207,7 +207,7 @@ export default function Notification() {
 
       await dispatch(
         assignedJobNotification({
-          body: `${hunterName} have been assigned for this job ${notification?.jobDetails?.title}`,
+          body: `You have been assigned for the job ${notification?.jobDetails?.title}`,
           receiverId: assignToId,
           jobId: notification.jobDetails._id,
         })
