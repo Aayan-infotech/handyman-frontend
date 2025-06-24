@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://18.209.91.97:7787/api",
+  baseURL: "http://api.tradehunters.com.au/api",
 });
 
 let isRefreshing = false;
@@ -80,10 +80,10 @@ axiosInstance.interceptors.response.use(
 
     try {
       const res = await axios.post(
-        "http://18.209.91.97:7787/api/auth/refreshtoken",
+        "http://api.tradehunters.com.au/api/auth/refreshtoken",
         { refreshToken, userType },
         {
-          baseURL: "http://18.209.91.97:7787/api",
+          baseURL: "http://api.tradehunters.com.au/api",
           headers: {
             "Content-Type": "application/json",
           },
