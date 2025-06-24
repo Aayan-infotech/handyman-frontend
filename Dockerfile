@@ -25,7 +25,7 @@ COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose the port (2022 as you specified)
-EXPOSE 2365
+EXPOSE 2366
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

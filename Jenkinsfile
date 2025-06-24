@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "docker.io/aayanindia/handy-frontend"
         CONTAINER_PORT = "2365"
-        HOST_PORT = "2365"
+        HOST_PORT = "2366"
         DOCKER_HUB_USERNAME = credentials('docker-hub-username')
         DOCKER_HUB_PASSWORD = credentials('docker-hub-password')
         EMAIL_RECIPIENTS = "daksh.kumar@aayaninfotech.com"
