@@ -157,7 +157,7 @@ export default function EditProfile() {
 
     // Append each business type separately
     businessType.forEach((type) => {
-      formData.append("businessType[]", type);
+      formData.append("businessType", type);
     });
 
     formData.append("businessName", businessName);
