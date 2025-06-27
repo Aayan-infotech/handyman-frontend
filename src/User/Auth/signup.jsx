@@ -211,7 +211,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "http://api.tradehunters.com.au/api/auth/signup",
+        "https://api.tradehunters.com.au/api/auth/signup",
 
         formData
       );
