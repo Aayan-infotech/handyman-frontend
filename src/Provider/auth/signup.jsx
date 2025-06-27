@@ -171,7 +171,7 @@ export default function SignUpProvider() {
     formData.append("addressLine", address);
     formData.append("password", password);
     selectedBusiness.forEach((type) => {
-      formData.append("businessType[]", type.name);
+      formData.append("businessType", type.name);
     });
     formData.append("ABN_Number", registrationNumber);
     formData.append("userType", "provider");
