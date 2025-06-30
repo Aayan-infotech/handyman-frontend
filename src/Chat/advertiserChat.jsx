@@ -24,49 +24,80 @@ const sendMessage = async (
   chatId,
   receiverId,
   senderId,
-  name,
-  setMessages
+  isReceiverOnline,
+  setMessages,
+  jobId,
+  jobTitle,
+  peerName
 ) => {
   if (!chatId) {
-    console.error("Chat ID is missing");
+    console.error("Chat ID or Job ID is missing");
     return;
   }
-  const time = Date.now();
+
+  // Clean the chatId to remove any invalid characters
+  const cleanChatId = chatId.replace(/[.#$\/\[\]]/g, "");
+  const cleanSenderId = senderId.replace(/[.#$\/\[\]]/g, "");
+  const cleanReceiverId = receiverId.replace(/[.#$\/\[\]]/g, "");
+
+  const timestamp = Date.now();
+
   try {
-    const chat = {
-      msg,
-      timeStamp: time,
+    // Step 1: Save the message in messages collection
+    const message = {
+      message: msg,
+      receiverId: cleanReceiverId,
+      senderId: cleanSenderId,
+      timestamp,
       type: msgType,
-      receiverId,
-      senderId,
-      name,
     };
 
-    const newMessageRef = push(ref(realtimeDb, `chats/${chatId}/messages`));
-    await set(newMessageRef, chat);
-    const users = {
-      receiverId,
-      senderId,
-    };
-    const chatMap = {
-      messages: chat,
-      users,
+    const newMessageRef = push(ref(realtimeDb, `messages/${cleanChatId}`));
+    await set(newMessageRef, message);
+
+    // Step 2: Create chat data objects
+    const senderChatData = {
+      isRead: true,
+      jobId: jobId || null,
+      jobTitle: jobTitle || "",
+      lastMessage: msg,
+      peerId: cleanReceiverId,
+      peerName: peerName || "Unknown",
+      timestamp,
     };
 
-    const chatMap1 = {
-      messages: chat,
-      unread: 1,
-      users,
+    const receiverChatData = {
+      isRead: false,
+      jobId: jobId || null,
+      jobTitle: jobTitle || "",
+      lastMessage: msg,
+      peerId: cleanSenderId,
+      peerName:
+        localStorage.getItem("ProviderBusinessName") ||
+        localStorage.getItem("hunterName") ||
+        "Unknown",
+      timestamp,
     };
 
-    const updates = {
-      [`chatList/${senderId}/${receiverId}/${chatId}`]: chatMap,
-      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap1,
-    };
+    // Step 3: Update chat lists - using update() instead of set()
+    const updates = {};
+    updates[`chatList/${cleanSenderId}/${cleanChatId}`] = senderChatData;
+    updates[`chatList/${cleanReceiverId}/${cleanChatId}`] = receiverChatData;
 
     await update(ref(realtimeDb), updates);
+
+    // If receiver is offline, mark as unread
+    if (!isReceiverOnline) {
+      await update(
+        ref(realtimeDb, `chatList/${cleanReceiverId}/${cleanChatId}`),
+        {
+          isRead: false,
+        }
+      );
+    }
   } catch (error) {
     console.error("Firebase Error:", error.message);
+    throw error;
   }
 };
 
@@ -104,11 +135,14 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
   useEffect(() => {
     if (!currentUser || !receiverId || !chatId) return;
 
-    const chatMessagesRef = ref(realtimeDb, `chats/${chatId}/messages`);
+    const chatMessagesRef = ref(realtimeDb, `messages/${chatId}`);
     const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
       if (snapshot.exists()) {
-        const data = Object.values(snapshot.val());
-        data.sort((a, b) => a.createdAt - b.createdAt);
+        const data = Object.entries(snapshot.val()).map(([key, value]) => ({
+          id: key,
+          ...value,
+        }));
+        data.sort((a, b) => a.timestamp - b.timestamp);
         setMessages(data);
       } else {
         setMessages([]);
@@ -175,10 +209,16 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
 
     if (!currentUser || !receiverId) return;
 
-    // Ensure chatId is always a string
-    const generatedChatId = [currentUser, receiverId].sort().join(`_chat_`);
+    // Remove any invalid characters from user IDs
+    const cleanCurrentUser = currentUser.replace(/[.#$\/\[\]]/g, "");
+    const cleanReceiverId = receiverId.replace(/[.#$\/\[\]]/g, "");
 
-    setChatId(generatedChatId);
+    // Sort the user IDs to ensure consistent order
+    const sortedIds = [cleanCurrentUser, cleanReceiverId].sort();
+
+    // Create the base chat ID (senderId_receiverId)
+    const baseChatId = sortedIds.join("_");
+    setChatId(baseChatId);
   }, [currentUser, receiverId]);
 
   const handleProvider = () => {
@@ -220,27 +260,38 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
 
   const handleSend = async () => {
     if (text.trim() === "" || !chatId || !currentUser) return;
-    setText("");
-    await sendMessage(
-      userType,
-      text,
-      chatId,
-      receiverId,
-      currentUser,
-      currentUserName,
-      setMessages
-    );
 
-    await handleSendEmail();
-    dispatch(
-      messageNotification({
-        receiverId: receiverId,
+    try {
+      setText("");
+      const jobId = chatData[0]?.jobPost?._id || selectedChat?.jobId;
+      const jobTitle = chatData[0]?.jobPost?.title || selectedChat?.jobTitle;
+      const peerName = otherUser?.name || otherUser?.businessName || "Unknown";
 
-        body: ` ${currentUserName} sent you a message `,
-      })
-    );
+      await sendMessage(
+        "text",
+        text,
+        chatId,
+        receiverId,
+        currentUser,
+        false, // isReceiverOnline
+        setMessages,
+        jobId,
+        jobTitle,
+        peerName
+      );
+
+      await handleSendEmail();
+      dispatch(
+        messageNotification({
+          receiverId: receiverId,
+          body: `${currentUserName} sent you a message`,
+        })
+      );
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      // Optionally show error to user
+    }
   };
-
   useEffect(() => {
     handleProvider();
   }, [location]);
@@ -359,10 +410,10 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
                           : "msg-recieved mb-1"
                       }
                     >
-                      {msg.msg}
+                      {msg.message}
                     </p>
                     <span className="text-muted time-status">
-                      {new Date(msg.timeStamp).toLocaleTimeString("en-AU", {
+                      {new Date(msg.timestamp).toLocaleTimeString("en-AU", {
                         timeZone: "Australia/Sydney",
                         hour: "2-digit",
                         minute: "2-digit",

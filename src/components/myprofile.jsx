@@ -264,7 +264,7 @@ export default function MyProfile() {
 
     const formData = new FormData();
     Array.from(files).forEach((file) => {
-      formData.append("files", file); // Same field name for each file
+      formData.append("image", file); // Same field name for each file
     });
 
     // formData.append("files", files);

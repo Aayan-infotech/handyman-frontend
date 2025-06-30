@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
+import { ref, push, set, onValue, update } from "firebase/database";
+import { realtimeDb } from "../../Chat/lib/firestore";
 import Header from "./component/Navbar";
 import Button from "@mui/material/Button";
 import logo from "../../assets/logo.png";
@@ -35,6 +37,20 @@ export default function Login() {
   const userType = "hunter";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const storeHunterInFirebase = async (userData) => {
+    try {
+      const hunterRef = ref(realtimeDb, `users/hunter/${userData._id}`);
+      await set(hunterRef, {
+        name: userData.name,
+        email: userData.email,
+        profileImage: userData.images || "",
+      });
+      console.log("Hunter data stored in Firebase successfully");
+    } catch (error) {
+      console.error("Error storing hunter data in Firebase:", error);
+    }
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -79,10 +95,15 @@ export default function Login() {
           type: "success",
           toastKey: Date.now(),
         });
-        if(response?.data?.message === "You are not verified, Please verify your email"){
+        if (
+          response?.data?.message ===
+          "You are not verified, Please verify your email"
+        ) {
           navigate(`/otp?email=${email}&action=login&type=hunter`);
-          return
+          return;
         }
+        console.log(response?.data?.data?.user);
+        storeHunterInFirebase(response?.data?.data?.user);
         setTimeout(() => {
           navigate("/home");
         }, 2000);
@@ -90,8 +111,13 @@ export default function Login() {
         localStorage.setItem("hunterEmail", response?.data?.data?.user?.email);
         localStorage.setItem("hunterName", response?.data?.data?.user?.name);
         localStorage.setItem("hunterId", response?.data?.data?.user?._id);
-        if(localStorage.getItem("notificationEnableHunter") === null || localStorage.getItem("notificationEnableHunter") === "null" || localStorage.getItem("notificationEnableHunter") === "" || localStorage.getItem("notificationEnableHunter") === undefined){
-          localStorage.setItem("notificationEnableProvider" , true)
+        if (
+          localStorage.getItem("notificationEnableHunter") === null ||
+          localStorage.getItem("notificationEnableHunter") === "null" ||
+          localStorage.getItem("notificationEnableHunter") === "" ||
+          localStorage.getItem("notificationEnableHunter") === undefined
+        ) {
+          localStorage.setItem("notificationEnableProvider", true);
         }
         localStorage.setItem(
           "hunterRefreshToken",
@@ -147,8 +173,10 @@ export default function Login() {
                           placeholder="Email Address"
                           value={email}
                           required
-                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
-                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                          onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
+                          onChange={(e) =>
+                            setEmail(e.target.value.toLowerCase())
+                          }
                         />
                       </Col>
                     </Form.Group>
@@ -186,11 +214,10 @@ export default function Login() {
                           value={password}
                           required
                           onChange={(e) => setPassword(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
+                          onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
                         />
                         <span
                           onClick={() => setShowPassword(!showPassword)}
-
                           style={{
                             position: "absolute",
                             right: "20px",

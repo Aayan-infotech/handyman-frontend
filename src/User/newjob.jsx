@@ -130,7 +130,7 @@ export default function NewJob() {
     formData.append("estimatedBudget", budget);
     formData.append("city", city);
     businessType.forEach((type) => {
-      formData.append("businessType[]", type);
+      formData.append("businessType", type);
     });
 
     formData.append("requirements", requirements);

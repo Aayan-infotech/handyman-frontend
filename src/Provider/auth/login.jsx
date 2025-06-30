@@ -14,6 +14,8 @@ import Loader from "../../Loader";
 import Toaster from "../../Toaster";
 import axiosInstance from "../../components/axiosInstance";
 import { Eye, EyeOff } from "lucide-react";
+import { ref, push, set, onValue, update } from "firebase/database";
+import { realtimeDb } from "../../Chat/lib/firestore";
 
 import {
   createUserWithEmailAndPassword,
@@ -36,6 +38,20 @@ export default function LoginProvider() {
   });
   const [guestLocation, setGuestLocation] = useState(null);
   const ProviderUId = localStorage.getItem("ProviderUId");
+
+  const storeHunterInFirebase = async (userData) => {
+    try {
+      const hunterRef = ref(realtimeDb, `users/provider/${userData._id}`);
+      await set(hunterRef, {
+        name: userData.businessName,
+        email: userData.email,
+        profileImage: userData.images || "",
+      });
+      console.log("Provider data stored in Firebase successfully");
+    } catch (error) {
+      console.error("Error storing Provider data in Firebase:", error);
+    }
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -73,6 +89,7 @@ export default function LoginProvider() {
         setEmail("");
         setPassword("");
         setLoading(false);
+        storeHunterInFirebase(response?.data?.data?.user);
         setToastProps({
           message: response?.data?.message,
           type: "success",
