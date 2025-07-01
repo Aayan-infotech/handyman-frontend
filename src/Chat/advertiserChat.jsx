@@ -307,6 +307,7 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
     otherUser?.name?.charAt(0) || otherUser?.businessName?.charAt(0) || "U";
 
   console.log("messages", messages);
+  console.log("avatarContent", avatarContent);
 
   return (
     <div className={`d-flex flex-column gap-3 pb-4 bg-second advertiser-chat`}>

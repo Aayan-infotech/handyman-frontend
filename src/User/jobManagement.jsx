@@ -484,6 +484,7 @@ export default function JobManagement() {
                                   <tr>
                                     {provider?.jobStatus !== "Completed" &&
                                     provider?.jobStatus !== "Assigned" &&
+                                    provider?.jobStatus !== "Deleted" &&
                                       !location.pathname.includes(
                                         "job-history"
                                       ) && (

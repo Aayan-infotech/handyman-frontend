@@ -83,7 +83,7 @@ export default function Notification() {
   // const handleName = async (notification) => {
   //   try {
   //     const response = await axios.post(
-  //       "https://api.tradehunters.com.au/api/match/getMatchedData",
+  //       "http://18.209.91.97:7777/api/match/getMatchedData",
   //       {
   //         senderId: notification.userId,
   //         receiverId: notification.receiverId,
@@ -590,6 +590,8 @@ export default function Notification() {
                               notification?.jobDetails?.jobStatus &&
                               notification?.jobDetails?.jobStatus !==
                                 "Completed" &&
+                              notification?.jobDetails?.jobStatus !==
+                                "Deleted" &&
                               hunterId && (
                                 <div className="col-lg-3 d-flex justify-content-end">
                                   <Button

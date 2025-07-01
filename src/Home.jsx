@@ -255,7 +255,7 @@ function Home() {
               </div>
             </div>
             <div className="col-lg-3 position-relative z-1">
-              <img src={sidepic} alt="sidepic" className="w-100 h-100" />
+              <img src={sidepic} alt="sidepic" className="w-100 h-100" loading="lazy"/>
             </div>
           </div>
         </Container>
