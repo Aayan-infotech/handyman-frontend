@@ -165,7 +165,7 @@ export default function Upload() {
 
     const formData = new FormData();
     newDocuments.forEach((file) => {
-      formData.append("file", file);
+      formData.append("files", file);
     });
 
     setLoading(true);

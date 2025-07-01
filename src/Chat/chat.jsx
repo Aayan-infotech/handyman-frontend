@@ -293,10 +293,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     setMsg("");
 
     // Get job title from wherever you're storing it (might need to add state for this)
-    const jobTitle =
-      selectedChat?.jobData?.title ||
-      (await handleData()) ||
-      "";
+    const jobTitle = selectedChat?.jobData?.title || (await handleData()) || "";
 
     await sendMessage(
       "text",
@@ -375,6 +372,12 @@ export default function Chat({ messageData, messages, selectedChat }) {
   if (loading) return <Loader />;
 
   const messages1 = messages || messagesPeople;
+  console.log(
+    "avatarContent",
+    peerData?.profileImage ||
+      peerData?.image ||
+      selectedChat?.displayUser?.images
+  );
 
   return (
     <>
@@ -405,7 +408,6 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     selectedChat?.displayUser?.businessName
                       ?.toUpperCase()
                       .charAt(0)}{" "}
-                  || selectedChat?.displayUser?.name?.toUpperCase().charAt(0)
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
                   <h5

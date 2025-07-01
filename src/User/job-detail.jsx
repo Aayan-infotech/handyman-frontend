@@ -496,7 +496,7 @@ export default function JobDetail() {
                       </div>
                     )}
 
-                    {receiverId && localStorage.getItem("hunterToken") && (
+                    {receiverId && localStorage.getItem("hunterToken") && data?.jobStatus !== "Deleted" && (
                       <>
                         <div className="row gy-4 gx-4 w-100 align-items-center">
                           <div className="col-2">
@@ -525,7 +525,7 @@ export default function JobDetail() {
                         </div>
                       </>
                     )}
-                    {receiverId && localStorage.getItem("hunterToken") && (
+                    {receiverId && localStorage.getItem("hunterToken") && data?.jobStatus !== "Deleted" && (
                       <Button
                         variant="contained"
                         color="success"
