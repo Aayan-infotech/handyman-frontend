@@ -84,7 +84,7 @@ export default function HomeProvider() {
     }
 
     console.log("Attempting to connect to socket...");
-    const newSocket = io("http://34.202.105.90:7777", {
+    const newSocket = io("https://api.tradehunters.com.au", {
       auth: {
         token: providerToken,
       },
