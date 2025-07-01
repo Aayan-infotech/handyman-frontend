@@ -76,7 +76,7 @@ export default function Otp({ length = 6 }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://18.209.91.97:7777/api/auth/verify-email",
+        "http://34.202.105.90:7777/api/auth/verify-email",
         {
           email,
           verificationOTP: otpValue,
@@ -121,7 +121,7 @@ export default function Otp({ length = 6 }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://18.209.91.97:7777/api/auth/verify-otp",
+        "http://34.202.105.90:7777/api/auth/verify-otp",
         {
           email,
           verificationOTP: otpValue,
@@ -163,7 +163,7 @@ export default function Otp({ length = 6 }) {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://18.209.91.97:7777/api/auth/resendOtp",
+        "http://34.202.105.90:7777/api/auth/resendOtp",
         {
           email,
           userType: ProviderParams ? "provider" : "hunter",

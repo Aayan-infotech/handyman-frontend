@@ -83,7 +83,7 @@ export default function Notification() {
   // const handleName = async (notification) => {
   //   try {
   //     const response = await axios.post(
-  //       "http://18.209.91.97:7777/api/match/getMatchedData",
+  //       "http://34.202.105.90:7777/api/match/getMatchedData",
   //       {
   //         senderId: notification.userId,
   //         receiverId: notification.receiverId,

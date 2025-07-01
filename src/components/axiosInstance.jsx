@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://18.209.91.97:7777/api",
+  baseURL: "http://34.202.105.90:7777/api",
 });
 
 let isRefreshing = false;
@@ -80,10 +80,10 @@ axiosInstance.interceptors.response.use(
 
     try {
       const res = await axios.post(
-        "http://18.209.91.97:7777/api/auth/refreshtoken",
+        "http://34.202.105.90:7777/api/auth/refreshtoken",
         { refreshToken, userType },
         {
-          baseURL: "http://18.209.91.97:7777/api",
+          baseURL: "http://34.202.105.90:7777/api",
           headers: {
             "Content-Type": "application/json",
           },
