@@ -210,7 +210,7 @@ export default function SignUpProvider() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://18.209.91.97:7777/api/auth/signup",
+        "http://34.202.105.90:7777/api/auth/signup",
         formData,
         {
           headers: {
