@@ -172,7 +172,7 @@ export default function Notification() {
   };
 
   const handleJobAccept = async (notification) => {
-    // Get current user ID
+     setLoading(true);
     const currentUserId = userId;
 
     // Determine which ID to use (the one that doesn't match current user)
@@ -190,7 +190,7 @@ export default function Notification() {
       return;
     }
 
-    setLoading(true);
+   
     try {
       const response = await axiosInstance.post(
         `/jobpost/changeJobStatus/${notification.jobDetails._id}`,
@@ -613,6 +613,8 @@ export default function Notification() {
                                   </Button>
                                 </div>
                               )}
+
+                              
                             {(notification?.type === "mass" ||
                               notification?.userName === "Admin" ||
                               !notification?.jobDetails?._id) && (
