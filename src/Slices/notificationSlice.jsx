@@ -12,7 +12,7 @@ const createNotificationThunk = (name, defaultTitle, defaultBody) =>
       try {
         const response = await axiosInstance.post(
           API_BASE_URL,
-          { title, body, receiverId, jobId },
+          { title, body, receiverId, jobId , notificationType: "job_alert" },
           {
             headers: {
               Authorization: `Bearer ${

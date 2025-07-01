@@ -16,11 +16,7 @@ import Loader from "../Loader";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { ref, set } from "firebase/database";
+import { ref, set, update } from "firebase/database";
 import { FaPen } from "react-icons/fa";
 import { auth, db } from "../Chat/lib/firestore";
 import axios from "axios";
@@ -100,6 +96,7 @@ export default function EditProfile() {
         }
 
         if (fetchedUser) {
+          console.log("Fetched User Data:", fetchedUser?.businessType);
           setName(fetchedUser?.contactName || fetchedUser?.name || "");
           setImages(fetchedUser?.images || "");
           const phoneNumber = fetchedUser?.phoneNo || "";
@@ -113,11 +110,7 @@ export default function EditProfile() {
           setLatitude(fetchedUser?.address?.location?.coordinates[1] || "");
           setLongitude(fetchedUser?.address?.location?.coordinates[0] || "");
 
-          setBusinessType(
-            Array.isArray(fetchedUser.businessType)
-              ? fetchedUser?.businessType
-              : []
-          );
+          setBusinessType(fetchedUser?.businessType);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -129,14 +122,60 @@ export default function EditProfile() {
   }, [dispatch, hunterToken, providerToken]);
 
   useEffect(() => {
-    if (businessData.length > 0 && businessType.length > 0) {
+    if (businessData?.length > 0 && businessType?.length > 0) {
       // Check if businessType IDs exist in businessData
-      const validBusinessTypes = businessType.filter((id) =>
+      const validBusinessTypes = businessType?.filter((id) =>
         businessData.some((service) => service._id === id)
       );
       setBusinessType(validBusinessTypes);
     }
   }, [businessData]);
+
+  const updateFirebaseProfile = async (userData) => {
+    console.log("Firebase update with userData:", userData);
+
+    try {
+      const userType = providerToken ? "provider" : "hunter";
+      const userId = providerToken ? providerId : hunterId;
+
+      // Verify we have required values
+      if (!userId) {
+        console.error("No user ID found for Firebase update");
+        return;
+      }
+
+      const userRef = ref(realtimeDb, `users/${userType}/${userId}`);
+
+      // Get current component state values as fallbacks
+      const currentName = businessName || "";
+      const currentImage = images || "";
+
+      // Prepare updates with multiple fallbacks
+      const updates = {
+        name:
+          userData[0]?.contactName || userData[0]?.name || currentName || "",
+        profileImage: userData[0]?.images || userData?.images || currentImage,
+      };
+
+      // Final validation - replace any undefined with empty string
+      Object.keys(updates).forEach((key) => {
+        updates[key] = updates[key] !== undefined ? updates[key] : "";
+      });
+
+      console.log("Final Firebase updates:", updates);
+
+      await set(userRef, updates);
+      console.log("Profile updated in Firebase successfully");
+    } catch (error) {
+      console.error("Error updating profile in Firebase:", error);
+      setToastProps({
+        message: "Failed to update real-time profile data",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      throw error;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -156,13 +195,13 @@ export default function EditProfile() {
     formData.append("ABN_Number", registrationNumber);
 
     // Append each business type separately
-    businessType.forEach((type) => {
+    businessType?.forEach((type) => {
       formData.append("businessType", type);
     });
 
     formData.append("businessName", businessName);
 
-    if (images && images instanceof FileList && images.length > 0) {
+    if (images && images instanceof FileList && images?.length > 0) {
       formData.append("images", images[0]);
     } else if (typeof images === "string") {
       formData.append("images", images);
@@ -184,6 +223,9 @@ export default function EditProfile() {
 
       if (response.status === 200 || response.status === 201) {
         setLoading(false);
+        await updateFirebaseProfile(
+          response?.data?.data || response?.data?.updatedProvider
+        );
         setToastProps({
           message: response?.data?.message,
           type: "success",

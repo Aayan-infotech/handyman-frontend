@@ -7,7 +7,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import { IoSendSharp } from "react-icons/io5";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { ref, push, set, onValue, update } from "firebase/database";
+import { ref, push, set, onValue, update, get, off } from "firebase/database";
 import { realtimeDb, auth } from "./lib/firestore";
 import Loader from "../Loader";
 import Toaster from "../Toaster";
@@ -30,81 +30,69 @@ const sendMessage = async (
   senderId,
   isReceiverOnline,
   setMessages,
-  jobId
+  jobId,
+  jobTitle,
+  peerName
 ) => {
   if (!chatId) {
     console.error("Chat ID or Job ID is missing");
     return;
   }
 
-  const time = Date.now();
+  const timestamp = Date.now();
   console.log("Sending message with Job ID:", jobId);
 
   try {
-    const chat = {
-      msg,
-      timeStamp: time,
+    // Step 1: Save the message in messages collection
+    const message = {
+      message: msg,
+      receiverId,
+      senderId,
+      timestamp,
       type: msgType,
-      receiverId,
-      senderId,
-      jobId,
-      chatId,
     };
 
-    const users = {
-      receiverId,
-      senderId,
-      jobId,
+    const newMessageRef = push(ref(realtimeDb, `messages/${chatId}`));
+    await set(newMessageRef, message);
+
+    // Step 2: Forcefully recreate chatList entries for both users
+    const updates = {};
+    const senderName =
+      localStorage.getItem("ProviderBusinessName") ||
+      localStorage.getItem("hunterName") ||
+      "Unknown";
+    const receiverName = peerName || "Unknown";
+
+    // Always create/update sender's chat entry
+    updates[`chatList/${senderId}/${chatId}`] = {
+      isRead: true,
+      jobId: jobId || null,
+      jobTitle: jobTitle || "",
+      lastMessage: msg,
+      peerId: receiverId,
+      peerName: receiverName,
+      timestamp,
     };
 
-    const chatMap = {
-      messages: chat,
-      users,
+    // Always create/update receiver's chat entry
+    updates[`chatList/${receiverId}/${chatId}`] = {
+      isRead: false,
+      jobId: jobId || null,
+      jobTitle: jobTitle || "",
+      lastMessage: msg,
+      peerId: senderId,
+      peerName: senderName,
+      timestamp,
     };
 
-    const chatMap1 = {
-      messages: chat,
-      unread: 1,
-      users,
-    };
-    console.log("CHAT MAP =>", chatMap);
-
-    const newMessageRef = push(
-      ref(
-        realtimeDb,
-        `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`
-      )
-    );
-    await set(newMessageRef, chat);
-
-    setMessages((prevMessages) => [...prevMessages]);
-
-    // Step 3: Update job status in chat
-    await set(ref(realtimeDb, `chats/${jobId}/${chatId}/jobStatus`), {
-      status: "Pending",
-      acceptedBy: "",
-    });
-
-    // Step 4: Save chat details in chatList for both users
-    // await set(
-    //   ref(realtimeDb, `chatList/${senderId}/${receiverId}/${chatId}`),
-    //   chatMap
-    // );
-    const updates = {
-      [`chatList/${senderId}/${receiverId}/${chatId}`]: chatMap,
-      [`chatList/${receiverId}/${senderId}/${chatId}`]: chatMap1,
-    };
-
+    // Execute all updates atomically
     await update(ref(realtimeDb), updates);
 
-    // Step 5: If receiver is offline, mark as unread
+    // If receiver is offline, ensure isRead is false
     if (!isReceiverOnline) {
-      await update(
-        ref(realtimeDb, `chatList/${receiverId}/${senderId}/${chatId}`),
-        {
-          unRead: 1,
-        }
-      );
+      await update(ref(realtimeDb, `chatList/${receiverId}/${chatId}`), {
+        isRead: false,
+      });
     }
   } catch (error) {
     console.error("Firebase Error:", error.message);
@@ -123,11 +111,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [loading, setLoading] = useState(false);
   const [chatId, setChatId] = useState(selectedChat?.chatId);
   const [validMessageData, setValidMessageData] = useState(null);
+  const [peerData, setPeerData] = useState(null); // Store peer user data
   const dispatch = useDispatch();
-  console.log("message data in chat", messages);
-  console.log("chat id in chat", chatId);
   const navigate = useNavigate();
-  const chatMessage = selectedChat?.messages;
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -140,112 +126,39 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const storedUserId =
     localStorage.getItem("hunterId") || localStorage.getItem("ProviderId");
   const [filteredMessageData, setFilteredMessageData] = useState(null);
-
-  useEffect(() => {
-    if (chatId && Array.isArray(messageData)) {
-      setFilteredMessageData(filterMessageDataByChatId(chatId, messageData));
-    }
-  }, [chatId, messageData]);
-
-  console.log("filteredMessageData", filteredMessageData);
-  const validateAndSetMessageData = (
-    storedUserId,
-    messageData,
-    setValidMessageData
-  ) => {
-    if (
-      storedUserId &&
-      messages?.senderId !== storedUserId &&
-      messages?.receiverId !== storedUserId
-    ) {
-      console.log("Valid message data:", messageData);
-      setValidMessageData(messageData);
-    } else {
-      setValidMessageData(null);
-    }
-  };
-
-  useEffect(() => {
-    validateAndSetMessageData(storedUserId, messageData, setValidMessageData);
-  }, [storedUserId, messageData]);
-
-  console.log("Filtered messageData:", validMessageData);
-  const hunterId = localStorage.getItem("hunterId");
-
-  const senderId = id || chatMessage?.receiverId;
+  const senderId =
+    localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   const [jobShow, setJobShow] = useState(false);
-  const [currentUser, setCurrentUser] = useState(
-    localStorage.getItem("ProviderId") || localStorage.getItem("hunterId")
-  );
-  const receiverId =
-    id ||
-    (chatMessage?.senderId === currentUser
-      ? chatMessage?.receiverId
-      : chatMessage?.senderId);
+  const [currentUser, setCurrentUser] = useState(senderId);
+  const receiverId = id || selectedChat?.peerId || messageData[chatId]?.peerId;
   const location = useLocation();
-  const [chatData, setChatData] = useState([]);
-
+  const hunterId = localStorage.getItem("hunterId");
   const jobId =
     new URLSearchParams(location.search).get("jobId") ||
-    messageData?.jobPost?._id ||
-    selectedChat?.users?.jobId ||
+    messageData?.jobId ||
+    selectedChat?.jobId ||
     null;
 
-  const notification = new URLSearchParams(location.search).get("path");
-  console.log("notification", notification);
-
-  console.log("job id in chat", receiverId);
+  // Fetch peer user data from Firebase
   useEffect(() => {
-    const storedUserId =
-      localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
-    setCurrentUser(storedUserId || "");
-  }, []);
+    if (!receiverId) return;
 
-  useEffect(() => {
-    if (!chatId) return;
-    console.log("Fetching messages for chatId:", chatId);
-    setLoading(true);
-    const chatMessagesRef = ref(
-      realtimeDb,
-      jobId ? `chats/${jobId}/${chatId}/messages` : `chats/${chatId}/messages`
-    );
-    console.log("Fetching messages for chatMessagesRef:", chatMessagesRef);
-    const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
+    const isCurrentUserProvider = localStorage.getItem("ProviderId") !== null;
+    const peerUserType = isCurrentUserProvider ? "hunter" : "provider";
+    const peerRef = ref(realtimeDb, `users/${peerUserType}/${receiverId}`);
+
+    const unsubscribe = onValue(peerRef, (snapshot) => {
       if (snapshot.exists()) {
-        const messagesData = snapshot.val();
-
-        // Convert to array and sort
-        let messagesArray = Object.values(messagesData).sort(
-          (a, b) => a.timeStamp - b.timeStamp
-        );
-
-        // Advanced deduplication
-        const uniqueMessages = [];
-        const seenKeys = new Set();
-        console.log("messagesArray", messagesArray);
-        messagesArray.forEach((message) => {
-          // Create a unique key combining timestamp, message, and sender
-          const messageKey = `${message.timeStamp}`;
-
-          if (!seenKeys.has(messageKey)) {
-            seenKeys.add(messageKey);
-            uniqueMessages.push(message);
-          }
-        });
-
-        setMessagesPeople(uniqueMessages);
-        setLoading(false);
+        setPeerData(snapshot.val());
       } else {
-        setMessagesPeople([]);
-        setLoading(false);
+        setPeerData(null);
       }
     });
 
-    return () => unsubscribe();
-  }, [chatId]);
-
-  console.log("messages1", messages);
-  console.log("messagesPeople", messagesPeople);
+    return () => {
+      off(peerRef);
+    };
+  }, [receiverId]);
 
   const handleData = async () => {
     try {
@@ -261,28 +174,82 @@ export default function Chat({ messageData, messages, selectedChat }) {
           },
         }
       );
+
       if (response.status === 500) {
         navigate("/error");
         return;
       }
-      console.log("121212", response);
-      setChatData(response?.data?.data);
+
+      const jobTitle = response?.data?.data?.jobPost?.title;
+      console.log("Job Title:", jobTitle);
+
+      // Instead of modifying selectedChat directly, we'll use this data when needed
+      return jobTitle;
     } catch (error) {
-      console.log(error);
-      if (error.response.status === 500) {
+      console.error("Match API error:", error);
+      if (error.response?.status === 500) {
         navigate("/error");
       }
+      return null;
     }
   };
 
+  // Then modify your useEffect to handle the job title properly
   useEffect(() => {
-    handleData();
-  }, []);
+    const fetchJobTitle = async () => {
+      if (jobId && senderId && receiverId) {
+        const jobTitle = await handleData();
+        // You can store this in state if needed elsewhere
+      }
+    };
 
-  const userChat =
-    chatData?.receiver?._id === id ? chatData?.sender : chatData?.receiver;
+    fetchJobTitle();
+  }, [jobId, senderId, receiverId]);
 
-  console.log("chatData", chatData);
+  console.log("peerData", peerData);
+
+  useEffect(() => {
+    if (chatId && Array.isArray(messageData)) {
+      setFilteredMessageData(filterMessageDataByChatId(chatId, messageData));
+    }
+  }, [chatId, messageData]);
+
+  useEffect(() => {
+    validateAndSetMessageData(storedUserId, messageData, setValidMessageData);
+  }, [storedUserId, messageData]);
+
+  useEffect(() => {
+    if (!chatId) return;
+
+    console.log("Fetching messages for chatId:", chatId);
+    setLoading(true);
+    const chatMessagesRef = ref(realtimeDb, `messages/${chatId}`);
+
+    const unsubscribe = onValue(chatMessagesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const messagesData = snapshot.val();
+
+        let messagesArray = Object.entries(messagesData)
+          .map(([key, value]) => ({
+            id: key,
+            ...value,
+            msg: value.message,
+            timeStamp: value.timestamp,
+            senderId: value.senderId,
+            receiverId: value.receiverId,
+          }))
+          .sort((a, b) => a.timestamp - b.timestamp);
+
+        setMessagesPeople(messagesArray);
+        setLoading(false);
+      } else {
+        setMessagesPeople([]);
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [chatId]);
 
   useEffect(() => {
     console.log("currentUser", currentUser);
@@ -290,51 +257,27 @@ export default function Chat({ messageData, messages, selectedChat }) {
 
     if (!currentUser || !receiverId) return;
 
-    // Ensure chatId is always a string
-    const generatedChatId = [currentUser, receiverId]
-      .sort()
-      .join(`__${jobId}__` || `_chat_`);
+    const sortedIds = [currentUser, receiverId].sort();
+    const baseChatId = sortedIds.join("_");
+    const generatedChatId = jobId ? `${baseChatId}_${jobId}` : baseChatId;
 
     setChatId(generatedChatId);
-  }, [currentUser, receiverId]);
-
-  const messageNotificationFunctionality = async () => {
-    setLoading(true);
-    try {
-      const response = dispatch(
-        messageNotification({
-          receiverId: receiverId,
-          jobId: jobId,
-        })
-      );
-      console.log("messageNotification response", response);
-      if (messageNotification.meta.requestStatus === "fulfilled") {
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  };
+  }, [currentUser, receiverId, jobId]);
 
   const handleSendEmail = async () => {
-    console.log("Sending email for job application");
     try {
       const response = await axiosInstance.post(
         "/hunter/send-job-email",
         {
-          jobTitle: chatData?.jobPost?.title || selectedChat?.jobData?.title,
+          jobTitle: selectedChat?.jobData?.title,
           name:
             localStorage.getItem("ProviderBusinessName") ||
             localStorage.getItem("hunterName"),
-          receverEmail: selectedChat?.displayUser?.email || userChat?.email,
+          receverEmail: peerData?.email, // Use email from Firebase peer data
         },
         {
           headers: {
-            Authorization: `Bearer ${
-              localStorage.getItem("hunterToken") ||
-              localStorage.getItem("ProviderToken")
-            }`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -348,6 +291,13 @@ export default function Chat({ messageData, messages, selectedChat }) {
     if (msg.trim() === "" || !chatId || !currentUser) return;
 
     setMsg("");
+
+    // Get job title from wherever you're storing it (might need to add state for this)
+    const jobTitle =
+      selectedChat?.jobData?.title ||
+      (await handleData()) ||
+      "";
+
     await sendMessage(
       "text",
       msg,
@@ -356,39 +306,28 @@ export default function Chat({ messageData, messages, selectedChat }) {
       currentUser,
       false,
       setMessagesPeople,
-      selectedChat?.users?.jobId || jobId || null
+      selectedChat?.users?.jobId || jobId || null,
+      jobTitle, // Pass the job title here
+      peerData?.businessName || peerData?.name
     );
 
     await handleSendEmail();
 
-    // Get the business name and job title
     const businessName =
       localStorage.getItem("ProviderBusinessName") ||
       localStorage.getItem("hunterName");
 
-    console.log(userChat, selectedChat);
-    const jobTitle = chatData?.jobPost?.title || selectedChat?.jobData?.title;
     if (businessName) {
       dispatch(
         messageNotification({
           receiverId: receiverId,
           jobId: jobId,
-          body: `${businessName}  sent you a message regarding your job ${jobTitle} `,
+          body: `${businessName} sent you a message regarding your job ${jobTitle}`,
         })
       );
     }
-    // else {
-    //   dispatch(
-    //     messageNotificationProvider({
-    //       receiverId: receiverId,
-    //       jobId: jobId,
-    //       body: `You have a new message from  for the job ${jobTitle}`,
-    //     })
-    //   );
-    // }
   };
 
-  // Handle visibility toggle
   const handleProvider = () => {
     if (
       location.pathname.includes("provider") ||
@@ -413,114 +352,29 @@ export default function Chat({ messageData, messages, selectedChat }) {
     navigate(`/provider/home`);
   };
 
-  console.log("storedUserId", storedUserId);
-  const handleCompletedJob = async ({ id }) => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.post(
-        `/provider/completedCount/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setLoading(false);
-      console.log(response);
-      setToastProps({
-        message: response.message,
-        type: "success",
-        toastKey: Date.now(),
-      });
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-      setToastProps({
-        message: error,
-        type: "error",
-        toastKey: Date.now(),
-      });
+  const validateAndSetMessageData = (
+    storedUserId,
+    messageData,
+    setValidMessageData
+  ) => {
+    if (
+      storedUserId &&
+      messages?.senderId !== storedUserId &&
+      messages?.receiverId !== storedUserId
+    ) {
+      setValidMessageData(messageData);
+    } else {
+      setValidMessageData(null);
     }
   };
-  const handleJobAccept = async ({ id }) => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.post(
-        `/jobpost/changeJobStatus/${jobId}`,
-        {
-          jobStatus: "Assigned",
-          providerId: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
-      setLoading(false);
-      console.log(response);
-      setToastProps({
-        message: response.message,
-        type: "success",
-        toastKey: Date.now(),
-      });
-      selectedChat.jobData.jobStatus = "Assigned";
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-      setToastProps({
-        message: error,
-        type: "error",
-        toastKey: Date.now(),
-      });
-    }
-  };
   useEffect(() => {
     handleProvider();
   }, [location]);
 
-  const noficationFunctionality = async () => {
-    setLoading(true);
-    try {
-      const response = dispatch(
-        assignedJobNotification({
-          body: `You have been assigned for this job ${
-            selectedChat?.jobData?.title || chatData?.jobPost?.title
-          }`,
-          receiverId: receiverId,
-          jobId: jobId,
-        })
-      );
-      if (assignedJobNotification.fulfilled.match(response)) {
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  };
-
-  const dobFunction = async ({ id }) => {
-    handleCompletedJob({ id });
-    handleJobAccept({ id });
-    setJobShow(true);
-    await noficationFunctionality();
-  };
-
-  console.log("messageData in chat", userChat);
-
-  const messages1 = messages || messagesPeople;
-
-  console.log("currentUser", currentUser);
-
-  console.log("messages1", messages1);
-  console.log("messagesPeople", messagesPeople);
-
   if (loading) return <Loader />;
 
-  console.log("selectedChat", selectedChat, messageData, messages);
+  const messages1 = messages || messagesPeople;
 
   return (
     <>
@@ -539,20 +393,19 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 )}
                 <Avatar
                   alt="Image"
-                  src={selectedChat?.displayUser?.images || userChat?.images}
+                  src={
+                    peerData?.profileImage ||
+                    peerData?.image ||
+                    selectedChat?.displayUser?.images
+                  }
                   style={{ height: "82px", width: "82px" }}
                 >
-                  {/* {selectedChat?.displayUser
-                    ? 
-                    : filteredMessage?.name
-                    ? filteredMessage?.name.toUpperCase().charAt(0)
-                    : ""} */}
-                  {selectedChat?.displayUser?.name?.toUpperCase().charAt(0) ||
+                  {peerData?.businessName?.toUpperCase().charAt(0) ||
+                    peerData?.name?.toUpperCase().charAt(0) ||
                     selectedChat?.displayUser?.businessName
-                      .toUpperCase()
-                      .charAt(0) ||
-                    userChat?.name?.toUpperCase().charAt(0) ||
-                    userChat?.businessName?.toUpperCase().charAt(0)}
+                      ?.toUpperCase()
+                      .charAt(0)}{" "}
+                  || selectedChat?.displayUser?.name?.toUpperCase().charAt(0)
                 </Avatar>
                 <div className="d-flex flex-column gap-1">
                   <h5
@@ -560,69 +413,20 @@ export default function Chat({ messageData, messages, selectedChat }) {
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       if (localStorage.getItem("hunterId")) {
-                        navigate(
-                          `/service-profile/${
-                            selectedChat?.displayUser?._id || userChat?._id
-                          }`
-                        );
+                        navigate(`/service-profile/${receiverId}`);
                       }
                     }}
                   >
-                    {selectedChat?.displayUser?.name ||
-                      selectedChat?.displayUser?.businessName ||
-                      userChat?.name ||
-                      userChat?.businessName}
+                    {peerData?.name ||
+                      peerData?.businessName ||
+                      selectedChat?.displayUser?.name ||
+                      selectedChat?.displayUser?.businessName}
                   </h5>
-                  {/* {!show ? (
-                    <span className="text-muted fs-6">2m ago</span>
-                  ) : null} */}
                 </div>
               </div>
-              {/* <div className="d-flex flex-row gap-2 align-items-center">
-                <IoIosSearch className="fs-3" />
-                <BsThreeDotsVertical className="fs-3" />
-              </div> */}
             </div>
           </div>
         </div>
-        {/* {hunterId &&
-          selectedChat?.jobData?.jobStatus === "Pending" &&
-          !jobShow && (
-            <div className="container-fluid">
-              <div className="row">
-                <div className={`mw-condition mx-auto`}>
-                  <div className="card rounded-5 border-0 shadow">
-                    <div className="card-body px-4 py-3">
-                      <span className="text-center d-flex justify-content-center">
-                        Do you want to work with them for this job
-                        <br />{" "}
-                        {selectedChat?.jobData?.title ||
-                          chatData?.jobPost?.title}
-                      </span>
-                      <div className="d-flex justify-content-evenly mt-3">
-                        <button
-                          className="btn btn-primary px-5"
-                          onClick={() =>
-                            dobFunction({
-                              id: selectedChat?.displayUser?._id || id,
-                            })
-                          }
-                        >
-                          Yes
-                        </button>
-                        <button
-                          className="btn btn-danger px-5"
-                          onClick={() => setJobShow(true)}
-                        >
-                          No
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )} */}
 
         <div
           className={`position-relative container${
@@ -700,10 +504,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
                         : "msg-recieved mb-1"
                     }
                   >
-                    {msg?.msg}
+                    {msg?.message}
                   </p>
                   <span className="text-muted time-status">
-                    {new Date(msg.timeStamp).toLocaleTimeString("en-AU", {
+                    {new Date(msg.timestamp).toLocaleTimeString("en-AU", {
                       timeZone: "Australia/Sydney",
                       hour: "2-digit",
                       minute: "2-digit",
@@ -724,7 +528,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                 onChange={(e) => setMsg(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault(); // Prevent default behavior (like new line in textarea)
+                    e.preventDefault();
                     handleSend();
                   }
                 }}

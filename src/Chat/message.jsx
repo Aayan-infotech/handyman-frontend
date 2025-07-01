@@ -26,6 +26,7 @@ import axiosInstance from "../components/axiosInstance";
 import Avatar from "@mui/material/Avatar";
 import Skeleton from "@mui/material/Skeleton";
 import AdvertiserChat from "./advertiserChat";
+
 export default function Message() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -33,11 +34,12 @@ export default function Message() {
   const [messageLoader, setMessageLoader] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [messageData, setMessageData] = useState({});
-  const [selectedChat, setSelectedChat] = useState(null); // Track selected chat
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [userData, setUserData] = useState({}); // Store user data from Firebase
   const location = useLocation();
   const [chatMessages, setChatMessages] = useState([]);
-  const [visibleChats, setVisibleChats] = useState(5); // Initial number of chats to show
-  const [allMessages, setAllMessages] = useState([]); // Store all messages
+  const [visibleChats, setVisibleChats] = useState(5);
+  const [allMessages, setAllMessages] = useState([]);
   const userFinder = location.pathname.includes("/provider");
 
   useEffect(() => {
@@ -49,85 +51,112 @@ export default function Message() {
     }
   }, []);
 
+  const listenToUserData = useCallback((userId, userType, callback) => {
+    if (!userId) return;
+    const userRef = ref(realtimeDb, `users/${userType}/${userId}`);
+    const listener = onValue(userRef, (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.val());
+      } else {
+        callback(null);
+      }
+    });
+    return () => off(userRef, listener); // cleanup function
+  }, []);
+
+  // Fetch user data from Firebase
+  const fetchUserData = useCallback(async (userId, userType) => {
+    if (!userId) return null;
+
+    const userRef = ref(realtimeDb, `users/${userType}/${userId}`);
+    const snapshot = await get(userRef);
+    return snapshot.exists() ? snapshot.val() : null;
+  }, []);
+
   const handleChat = useCallback(async () => {
-    if (messages.length === 0) return; // Prevent API call if no messages exist
+    if (messages.length === 0) return;
     setMessageLoader(true);
+
     try {
-      // Loop through all messages and make API calls
-      const apiCalls = messages.map(async (message) => {
-        const { jobId, senderId, receiverId } = message.users;
+      const cleanupFunctions = [];
 
-        if (!senderId || !receiverId) {
-          console.error("Missing required parameters for API request");
-          return null;
+      for (const message of messages) {
+        const { senderId, receiverId } = message.users;
+        const isCurrentUserProvider =
+          localStorage.getItem("ProviderId") !== null;
+
+        let peerUserType, peerId;
+        if (isCurrentUserProvider) {
+          peerUserType = "hunter";
+          peerId = receiverId;
+        } else {
+          peerUserType = "provider";
+          peerId = senderId === currentUser ? receiverId : senderId;
         }
 
-        const response = await axiosInstance.post(
-          "/match/getMatchedData",
-          { jobPostId: jobId, senderId, receiverId },
-          {
-            headers: {
-              Authorization: `Bearer ${
-                localStorage.getItem("hunterToken") ||
-                localStorage.getItem("ProviderToken")
-              }`,
-            },
+        const cleanup = listenToUserData(peerId, peerUserType, (peerData) => {
+          if (peerData) {
+            setMessageData((prev) => ({
+              ...prev,
+              [message.chatId]: {
+                receiver: peerData,
+                jobData: {
+                  title: message.jobTitle,
+                },
+                peerId: message.peerId,
+                peerName: message.peerName,
+                peerUserType,
+              },
+            }));
           }
-        );
+        });
 
-        if (response.status === 200) {
-          return {
-            chatId: message.chatId,
-            data: response.data.data,
-            jobData: response.data.data.job || {},
-          };
-        }
-        return null;
-      });
+        if (typeof cleanup === "function") cleanupFunctions.push(cleanup);
+      }
 
-      // Wait for all API calls to complete
-      const results = await Promise.all(apiCalls);
-      const newMessageData = results.reduce((acc, result) => {
-        if (result) {
-          acc[result.chatId] = { ...result.data, jobData: result.data.jobPost };
-        }
-        return acc;
-      }, {});
-
-      setMessageData(newMessageData);
       setMessageLoader(false);
+
+      return () => {
+        cleanupFunctions.forEach((fn) => fn());
+      };
     } catch (error) {
       console.error("Error fetching chat data:", error);
       setMessageLoader(false);
     }
-  }, [messages]);
+  }, [messages, listenToUserData, currentUser]);
 
-  console.log("message data", messageData);
   const getChatList = useCallback(
     (user) => {
       setMessageLoader(true);
       if (!user) return;
 
+      const userCategory = localStorage.getItem("ProviderId")
+        ? "provider"
+        : "hunter";
       const chatListRef = ref(realtimeDb, `chatList/${user}`);
 
       const listener = onValue(chatListRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
-          const formattedChatList = Object.keys(data).flatMap((receiverId) =>
-            Object.keys(data[receiverId]).map((chatId) => ({
-              chatId,
-              messages: data[receiverId][chatId].messages || {},
-              unRead: data[receiverId][chatId].unread || 0,
-              users: data[receiverId][chatId].users || {},
-            }))
-          );
+          const formattedChatList = Object.keys(data).map((chatId) => ({
+            chatId,
+            isRead: data[chatId].isRead,
+            jobId: data[chatId].jobId,
+            jobTitle: data[chatId].jobTitle,
+            lastMessage: data[chatId].lastMessage,
+            peerId: data[chatId].peerId,
+            peerName: data[chatId].peerName,
+            timestamp: data[chatId].timestamp,
+            users: {
+              senderId: user,
+              receiverId: data[chatId].peerId,
+              jobId: data[chatId].jobId,
+            },
+          }));
 
-          // Sort by most recent message timestamp
-          const sorted = formattedChatList.sort((a, b) => {
-            const timeA = a.messages?.timeStamp || 0;
-            const timeB = b.messages?.timeStamp || 0;
-            return timeB - timeA; // Newest first
-          });
+          const sorted = formattedChatList.sort(
+            (a, b) => b.timestamp - a.timestamp
+          );
 
           setAllMessages(sorted);
           setMessages(sorted.slice(0, visibleChats));
@@ -147,26 +176,15 @@ export default function Message() {
   const loadMoreChats = () => {
     const newVisibleChats = visibleChats + 5;
     setVisibleChats(newVisibleChats);
-    setMessages(allMessages.slice(0, newVisibleChats)); // Show more chats
+    setMessages(allMessages.slice(0, newVisibleChats));
   };
-  console.log("messages in chat", messages);
 
   const getChatMessages = useCallback((selectedChat) => {
     setMessageLoader(true);
     if (!selectedChat || !selectedChat.chatId) return;
 
-    const { chatId, users } = selectedChat;
-    const { jobId } = users;
-
-    if (!chatId) {
-      console.error("Missing chatId in selectedChat");
-      return;
-    }
-
-    const chatMessagesRef = ref(
-      realtimeDb,
-      `chats/${jobId}/${chatId}/messages` || `chats/${chatId}/messages`
-    );
+    const { chatId } = selectedChat;
+    const chatMessagesRef = ref(realtimeDb, `messages/${chatId}`);
 
     const listener = onValue(chatMessagesRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -191,7 +209,8 @@ export default function Message() {
       const cleanup = getChatList(currentUser);
       return cleanup;
     }
-  }, [currentUser, getChatList, visibleChats]); // Add visibleChats as dependency
+  }, [currentUser, getChatList, visibleChats]);
+
   useEffect(() => {
     if (selectedChat) {
       const cleanup = getChatMessages(selectedChat);
@@ -200,65 +219,95 @@ export default function Message() {
   }, [selectedChat]);
 
   useEffect(() => {
-    handleChat();
+    let isMounted = true;
+    let cleanupFn;
+
+    const run = async () => {
+      const maybeCleanup = await handleChat();
+      if (isMounted && typeof maybeCleanup === "function") {
+        cleanupFn = maybeCleanup;
+      }
+    };
+
+    run();
+
+    return () => {
+      isMounted = false;
+      if (typeof cleanupFn === "function") {
+        cleanupFn();
+      }
+    };
   }, [handleChat]);
 
-  // Updated handleSendMessage to accept chat data
   const handleSendMessage = async (chat) => {
     try {
-      // Get the other user's ID (the one who is not the current user)
-      const otherUserId =
-        chat.users.senderId === currentUser
-          ? chat.users.receiverId
-          : chat.users.senderId;
+      const peerId = chat.peerId;
+      const updates = {};
+      updates[`chatList/${currentUser}/${chat.chatId}/isRead`] = true;
 
-      // Reference to the specific chat in chatList
-      const chatRef = ref(
-        realtimeDb,
-        `chatList/${currentUser}/${otherUserId}/${chat.chatId}`
-      );
+      await update(ref(realtimeDb), updates);
 
-      // Update the unRead count to 0
-      await update(chatRef, {
-        unread: 0,
+      setSelectedChat({
+        ...chat,
+        jobData: messageData[chat.chatId]?.jobData,
       });
-
-      setSelectedChat({ ...chat, jobData: messageData[chat.chatId]?.jobData });
       setOpen(!open);
     } catch (error) {
-      console.error("Error resetting unread count:", error);
+      console.error("Error updating chat status:", error);
     }
   };
-  console.log("selectedChat", selectedChat);
 
   if (loading) return <Loader />;
 
   const filteredMessages = messages.map((item) => {
-    const isSender = item.users.senderId === currentUser;
+    const peerData = messageData[item.chatId]?.receiver || {};
+    const isCurrentUserProvider = localStorage.getItem("ProviderId") !== null;
+
+    // Determine image source based on user type
+    let imageSrc;
+    let nameUser = "";
+    if (isCurrentUserProvider) {
+      // Current user is provider, peer is hunter
+      imageSrc = peerData.profileImage || peerData.image;
+      nameUser = peerData.businessName || peerData.name;
+    } else {
+      // Current user is hunter, peer is provider
+      imageSrc = peerData.image || peerData.profileImage;
+      nameUser = peerData.businessName || peerData.name;
+    }
+
     return {
       ...item,
-      displayUser: isSender
-        ? messageData[item.chatId]?.receiver
-        : messageData[item.chatId]?.sender,
-      jobData: messageData[item.chatId]?.jobData,
+      displayUser: {
+        name: nameUser,
+        businessName: peerData.businessName,
+        images: imageSrc,
+      },
+      jobData: {
+        title: item.jobTitle,
+      },
+      messages: {
+        msg: item.lastMessage,
+        timeStamp: item.timestamp,
+      },
     };
   });
 
   const getNewestMessageTime = (messages) => {
     if (!messages) return 0;
     const messageTimes = Object.values(messages).map(
-      (msg) => msg.timeStamp || 0
+      (msg) => msg?.timeStamp || 0
     );
     return Math.max(...messageTimes);
   };
 
-  // Then use it in your sort functions:
   const sortedMessages = [...filteredMessages].sort((a, b) => {
     const newestA = getNewestMessageTime(a.messages);
     const newestB = getNewestMessageTime(b.messages);
     return newestB - newestA;
   });
 
+  console.log("Sorted Messages:", sortedMessages);
   const deleteChat = async (chatId, currentUser) => {
     try {
       if (!currentUser || !chatId) {
@@ -266,40 +315,9 @@ export default function Message() {
         return;
       }
 
-      // Get a reference to the user's chatList
-      const userChatListRef = ref(realtimeDb, `chatList/${currentUser}`);
-
-      // Fetch the user's chatList data
-      const snapshot = await get(userChatListRef);
-
-      if (!snapshot.exists()) {
-        console.log("No chats found for this user");
-        return;
-      }
-
-      let found = false;
-      const updates = {};
-
-      // Iterate through all receiverIds
-      snapshot.forEach((receiverSnapshot) => {
-        const receiverId = receiverSnapshot.key;
-
-        // Check if this receiver has the chatId we want to delete
-        if (receiverSnapshot.val()[chatId]) {
-          found = true;
-          updates[`${currentUser}/${receiverId}/${chatId}`] = null; // Mark for deletion
-        }
-      });
-
-      if (found) {
-        // Perform the deletion
-        await update(ref(realtimeDb, "chatList"), updates);
-        console.log("Chat deleted successfully");
-        return true;
-      } else {
-        console.log("Chat not found for this user");
-        return false;
-      }
+      const userChatRef = ref(realtimeDb, `chatList/${currentUser}/${chatId}`);
+      await remove(userChatRef);
+      return true;
     } catch (error) {
       console.error("Error deleting chat:", error);
       throw error;
@@ -311,7 +329,6 @@ export default function Message() {
     setLoading(true);
     try {
       const success = await deleteChat(chatId, currentUser);
-      window.location.reload();
       if (success) {
         getChatList(currentUser);
       }
@@ -321,9 +338,6 @@ export default function Message() {
       setLoading(false);
     }
   };
-
-  console.log("messageData", sortedMessages, "selectedChat ", selectedChat);
-  console.log(currentUser);
 
   return (
     <>
@@ -343,15 +357,6 @@ export default function Message() {
                 <div className="col-lg-2">
                   <h3>Messages</h3>
                 </div>
-                {/* <div className="col-lg-10">
-                  <div className="position-relative icon">
-                    <IoIosSearch className="mt-lg-1 mt-2 ms-1 fs-4" />
-                    <Form.Control
-                      placeholder="Search Message"
-                      className="w-100 border-0 px-2 ps-5 py-3 rounded-5"
-                    />
-                  </div>
-                </div> */}
               </div>
             )}
             <div className="row gy-3 gx-2">
@@ -405,98 +410,89 @@ export default function Message() {
                   ) : (
                     <>
                       {sortedMessages.map((item) => (
-                        <>
-                          <div className="d-flex flex-row gap-1 w-100 position-relative">
-                            <Link
-                              className="text-decoration-none w-100"
-                              onClick={() => handleSendMessage(item)} // Pass chat data to handleSendMessage
-                              key={item.chatId}
+                        <div
+                          className="d-flex flex-row gap-1 w-100 position-relative"
+                          key={item.chatId}
+                        >
+                          <Link
+                            className="text-decoration-none w-100"
+                            onClick={() => handleSendMessage(item)}
+                          >
+                            <div
+                              className={`${
+                                item?.isRead == false && "unread"
+                              } user-card`}
                             >
-                              <div className={`${item?.unRead == 1 && "unread"} user-card`}>
-                                <div className="row align-items-center">
-                                  <div
-                                    className={
-                                      open
-                                        ? "col-lg-2 px-0"
-                                        : "col-lg-2 px-lg-4 col-3 px-0"
-                                    }
-                                  >
-                                    <Avatar
-                                      alt="Image"
-                                      src={item?.displayUser?.images}
-                                      className="w-100"
-                                      style={{
-                                        height: "120px",
-                                        width: "120px",
-                                      }}
-                                    >
-                                      {item?.displayUser?.businessName?.[0] ||
-                                        item?.displayUser?.name?.[0]}
-                                    </Avatar>
-                                  </div>
-
-                                  <div
-                                    className={
-                                      open
-                                        ? "col-lg-9"
-                                        : "col-lg-9 ps-lg-2 col-8"
-                                    }
-                                  >
-                                    <div className="d-flex flex-column gap-1">
-                                      <h6 className="mb-0 fw-bold fs-5 text-dark">
-                                        {item?.jobData && (
-                                          <div>
-                                            Job Title: {item?.jobData?.title}
-                                          </div>
-                                        )}
-                                      </h6>
-                                      <h5 className="mb-0 fw-bold fs-5 text-dark">
-                                        {item?.displayUser?.businessName ||
-                                          item?.displayUser?.name}
-                                      </h5>
-                                      <p className="mb-0 fw-medium fs-6 text-dark">
-                                        {item?.messages?.msg}
-                                      </p>
-                                      <span className="text-muted">
-                                        {new Date(
-                                          item?.messages?.timeStamp
-                                        ).toLocaleTimeString("en-AU", {
-                                          timeZone: "Australia/Sydney",
-                                          weekday: "short",
-                                          day: "numeric",
-                                          month: "short",
-                                          year: "numeric",
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                          hour12: true,
-                                        })}{" "}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                  {/* <div className="col-1 text-end px-0 ms-auto">
-                                <button
-                                  className="btn btn-danger p-2 py-1 z-1"
-                                  onClick={() => {
-                                    handleDelete(item.chatId);
-                                  }}
+                              <div className="row align-items-center">
+                                <div
+                                  className={
+                                    open
+                                      ? "col-lg-2 px-0"
+                                      : "col-lg-2 px-lg-4 col-3 px-0"
+                                  }
                                 >
-                                  <FaTrash />
-                                </button>
-                              </div> */}
+                                  <Avatar
+                                    alt="Image"
+                                    src={item?.displayUser?.images}
+                                    className="w-100"
+                                    style={{
+                                      height: "120px",
+                                      width: "120px",
+                                    }}
+                                  >
+                                    {item?.displayUser?.businessName?.[0] ||
+                                      item?.displayUser?.name?.[0]}
+                                  </Avatar>
+                                </div>
+
+                                <div
+                                  className={
+                                    open ? "col-lg-9" : "col-lg-9 ps-lg-2 col-8"
+                                  }
+                                >
+                                  <div className="d-flex flex-column gap-1">
+                                    <h6 className="mb-0 fw-bold fs-5 text-dark">
+                                      {item?.jobTitle !== "" && (
+                                        <div>
+                                          Job Title: {item?.jobData?.title}
+                                        </div>
+                                      )}
+                                    </h6>
+                                    <h5 className="mb-0 fw-bold fs-5 text-dark">
+                                      {item?.displayUser?.businessName ||
+                                        item?.displayUser?.name}
+                                    </h5>
+                                    <p className="mb-0 fw-medium fs-6 text-dark">
+                                      {item?.messages?.msg}
+                                    </p>
+                                    <span className="text-muted">
+                                      {new Date(
+                                        item?.messages?.timeStamp
+                                      ).toLocaleTimeString("en-AU", {
+                                        timeZone: "Australia/Sydney",
+                                        weekday: "short",
+                                        day: "numeric",
+                                        month: "short",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        hour12: true,
+                                      })}{" "}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
-                            </Link>
-                            <button
-                              className="btn btn-danger p-2 py-1 z-1 delete-msg-btn"
-                              onClick={() => {
-                                handleDelete(item.chatId);
-                              }}
-                            >
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </>
+                            </div>
+                          </Link>
+                          <button
+                            className="btn btn-danger p-2 py-1 z-1 delete-msg-btn"
+                            onClick={() => {
+                              handleDelete(item.chatId);
+                            }}
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
                       ))}
                       {allMessages.length > visibleChats && (
                         <div className="text-center mt-3">
