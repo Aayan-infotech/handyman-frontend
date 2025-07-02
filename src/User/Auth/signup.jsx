@@ -211,7 +211,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "http://18.209.91.97:7777/api/auth/signup",
+        "https://api.tradehunters.com.au/api/auth/signup",
 
         formData
       );
@@ -387,49 +387,41 @@ export default function SignUp() {
                         Phone Number
                       </Form.Label>
                       <Col sm="8">
-                        <div className="d-flex">
+                        <div className="d-flex align-items-center">
+                          <span
+                            style={{
+                              padding: "0.375rem 0.75rem",
+                              border: "1px solid #ced4da",
+                              borderRadius: "0.25rem 0 0 0.25rem",
+                              backgroundColor: "#e9ecef",
+                            }}
+                          >
+                            +61
+                          </span>
                           <Form.Control
                             type="text"
                             placeholder="Phone number"
-                            value={`+61${phoneNo}`} 
+                            value={phoneNo}
                             required
+                            style={{
+                              borderRadius: "0 0.25rem 0.25rem 0",
+                              borderLeft: "none",
+                            }}
                             onKeyDown={(e) =>
                               e.key === "Enter" && handleSignUp(e)
                             }
                             onChange={(e) => {
-                              let inputValue = e.target.value;
-
-                              // Always ensure +61 is present
-                              if (!inputValue.startsWith("+61")) {
-                                inputValue =
-                                  "+61" + inputValue.replace(/^\+61/, "");
+                              let digits = e.target.value.replace(/\D/g, "");
+                              if (digits.startsWith("0")) {
+                                digits = digits.substring(1); // Remove leading 0
                               }
-
-                              // Get the part after +61
-                              let digitsAfterPrefix = inputValue.substring(3);
-
-                              // Remove all non-digit characters
-                              digitsAfterPrefix = digitsAfterPrefix.replace(
-                                /\D/g,
-                                ""
-                              );
-
-                              // Ensure first digit after +61 is not 0
-                              if (
-                                digitsAfterPrefix.length > 0 &&
-                                digitsAfterPrefix.charAt(0) === "0"
-                              ) {
-                                digitsAfterPrefix =
-                                  digitsAfterPrefix.substring(1);
-                              }
-
-                             
-                              setPhoneNo(digitsAfterPrefix);
+                              setPhoneNo(digits);
                             }}
                           />
                         </div>
                       </Col>
                     </Form.Group>
+
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="4">
                         Email Address
