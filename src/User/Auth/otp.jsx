@@ -76,7 +76,7 @@ export default function Otp({ length = 6 }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://18.209.91.97:7787/api/auth/verify-email",
+        "https://api.tradehunters.com.au/api/auth/verify-email",
         {
           email,
           verificationOTP: otpValue,
@@ -121,7 +121,7 @@ export default function Otp({ length = 6 }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://18.209.91.97:7787/api/auth/verify-otp",
+        "https://api.tradehunters.com.au/api/auth/verify-otp",
         {
           email,
           verificationOTP: otpValue,
@@ -163,7 +163,7 @@ export default function Otp({ length = 6 }) {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://18.209.91.97:7787/api/auth/resendOtp",
+        "https://api.tradehunters.com.au/api/auth/resendOtp",
         {
           email,
           userType: ProviderParams ? "provider" : "hunter",
