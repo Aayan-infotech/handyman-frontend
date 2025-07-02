@@ -188,12 +188,12 @@ export default function MainProvider() {
                     </h5>
                   </div>
 
-                  <div className="col-lg-5 ms-auto">
+                  {/* <div className="col-lg-5 ms-auto">
                     <Box
                       display="flex"
                       alignItems="center"
                       justifyContent="center"
-                    >
+                    > */}
                       {/* Voucher Dropdown */}
                       {/* <Form.Select
                         aria-label="Default select example"
@@ -204,7 +204,7 @@ export default function MainProvider() {
                         <option value="SIGNUPBONUS">SIGNUPBONUS</option>
                       </Form.Select> */}
 
-                      <CreatableSelect
+                      {/* <CreatableSelect
                         options={formatCouponOptions(couponData)}
                         value={selectedCoupon}
                         onChange={handleCouponChange}
@@ -238,9 +238,9 @@ export default function MainProvider() {
                         onClick={handleCoupon}
                       >
                         Apply
-                      </Button>
-                    </Box>
-                  </div>
+                      </Button> */}
+                    {/* </Box>
+                  </div> */}
                 </div>
               </div>
             </div>

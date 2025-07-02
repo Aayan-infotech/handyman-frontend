@@ -177,87 +177,27 @@ export default function PaymentDetail() {
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
             <div className="row gy-4 price-line gx-lg-5">
-              <div className="col-lg-4  price-line-line d-none d-lg-block">
-                <h5 className="fw-medium mb-4">Payment Options</h5>
-                <div className="d-flex flex-column gap-3 align-items-center justify-content-center">
-                  <div className="card rounded-3 border-0 card-wallet w-100 debit-card ">
-                    <div className="card-body text-center p-2">
-                      <div className="d-flex justify-content-start align-items-center gap-1 flex-row mb-3">
-                        <CiBank className="fs-3" />
-                        <h6 className="mb-0">FYI Bank</h6>
-                      </div>
-                      <span className="text-start d-flex w-100">
-                        0000 2363 8364 8269
-                      </span>
-                      <div className="d-flex justify-content-center align-items-center gap-5 flex-row mt-4">
-                        <span className="valid-thru">5/23</span>
-                        <span>633</span>
-                      </div>
-                      <h6 className="mt-3 d-flex w-100">Okechukwu ozioma</h6>
-                    </div>
-                  </div>
-                  <div className="card rounded-3 border-0 card-wallet w-100 credit-card ">
-                    <div className="card-body text-center p-2">
-                      <div className="d-flex justify-content-between align-items-center gap-1 flex-row mb-3">
-                        <div className="d-flex flex-row gap-2 align-items-center justify-content-center ">
-                          <CiBank className="fs-3" />
-                          <h6 className="mb-0">FYI Bank</h6>
-                        </div>
-                        <h6 className="mb-0">CREDIT</h6>
-                      </div>
-                      <div className="text-start d-flex w-100 justify-content-between align-items-center gap-2">
-                        <span>0000 2363 8364 8269</span>
-                        <span>
-                          <FaWifi
-                            className="fs-5"
-                            style={{ transform: "rotate(90deg)" }}
-                          />
-                        </span>
-                      </div>
-                      <div className="d-flex justify-content-center align-items-center gap-5 flex-row mt-4">
-                        <span className="valid-thru">5/23</span>
-                        <span>633</span>
-                      </div>
-                      <h6 className="mt-3 d-flex w-100">Okechukwu ozioma</h6>
-                    </div>
-                  </div>
-                  <div className="card rounded-3 border-0 card-wallet w-100 credit-card ">
-                    <div className="card-body text-center p-2">
-                      <div className="d-flex justify-content-between align-items-center gap-1 flex-row mb-3">
-                        <div className="d-flex flex-row gap-2 align-items-center justify-content-center ">
-                          <CiBank className="fs-3" />
-                          <h6 className="mb-0">FYI Bank</h6>
-                        </div>
-                        <h6 className="mb-0">CREDIT</h6>
-                      </div>
-                      <div className="text-start d-flex w-100 justify-content-between align-items-center gap-2">
-                        <span>0000 2363 8364 8269</span>
-                        <span>
-                          <FaWifi
-                            className="fs-5"
-                            style={{ transform: "rotate(90deg)" }}
-                          />
-                        </span>
-                      </div>
-                      <div className="d-flex justify-content-center align-items-center gap-5 flex-row mt-4">
-                        <span className="valid-thru">5/23</span>
-                        <span>633</span>
-                      </div>
-                      <h6 className="mt-3 d-flex w-100">Okechukwu ozioma</h6>
-                    </div>
-                  </div>
+              <div className="col-lg-5 order-2 order-lg-1 ">
+                <div className=" price-card px-4 py-3 d-flex flex-column rounded-4 gap-2 h-100">
+                  <h3>Plan Information</h3>
+                  <h4 className="fs-5">{data?.planName}</h4>
+                  <h4 className="fs-5">${data?.amount}</h4>
+                  <h4 className="fs-5">
+                    Valid for {data?.validity === 30 ? "Month" : "Year"}
+                  </h4>
+                  <h4 className="fs-5">For {data?.kmRadius}km</h4>
                 </div>
               </div>
 
-              <div className="col-lg-7 offset-lg-1">
-                <h5 className="fw-medium mb-4 text-center">
-                  Enter card details
-                </h5>
+              <div className="col-lg-7 order-1 order-lg-2">
                 <div className="d-flex justify-content-center align-items-center flex-column w-100">
-                  <div className="card rounded-5 border-0 w-100">
+                  <div className="card rounded-5 border-0 w-100 pt-3">
                     <div className="card-body text-center">
                       <div className="row">
                         <div className="col-lg-10 mx-auto">
+                          <h5 className="fw-medium mb-4 text-start">
+                            Enter card details
+                          </h5>
                           <Box
                             component="form"
                             noValidate
@@ -265,12 +205,6 @@ export default function PaymentDetail() {
                             className="w-100 d-flex flex-column gap-4"
                             onSubmit={handleSubmit}
                           >
-                            <div className="d-flex flex-column gap-2 justify-content-start align-items-start w-100">
-                              <h3>Plan Information</h3>
-                              <h6>{data?.planName}</h6>
-                              <h6>${data?.amount}</h6>
-                            </div>
-
                             <div className="d-flex flex-row gap-3">
                               <TextField
                                 id="standard-basic"
@@ -317,6 +251,7 @@ export default function PaymentDetail() {
                               <FormControl
                                 variant="standard"
                                 sx={{ minWidth: 120 }}
+                                md={{ minWidth: 150 }}
                               >
                                 <InputLabel id="month-select-label">
                                   Month
@@ -341,7 +276,8 @@ export default function PaymentDetail() {
                               </FormControl>
                               <FormControl
                                 variant="standard"
-                                sx={{ minWidth: 120 }}
+                                sx={{ minWidth: 100 }}
+                                md={{ minWidth: 150 }}
                               >
                                 <InputLabel id="year-select-label">
                                   Year
