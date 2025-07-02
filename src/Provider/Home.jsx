@@ -129,9 +129,6 @@ export default function HomeProvider() {
         handleAllData();
       }
     });
-
-
-    
     return () => {
       console.log("Cleaning up socket connection");
       newSocket.disconnect();
