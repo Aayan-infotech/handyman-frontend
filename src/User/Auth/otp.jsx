@@ -143,6 +143,7 @@ export default function Otp({ length = 6 }) {
             navigate(`/provider/reset-password`);
           }, 2000);
         } else {
+          localStorage.removeItem("forgetEmail");
           setTimeout(() => {
             navigate(`/reset-password`);
           }, 2000);
