@@ -367,8 +367,6 @@ function App() {
         <Route path="/error" element={<Error />} />
         <Route path="*" element={<Error />} />
       </Routes>
-
-      {/* </NotificationProvider> */}
     </BrowserRouter>
   );
 }
