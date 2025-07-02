@@ -130,6 +130,8 @@ export default function HomeProvider() {
       }
     });
 
+
+    
     return () => {
       console.log("Cleaning up socket connection");
       newSocket.disconnect();
