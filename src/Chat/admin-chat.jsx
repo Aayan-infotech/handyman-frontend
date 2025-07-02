@@ -61,7 +61,8 @@ export default function AdminChat() {
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   const currentUserName =
-    localStorage.getItem("ProviderBusinessName") || localStorage.getItem("hunterName");
+    localStorage.getItem("ProviderBusinessName") ||
+    localStorage.getItem("hunterName");
 
   console.log("currentUseradmin", currentUser);
 
@@ -136,7 +137,7 @@ export default function AdminChat() {
   const handleSend = async () => {
     // if (messages.trim() === "" || !chatId || !currentUser) return;
     if (text.trim() === "" || !chatId || !currentUser) return;
-
+    setText("");
     await sendMessage(
       userType,
       text,
@@ -146,8 +147,7 @@ export default function AdminChat() {
       currentUserName,
       setMessages
     );
-    await handleSendEmail()
-    setText("");
+    await handleSendEmail();
   };
 
   useEffect(() => {

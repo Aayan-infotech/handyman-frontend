@@ -526,45 +526,35 @@ export default function SignUpProvider() {
                         Phone Number
                       </Form.Label>
                       <Col sm="7">
-                        <div className="d-flex">
+                        <div className="d-flex align-items-center">
+                          <span
+                            style={{
+                              padding: "0.375rem 0.75rem",
+                              border: "1px solid #ced4da",
+                              borderRadius: "0.25rem 0 0 0.25rem",
+                              backgroundColor: "#e9ecef",
+                            }}
+                          >
+                            +61
+                          </span>
                           <Form.Control
                             type="text"
                             placeholder="Phone number"
+                            value={phoneNo}
                             required
+                            style={{
+                              borderRadius: "0 0.25rem 0.25rem 0",
+                              borderLeft: "none",
+                            }}
                             onKeyDown={(e) =>
                               e.key === "Enter" && handleSignUp(e)
                             }
-                            value={`+61${phoneNo}`}
                             onChange={(e) => {
-                              let inputValue = e.target.value;
-
-                              // Always ensure +61 is present
-                              if (!inputValue.startsWith("+61")) {
-                                inputValue =
-                                  "+61" + inputValue.replace(/^\+61/, "");
+                              let digits = e.target.value.replace(/\D/g, "");
+                              if (digits.startsWith("0")) {
+                                digits = digits.substring(1); // Remove leading 0
                               }
-
-                              // Get the part after +61
-                              let digitsAfterPrefix = inputValue.substring(3);
-
-                              // Remove all non-digit characters
-                              digitsAfterPrefix = digitsAfterPrefix.replace(
-                                /\D/g,
-                                ""
-                              );
-
-                              // Ensure first digit after +61 is not 0
-                              if (
-                                digitsAfterPrefix.length > 0 &&
-                                digitsAfterPrefix.charAt(0) === "0"
-                              ) {
-                                digitsAfterPrefix =
-                                  digitsAfterPrefix.substring(1);
-                              }
-                             
-
-                              // Update the state with just the digits after +61
-                              setPhoneNo(digitsAfterPrefix);
+                              setPhoneNo(digits);
                             }}
                           />
                         </div>
