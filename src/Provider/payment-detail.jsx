@@ -25,7 +25,6 @@ export default function PaymentDetail() {
   const [email, setEmail] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
-  const [eCryptorLoaded, setECryptorLoaded] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user?.data);
   const providerId = localStorage.getItem("ProviderId");
@@ -37,9 +36,6 @@ export default function PaymentDetail() {
     type: "",
     toastKey: 0,
   });
-
-  const clientKey =
-    "09n/nrZ2RtlG9HWIuWmDq+w/KIv5E4BJwP413gyPZ5xnRFf6HvgS8P5q478oLsYQji+b2TuJVBdxRurAl6qZWioRjbI4uG2VAzxsuX5bnK8TkmU15MSZkSWd9m4wFYjnIFMkxbCPhKHOzwrVz7fZcxckY1d1is3K2D8J7NnDv3WmTxmYKnJkHZwxdeD7XgSCThcexrTJZEYBlaYftHbxfEOVHvcj4Cu1zKPcQfn+ZWlITm/QEjqgZHov957LeavJOhpzcGJAkK8X4o6W99PcQbj277Tus+S3qQsd7miz+H5dObjUSz7w/b7EMaD4GecVgKm18zdCoOraN3Cs3ON3nQ==";
 
   const months = [
     { value: "01", name: "January" },
@@ -60,19 +56,6 @@ export default function PaymentDetail() {
     const year = new Date().getFullYear() - 2000 + i;
     return year < 10 ? `0${year}` : `${year}`;
   });
-
-  useEffect(() => {
-    // Load eCrypt script dynamically
-    const script = document.createElement("script");
-    script.src = "https://www.eway.com.au/gateway/javascript/eCrypt.js";
-    script.async = true;
-    script.onload = () => setECryptorLoaded(true);
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
 
   useEffect(() => {
     if (hunterId) {
@@ -100,49 +83,9 @@ export default function PaymentDetail() {
     getData();
   }, [id]);
 
-  const encryptCardDetails = () => {
-    if (!eCryptorLoaded || typeof window.eCryptor === "undefined") {
-      setToastProps({
-        message:
-          "Payment encryption service is not available. Please try again later.",
-        type: "error",
-        toastKey: Date.now(),
-      });
-      return null;
-    }
-
-    try {
-      const cryptor = new window.eCryptor(clientKey);
-      const card = {
-        Number: cardNumber.replace(/\s/g, ""),
-        ExpiryMonth: month,
-        ExpiryYear: year,
-        CVN: cvv,
-      };
-
-      return cryptor.encrypt(card);
-    } catch (err) {
-      console.error("Encryption failed:", err);
-      setToastProps({
-        message:
-          "Failed to secure your payment details. Please check your card information.",
-        type: "error",
-        toastKey: Date.now(),
-      });
-      return null;
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    // Encrypt the card details first
-    const encryptedCard = encryptCardDetails();
-    if (!encryptedCard) {
-      setLoading(false);
-      return;
-    }
 
     // Prepare the payment data in the required format
     const paymentData = {
@@ -155,7 +98,7 @@ export default function PaymentDetail() {
         Email: email,
         CardDetails: {
           Name: `${firstName} ${lastName}`,
-          Number: encryptedCard, // Use the encrypted card token
+          Number: cardNumber.replace(/\s/g, ""),
           ExpiryMonth: month,
           ExpiryYear: year,
           CVN: cvv,
@@ -370,7 +313,7 @@ export default function PaymentDetail() {
                               type="submit"
                               variant="contained"
                               className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4"
-                              disabled={loading || !eCryptorLoaded}
+                              disabled={loading}
                             >
                               {loading ? "Processing..." : "Pay Now"}
                             </Button>
