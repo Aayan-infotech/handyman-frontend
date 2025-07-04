@@ -368,6 +368,7 @@ export default function Message() {
                         src={noData}
                         alt="No Data Found"
                         className="w-nodata"
+                        loading="lazy"
                       />
                     </div>
                   ) : messageLoader === true ? (

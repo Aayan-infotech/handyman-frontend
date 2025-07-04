@@ -119,7 +119,7 @@ export default function ServicesProvider() {
             <div className="row gy-4 my-4">
               {data.length === 0 ? (
                 <div className="text-center">
-                  <img src={noData} alt="No data found" className="img-fluid" />
+                  <img src={noData} alt="No data found" className="img-fluid" loading="lazy"/>
                 </div>
               ) : (
                 <>

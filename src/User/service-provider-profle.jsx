@@ -97,6 +97,7 @@ export default function ServiceProviderProfile() {
                 <a className="" href={image?.url} target="_blank">
                   <img
                     src={image?.url}
+                    loading="lazy"
                     alt="Gallery Item"
                     className="rounded-5 position-relative"
                     style={{
@@ -149,6 +150,7 @@ export default function ServiceProviderProfile() {
                           alt="profile"
                           className="object-fit-cover"
                           style={{ width: "100px", height: "100px" }}
+                          loading="lazy"
                         />
                         <div className="d-flex flex-row gap-1 align-items-center">
                           <div className="flex">
@@ -220,6 +222,7 @@ export default function ServiceProviderProfile() {
                       src={data?.images || notFound}
                       alt="profile"
                       className="profile-img"
+                      loading="lazy"
                     />
                   </div>
                 </div>

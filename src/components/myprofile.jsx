@@ -685,6 +685,7 @@ export default function MyProfile() {
                         src={profile || notFound}
                         alt="profile"
                         className="profile-img"
+                        loading="lazy"
                       />
                     </div>
                   </div>
@@ -1069,6 +1070,7 @@ export default function MyProfile() {
                                         height: "150px",
                                         objectFit: "cover",
                                       }}
+                                      loading="lazy"
                                     />
                                   </a>
                                 </div>
@@ -1165,6 +1167,7 @@ export default function MyProfile() {
                               <div className="card-body">
                                 <div className="d-flex flex-row justify-content-between align-items-center">
                                   <img
+                                  loading="lazy"
                                     src={item?.userId?.images || notFound}
                                     alt="profile"
                                     className="object-fit-cover"

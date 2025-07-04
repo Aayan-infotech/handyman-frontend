@@ -334,7 +334,7 @@ export default function ServiceProvider() {
                 <div className="col-lg-12">
                   {filteredData.length === 0 ? (
                     <div className="d-flex justify-content-center flex-column gap-1 align-items-center">
-                      <img src={NoData} alt="noData" className="w-nodata" />
+                      <img src={NoData} alt="noData" className="w-nodata" loading="lazy"/>
                     </div>
                   ) : (
                     <div className=" management">

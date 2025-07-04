@@ -416,6 +416,7 @@ export default function JobSpecification() {
                                             target="_blank"
                                           >
                                             <img
+                                            loading="lazy"
                                               src={fileUrl}
                                               alt={fileName}
                                               className="img-fluid w-100"

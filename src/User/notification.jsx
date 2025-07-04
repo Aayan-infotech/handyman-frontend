@@ -441,6 +441,7 @@ export default function Notification() {
                       src={noData}
                       alt="No notifications"
                       className="img-fluid"
+                      loading="lazy"
                     />
                   </div>
                 ) : (

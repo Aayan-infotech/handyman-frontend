@@ -30,7 +30,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 import Select from "react-select";
-
+import Skeleton from '@mui/material/Skeleton';
 import {
   FaFacebook,
   FaTwitter,
@@ -153,7 +153,7 @@ function Home() {
         <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
           <Container fluid>
             <Link to="/" className="py-1">
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo" loading="lazy"/>
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse
@@ -188,7 +188,7 @@ function Home() {
                   <br />
                   <span className="highlighted">Expert Help?</span>
                 </h1>
-                <img src={underline} alt="underline" className="" />
+                <img src={underline} alt="underline" className="" loading="lazy"/>
                 <br />
                 <span className="text-muted">
                   Trade Hunters connects you with top service providers in
@@ -320,7 +320,7 @@ function Home() {
             </div>
             <div className="col-lg-7  ">
               <div className="position-mobile-adjust">
-                <img src={mobile} alt="mobile" className="" />
+                <img src={mobile} alt="mobile" className="" loading="lazy"/>
               </div>
             </div>
           </div>
@@ -345,6 +345,7 @@ function Home() {
                     <div className="card-body">
                       <div className="d-flex justify-content-between align-items-center flex-row">
                         <img
+                        loading="lazy"
                           src={item?.images || noImage}
                           alt="company1"
                           className="img-fluid"
@@ -495,7 +496,7 @@ function Home() {
           <Row>
             {/* Left Section: Logo and Description */}
             <Col md={4} className="mb-4">
-              <img src={logoWhite} alt="logo" />
+              <img src={logoWhite} alt="logo" loading="lazy"/>
               <p className="fw-normal mt-3">
                 Great platfrom for connecting service Hunters to Service
                 providers in Australia
@@ -567,12 +568,14 @@ function Home() {
                   alt="play store icon"
                   className="rounded-4 mb-4"
                   style={{ height: "60px", width: "200px" }}
+                  loading="lazy"
                 />
                 <img
                   src={appleIcon}
                   alt="apple store icon"
                   className=" rounded-4"
                   style={{ height: "60px", width: "200px" }}
+                  loading="lazy"
                 />
               </div>
             </Col>

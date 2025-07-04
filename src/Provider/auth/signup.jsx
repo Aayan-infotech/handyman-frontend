@@ -352,6 +352,7 @@ export default function SignUpProvider() {
                           src={URL.createObjectURL(images[0]) || previewImage}
                           alt="profile"
                           className="profile-image"
+                          loading="lazy"
                         />
                         <div className="position-absolute end-0 bottom-0">
                           <Form.Control

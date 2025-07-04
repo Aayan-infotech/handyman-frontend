@@ -519,6 +519,7 @@ export default function JobEdit() {
                             <div className="card-body p-2">
                               {isImage ? (
                                 <img
+                                loading="lazy"
                                   src={fileUrl}
                                   alt={fileName}
                                   className="img-fluid"

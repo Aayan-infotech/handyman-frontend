@@ -82,7 +82,7 @@ export default function Contact() {
             >
               <Container fluid>
                 <Link to="/" className="py-1">
-                  <img src={logo} alt="logo" />
+                  <img src={logo} alt="logo" loading="lazy"/>
                 </Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
@@ -200,7 +200,7 @@ export default function Contact() {
               <Row>
                 {/* Left Section: Logo and Description */}
                 <Col md={4} className="mb-4">
-                  <img src={logoWhite} alt="logo" />
+                  <img src={logoWhite} alt="logo" loading="lazy"/>
                   <p className="fw-normal mt-3">
                     Great platfrom for connecting service Hunters to Service
                     providers in Australia
@@ -271,12 +271,14 @@ export default function Contact() {
                       alt="play store icon"
                       className="rounded-4 mb-4"
                       style={{ height: "60px", width: "200px" }}
+                      loading="lazy"
                     />
                     <img
                       src={appleIcon}
                       alt="apple store icon"
                       className=" rounded-4"
                       style={{ height: "60px", width: "200px" }}
+                      loading="lazy"
                     />
                   </div>
                 </Col>

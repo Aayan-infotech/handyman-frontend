@@ -26,34 +26,32 @@ import {
 export default function LatestJobs() {
   const [recentJob, setRecentJob] = useState([]);
   const [loading, setLoading] = useState(false);
- const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState({
     total: 0,
     currentPage: 1,
     limit: 10,
     totalPages: 1,
   });
 
-   const handlePageChange = async(page) => {
+  const handlePageChange = async (page) => {
     if (page !== pagination.page) {
       setPagination((prev) => ({ ...prev, page }));
       await handleResponse(page);
     }
   };
 
-
   console.log("pagination", pagination);
-   const handleResponse = async (page = pagination?.currentPage) => {
-      setLoading(true);
-      const response = await axiosInstance.get(`/jobs?page=${page}&total=${20}` );
+  const handleResponse = async (page = pagination?.currentPage) => {
+    setLoading(true);
+    const response = await axiosInstance.get(`/jobs?page=${page}&total=${20}`);
 
-      if (response.data.success === true || response.data.status === 200) {
-        setLoading(false);
-        setRecentJob(response?.data?.data?.jobPosts);
-        setPagination(response?.data?.data?.pagination);
-      }
-    };
+    if (response.data.success === true || response.data.status === 200) {
+      setLoading(false);
+      setRecentJob(response?.data?.data?.jobPosts);
+      setPagination(response?.data?.data?.pagination);
+    }
+  };
   useEffect(() => {
-   
     handleResponse();
   }, []);
 
@@ -80,7 +78,7 @@ export default function LatestJobs() {
             >
               <Container fluid>
                 <Link to="/" className="py-1">
-                  <img src={logo} alt="logo" />
+                  <img src={logo} alt="logo" loading="lazy" />
                 </Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
@@ -198,7 +196,7 @@ export default function LatestJobs() {
               <Row>
                 {/* Left Section: Logo and Description */}
                 <Col md={4} className="mb-4">
-                  <img src={logoWhite} alt="logo" />
+                  <img src={logoWhite} alt="logo" loading="lazy" />
                   <p className="fw-normal mt-3">
                     Great platfrom for connecting service Hunters to Service
                     providers in Australia
@@ -221,11 +219,11 @@ export default function LatestJobs() {
                         Pricing
                       </a>
                     </li> */}
-                    <li>
-                      <a href="allblogs" className="text-light">
-                        Blogs
-                      </a>
-                    </li>
+                        <li>
+                          <a href="allblogs" className="text-light">
+                            Blogs
+                          </a>
+                        </li>
                         <li>
                           <a href="terms" className="text-light">
                             Terms
@@ -263,21 +261,22 @@ export default function LatestJobs() {
                 </Col>
                 <Col md={4} className="mb-4">
                   <h6>Download Our app</h6>
-                    <div className="d-flex flex-column">
-                       <img
-                    src={playIcon}
-                    alt="play store icon"
-                    className="rounded-4 mb-4"
-                    style={{ height: "60px", width: "200px" }}
-                  />
-                  <img
-                    src={appleIcon}
-                    alt="apple store icon"
-                    className=" rounded-4"
-                    style={{ height: "60px", width: "200px" }}
-                  />
-                    </div>
-                 
+                  <div className="d-flex flex-column">
+                    <img
+                      src={playIcon}
+                      alt="play store icon"
+                      className="rounded-4 mb-4"
+                      style={{ height: "60px", width: "200px" }}
+                      loading="lazy"
+                    />
+                    <img
+                      src={appleIcon}
+                      alt="apple store icon"
+                      className=" rounded-4"
+                      style={{ height: "60px", width: "200px" }}
+                      loading="lazy"
+                    />
+                  </div>
                 </Col>
                 {/* Right Section: Subscription */}
                 {/* <Col md={4} className="mb-4">

@@ -134,7 +134,7 @@ function Search() {
           >
             <Container fluid>
               <Link to="/" className="py-1">
-                <img src={logo} alt="logo" />
+                <img src={logo} alt="logo" loading="lazy"/>
               </Link>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse
@@ -169,6 +169,7 @@ function Search() {
                       src={noData}
                       alt="No Data Found"
                       className="w-nodata"
+                      loading="lazy"
                     />
                   </div>
                 ) : (
@@ -251,7 +252,7 @@ function Search() {
               <Row>
                 {/* Left Section: Logo and Description */}
                 <Col md={4} className="mb-4">
-                  <img src={logoWhite} alt="logo" />
+                  <img src={logoWhite} alt="logo" loading="lazy"/>
                   <p className="fw-normal mt-3">
                     Great platform for connecting service Hunters to Service
                     providers in Australia

@@ -313,6 +313,7 @@ export default function Upload() {
                                           alt="doc"
                                           className="object-fit-contain w-100 rounded-4"
                                           height={100}
+                                          loading="lazy"
                                         />
                                       </a>
                                     ) : (
@@ -371,6 +372,7 @@ export default function Upload() {
                                           alt="doc"
                                           className="object-fit-contain w-100 rounded-4"
                                           height={100}
+                                          loading="lazy"
                                         />
                                       </a>
                                     ) : (
