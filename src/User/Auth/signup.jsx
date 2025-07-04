@@ -211,7 +211,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "http://18.209.91.97:7777/api/auth/signup",
+        "https://api.tradehunters.com.au/api/auth/signup",
 
         formData
       );
@@ -321,6 +321,7 @@ export default function SignUp() {
                             src={URL.createObjectURL(images[0]) || previewImage}
                             alt="profile"
                             className="profile-image"
+                            loading="lazy"
                           />
                           <div className="position-absolute end-0 bottom-0">
                             <Form.Control

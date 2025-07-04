@@ -83,7 +83,7 @@ export default function Notification() {
   // const handleName = async (notification) => {
   //   try {
   //     const response = await axios.post(
-  //       "http://18.209.91.97:7777/api/match/getMatchedData",
+  //       "https://api.tradehunters.com.au/api/match/getMatchedData",
   //       {
   //         senderId: notification.userId,
   //         receiverId: notification.receiverId,
@@ -441,6 +441,7 @@ export default function Notification() {
                       src={noData}
                       alt="No notifications"
                       className="img-fluid"
+                      loading="lazy"
                     />
                   </div>
                 ) : (

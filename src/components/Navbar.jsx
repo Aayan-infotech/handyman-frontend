@@ -12,7 +12,7 @@ export default function Header() {
       <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
         <Container fluid>
           <Link to="/" className="py-1">
-            <img src={logo} alt="logo" />
+            <img src={logo} alt="logo" loading="lazy"/>
           </Link>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">

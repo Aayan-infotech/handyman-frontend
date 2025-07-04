@@ -44,7 +44,7 @@ export default function LoggedHeader() {
     if (!userId) return;
 
     if (!socketRef.current || socketRef.current.disconnected) {
-      const newSocket = io("http://18.209.91.97:7777", {
+      const newSocket = io("https://api.tradehunters.com.au", {
         auth: {
           token: hunterToken || providerToken,
           userId,
@@ -239,7 +239,7 @@ export default function LoggedHeader() {
               to={`${providerToken ? "/provider/home" : "/home"}`}
               className="py-1"
             >
-              <img src={logo} alt="logo" className="w-100" />
+              <img src={logo} alt="logo" className="w-100" loading="lazy"/>
             </Link>
             {Location.pathname === "/post-new-job" ? (
               <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
@@ -277,7 +277,7 @@ export default function LoggedHeader() {
                   {!images ? (
                     <FaRegUserCircle className="fs-1" />
                   ) : (
-                    <img src={images} alt="profile" />
+                    <img src={images} alt="profile" loading="lazy"/>
                   )}
                 </Link>
               </div>

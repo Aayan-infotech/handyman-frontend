@@ -100,7 +100,7 @@ export default function Main() {
   // }, []);
 
   useEffect(() => {
-    if(!hunterToken) {
+    if (!hunterToken) {
       window.location.href = "/error";
     }
     const handleJobs = async () => {
@@ -163,7 +163,7 @@ export default function Main() {
                           <h3 className="mt-3">New Job</h3>
                           <h6>Post New Job</h6>
                           <div className="pos-design-icon">
-                            <img src={arrow} alt="arrow" />
+                            <img src={arrow} alt="arrow" loading="lazy" />
                           </div>
                         </div>
                       </div>
@@ -176,7 +176,7 @@ export default function Main() {
                           <h3 className="mt-3">Services</h3>
                           <h6>Service Provider</h6>
                           <div className=" pos-design-pillai">
-                            <img src={pillai} alt="pillai" />
+                            <img src={pillai} alt="pillai" loading="lazy" />
                           </div>
                         </div>
                       </div>
@@ -189,7 +189,12 @@ export default function Main() {
                           <h2 className="mt-3 fs-1">Job Management</h2>
                           <h6>Manage Jobs</h6>
                           <div className="pos-design-bag">
-                            <img src={bag} alt="bag" className="bag-image" />
+                            <img
+                              src={bag}
+                              alt="bag"
+                              className="bag-image"
+                              loading="lazy"
+                            />
                           </div>
                         </div>
                       </div>
@@ -233,6 +238,7 @@ export default function Main() {
                                     <h3 className="mt-3 fs-4">{item.name}</h3>
                                     <div className="pos-design-icon">
                                       <img
+                                        loading="lazy"
                                         src={bag} // Replace with actual image path
                                         alt={item.name}
                                         className="service-image"

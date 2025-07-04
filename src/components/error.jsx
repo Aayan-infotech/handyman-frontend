@@ -26,6 +26,7 @@ export default function Error() {
               src={error}
               alt="404"
               className="w-100 h-100 object-fit-cover"
+              loading="lazy"
             />
           </div>
           <div className="col-lg-6">

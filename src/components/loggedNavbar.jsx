@@ -55,7 +55,7 @@ export default function LoggedHeader() {
             to={`${providerToken ? "/provider/home" : "/home"}`}
             className="py-1"
           >
-            <img src={logo} alt="logo" />
+            <img src={logo} alt="logo" loading="lazy"/>
           </Link>
           {Location.pathname === "/post-new-job" ? (
             <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
@@ -95,7 +95,7 @@ export default function LoggedHeader() {
                 {!images ? (
                   <FaRegUserCircle className="fs-1" />
                 ) : (
-                  <img src={images} alt="profile" />
+                  <img src={images} alt="profile" loading="lazy"/>
                 )}
               </Link>
             </div>

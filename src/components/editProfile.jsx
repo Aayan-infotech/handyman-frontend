@@ -321,6 +321,7 @@ export default function EditProfile() {
                           src={previewImage || notFound}
                           alt="profile"
                           className="profile-image edit-profile"
+                          loading="lazy"
                         />
                         <div className="position-absolute end-0 bottom-0">
                           <Form.Control

@@ -257,12 +257,12 @@ export default function Login() {
               <div className="d-flex flex-row gap-3 align-items-center icons-color mt-2 mb-4">
                 <div className="card shadow-lg rounded-5 border-0 d-flex align-items-center py-2 px-5 w-fit-content">
                   <Link to="/">
-                    <img src={google} alt="google" className="" />
+                    <img src={google} alt="google" className="" loading="lazy"/>
                   </Link>
                 </div>
                 <div className="card shadow-lg rounded-5 border-0 d-flex align-items-center  py-2 px-5 w-fit-content">
                   <Link to="/">
-                    <img src={facebook} alt="facebook" />
+                    <img src={facebook} alt="facebook" loading="lazy"/>
                   </Link>
                 </div>
               </div>

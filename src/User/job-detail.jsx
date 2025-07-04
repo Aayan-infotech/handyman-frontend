@@ -331,7 +331,7 @@ export default function JobDetail() {
       ) : !data ? (
         <>
           <LoggedHeader />
-          <img src={NoData} alt="No data found" />
+          <img src={NoData} alt="No data found" loading="lazy"/>
         </>
       ) : (
         <>
@@ -394,6 +394,7 @@ export default function JobDetail() {
                               <a className="" href={doc} target="_blank">
                                 <img
                                   src={doc}
+                                  loading="lazy"
                                   alt="document"
                                   className="w-100 h-100 px-1"
                                   style={{

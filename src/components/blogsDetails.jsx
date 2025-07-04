@@ -56,7 +56,7 @@ export default function BlogDetail() {
       <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
         <Container fluid>
           <Link to="/" className="py-1">
-            <img src={logo} alt="logo" />
+            <img src={logo} alt="logo" loading="lazy"/>
           </Link>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse
@@ -88,6 +88,7 @@ export default function BlogDetail() {
             <div className="card shadow-lg p-4 border-0 rounded-3">
               <img
                 src={blog.image}
+                loading="lazy"
                 alt="Blog Thumbnail"
                 className="img-fluid rounded mb-3"
                 style={{
@@ -138,7 +139,7 @@ export default function BlogDetail() {
           <Row>
             {/* Left Section: Logo and Description */}
             <Col md={4} className="mb-4">
-              <img src={logoWhite} alt="logo" />
+              <img src={logoWhite} alt="logo" loading="lazy"/>
               <p className="fw-normal mt-3">
                 Great platfrom for connecting service Hunters to Service
                 providers in Australia
@@ -210,12 +211,14 @@ export default function BlogDetail() {
                   alt="play store icon"
                   className="rounded-4 mb-4"
                   style={{ height: "60px", width: "200px" }}
+                  loading="lazy"
                 />
                 <img
                   src={appleIcon}
                   alt="apple store icon"
                   className=" rounded-4"
                   style={{ height: "60px", width: "200px" }}
+                  loading="lazy"
                 />
               </div>
             </Col>

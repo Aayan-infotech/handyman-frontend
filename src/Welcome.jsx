@@ -32,7 +32,7 @@ export default function Welcome() {
         <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
           <Container fluid>
             <Link to="/" className="py-1">
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo" loading="lazy"/>
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse
@@ -56,8 +56,8 @@ export default function Welcome() {
         </Navbar>
         <div className="container top-avatar">
           <div className="d-flex justify-content-center align-items-center flex-column gap-1">
-            <img src={bigLogo} alt="" />
-            <img src={logoText} alt="" />
+            <img src={bigLogo} alt="" loading="lazy"/>
+            <img src={logoText} alt="" loading="lazy"/>
             <b className="fs-2">Continue as</b>
             {/* <p className="text-center">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -68,7 +68,7 @@ export default function Welcome() {
                 <div className="card border-0 shadow-lg rounded-4 px-4 pe-5 py-2">
                   <div className="card-body">
                     <div className="d-flex flex-column flex-lg-row align-items-center gap-4">
-                      <img src={female} alt="" />
+                      <img src={female} alt="female" loading="lazy"/>
                       <div className="d-flex flex-column align-items-center align-items-lg-start w-100">
                         <h5>Service Hunter</h5>
                         <p>
@@ -83,7 +83,7 @@ export default function Welcome() {
                 <div className="card border-0 shadow-lg rounded-4 px-4 pe-5 py-2 ">
                   <div className="card-body">
                     <div className="d-flex flex-column flex-lg-row align-items-center gap-4">
-                      <img src={male} alt="" />
+                      <img src={male} alt="male" loading="lazy"/>
                       <div className="d-flex flex-column align-items-center align-items-lg-start w-100">
                         <h5>Service Provider</h5>
                         <p>Let’s provide your great services faster here </p>

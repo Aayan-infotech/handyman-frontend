@@ -419,6 +419,7 @@ export default function JobManagement() {
                       src={noData}
                       alt="No Data Found"
                       className="w-nodata"
+                      loading="lazy"
                     />
                   </div>
                 )}
