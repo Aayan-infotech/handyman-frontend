@@ -40,13 +40,12 @@ export default function JobDetail() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [loading, setLoading] = useState(false);
-  const [providerName, setProviderName] = useState("");
   const name = localStorage.getItem("hunterName");
   const location = useLocation();
   const hunterToken = localStorage.getItem("hunterToken");
   const ProviderToken = localStorage.getItem("ProviderToken");
   const { id } = useParams();
-  const [receiverId, setRecieverId] = useState(null);
+  const [receiverId, setRecieverId] = useState({});
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const isHistoryType = searchParams.get("type") === "history";
@@ -91,7 +90,7 @@ export default function JobDetail() {
 
       const response2 = await dispatch(
         reviewJobNotification({
-          receiverId,
+          receiverId: receiverId?._id,
           body: `${name} has submitted Feedback for the job ${data?.title}   `,
         })
       );
@@ -109,48 +108,11 @@ export default function JobDetail() {
     }
   };
 
-  const handleProvider = async () => {
-    try {
-      const response = await axiosInstance.post(
-        "/match/getMatchedData",
-        { jobPostId: id, senderId: user, receiverId },
-        {
-          headers: {
-            Authorization: `Bearer ${ProviderToken || hunterToken}`,
-          },
-        }
-      );
-
-      const responseData = response.data.data;
-
-      if (responseData.sender && responseData.receiver) {
-        // Check if the logged-in user's name matches sender or receiver
-        if (responseData.sender.name === name) {
-          setProviderName(
-            responseData.receiver.contactName || responseData.sender.name
-          );
-        } else if (
-          responseData.sender.name === name ||
-          responseData.receiver.contactName === name
-        ) {
-          setProviderName(responseData.sender.name);
-        } else {
-          // If name does not match either, set any of them as provider name
-          setProviderName(
-            responseData.receiver.contactName || responseData.sender.name
-          );
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleReview = async () => {
     setLoading(true);
     try {
       const reponse = await axiosInstance.post(
-        `/rating/giveRating/${receiverId}`,
+        `/rating/giveRating/${receiverId?._id}`,
         {
           jobId: data?._id,
           rating: value,
@@ -177,7 +139,7 @@ export default function JobDetail() {
         `/jobPost/changeJobStatus/${id}`,
         {
           jobStatus: "Completed",
-          providerId: receiverId,
+          providerId: receiverId?._id,
         },
         {
           headers: {
@@ -210,7 +172,7 @@ export default function JobDetail() {
         setLoading(false);
         const response = dispatch(
           messageNotification({
-            receiverId,
+            receiverId: receiverId?._id,
             jobId: id,
             body: `${providerbusinessName} have completed your job ${title}`,
           })
@@ -244,41 +206,6 @@ export default function JobDetail() {
         // Set user and receiverId together
         setUser(jobData?.user);
         setRecieverId(jobData?.provider);
-
-        // Only fetch provider if we have both IDs
-        if (jobData?.user && jobData?.provider) {
-          const providerRes = await axiosInstance.post(
-            "/match/getMatchedData",
-            {
-              jobPostId: id,
-              senderId: jobData.user, // Removed optional chaining since we checked it exists
-              receiverId: jobData.provider,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${ProviderToken || hunterToken}`,
-              },
-            }
-          );
-
-          const responseData = providerRes.data.data;
-          if (responseData?.sender && responseData?.receiver) {
-            let nameToSet = "";
-            if (responseData.sender.name === name) {
-              nameToSet =
-                responseData.receiver.businessName || responseData.sender.name;
-            } else if (
-              responseData.sender.name === name ||
-              responseData.receiver.businessName === name
-            ) {
-              nameToSet = responseData.sender.name;
-            } else {
-              nameToSet =
-                responseData.receiver.businessName || responseData.sender.name;
-            }
-            setProviderName(nameToSet);
-          }
-        }
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -331,7 +258,7 @@ export default function JobDetail() {
       ) : !data ? (
         <>
           <LoggedHeader />
-          <img src={NoData} alt="No data found" loading="lazy"/>
+          <img src={NoData} alt="No data found" loading="lazy" />
         </>
       ) : (
         <>
@@ -474,7 +401,7 @@ export default function JobDetail() {
                                 onClick={() =>
                                   handleJobCompletNotify({
                                     id: id,
-                                    receiverId: data?.user,
+                                    receiverId: data?.user?._id,
                                     title: data?.title,
                                   })
                                 }
@@ -497,48 +424,54 @@ export default function JobDetail() {
                       </div>
                     )}
 
-                    {receiverId && localStorage.getItem("hunterToken") && data?.jobStatus !== "Deleted" && (
-                      <>
-                        <div className="row gy-4 gx-4 w-100 align-items-center">
-                          <div className="col-2">
-                            <CiUser />
-                          </div>
-                          <div className="col-10 ps-lg-4 ps-5">
-                            <div className="d-flex flex-column align-items-start gap-2">
-                              <span className="text-muted">
-                                You have Assigned job to
-                              </span>
-                              <div className="d-flex flex-row align-items-start gap-3 ">
-                                <b className="fw-medium fs-5">
-                                  {providerName.toLocaleUpperCase()}
-                                </b>
-                                <button
-                                  className="btn btn-info text-light"
-                                  onClick={() => {
-                                    navigate(`/service-profile/${receiverId}`);
-                                  }}
-                                >
-                                  View Profile
-                                </button>
+                    {receiverId &&
+                      localStorage.getItem("hunterToken") &&
+                      data?.jobStatus !== "Deleted" && (
+                        <>
+                          <div className="row gy-4 gx-4 w-100 align-items-center">
+                            <div className="col-2">
+                              <CiUser />
+                            </div>
+                            <div className="col-10 ps-lg-4 ps-5">
+                              <div className="d-flex flex-column align-items-start gap-2">
+                                <span className="text-muted">
+                                  You have Assigned job to
+                                </span>
+                                <div className="d-flex flex-row align-items-start gap-3 ">
+                                  <b className="fw-medium fs-5">
+                                    {data?.provider?.contactName?.toLocaleUpperCase()}
+                                  </b>
+                                  <button
+                                    className="btn btn-info text-light"
+                                    onClick={() => {
+                                      navigate(
+                                        `/service-profile/${receiverId?._id}`
+                                      );
+                                    }}
+                                  >
+                                    View Profile
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </>
-                    )}
-                    {receiverId && localStorage.getItem("hunterToken") && data?.jobStatus !== "Deleted" && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        className="custom-green py-3 w-100 rounded-5 bg-green-custom"
-                        onClick={handleShow}
-                        disabled={data.jobStatus === "Completed"}
-                      >
-                        {data?.jobStatus === "Completed"
-                          ? "This job has been Completed"
-                          : " Mark As Complete"}
-                      </Button>
-                    )}
+                        </>
+                      )}
+                    {receiverId &&
+                      localStorage.getItem("hunterToken") &&
+                      data?.jobStatus !== "Deleted" && (
+                        <Button
+                          variant="contained"
+                          color="success"
+                          className="custom-green py-3 w-100 rounded-5 bg-green-custom"
+                          onClick={handleShow}
+                          disabled={data.jobStatus === "Completed"}
+                        >
+                          {data?.jobStatus === "Completed"
+                            ? "This job has been Completed"
+                            : " Mark As Complete"}
+                        </Button>
+                      )}
                   </div>
                   <hr />
                   {/* <div className="d-flex flex-row gap-2 flex-wrap flex-lg-nowrap gap-lg-4 align-items-center w-lg-75">
