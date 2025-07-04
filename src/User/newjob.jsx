@@ -241,7 +241,7 @@ export default function NewJob() {
                   <div className="col-lg-4">
                     <Form.Control
                       type="Number"
-                      placeholder="Estimated budget"
+                      placeholder="Estimated budget (optional)"
                       className="input1"
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}

@@ -15,6 +15,7 @@ import notFound from "./assets/noprofile.png";
 import "swiper/css";
 import Tooltip from "@mui/material/Tooltip";
 import "swiper/css/navigation";
+import { IoCallSharp, IoLocationSharp } from "react-icons/io5";
 
 export default function ServiceProviderProfile() {
   const { id } = useParams();
@@ -67,6 +68,17 @@ export default function ServiceProviderProfile() {
     }
   }, [id]);
 
+  const filterAddressState = (address) => {
+    if (!address) return address;
+
+    // Find the index of the first comma
+    const firstCommaIndex = address.indexOf(",");
+
+    // If a comma exists, return the substring after it (trimmed)
+    return firstCommaIndex !== -1
+      ? address.substring(firstCommaIndex + 1).trim()
+      : address;
+  };
   useEffect(() => {
     const token = localStorage.getItem("hunterToken");
     if (!token) {
@@ -75,7 +87,7 @@ export default function ServiceProviderProfile() {
     fetchData();
   }, []);
 
-  console.log(rating)
+  console.log(rating);
 
   const renderGallery = () => {
     if (gallery.length === 0) return null;
@@ -256,13 +268,17 @@ export default function ServiceProviderProfile() {
                             Completed {data?.jobCompleteCount}+ Jobs
                           </p>
                         </div>
-                        <BsThreeDotsVertical />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
+              <div className="contact">
+                <a className="text-dark d-flex flex-row flex-wrap gap-2 address-wrap align-items-lg-center">
+                  <IoLocationSharp className="" />
+                  <span>{filterAddressState(data?.address?.addressLine)}</span>
+                </a>
+              </div>
               <div className="d-flex flex-row flex-wrap justify-content-center gap-1 gap-lg-2 mt-lg-5 align-items-center profile my-4">
                 {data?.businessType?.map((type, index) => (
                   <div
