@@ -70,7 +70,7 @@ export default function JobSpecification() {
         acceptJobNotification({
           receiverId: data?.user,
           jobId: id,
-          body: `${businessName} is interested in your job ${data?.title}`,
+          body: `${businessName} is interested in the job ${data?.title}`,
         })
       );
       if (acceptJobNotification.fulfilled.match(response)) {
@@ -130,7 +130,7 @@ export default function JobSpecification() {
           messageNotification({
             receiverId,
             jobId: id,
-            body: `Provider have completed your job ${title}`,
+            body: `Provider have completed the job ${title}`,
           })
         );
         // if (messageNotification.fulfilled.match(response)) {

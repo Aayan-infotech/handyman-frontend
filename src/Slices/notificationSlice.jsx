@@ -31,7 +31,7 @@ const createNotificationThunk = (name, defaultTitle, defaultBody) =>
 
 export const acceptJobNotification = createNotificationThunk(
   "jobAcceptedNotification",
-  "Provider is ready to quote your job",
+  "Provider is ready to quote the job",
 );
 
 export const assignedJobNotification = createNotificationThunk(

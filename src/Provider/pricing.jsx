@@ -182,19 +182,27 @@ export default function MainProvider() {
             <div className="container">
               <div className="top-section-main py-4 px-lg-5">
                 <div className="row ">
-                  <div className="col-lg-4">
+                  <div className="col-lg-8">
                     <h5 className="user d-flex justify-content-center justify-content-lg-start">
                       Hello {name}
                     </h5>
                   </div>
 
-                  {/* <div className="col-lg-5 ms-auto">
+                  <div className="col-lg-4 ms-auto">
                     <Box
                       display="flex"
                       alignItems="center"
                       justifyContent="center"
-                    > */}
-                      {/* Voucher Dropdown */}
+                    >
+                      <Form.Control
+                        type="text"
+                        id="couponCode"
+                        placeholder="Enter Coupon Code"
+                        value={voucher}
+                        onChange={(e) => setVoucher(e.target.value)}
+                        className="rounded-0 rounded-start"
+                      />
+
                       {/* <Form.Select
                         aria-label="Default select example"
                         value={voucher}
@@ -229,7 +237,7 @@ export default function MainProvider() {
                             minWidth: "250px",
                           }),
                         }}
-                      />
+                      /> */}
 
                       <Button
                         variant="contained"
@@ -238,9 +246,9 @@ export default function MainProvider() {
                         onClick={handleCoupon}
                       >
                         Apply
-                      </Button> */}
-                    {/* </Box>
-                  </div> */}
+                      </Button>
+                    </Box>
+                  </div>
                 </div>
               </div>
             </div>

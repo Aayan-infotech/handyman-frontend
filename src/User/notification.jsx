@@ -172,7 +172,7 @@ export default function Notification() {
   };
 
   const handleJobAccept = async (notification) => {
-     setLoading(true);
+    setLoading(true);
     const currentUserId = userId;
 
     // Determine which ID to use (the one that doesn't match current user)
@@ -190,7 +190,6 @@ export default function Notification() {
       return;
     }
 
-   
     try {
       const response = await axiosInstance.post(
         `/jobpost/changeJobStatus/${notification.jobDetails._id}`,
@@ -204,6 +203,16 @@ export default function Notification() {
           },
         }
       );
+
+      const response2 = await axiosInstance.post(`/hunter/jobAssignEmail/`, {
+        providerId: assignToId,
+        contactName: localStorage.getItem("hunterName"),
+        title: notification?.jobDetails?.title,
+      });
+
+      if (response2.status === 200) {
+        console.log("Email sent successfully:", response2.data);
+      }
 
       await dispatch(
         assignedJobNotification({
@@ -571,15 +580,31 @@ export default function Notification() {
                                     <Button
                                       variant="outlined"
                                       color="success"
-                                      onClick={() => {
-                                        handleMarkAsRead(
-                                          notification?._id,
-                                          notification?.type
-                                        );
-                                        handleJobAccept(notification);
-                                        handleCompletedJob(notification);
+                                      onClick={async () => {
+                                        try {
+                                          setLoading(true);
+                                          // First mark as read
+                                          await handleMarkAsRead(
+                                            notification?._id,
+                                            notification?.type
+                                          );
+                                          // Then handle job acceptance
+                                          await handleJobAccept(notification);
+                                          // Finally handle completed job
+                                          await handleCompletedJob(
+                                            notification
+                                          );
+                                        } catch (error) {
+                                          console.error(
+                                            "Error in assign job flow:",
+                                            error
+                                          );
+                                        } finally {
+                                          setLoading(false);
+                                        }
                                       }}
                                       className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                      disabled={loading}
                                     >
                                       Assign job
                                     </Button>
@@ -615,7 +640,6 @@ export default function Notification() {
                                 </div>
                               )}
 
-                              
                             {(notification?.type === "mass" ||
                               notification?.userName === "Admin" ||
                               !notification?.jobDetails?._id) && (

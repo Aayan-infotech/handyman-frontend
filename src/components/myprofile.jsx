@@ -1167,7 +1167,7 @@ export default function MyProfile() {
                               <div className="card-body">
                                 <div className="d-flex flex-row justify-content-between align-items-center">
                                   <img
-                                  loading="lazy"
+                                    loading="lazy"
                                     src={item?.userId?.images || notFound}
                                     alt="profile"
                                     className="object-fit-cover"
@@ -1541,6 +1541,48 @@ export default function MyProfile() {
                     </Link>
                   </div>
                 )}
+                {
+                  <div
+                    className={`${
+                      Location.pathname.includes("provider")
+                        ? "col-lg-2"
+                        : "col-lg-3"
+                    }`}
+                  >
+                    <Link to={"/terms"}>
+                      <div className="card border-0 rounded-5 h-100">
+                        <div className="card-body">
+                          <div
+                            className={`d-flex gap-3 align-items-center justify-content-center ${
+                              Location.pathname.includes("provider") &&
+                              "flex-column"
+                            }`}
+                          >
+                            <div className="circle-container">
+                              <div className="progress-circle">
+                                <div className="lock-icon">
+                                  <MdOutlineWork />
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="d-flex flex-row gap-3 align-items-center">
+                              <span
+                                className={`text-success ${
+                                  Location.pathname.includes("provider")
+                                    ? "text-center"
+                                    : "text-start"
+                                }`}
+                              >
+                                Terms & Conditions
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                }
               </div>
             </div>
           </div>

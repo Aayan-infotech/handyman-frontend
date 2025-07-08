@@ -319,7 +319,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
         messageNotification({
           receiverId: receiverId,
           jobId: jobId,
-          body: `${businessName} sent you a message regarding your job ${jobTitle}`,
+          body: `${businessName} sent you a message regarding the job ${jobTitle}`,
         })
       );
     }
