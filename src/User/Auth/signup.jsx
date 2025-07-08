@@ -22,7 +22,8 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { ref, set } from "firebase/database";
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import { auth, db } from "../../Chat/lib/firestore";
 import {
   collection,
@@ -37,7 +38,9 @@ import { realtimeDb } from "../../Chat/lib/firestore";
 
 export default function SignUp() {
   const { state } = useLocation();
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const [name, setName] = useState(localStorage.getItem("signup_name") || "");
   const [email, setEmail] = useState(
     localStorage.getItem("signup_email") || ""
@@ -73,6 +76,28 @@ export default function SignUp() {
 
   const userType = "hunter";
   const radius = "10000";
+
+  const handleFileChange = (event) => {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+    const files = event.target.files;
+    console.log(files);
+    if (!files || files.length === 0) return;
+
+    // Check each file's size
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
+        setSnackbarMessage("File size exceeds 5MB limit");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return; // Exit if any file is too large
+      }
+    }
+
+    if (files) {
+      handleImageChange(event);
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -131,6 +156,12 @@ export default function SignUp() {
     localStorage.removeItem("signup_latitude");
     localStorage.removeItem("signup_longitude");
     localStorage.removeItem("signup_previewImage");
+  };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
   };
 
   const handleSignUp = async (e) => {
@@ -296,9 +327,14 @@ export default function SignUp() {
                           type="file"
                           onChange={(e) => {
                             const file = e.target.files[0];
+
+                            // First check if a file was selected
                             if (!file) return;
 
                             const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+                            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+                            // Check file type
                             if (!allowedExtensions.test(file.name)) {
                               setToastProps({
                                 message:
@@ -310,6 +346,18 @@ export default function SignUp() {
                               return;
                             }
 
+                            // Check file size
+                            if (file.size > MAX_FILE_SIZE) {
+                              setToastProps({
+                                message: "File size exceeds 5MB limit",
+                                type: "error",
+                                toastKey: Date.now(),
+                              });
+                              e.target.value = null; // Reset file input
+                              return;
+                            }
+
+                            // If all validations pass
                             setImages(e.target.files);
                           }}
                         />
@@ -327,7 +375,7 @@ export default function SignUp() {
                             <Form.Control
                               className="pos-image-selector2"
                               type="file"
-                              onChange={handleImageChange}
+                              onChange={handleFileChange}
                             />
                             <FaPen className="pos-image-selector3 " />
                           </div>
@@ -557,6 +605,22 @@ export default function SignUp() {
           </div>
         </div>
       )}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Toaster
         message={toastProps.message}
         type={toastProps.type}

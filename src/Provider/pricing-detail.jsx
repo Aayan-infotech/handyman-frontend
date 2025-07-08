@@ -92,30 +92,24 @@ export default function PricingProvider() {
                 <div className="top-section-main py-4 px-lg-5">
                   <h3 className="pb-3">Hello {name}</h3>
                   <h2 className="fw-bold fs-1 mt-4">{planName}</h2>
-                  <div className="row mt-5 px-3 px-lg-0">
-                    <div className="col-lg-4 mx-auto pt-4">
-                      <div className="d-flex flex-column gap-4">
-                        <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
-                          <h2>
-                            <span className="highlighted-text">
-                              {kmRadius} 
-                            </span>{" "}
-                            km Radius
-                          </h2>
-                          <FaRegCircleCheck />
-                        </div>
+                  <div className="row mt-4 px-3 px-lg-0">
+                    <div className="col-lg-5 mx-auto pt-4">
+                      <div className="card shadow-lg border-0 rounded-5 p-4">
+                        <div className="d-flex flex-column gap-4">
+                          <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
+                            <h4>Radius</h4>
+                            <h4>
+                              {kmRadius}
+                              km
+                            </h4>
+                          </div>
 
-                        <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
-                          <h2>
-                            <span className="highlighted-text">
-                              ${}
-                              {subscriptionAmount}
-                            </span>{" "}
-                          </h2>
-                          <FaRegCircleCheck />
-                        </div>
+                          <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
+                            <h4>Price</h4>
+                            <h4>${subscriptionAmount}</h4>
+                          </div>
 
-                        {/* <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
+                          {/* <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
                             <span className="highlighted-text">
                             Validity for {' '}
@@ -124,33 +118,34 @@ export default function PricingProvider() {
                           </h2>
                        
                         </div> */}
-                        <div
-                          className="d-flex flex-column align-items-center justify-content-center price-detail"
-                          style={{
-                            color: "rgba(50, 205, 222, 1) !important",
-                            textAlign: "center",
-                          }}
-                        >
-                          <h2>
-                            <span style={{ color: "rgba(50, 205, 222, 1)" }}>
-                              Validity for{" "}
-                              {validity === 30 ? "Monthly" : "Yearly"}
-                            </span>
-                          </h2>
+                          <div
+                            className="d-flex flex-column align-items-center justify-content-center price-detail"
+                            style={{
+                              color: "rgba(50, 205, 222, 1) !important",
+                              textAlign: "center",
+                            }}
+                          >
+                            <h4>
+                              <span style={{ color: "rgba(50, 205, 222, 1)" }}>
+                                Validity for{" "}
+                                {validity === 30 ? "Month" : "Year"}
+                              </span>
+                            </h4>
+                          </div>
+
+                          <span
+                            className="text-dark"
+                            dangerouslySetInnerHTML={{ __html: description }}
+                          ></span>
+
+                          <Button
+                            variant="contained"
+                            className="custom-green bg-green-custom rounded-5 py-3 w-100"
+                            onClick={handleSubmit}
+                          >
+                            Purchase
+                          </Button>
                         </div>
-
-                        <span
-                          className="text-dark"
-                          dangerouslySetInnerHTML={{ __html: description }}
-                        ></span>
-
-                        <Button
-                          variant="contained"
-                          className="custom-green bg-green-custom rounded-5 py-3 w-100"
-                          onClick={handleSubmit}
-                        >
-                          Purchase
-                        </Button>
                       </div>
                     </div>
                   </div>

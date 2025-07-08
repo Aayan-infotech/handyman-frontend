@@ -30,7 +30,8 @@ import { auth } from "../../Chat/lib/firestore";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import upload from "../../Chat/lib/upload";
 import { realtimeDb } from "../../Chat/lib/firestore";
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 function getStyles(name, personName, theme) {
   return {
     fontWeight: personName.includes(name)
@@ -63,7 +64,9 @@ export default function SignUpProvider() {
   const [businessData, setBusinessData] = useState([]);
   const [businessType, setBusinessType] = useState([]);
   const [images, setImages] = useState(null);
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -123,7 +126,12 @@ export default function SignUpProvider() {
     navigate("/terms");
   };
 
-  // Clear localStorage after successful submission
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
   const clearSignupStorage = () => {
     localStorage.removeItem("signup_name", name);
     localStorage.removeItem("signup_businessName", businessName);
@@ -271,7 +279,27 @@ export default function SignUpProvider() {
       setLoading(false);
     }
   };
+  const handleFileChange = (event) => {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
 
+    const files = event.target.files;
+    console.log(files);
+    if (!files || files.length === 0) return;
+
+    // Check each file's size
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
+        setSnackbarMessage("File size exceeds 5MB limit");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return; // Exit if any file is too large
+      }
+    }
+
+    if (files) {
+      handleImageChange(event);
+    }
+  };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -326,9 +354,14 @@ export default function SignUpProvider() {
                           type="file"
                           onChange={(e) => {
                             const file = e.target.files[0];
+
+                            // First check if a file was selected
                             if (!file) return;
 
                             const allowedExtensions = /\.(jpeg|jpg|png)$/i;
+                            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+                            // Check file type
                             if (!allowedExtensions.test(file.name)) {
                               setToastProps({
                                 message:
@@ -340,6 +373,18 @@ export default function SignUpProvider() {
                               return;
                             }
 
+                            // Check file size
+                            if (file.size > MAX_FILE_SIZE) {
+                              setToastProps({
+                                message: "File size exceeds 5MB limit",
+                                type: "error",
+                                toastKey: Date.now(),
+                              });
+                              e.target.value = null; // Reset file input
+                              return;
+                            }
+
+                            // If all validations pass
                             setImages(e.target.files);
                           }}
                         />
@@ -358,7 +403,7 @@ export default function SignUpProvider() {
                           <Form.Control
                             className="pos-image-selector2"
                             type="file"
-                            onChange={handleImageChange}
+                            onChange={handleFileChange}
                           />
                           <FaPen className="pos-image-selector3 " />
                         </div>
@@ -686,6 +731,23 @@ export default function SignUpProvider() {
           </div>
         </div>
       )}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
       <Toaster
         message={toastProps.message}
         type={toastProps.type}
