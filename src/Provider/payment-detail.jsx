@@ -23,6 +23,7 @@ export default function PaymentDetail() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [cardHolderName, setCardHolderName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ export default function PaymentDetail() {
         LastName: lastName,
         Email: email,
         CardDetails: {
-          Name: `${firstName} ${lastName}`,
+          Name: `${cardHolderName}`,
           Number: cardNumber.replace(/\s/g, ""),
           ExpiryMonth: month,
           ExpiryYear: year,
@@ -225,6 +226,16 @@ export default function PaymentDetail() {
                                 required
                               />
                             </div>
+                               <TextField
+                              id="standard-basic"
+                              label="Card Holder Name"
+                              variant="standard"
+                              className="w-100"
+                              value={cardHolderName}
+                              onChange={(e) => setCardHolderName(e.target.value)}
+                              type="TEXT"
+                              required
+                            />
                             <TextField
                               id="standard-basic"
                               label="Email"

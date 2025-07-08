@@ -98,9 +98,9 @@ export default function PricingProvider() {
                         <div className="d-flex flex-row gap-2 align-items-center justify-content-between price-detail">
                           <h2>
                             <span className="highlighted-text">
-                              {kmRadius} km
+                              {kmRadius} 
                             </span>{" "}
-                            Radius
+                            km Radius
                           </h2>
                           <FaRegCircleCheck />
                         </div>

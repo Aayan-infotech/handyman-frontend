@@ -174,7 +174,7 @@ export default function JobDetail() {
           messageNotification({
             receiverId: receiverId?._id,
             jobId: id,
-            body: `${providerbusinessName} have completed your job ${title}`,
+            body: `${providerbusinessName} have completed the job ${title}`,
           })
         );
         // if (messageNotification.fulfilled.match(response)) {
@@ -277,20 +277,23 @@ export default function JobDetail() {
                     <div className="d-flex flex-row gap-2 align-items-center">
                       <div className="d-flex flex-column align-items-start gap-1">
                         <h3 className="mb-0">{data?.title || "Job Title"}</h3>
-                        <h6>
-                          Date Posted:
-                          {data?.createdAt
-                            ? new Date(data.createdAt).toLocaleDateString(
-                                "en-AU",
-                                {
-                                  timeZone: "Australia/Sydney",
-                                  day: "2-digit",
-                                  month: "2-digit",
-                                  year: "numeric",
-                                }
-                              )
-                            : "No date provided"}
-                        </h6>
+                        {!isHistoryType && (
+                          <h6>
+                            Date Posted:
+                            {data?.createdAt
+                              ? new Date(data.createdAt).toLocaleDateString(
+                                  "en-AU",
+                                  {
+                                    timeZone: "Australia/Sydney",
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                  }
+                                )
+                              : "No date provided"}
+                          </h6>
+                        )}
+
                         <h6>
                           Date Required:
                           {data?.date
@@ -302,6 +305,23 @@ export default function JobDetail() {
                               })
                             : "No date provided"}
                         </h6>
+
+                         {ProviderToken && isHistoryType && (
+                          <h6>
+                            Date Completed:
+                            {data?.createdAt
+                              ? new Date(data.completionDate).toLocaleDateString(
+                                  "en-AU",
+                                  {
+                                    timeZone: "Australia/Sydney",
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                  }
+                                )
+                              : "No date provided"}
+                          </h6>
+                        )}
                       </div>
                     </div>
                     <div className="d-flex flex-row gap-2 align-items-center flex-wrap">
@@ -439,7 +459,8 @@ export default function JobDetail() {
                                 </span>
                                 <div className="d-flex flex-row align-items-start gap-3 ">
                                   <b className="fw-medium fs-5">
-                                    {data?.provider?.contactName?.toLocaleUpperCase()}
+                                    {data?.provider?.businessName?.toLocaleUpperCase() ||
+                                      data?.provider?.contactName?.toLocaleUpperCase()}
                                   </b>
                                   <button
                                     className="btn btn-info text-light"
