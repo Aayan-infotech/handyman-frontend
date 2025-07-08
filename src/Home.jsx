@@ -85,8 +85,8 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    axiosInstance.get("/jobs/getRecentJobs").then((res) => {
-      setRecentJob(res?.data?.data);
+    axiosInstance.get(`/jobs?page=1&limit=6`).then((res) => {
+      setRecentJob(res?.data?.data?.jobPosts);
     });
   }, []);
   // const handleBusinessChange = (event) => {

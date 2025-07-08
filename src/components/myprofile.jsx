@@ -241,12 +241,25 @@ export default function MyProfile() {
   };
   // Handle file change and trigger upload
   const handleFileChange = (event) => {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
     setSnackbarMessage("Image uploading...");
     setSnackbarSeverity("info");
     setSnackbarOpen(true);
+
     const files = event.target.files;
     console.log(files);
     if (!files || files.length === 0) return;
+
+    // Check each file's size
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
+        setSnackbarMessage("File size exceeds 5MB limit");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return; // Exit if any file is too large
+      }
+    }
 
     if (files) {
       setSelectedFile(files);

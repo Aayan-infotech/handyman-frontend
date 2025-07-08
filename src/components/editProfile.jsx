@@ -9,6 +9,7 @@ import "../User/user.css";
 import { IoImageOutline } from "react-icons/io5";
 import LoggedHeader from "./loggedNavbar";
 import { useDispatch } from "react-redux";
+import Snackbar from "@mui/material/Snackbar";
 import Autocomplete from "react-google-autocomplete";
 import { getHunterUser, getProviderUser } from "../Slices/userSlice";
 import axiosInstance from "./axiosInstance";
@@ -20,6 +21,8 @@ import { ref, set, update } from "firebase/database";
 import { FaPen } from "react-icons/fa";
 import { auth, db } from "../Chat/lib/firestore";
 import axios from "axios";
+import Alert from "@mui/material/Alert";
+
 import {
   collection,
   query,
@@ -44,7 +47,9 @@ export default function EditProfile() {
   const providerToken = localStorage.getItem("ProviderToken");
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const providerUid = localStorage.getItem("ProviderUId");
   const hunterUid = localStorage.getItem("hunterUId");
   const [businessData, setBusinessData] = useState([]);
@@ -177,6 +182,13 @@ export default function EditProfile() {
     }
   };
 
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -248,6 +260,29 @@ export default function EditProfile() {
       setPreviewImage(images); // Use the existing image URL
     }
   }, [images]);
+
+  const handleFileChange = (event) => {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+    const files = event.target.files;
+    console.log(files);
+    if (!files || files.length === 0) return;
+
+    // Check each file's size
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
+        setSnackbarMessage("File size exceeds 5MB limit");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return; // Exit if any file is too large
+      }
+    }
+
+    if (files) {
+     
+      handleImageChange(event); 
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -327,7 +362,7 @@ export default function EditProfile() {
                           <Form.Control
                             className="pos-image-selector2"
                             type="file"
-                            onChange={handleImageChange}
+                            onChange={handleFileChange}
                           />
                           <FaPen className="pos-image-selector3 " />
                         </div>
@@ -551,6 +586,22 @@ export default function EditProfile() {
           </div>
         </div>
       )}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Toaster
         message={toastProps.message}
         type={toastProps.type}
