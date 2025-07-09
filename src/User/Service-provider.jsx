@@ -163,7 +163,7 @@ export default function ServiceProvider() {
       //   type: "error",
       //   toastKey: Date.now(),
       // });
-      console.log(error)
+      console.log(error);
       setFilteredData([]);
     } finally {
       setLoading(false);
@@ -334,7 +334,12 @@ export default function ServiceProvider() {
                 <div className="col-lg-12">
                   {filteredData.length === 0 ? (
                     <div className="d-flex justify-content-center flex-column gap-1 align-items-center">
-                      <img src={NoData} alt="noData" className="w-nodata" loading="lazy"/>
+                      <img
+                        src={NoData}
+                        alt="noData"
+                        className="w-nodata"
+                        loading="lazy"
+                      />
                     </div>
                   ) : (
                     <div className=" management">
@@ -424,26 +429,60 @@ export default function ServiceProvider() {
                                     {/* </Link> */}
                                   </td>
                                   <td>
-                                    <tr
-                                      className={`text-start flex-wrap ${
-                                        provider.businessType.length === 1
-                                          ? ""
-                                          : "d-flex"
-                                      }`}
-                                    >
-                                      {Array.isArray(provider?.businessType) &&
-                                      provider.businessType.length > 0
-                                        ? provider.businessType.map(
-                                            (type, index) => (
-                                              <>
-                                                <td
-                                                  key={index}
-                                                >{`"${type}"`}</td>
-                                              </>
+                                    <div className="d-flex flex-column">
+                                      <div className="d-flex flex-row flex-wrap gap-1">
+                                        {Array.isArray(
+                                          provider?.businessType
+                                        ) &&
+                                        provider.businessType.length > 0 ? (
+                                          provider.businessType
+                                            .slice(
+                                              0,
+                                              provider.showAllTypes
+                                                ? provider.businessType.length
+                                                : 3
                                             )
-                                          )
-                                        : "No Category"}
-                                    </tr>
+                                            .map((type, index) => (
+                                              <td
+                                                key={index}
+                                                
+                                              >
+                                                {type}
+                                              </td>
+                                            ))
+                                        ) : (
+                                          <span className="badge bg-light text-dark border">
+                                            No Category
+                                          </span>
+                                        )}
+                                      </div>
+                                      {Array.isArray(provider?.businessType) &&
+                                        provider.businessType.length > 3 && (
+                                          <button
+                                            className="btn btn-link p-0 text-decoration-none text-start small"
+                                            onClick={() => {
+                                              const newData = [...filteredData];
+                                              const providerIndex =
+                                                newData.findIndex(
+                                                  (p) => p._id === provider._id
+                                                );
+                                              newData[
+                                                providerIndex
+                                              ].showAllTypes =
+                                                !newData[providerIndex]
+                                                  .showAllTypes;
+                                              setFilteredData(newData);
+                                            }}
+                                          >
+                                            {provider.showAllTypes
+                                              ? "Show Less"
+                                              : `Show More (+${
+                                                  provider.businessType.length -
+                                                  3
+                                                })`}
+                                          </button>
+                                        )}
+                                    </div>
                                   </td>
                                   <td>
                                     {(provider.distance / 1000).toFixed(2)}

@@ -26,7 +26,8 @@ export default function ServiceProviderProfile() {
   const [gallery, setGallery] = useState([]);
   const [backgroundImg, setBackgroundImg] = useState(null);
   const [avgRating, setAvgRating] = useState(0);
-
+  const [showAllTypes, setShowAllTypes] = useState(false);
+  const visibleTypesLimit = 3; // Number of types to show initially
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -279,15 +280,36 @@ export default function ServiceProviderProfile() {
                   <span>{filterAddressState(data?.address?.addressLine)}</span>
                 </a>
               </div>
-              <div className="d-flex flex-row flex-wrap justify-content-center gap-1 gap-lg-2 mt-lg-5 align-items-center profile my-4">
-                {data?.businessType?.map((type, index) => (
-                  <div
-                    className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
-                    key={index}
+              <div className="d-flex flex-column align-items-center gap-2 mt-lg-5 my-4">
+                <div className="d-flex flex-row flex-wrap justify-content-center gap-1 gap-lg-2 align-items-center profile ">
+                  {data?.businessType
+                    ?.slice(
+                      0,
+                      showAllTypes
+                        ? data.businessType.length
+                        : visibleTypesLimit
+                    )
+                    .map((type, index) => (
+                      <div
+                        className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
+                        key={index}
+                      >
+                        <span className="fs-6">{type}</span>
+                      </div>
+                    ))}
+                </div>
+                {data?.businessType?.length > visibleTypesLimit && (
+                  <button
+                    className="btn btn-link p-0 text-decoration-none"
+                    onClick={() => setShowAllTypes(!showAllTypes)}
                   >
-                    <span className="fs-6">{type}</span>
-                  </div>
-                ))}
+                    {showAllTypes
+                      ? "Show Less"
+                      : `Show More (+${
+                          data.businessType.length - visibleTypesLimit
+                        })`}
+                  </button>
+                )}
               </div>
 
               <div className="d-flex justify-content-center align-items-center mt-3 flex-column flex-column gap-3">
