@@ -45,7 +45,7 @@ export default function LoggedHeader() {
     if (!userId) return;
 
     if (!socketRef.current || socketRef.current.disconnected) {
-      const newSocket = io("http://18.209.91.97:7777", {
+      const newSocket = io("https://api.tradehunters.com.au", {
         auth: {
           token: hunterToken || providerToken,
           userId,
