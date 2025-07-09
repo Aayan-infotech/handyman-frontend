@@ -250,7 +250,7 @@ export default function LoggedHeader() {
 
             <div className="   d-flex justify-content-between align-items-center gap-5">
               <div className=" d-flex justify-content-between align-items-center gap-2">
-                {providerToken && plan === null && (
+                {providerToken && plan !== "null" && (
                   <Link to="/message">
                     {/* <Tooltip title="Message" placement="left-start"> */}
                     <div className="message">

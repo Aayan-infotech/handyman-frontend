@@ -18,6 +18,8 @@ export default function LoggedHeader() {
   const [images, setImages] = useState(null);
   const hunterToken = localStorage.getItem("hunterToken");
   const providerToken = localStorage.getItem("ProviderToken");
+  const plan = localStorage.getItem("PlanType");
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -55,7 +57,7 @@ export default function LoggedHeader() {
             to={`${providerToken ? "/provider/home" : "/home"}`}
             className="py-1"
           >
-            <img src={logo} alt="logo" loading="lazy"/>
+            <img src={logo} alt="logo" loading="lazy" />
           </Link>
           {Location.pathname === "/post-new-job" ? (
             <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
@@ -77,13 +79,35 @@ export default function LoggedHeader() {
             )}
 
             <div className=" d-flex justify-content-between align-items-center gap-2">
-              <Link to="/message">
-                {/* <Tooltip title="Message" placement="left-start"> */}
-                <div className="message">
-                  <MdMessage />{" "}
-                </div>
-                {/* </Tooltip> */}
-              </Link>
+              {providerToken && plan !== "null" && (
+                <Link to="/message">
+                  {/* <Tooltip title="Message" placement="left-start"> */}
+                  <div className="message">
+                    <MdMessage />{" "}
+                  </div>
+                  {/* </Tooltip> */}
+                </Link>
+              )}
+
+              {hunterToken && (
+                <Link to="/message">
+                  {/* <Tooltip title="Message" placement="left-start"> */}
+                  <div className="message">
+                    <MdMessage />{" "}
+                  </div>
+                  {/* </Tooltip> */}
+                </Link>
+              )}
+
+              {!hunterToken && !providerToken && (
+                <Link to="/message">
+                  {/* <Tooltip title="Message" placement="left-start"> */}
+                  <div className="message">
+                    <MdMessage />{" "}
+                  </div>
+                  {/* </Tooltip> */}
+                </Link>
+              )}
               <Link className="notification" to="/notification">
                 <IoMdNotificationsOutline className="fs-4" />
               </Link>
@@ -95,7 +119,7 @@ export default function LoggedHeader() {
                 {!images ? (
                   <FaRegUserCircle className="fs-1" />
                 ) : (
-                  <img src={images} alt="profile" loading="lazy"/>
+                  <img src={images} alt="profile" loading="lazy" />
                 )}
               </Link>
             </div>

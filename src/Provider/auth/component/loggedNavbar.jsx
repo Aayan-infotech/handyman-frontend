@@ -29,7 +29,7 @@ export default function LoggedHeader() {
   const hunterToken = localStorage.getItem("hunterToken");
   const providerToken = localStorage.getItem("ProviderToken");
   const plan = localStorage.getItem("PlanType");
-
+console.log(plan)
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
@@ -303,7 +303,7 @@ export default function LoggedHeader() {
             )}
 
             <div className="d-flex justify-content-between align-items-center gap-2">
-              {providerToken && plan !== null && (
+              {providerToken && plan !== "null" && (
                 <Link to="/message">
                   {/* <Tooltip title="Message" placement="left-start"> */}
                   <div className="message">
