@@ -218,7 +218,7 @@ export default function SignUpProvider() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://api.tradehunters.com.au/api/auth/signup",
+        "http://18.209.91.97:7777/api/auth/signup",
         formData,
         {
           headers: {
@@ -704,6 +704,13 @@ export default function SignUpProvider() {
                       >
                         terms and condition
                       </span>
+                      {"  "}& {"  "}
+                      <Link
+                        to="/privacy"
+                        className="highlighted-text text-decoration-none"
+                      >
+                        Privacy and Policy
+                      </Link>
                     </span>
                     <div className="d-flex justify-content-center align-items-center py-3">
                       <Button

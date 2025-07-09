@@ -54,6 +54,8 @@ export default function MyProfile() {
   const [aboutText, setAboutText] = useState("");
   const [fileToUpload, setFileToUpload] = useState(null);
   const [editShowModal, setEditShowModal] = useState(false);
+  const [showAllTypes, setShowAllTypes] = useState(false);
+  const visibleTypesLimit = 2; // Number of types to show initially
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -1011,15 +1013,34 @@ export default function MyProfile() {
               </div>
 
               {Location.pathname.includes("provider") ? (
-                <div className="d-flex flex-row flex-wrap justify-content-lg-start justify-content-center gap-1 gap-lg-2 align-items-center profile my-4">
-                  {businessType.map((type, index) => (
-                    <div
-                      className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
-                      key={index}
-                    >
-                      <span className="fs-6">{type}</span>
-                    </div>
-                  ))}
+                <div className="d-flex flex-column gap-2">
+                  <div className="d-flex flex-row flex-wrap justify-content-lg-start justify-content-center gap-1 gap-lg-2 align-items-center profile my-4">
+                    {businessType
+                      .slice(
+                        0,
+                        showAllTypes ? businessType.length : visibleTypesLimit
+                      )
+                      .map((type, index) => (
+                        <div
+                          className="color-profile px-3 py-2 pt-1 rounded-5 fs-5"
+                          key={index}
+                        >
+                          <span className="fs-6">{type}</span>
+                        </div>
+                      ))}
+                    {businessType.length > visibleTypesLimit && (
+                      <button
+                        className="btn btn-link p-0 text-decoration-none"
+                        onClick={() => setShowAllTypes(!showAllTypes)}
+                      >
+                        {showAllTypes
+                          ? "Show Less"
+                          : `Show More (+${
+                              businessType.length - visibleTypesLimit
+                            })`}
+                      </button>
+                    )}
+                  </div>
                 </div>
               ) : (
                 ""
