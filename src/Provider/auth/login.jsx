@@ -128,7 +128,7 @@ export default function LoginProvider() {
         );
         localStorage.setItem(
           "PlanType",
-          response?.data?.data?.user?.subscriptionType
+          response?.data?.data?.user?.subscriptionType || "none"
         );
         localStorage.setItem("ProviderId", response?.data?.data?.user?._id);
         localStorage.setItem(

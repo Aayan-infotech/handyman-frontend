@@ -28,6 +28,8 @@ export default function LoggedHeader() {
   const [images, setImages] = useState(null);
   const hunterToken = localStorage.getItem("hunterToken");
   const providerToken = localStorage.getItem("ProviderToken");
+  const plan = localStorage.getItem("PlanType");
+
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
@@ -286,7 +288,7 @@ export default function LoggedHeader() {
         <Container fluid>
           <div className=" d-flex justify-content-between align-items-center w-100">
             <Link to="/provider/home" className="py-1">
-              <img src={logo} alt="logo" loading="lazy"/>
+              <img src={logo} alt="logo" loading="lazy" />
             </Link>
 
             {location.pathname === "/post-new-job" && (
@@ -301,13 +303,25 @@ export default function LoggedHeader() {
             )}
 
             <div className="d-flex justify-content-between align-items-center gap-2">
-              <Link to="/message">
-                {/* <Tooltip title="Message" placement="left-start"> */}
-                <div className="message">
-                  <MdMessage />{" "}
-                </div>
-                {/* </Tooltip> */}
-              </Link>
+              {providerToken && plan !== "none" && (
+                <Link to="/message">
+                  {/* <Tooltip title="Message" placement="left-start"> */}
+                  <div className="message">
+                    <MdMessage />{" "}
+                  </div>
+                  {/* </Tooltip> */}
+                </Link>
+              )}
+
+              {hunterToken && (
+                <Link to="/message">
+                  {/* <Tooltip title="Message" placement="left-start"> */}
+                  <div className="message">
+                    <MdMessage />{" "}
+                  </div>
+                  {/* </Tooltip> */}
+                </Link>
+              )}
               <Link
                 className="notification position-relative"
                 to="/notification"
@@ -330,7 +344,7 @@ export default function LoggedHeader() {
                 {!images ? (
                   <FaRegUserCircle className="fs-1" />
                 ) : (
-                  <img src={images} alt="profile" loading="lazy"/>
+                  <img src={images} alt="profile" loading="lazy" />
                 )}
               </Link>
             </div>

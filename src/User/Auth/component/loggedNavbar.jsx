@@ -23,6 +23,7 @@ export default function LoggedHeader() {
   const Location = useLocation();
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
+  const plan = localStorage.getItem("PlanType");
   const userType = hunterId ? "hunter" : "provider";
   const userId = hunterId || providerId;
   const [notifications, setNotifications] = useState([]);
@@ -239,7 +240,7 @@ export default function LoggedHeader() {
               to={`${providerToken ? "/provider/home" : "/home"}`}
               className="py-1"
             >
-              <img src={logo} alt="logo" className="w-100" loading="lazy"/>
+              <img src={logo} alt="logo" className="w-100" loading="lazy" />
             </Link>
             {Location.pathname === "/post-new-job" ? (
               <b className="fs-5 ms-2 d-none d-lg-flex">Post a new Job!</b>
@@ -249,13 +250,27 @@ export default function LoggedHeader() {
 
             <div className="   d-flex justify-content-between align-items-center gap-5">
               <div className=" d-flex justify-content-between align-items-center gap-2">
-                <Link to="/message">
-                  {/* <Tooltip title="Message" placement="left-start"> */}
-                  <div className="message">
-                    <MdMessage />{" "}
-                  </div>
-                  {/* </Tooltip> */}
-                </Link>
+                {providerToken && plan === "none" && (
+                  <Link to="/message">
+                    {/* <Tooltip title="Message" placement="left-start"> */}
+                    <div className="message">
+                      <MdMessage />{" "}
+                    </div>
+                    {/* </Tooltip> */}
+                  </Link>
+                )}
+
+                {hunterToken && (
+                  <Link to="/message">
+                    {/* <Tooltip title="Message" placement="left-start"> */}
+                    <div className="message">
+                      <MdMessage />{" "}
+                    </div>
+                    {/* </Tooltip> */}
+                  </Link>
+                )}
+
+
                 <Link
                   className="notification position-relative"
                   to="/notification"
@@ -277,7 +292,7 @@ export default function LoggedHeader() {
                   {!images ? (
                     <FaRegUserCircle className="fs-1" />
                   ) : (
-                    <img src={images} alt="profile" loading="lazy"/>
+                    <img src={images} alt="profile" loading="lazy" />
                   )}
                 </Link>
               </div>

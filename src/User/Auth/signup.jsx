@@ -578,6 +578,13 @@ export default function SignUp() {
                     >
                       terms and condition
                     </span>
+                    {"  "}& {"  "}
+                    <Link
+                      to="/privacy"
+                      className="highlighted-text text-decoration-none"
+                    >
+                      Privacy and Policy
+                    </Link>
                   </span>
 
                   <div className="d-flex justify-content-center align-items-center py-3">

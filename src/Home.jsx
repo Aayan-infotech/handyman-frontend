@@ -30,7 +30,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 import Select from "react-select";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import {
   FaFacebook,
   FaTwitter,
@@ -54,7 +54,15 @@ function Home() {
   const [selectedBusiness, setSelectedBusiness] = useState(null); // Manage selected business
   const [providers, setProviders] = useState([]);
   const [inputValue, setInputValue] = React.useState("");
+  const [expanded, setExpanded] = useState(false);
+  const maxVisibleChips = 4; // Number of chips to show when collapsed
 
+  const toggleExpand = (cardId) => {
+    setExpanded((prev) => ({
+      ...prev,
+      [cardId]: !prev[cardId],
+    }));
+  };
   const [address, setAddress] = useState("");
   const [toastProps, setToastProps] = useState({
     message: "",
@@ -153,7 +161,7 @@ function Home() {
         <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
           <Container fluid>
             <Link to="/" className="py-1">
-              <img src={logo} alt="logo" loading="lazy"/>
+              <img src={logo} alt="logo" loading="lazy" />
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse
@@ -188,7 +196,12 @@ function Home() {
                   <br />
                   <span className="highlighted">Expert Help?</span>
                 </h1>
-                <img src={underline} alt="underline" className="" loading="lazy"/>
+                <img
+                  src={underline}
+                  alt="underline"
+                  className=""
+                  loading="lazy"
+                />
                 <br />
                 <span className="text-muted">
                   Trade Hunters connects you with top service providers in
@@ -255,7 +268,12 @@ function Home() {
               </div>
             </div>
             <div className="col-lg-3 position-relative z-1">
-              <img src={sidepic} alt="sidepic" className="w-100 h-100" loading="lazy"/>
+              <img
+                src={sidepic}
+                alt="sidepic"
+                className="w-100 h-100"
+                loading="lazy"
+              />
             </div>
           </div>
         </Container>
@@ -320,7 +338,7 @@ function Home() {
             </div>
             <div className="col-lg-7  ">
               <div className="position-mobile-adjust">
-                <img src={mobile} alt="mobile" className="" loading="lazy"/>
+                <img src={mobile} alt="mobile" className="" loading="lazy" />
               </div>
             </div>
           </div>
@@ -340,12 +358,12 @@ function Home() {
           <div className="row gy-4 mt-4">
             {providers.map((item) => (
               <div className="col-lg-4" key={item._id}>
-                <Link to="/welcome" className="text-decoration-none">
+             
                   <div className="card rounded-0 h-100">
                     <div className="card-body">
                       <div className="d-flex justify-content-between align-items-center flex-row">
                         <img
-                        loading="lazy"
+                          loading="lazy"
                           src={item?.images || noImage}
                           alt="company1"
                           className="img-fluid"
@@ -367,17 +385,47 @@ function Home() {
                       </div>
                       <span className="text-secondary">{item?.about}</span>
                       <div className="d-flex flex-row flex-wrap gap-2">
-                        {item?.businessType.map((text, index) => (
-                          <Chip
-                            key={index}
-                            label={text}
-                            className="green-line"
-                          />
-                        ))}
+                        <Stack direction="column" spacing={1}>
+                        <Stack
+                          direction="row"
+                          className="flex-wrap gap-2 justify-content-start align-items-start"
+                        >
+                          {item.businessType
+                            .slice(
+                              0,
+                              expanded[item?._id]
+                                ? item.businessType.length
+                                : maxVisibleChips
+                            )
+                            .map((text, index) => (
+                              <Chip
+                                label={text}
+                                className="green-line"
+                                key={index}
+                              />
+                            ))}
+                        </Stack>
+
+                        {item.businessType.length > maxVisibleChips && (
+                          <Button
+                            size="small"
+                           
+                            onClick={() => toggleExpand(item._id)}
+                            sx={{
+                              alignSelf: "flex-start",
+                              mt: 1,
+                              zIndex: 9999,
+                            }}
+                          >
+                            {expanded[item._id] ? "See Less" : "See More"}
+                          </Button>
+                        )}
+                      </Stack>
+
                       </div>
                     </div>
                   </div>
-                </Link>
+               
               </div>
             ))}
           </div>
@@ -496,7 +544,7 @@ function Home() {
           <Row>
             {/* Left Section: Logo and Description */}
             <Col md={4} className="mb-4">
-              <img src={logoWhite} alt="logo" loading="lazy"/>
+              <img src={logoWhite} alt="logo" loading="lazy" />
               <p className="fw-normal mt-3">
                 Great platfrom for connecting service Hunters to Service
                 providers in Australia
