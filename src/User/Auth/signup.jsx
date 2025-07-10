@@ -583,7 +583,7 @@ export default function SignUp() {
                       to="/privacy"
                       className="highlighted-text text-decoration-none"
                     >
-                      Privacy and Policy
+                      Privacy Policy
                     </Link>
                   </span>
 

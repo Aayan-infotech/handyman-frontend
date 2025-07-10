@@ -709,7 +709,7 @@ export default function SignUpProvider() {
                         to="/privacy"
                         className="highlighted-text text-decoration-none"
                       >
-                        Privacy and Policy
+                        Privacy Policy
                       </Link>
                     </span>
                     <div className="d-flex justify-content-center align-items-center py-3">
