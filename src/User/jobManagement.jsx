@@ -130,7 +130,7 @@ export default function JobManagement() {
       //   type: "error",
       //   toastKey: Date.now(),
       // });
-      console.log(error)
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -202,7 +202,6 @@ export default function JobManagement() {
           });
           return;
         }
-      
       }
     } catch (error) {
       console.log(error);
@@ -337,18 +336,22 @@ export default function JobManagement() {
                             selected || "Select Job Status"
                           }
                         >
-                          {["Completed", "Pending", "Assigned", "Deleted" , "Quoted"].map(
-                            (status) => (
-                              <MenuItem key={status} value={status}>
-                                <Checkbox
-                                  checked={jobStatus === status}
-                                  // Prevent the checkbox from intercepting clicks
-                                  onClick={(e) => e.stopPropagation()}
-                                />
-                                <ListItemText primary={status} />
-                              </MenuItem>
-                            )
-                          )}
+                          {[
+                            "Completed",
+                            "Pending",
+                            "Assigned",
+                            "Deleted",
+                            "Quoted",
+                          ].map((status) => (
+                            <MenuItem key={status} value={status}>
+                              <Checkbox
+                                checked={jobStatus === status}
+                                // Prevent the checkbox from intercepting clicks
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              <ListItemText primary={status} />
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                       {jobStatus && (
@@ -442,9 +445,24 @@ export default function JobManagement() {
                               <th className="green-card-important py-3 text-center">
                                 Address
                               </th>
-                              <th className="green-card-important py-3 text-center">
-                                Date Posted
-                              </th>
+                              {!location.pathname.includes("job-history") && (
+                                <>
+                                  <th className="green-card-important py-3 text-center">
+                                    Date Posted
+                                  </th>
+                                </>
+                              )}
+                              {location.pathname.includes("job-history") && (
+                                <>
+                                  <th className="green-card-important py-3 text-center">
+                                    Date Requirement
+                                  </th>
+                                  <th className="green-card-important py-3 text-center">
+                                    Date Completed
+                                  </th>
+                                </>
+                              )}
+
                               <th className="green-card-important py-3 text-center">
                                 Job Status
                               </th>
@@ -469,23 +487,54 @@ export default function JobManagement() {
                                     provider?.jobLocation?.jobAddressLine
                                   )}
                                 </td>
-                                <td>
-                                  {" "}
-                                  {new Date(
-                                    provider?.createdAt
-                                  ).toLocaleDateString("en-AU", {
-                                    timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  })}
-                                </td>
+                                {!location.pathname.includes("job-history") && (
+                                  <>
+                                    <td>
+                                      {" "}
+                                      {new Date(
+                                        provider?.createdAt
+                                      ).toLocaleDateString("en-AU", {
+                                        timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                      })}
+                                    </td>
+                                  </>
+                                )}
+                                {location.pathname.includes("job-history") && (
+                                  <>
+                                    <td>
+                                      {" "}
+                                      {new Date(
+                                        provider?.date
+                                      ).toLocaleDateString("en-AU", {
+                                        timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                      })}
+                                    </td>
+                                    <td>
+                                      {" "}
+                                      {new Date(
+                                        provider?.completionDate
+                                      ).toLocaleDateString("en-AU", {
+                                        timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                      })}
+                                    </td>
+                                  </>
+                                )}
                                 <td>{provider?.jobStatus}</td>
+
                                 <td>
                                   <tr>
                                     {provider?.jobStatus !== "Completed" &&
-                                    provider?.jobStatus !== "Assigned" &&
-                                    provider?.jobStatus !== "Deleted" &&
+                                      provider?.jobStatus !== "Assigned" &&
+                                      provider?.jobStatus !== "Deleted" &&
                                       !location.pathname.includes(
                                         "job-history"
                                       ) && (
