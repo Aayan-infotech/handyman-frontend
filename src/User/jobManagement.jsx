@@ -455,9 +455,6 @@ export default function JobManagement() {
                               {location.pathname.includes("job-history") && (
                                 <>
                                   <th className="green-card-important py-3 text-center">
-                                    Date Requirement
-                                  </th>
-                                  <th className="green-card-important py-3 text-center">
                                     Date Completed
                                   </th>
                                 </>
@@ -504,17 +501,6 @@ export default function JobManagement() {
                                 )}
                                 {location.pathname.includes("job-history") && (
                                   <>
-                                    <td>
-                                      {" "}
-                                      {new Date(
-                                        provider?.date
-                                      ).toLocaleDateString("en-AU", {
-                                        timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
-                                        day: "2-digit",
-                                        month: "2-digit",
-                                        year: "numeric",
-                                      })}
-                                    </td>
                                     <td>
                                       {" "}
                                       {new Date(
