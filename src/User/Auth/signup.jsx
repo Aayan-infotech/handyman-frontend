@@ -242,7 +242,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "http://52.20.55.193:7777//api/auth/signup",
+        "http://52.20.55.193:7777/api/auth/signup",
 
         formData
       );

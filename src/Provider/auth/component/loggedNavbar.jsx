@@ -45,7 +45,7 @@ console.log(plan)
     if (!userId) return;
 
     if (!socketRef.current || socketRef.current.disconnected) {
-      const newSocket = io("http://52.20.55.193:7777/", {
+      const newSocket = io("http://52.20.55.193:7777", {
         auth: {
           token: hunterToken || providerToken,
           userId,

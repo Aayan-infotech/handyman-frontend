@@ -84,7 +84,7 @@ export default function HomeProvider() {
     }
 
     console.log("Attempting to connect to socket...");
-    const newSocket = io("http://52.20.55.193:7777/", {
+    const newSocket = io("http://52.20.55.193:7777", {
       auth: {
         token: providerToken,
       },
