@@ -14,7 +14,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import axiosInstance from "../components/axiosInstance";
-import axios from "axios"
+import axios from "axios";
 export default function PaymentDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -140,6 +140,9 @@ export default function PaymentDetail() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    console.log("Submit started");
 
     if (!ewayLoaded) {
       setToastProps({
@@ -189,13 +192,15 @@ export default function PaymentDetail() {
       // Make the API call to eWay endpoint
       const response = await axios.post(
         "https://api.tradehunters.com.au/api/eway/pay",
-
         paymentData
       );
 
-      const result = await response.json();
+      const result = response.data; // Remove await here since response is already resolved
 
-      if (!response.ok) throw new Error(result?.message || "Payment failed");
+      // Fix: Check response.status instead of response.ok (axios doesn't have ok property)
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(result?.message || "Payment failed");
+      }
 
       setToastProps({
         message: "Subscription purchased successfully!",
