@@ -89,7 +89,7 @@ export default function PaymentDetail() {
   useEffect(() => {
     // Load eWay script
     const script = document.createElement("script");
-    script.src = "https://secure.ewaypayments.com/scripts/eCrypt.js";
+    script.src = "https://secure.ewaypayments.com/scripts/eCrypt.min.js";
     script.async = true;
     script.onload = () => {
       console.log("eWay encryption script loaded");
