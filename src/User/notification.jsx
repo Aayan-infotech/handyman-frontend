@@ -83,7 +83,7 @@ export default function Notification() {
   // const handleName = async (notification) => {
   //   try {
   //     const response = await axios.post(
-  //       "https://api.tradehunters.com.au/api/match/getMatchedData",
+  //       "https://api.tradehunters.com.au//api/match/getMatchedData",
   //       {
   //         senderId: notification.userId,
   //         receiverId: notification.receiverId,
@@ -703,10 +703,10 @@ export default function Notification() {
                                   color="success"
                                   className="custom-green bg-green-custom rounded-5 px-3 text-light border-light w-100"
                                   onClick={() => {
-                                    handleMarkAsRead(
-                                      notification?._id,
-                                      notification?.type
-                                    );
+                                    // handleMarkAsRead(
+                                    //   notification?._id,
+                                    //   notification?.type
+                                    // );
                                     handleDeleteMass(notification._id);
                                   }}
                                 >
