@@ -27,6 +27,7 @@ export default function Error() {
               alt="404"
               className="w-100 h-100 object-fit-cover"
               loading="lazy"
+              style={{ maxHeight: "200px" }}
             />
           </div>
           <div className="col-lg-6">
