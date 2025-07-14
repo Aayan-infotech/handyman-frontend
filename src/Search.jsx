@@ -14,7 +14,7 @@ import logo from "./assets/logo.png";
 import { GoArrowRight } from "react-icons/go";
 import { useNavigate, useLocation } from "react-router-dom";
 import Chip from "@mui/material/Chip";
-
+import Stack from "@mui/material/Stack";
 import {
   FaFacebook,
   FaDribbble,
@@ -31,13 +31,19 @@ function Search() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const [isExpanded, setIsExpanded] = useState(true);
-
+  const [expanded, setExpanded] = useState(false);
+  const maxVisibleChips = 4; // Number of chips to show when collapsed
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
     toastKey: 0,
   });
-
+  const toggleExpand = (cardId) => {
+    setExpanded((prev) => ({
+      ...prev,
+      [cardId]: !prev[cardId],
+    }));
+  };
   const latitude = searchParams.get("lat");
   const longitude = searchParams.get("lng");
   const businessType = searchParams.get("businessType");
@@ -134,7 +140,7 @@ function Search() {
           >
             <Container fluid>
               <Link to="/" className="py-1">
-                <img src={logo} alt="logo" loading="lazy"/>
+                <img src={logo} alt="logo" loading="lazy" />
               </Link>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse
@@ -218,13 +224,44 @@ function Search() {
                                     </h5>
                                   </div>
                                   <div className="d-flex flex-row flex-wrap gap-2">
-                                    {job?.businessType?.map((text, index) => (
-                                      <Chip
-                                        key={index}
-                                        label={text}
-                                        className="green-line"
-                                      />
-                                    ))}
+                                    <Stack direction="column" spacing={1}>
+                                      <Stack
+                                        direction="row"
+                                        className="flex-wrap gap-2 justify-content-start align-items-start"
+                                      >
+                                        {job?.businessType
+                                          .slice(
+                                            0,
+                                            expanded[job?._id]
+                                              ? job?.businessType.length
+                                              : maxVisibleChips
+                                          )
+                                          .map((text, index) => (
+                                            <Chip
+                                              label={text}
+                                              className="green-line"
+                                              key={index}
+                                            />
+                                          ))}
+                                      </Stack>
+
+                                      {job?.businessType.length >
+                                        maxVisibleChips && (
+                                        <Button
+                                          size="small"
+                                          onClick={() => toggleExpand(job._id)}
+                                          sx={{
+                                            alignSelf: "flex-start",
+                                            mt: 1,
+                                            zIndex: 9999,
+                                          }}
+                                        >
+                                          {expanded[job._id]
+                                            ? "See Less"
+                                            : "See More"}
+                                        </Button>
+                                      )}
+                                    </Stack>
                                   </div>
                                 </div>
                               </div>
@@ -252,7 +289,7 @@ function Search() {
               <Row>
                 {/* Left Section: Logo and Description */}
                 <Col md={4} className="mb-4">
-                  <img src={logoWhite} alt="logo" loading="lazy"/>
+                  <img src={logoWhite} alt="logo" loading="lazy" />
                   <p className="fw-normal mt-3">
                     Great platform for connecting service Hunters to Service
                     providers in Australia

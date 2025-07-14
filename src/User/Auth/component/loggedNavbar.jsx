@@ -45,7 +45,7 @@ export default function LoggedHeader() {
     if (!userId) return;
 
     if (!socketRef.current || socketRef.current.disconnected) {
-      const newSocket = io("http://18.209.91.97:7777", {
+      const newSocket = io("https://api.tradehunters.com.au", {
         auth: {
           token: hunterToken || providerToken,
           userId,
@@ -250,7 +250,7 @@ export default function LoggedHeader() {
 
             <div className="   d-flex justify-content-between align-items-center gap-5">
               <div className=" d-flex justify-content-between align-items-center gap-2">
-                {providerToken && plan === "none" && (
+                {providerToken && plan !== "null" && (
                   <Link to="/message">
                     {/* <Tooltip title="Message" placement="left-start"> */}
                     <div className="message">
