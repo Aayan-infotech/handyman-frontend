@@ -32,6 +32,7 @@ export default function PaymentDetail() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState();
   const hunterId = localStorage.getItem("hunterId");
+  const [ewayLoaded, setEwayLoaded] = useState(false);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -58,6 +59,7 @@ export default function PaymentDetail() {
     return year < 10 ? `0${year}` : `${year}`;
   });
 
+  // Load eWay encryption script
   useEffect(() => {
     if (hunterId) {
       navigate("/error");
@@ -74,8 +76,8 @@ export default function PaymentDetail() {
         setData(subscriptionData);
         setLoading(false);
       } catch (error) {
-        if (error.response.status === 500) {
-          navigate("/error");
+        if (error.response?.status === 500) {
+          // navigate("/error");
         }
         console.log(error);
         setLoading(false);
@@ -84,73 +86,149 @@ export default function PaymentDetail() {
     getData();
   }, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    // Prepare the payment data in the required format
-    const paymentData = {
-      userId: providerId,
-      subscriptionPlanId: id,
-      Amount: data?.amount * 100,
-      Customer: {
-        FirstName: firstName,
-        LastName: lastName,
-        Email: email,
-        CardDetails: {
-          Name: `${cardHolderName}`,
-          Number: cardNumber.replace(/\s/g, ""),
-          ExpiryMonth: month,
-          ExpiryYear: year,
-          CVN: cvv,
-        },
-      },
-      Payment: {
-        TotalAmount: data?.amount * 100,
-        CurrencyCode: "AUD",
-      },
+  useEffect(() => {
+    // Load eWay script
+    const script = document.createElement("script");
+    script.src = "https://secure.ewaypayments.com/scripts/eCrypt.js";
+    script.async = true;
+    script.onload = () => {
+      console.log("eWay encryption script loaded");
+      setEwayLoaded(true);
     };
-
-    try {
-      const result = await dispatch(handlePayment(paymentData));
-
-      if (handlePayment.fulfilled.match(result)) {
-        setToastProps({
-          message: "Subscription purchased successfully!",
-          type: "success",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-        localStorage.setItem("Guest", false);
-        localStorage.setItem(
-          "PlanType",
-          result?.payload?.data?.newSubscription?.type
-        );
-        setTimeout(() => {
-          navigate("/provider/payment/success");
-        }, 2000);
-      } else {
-        const errorMessage =
-          result.payload.message ||
-          "Failed to complete the transaction. Please try again.";
-        setToastProps({
-          message: errorMessage,
-          type: "error",
-          toastKey: Date.now(),
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("Error during transaction:", error);
+    script.onerror = () => {
+      console.error("Failed to load eWay encryption script");
       setToastProps({
-        message: error?.response?.data?.message,
+        message: "Failed to load payment processor. Please refresh the page.",
         type: "error",
         toastKey: Date.now(),
       });
-      setLoading(false);
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const encryptCardDetails = () => {
+    if (!window.eCrypt || !window.eCrypt.encryptValue) {
+      throw new Error("Payment processor not ready. Please try again.");
+    }
+
+    const cleanedCardNumber = cardNumber.replace(/\s/g, "");
+    const cleanedCvv = cvv.trim();
+
+    if (!cleanedCardNumber || !cleanedCvv) {
+      throw new Error("Card details are incomplete");
+    }
+
+    try {
+      return {
+        Name: cardHolderName,
+        Number: window.eCrypt.encryptValue(cleanedCardNumber),
+        CVN: window.eCrypt.encryptValue(cleanedCvv),
+        ExpiryMonth: month,
+        ExpiryYear: year,
+      };
+    } catch (error) {
+      console.error("Encryption failed:", error);
+      throw new Error(
+        "Failed to secure card details. Please check your entries."
+      );
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!ewayLoaded) {
+      setToastProps({
+        message: "Payment processor is still loading. Please wait.",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Validate all required fields
+      if (
+        !firstName ||
+        !lastName ||
+        !email ||
+        !cardHolderName ||
+        !cardNumber ||
+        !cvv
+      ) {
+        throw new Error("Please fill all card details.");
+      }
+
+      // Encrypt card details
+      const encryptedCard = encryptCardDetails();
+
+      // Prepare the payment data
+      const paymentData = {
+        userId: providerId,
+        subscriptionPlanId: id,
+        Customer: {
+          FirstName: firstName,
+          LastName: lastName,
+          Email: email,
+          CardDetails: encryptedCard,
+        },
+        Payment: {
+          TotalAmount: data?.amount * 100,
+          CurrencyCode: "AUD",
+        },
+      };
+
+      console.log("payment data", paymentData);
+
+      // Make the API call to eWay endpoint
+      const response = await axiosInstance.post(
+        "https://api.tradehunters.com.au/api/eway/pay",
+
+        paymentData
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result?.message || "Payment failed");
+
+      setToastProps({
+        message: "Subscription purchased successfully!",
+        type: "success",
+        toastKey: Date.now(),
+      });
+
+      localStorage.setItem("Guest", false);
+      localStorage.setItem(
+        "PlanType",
+        result?.data?.newSubscription?.type || ""
+      );
+
       setTimeout(() => {
-        navigate("/provider/payment/error");
+        navigate("/provider/payment/success");
       }, 2000);
+    } catch (error) {
+      console.error("Payment error:", error);
+      setToastProps({
+        message: error.message || "Payment processing failed",
+        type: "error",
+        toastKey: Date.now(),
+      });
+
+      if (
+        error.message.includes("processor") ||
+        error.message.includes("secure")
+      ) {
+        // For script loading/encryption errors, suggest page refresh
+        setTimeout(() => window.location.reload(), 3000);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,6 +252,11 @@ export default function PaymentDetail() {
   return (
     <>
       <LoggedHeader />
+      {!ewayLoaded && (
+        <div className="alert alert-info">
+          Loading payment processor... Please wait.
+        </div>
+      )}
       <div className="bg-second ">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
@@ -199,16 +282,14 @@ export default function PaymentDetail() {
                           <h5 className="fw-medium mb-4 text-start">
                             Enter card details
                           </h5>
-                          <Box
-                            component="form"
-                            noValidate
-                            autoComplete="off"
+                          <form
+                            data-eway-encrypt-key="09n/nrZ2RtlG9HWIuWmDq+w/KIv5E4BJwP413gyPZ5xnRFf6HvgS8P5q478oLsYQji+b2TuJVBdxRurAl6qZWioRjbI4uG2VAzxsuX5bnK8TkmU15MSZkSWd9m4wFYjnIFMkxbCPhKHOzwrVz7fZcxckY1d1is3K2D8J7NnDv3WmTxmYKnJkHZwxdeD7XgSCThcexrTJZEYBlaYftHbxfEOVHvcj4Cu1zKPcQfn+ZWlITm/QEjqgZHov957LeavJOhpzcGJAkK8X4o6W99PcQbj277Tus+S3qQsd7miz+H5dObjUSz7w/b7EMaD4GecVgKm18zdCoOraN3Cs3ON3nQ=="
                             className="w-100 d-flex flex-column gap-4"
                             onSubmit={handleSubmit}
                           >
                             <div className="d-flex flex-row gap-3">
                               <TextField
-                                id="standard-basic"
+                                id="card_firstname"
                                 label="First Name"
                                 variant="standard"
                                 className="w-100"
@@ -217,7 +298,7 @@ export default function PaymentDetail() {
                                 required
                               />
                               <TextField
-                                id="standard-basic"
+                                id="card_lastname"
                                 label="Last Name"
                                 variant="standard"
                                 className="w-100"
@@ -226,18 +307,21 @@ export default function PaymentDetail() {
                                 required
                               />
                             </div>
-                               <TextField
-                              id="standard-basic"
+                            <TextField
+                              id="card_name"
                               label="Card Holder Name"
                               variant="standard"
                               className="w-100"
                               value={cardHolderName}
-                              onChange={(e) => setCardHolderName(e.target.value)}
+                              onChange={(e) =>
+                                setCardHolderName(e.target.value)
+                              }
+                              placeholder="John Doe"
                               type="TEXT"
                               required
                             />
                             <TextField
-                              id="standard-basic"
+                              id="card_email"
                               label="Email"
                               variant="standard"
                               className="w-100"
@@ -247,7 +331,7 @@ export default function PaymentDetail() {
                               required
                             />
                             <TextField
-                              id="standard-basic"
+                              id="card_number"
                               label="Card Number"
                               variant="standard"
                               className="w-100"
@@ -255,6 +339,7 @@ export default function PaymentDetail() {
                               onChange={(e) =>
                                 setCardNumber(formatCardNumber(e.target.value))
                               }
+                              placeholder="4444333322221111"
                               inputProps={{ maxLength: 19 }}
                               required
                             />
@@ -264,23 +349,23 @@ export default function PaymentDetail() {
                                 sx={{ minWidth: 120 }}
                                 md={{ minWidth: 150 }}
                               >
-                                <InputLabel id="month-select-label">
+                                <InputLabel id="expiry_month-select-label">
                                   Month
                                 </InputLabel>
                                 <Select
-                                  labelId="month-select-label"
-                                  id="month-select"
+                                  labelId="expiry_month-select-label"
+                                  id="expiry_month"
                                   value={month}
                                   onChange={(e) => setMonth(e.target.value)}
                                   label="Month"
                                   required
                                 >
-                                  {months.map((month) => (
+                                  {months.map((monthItem) => (
                                     <MenuItem
-                                      key={month.value}
-                                      value={month.value}
+                                      key={monthItem.value}
+                                      value={monthItem.value}
                                     >
-                                      {month.name}
+                                      {monthItem.name}
                                     </MenuItem>
                                   ))}
                                 </Select>
@@ -290,45 +375,46 @@ export default function PaymentDetail() {
                                 sx={{ minWidth: 100 }}
                                 md={{ minWidth: 150 }}
                               >
-                                <InputLabel id="year-select-label">
+                                <InputLabel id="expiry_year-select-label">
                                   Year
                                 </InputLabel>
                                 <Select
-                                  labelId="year-select-label"
-                                  id="year-select"
+                                  labelId="expiry_year-select-label"
+                                  id="expiry_year"
                                   value={year}
                                   onChange={(e) => setYear(e.target.value)}
                                   label="Year"
                                   required
                                 >
-                                  {years.map((year) => (
-                                    <MenuItem key={year} value={year}>
-                                      {year}
+                                  {years.map((yearItem) => (
+                                    <MenuItem key={yearItem} value={yearItem}>
+                                      {yearItem}
                                     </MenuItem>
                                   ))}
                                 </Select>
                               </FormControl>
                               <TextField
-                                id="standard-basic"
+                                id="card_cvn"
                                 label="CVV"
                                 variant="standard"
                                 className="w-100"
                                 value={cvv}
                                 onChange={(e) => setCvv(e.target.value)}
+                                placeholder="123"
                                 inputProps={{ maxLength: 4 }}
                                 required
                               />
                             </div>
 
-                            <Button
+                            <button
                               type="submit"
-                              variant="contained"
-                              className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4"
+                              className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4 btn btn-primary"
                               disabled={loading}
+                              style={{ border: "none", padding: "12px" }}
                             >
-                              {loading ? "Processing..." : "Pay Now"}
-                            </Button>
-                          </Box>
+                              {loading ? "Processing..." : "Make Payment"}
+                            </button>
+                          </form>
                         </div>
                       </div>
                     </div>
