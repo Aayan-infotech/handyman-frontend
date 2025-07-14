@@ -188,7 +188,7 @@ export default function PaymentDetail() {
 
       // Make the API call to eWay endpoint
       const response = await axiosInstance.post(
-        "https://api.tradehunters.com.au/api/eway/pay",
+        "https://api.tradehunters.com.auapi/eway/pay",
 
         paymentData
       );

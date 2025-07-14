@@ -83,7 +83,7 @@ export default function Notification() {
   // const handleName = async (notification) => {
   //   try {
   //     const response = await axios.post(
-  //       "https://api.tradehunters.com.au//api/match/getMatchedData",
+  //       "https://api.tradehunters.com.au/api/match/getMatchedData",
   //       {
   //         senderId: notification.userId,
   //         receiverId: notification.receiverId,
