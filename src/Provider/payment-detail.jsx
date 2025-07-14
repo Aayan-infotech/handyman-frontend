@@ -14,7 +14,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import axiosInstance from "../components/axiosInstance";
-
+import axios from "axios"
 export default function PaymentDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -187,8 +187,8 @@ export default function PaymentDetail() {
       console.log("payment data", paymentData);
 
       // Make the API call to eWay endpoint
-      const response = await axiosInstance.post(
-        "https://api.tradehunters.com.auapi/eway/pay",
+      const response = await axios.post(
+        "https://api.tradehunters.com.au/api/eway/pay",
 
         paymentData
       );
