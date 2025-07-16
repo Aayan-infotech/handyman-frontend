@@ -358,34 +358,33 @@ function Home() {
           <div className="row gy-4 mt-4">
             {providers.map((item) => (
               <div className="col-lg-4" key={item._id}>
-             
-                  <div className="card rounded-0 h-100">
-                    <div className="card-body">
-                      <div className="d-flex justify-content-between align-items-center flex-row">
-                        <img
-                          loading="lazy"
-                          src={item?.images || noImage}
-                          alt="company1"
-                          className="img-fluid"
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            borderRadius: "50%",
-                          }}
-                        />
-                        {/* <span className="border-full-time">Full Time</span> */}
-                      </div>
-                      <b>{item?.businessName}</b>
-                      <div className="d-flex justify-content-start align-items-start flex-row my-2 flex-column">
-                        <span>{item?.contactName}</span>
+                <div className="card rounded-0 h-100">
+                  <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-center flex-row">
+                      <img
+                        loading="lazy"
+                        src={item?.images || noImage}
+                        alt="company1"
+                        className="img-fluid"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                      {/* <span className="border-full-time">Full Time</span> */}
+                    </div>
+                    <b>{item?.businessName}</b>
+                    <div className="d-flex justify-content-start align-items-start flex-row my-2 flex-column">
+                      <span>{item?.contactName}</span>
 
-                        <span>
-                          {filterAddressState(item?.address?.addressLine)}
-                        </span>
-                      </div>
-                      <span className="text-secondary">{item?.about}</span>
-                      <div className="d-flex flex-row flex-wrap gap-2">
-                        <Stack direction="column" spacing={1}>
+                      <span>
+                        {filterAddressState(item?.address?.addressLine)}
+                      </span>
+                    </div>
+                    <span className="text-secondary">{item?.about}</span>
+                    <div className="d-flex flex-row flex-wrap gap-2">
+                      <Stack direction="column" spacing={1}>
                         <Stack
                           direction="row"
                           className="flex-wrap gap-2 justify-content-start align-items-start"
@@ -409,7 +408,6 @@ function Home() {
                         {item.businessType.length > maxVisibleChips && (
                           <Button
                             size="small"
-                           
                             onClick={() => toggleExpand(item._id)}
                             sx={{
                               alignSelf: "flex-start",
@@ -421,11 +419,9 @@ function Home() {
                           </Button>
                         )}
                       </Stack>
-
-                      </div>
                     </div>
                   </div>
-               
+                </div>
               </div>
             ))}
           </div>
@@ -549,6 +545,23 @@ function Home() {
                 Great platfrom for connecting service Hunters to Service
                 providers in Australia
               </p>
+              <div className="social-icons d-flex justify-content-start gap-4 mb-3">
+                <a href="#facebook" className="text-light bg-dark">
+                  <FaFacebook size={16} />
+                </a>
+                <a href="#dribble" className="text-light">
+                  <FaDribbble size={16} />
+                </a>
+                <a href="#instagram" className="text-light">
+                  <FaInstagram size={16} />
+                </a>
+                <a href="#twitter" className="text-light">
+                  <FaTwitter size={16} />
+                </a>
+                <a href="#linkedin" className="text-light">
+                  <FaLinkedin size={16} />
+                </a>
+              </div>
             </Col>
 
             {/* Center Section: Links */}
@@ -558,30 +571,30 @@ function Home() {
                   <h6 className="">About</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                     {/* <li>
-                      <a href="#companies" className="text-light">
-                        Companies
-                      </a>
-                    </li> */}
+                                 <a href="#companies" className="text-light">
+                                   Companies
+                                 </a>
+                               </li> */}
                     {/* <li>
-                      <a href="#pricing" className="text-light">
-                        Pricing
-                      </a>
-                    </li> */}
+                                 <a href="#pricing" className="text-light">
+                                   Pricing
+                                 </a>
+                               </li> */}
                     <li>
-                      <a href="allblogs" className="text-light">
+                      <Link to="/allblogs" className="text-light">
                         Blogs
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a href="terms" className="text-light">
+                      <Link to="/terms" className="text-light">
                         Terms
-                      </a>
+                      </Link>
                     </li>
                     {/* <li>
-                      <a href="#advice" className="text-light">
-                        Advice
-                      </a>
-                    </li> */}
+                                 <a href="#advice" className="text-light">
+                                   Advice
+                                 </a>
+                               </li> */}
                     <li>
                       <Link to="/privacy" className="text-light">
                         Privacy Policy
@@ -593,15 +606,15 @@ function Home() {
                   <h6>Resources</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                     <li>
-                      <a href="/guide" className="text-light">
+                      <Link to="/guide" className="text-light">
                         Guide & Updates
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
-                      <a href="/contact-us" className="text-light">
+                      <Link to="/contact-us" className="text-light">
                         Contact Us
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </Col>
@@ -637,23 +650,16 @@ function Home() {
               </p>
             </Col>
             <Col lg={6}>
-              <div className="social-icons d-flex justify-content-center justify-content-lg-end gap-4 mb-3">
-                <a href="#facebook" className="text-light bg-dark">
-                  <FaFacebook size={16} />
+              <p className="text-end">
+                Developed by{" "}
+                <a
+                  href="https://aayaninfotech.com/"
+                  target="_blank"
+                  className="text-light text-decoration-none text-bold"
+                >
+                  @Aayan Infotech
                 </a>
-                <a href="#dribble" className="text-light">
-                  <FaDribbble size={16} />
-                </a>
-                <a href="#instagram" className="text-light">
-                  <FaInstagram size={16} />
-                </a>
-                <a href="#twitter" className="text-light">
-                  <FaTwitter size={16} />
-                </a>
-                <a href="#linkedin" className="text-light">
-                  <FaLinkedin size={16} />
-                </a>
-              </div>
+              </p>
             </Col>
           </Row>
         </Container>
