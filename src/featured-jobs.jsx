@@ -57,7 +57,7 @@ export default function FeaturedJobs() {
         params: {
           page,
           limit: 9,
-          total:20,
+          total: 20,
           // search: searchQuery?.name || "",
           ...(query && { search: query }),
         },
@@ -97,7 +97,7 @@ export default function FeaturedJobs() {
         <Navbar collapseOnSelect expand="lg" className="position-relative z-1">
           <Container fluid>
             <Link to="/" className="py-1">
-              <img src={logo} alt="logo" loading="lazy"/>
+              <img src={logo} alt="logo" loading="lazy" />
             </Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
@@ -232,29 +232,63 @@ export default function FeaturedJobs() {
       <footer className="footer text-light">
         <Container>
           <Row>
+            {/* Left Section: Logo and Description */}
             <Col md={4} className="mb-4">
-              <img src={logoWhite} alt="logo" loading="lazy"/>
+              <img src={logoWhite} alt="logo" loading="lazy" />
               <p className="fw-normal mt-3">
-                Great platform for connecting service Hunters to Service
+                Great platfrom for connecting service Hunters to Service
                 providers in Australia
               </p>
+              <div className="social-icons d-flex justify-content-start gap-4 mb-3">
+                <a href="#facebook" className="text-light bg-dark">
+                  <FaFacebook size={16} />
+                </a>
+                <a href="#dribble" className="text-light">
+                  <FaDribbble size={16} />
+                </a>
+                <a href="#instagram" className="text-light">
+                  <FaInstagram size={16} />
+                </a>
+                <a href="#twitter" className="text-light">
+                  <FaTwitter size={16} />
+                </a>
+                <a href="#linkedin" className="text-light">
+                  <FaLinkedin size={16} />
+                </a>
+              </div>
             </Col>
 
+            {/* Center Section: Links */}
             <Col md={4} className="mb-4">
               <Row>
                 <Col>
-                  <h6>About</h6>
+                  <h6 className="">About</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                    {/* <li>
+                           <a href="#companies" className="text-light">
+                             Companies
+                           </a>
+                         </li> */}
+                    {/* <li>
+                           <a href="#pricing" className="text-light">
+                             Pricing
+                           </a>
+                         </li> */}
                     <li>
-                      <a href="allblogs" className="text-light">
+                      <Link to="/allblogs" className="text-light">
                         Blogs
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a href="terms" className="text-light">
+                      <Link to="/terms" className="text-light">
                         Terms
-                      </a>
+                      </Link>
                     </li>
+                    {/* <li>
+                           <a href="#advice" className="text-light">
+                             Advice
+                           </a>
+                         </li> */}
                     <li>
                       <Link to="/privacy" className="text-light">
                         Privacy Policy
@@ -266,15 +300,15 @@ export default function FeaturedJobs() {
                   <h6>Resources</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                     <li>
-                      <a href="/guide" className="text-light">
+                      <Link to="/guide" className="text-light">
                         Guide & Updates
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
-                      <a href="/contact-us" className="text-light">
+                      <Link to="/contact-us" className="text-light">
                         Contact Us
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </Col>
@@ -306,27 +340,20 @@ export default function FeaturedJobs() {
           <Row className="mt-4">
             <Col lg={6}>
               <p className="text-start">
-                2025 @ TradeHunter. All rights reserved.
+                2025 @ TradeHunters. All rights reserved.
               </p>
             </Col>
             <Col lg={6}>
-              <div className="social-icons d-flex justify-content-center justify-content-lg-end gap-4 mb-3">
-                <a href="#facebook" className="text-light bg-dark">
-                  <FaFacebook size={16} />
+              <p className="text-end">
+                Developed by{" "}
+                <a
+                  href="https://aayaninfotech.com/"
+                  target="_blank"
+                  className="text-light text-decoration-none text-bold"
+                >
+                  @Aayan Infotech
                 </a>
-                <a href="#dribble" className="text-light">
-                  <FaDribbble size={16} />
-                </a>
-                <a href="#instagram" className="text-light">
-                  <FaInstagram size={16} />
-                </a>
-                <a href="#twitter" className="text-light">
-                  <FaTwitter size={16} />
-                </a>
-                <a href="#linkedin" className="text-light">
-                  <FaLinkedin size={16} />
-                </a>
-              </div>
+              </p>
             </Col>
           </Row>
         </Container>

@@ -14,12 +14,13 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import axiosInstance from "../components/axiosInstance";
-import axios from "axios"
+import axios from "axios";
+
 export default function PaymentDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [month, setMonth] = useState("01");
-  const [year, setYear] = useState("23");
+  const [year, setYear] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -55,17 +56,12 @@ export default function PaymentDetail() {
   ];
 
   const years = Array.from({ length: 10 }, (_, i) => {
-    const year = new Date().getFullYear() - 2000 + i;
-    return year < 10 ? `0${year}` : `${year}`;
+    const year = new Date().getFullYear() + i;
+    return year.toString().slice(-2); // Get last 2 digits
   });
 
   // Load eWay encryption script
   useEffect(() => {
-    if (hunterId) {
-      navigate("/error");
-      return;
-    }
-
     const getData = async () => {
       setLoading(true);
       try {
@@ -76,9 +72,6 @@ export default function PaymentDetail() {
         setData(subscriptionData);
         setLoading(false);
       } catch (error) {
-        if (error.response?.status === 500) {
-          // navigate("/error");
-        }
         console.log(error);
         setLoading(false);
       }
@@ -86,10 +79,11 @@ export default function PaymentDetail() {
     getData();
   }, [id]);
 
+  // UNCOMMENTED AND FIXED: Load eWay script
   useEffect(() => {
     // Load eWay script
     const script = document.createElement("script");
-    script.src = "https://secure.ewaypayments.com/scripts/eCrypt.js";
+    script.src = "https://secure.ewaypayments.com/scripts/eCrypt.min.js";
     script.async = true;
     script.onload = () => {
       console.log("eWay encryption script loaded");
@@ -106,7 +100,10 @@ export default function PaymentDetail() {
     document.body.appendChild(script);
 
     return () => {
-      document.body.removeChild(script);
+      // Check if script exists before removing
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
@@ -140,10 +137,14 @@ export default function PaymentDetail() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
 
+    console.log("Submit started");
+
+    // Check if eWay script is loaded
     if (!ewayLoaded) {
       setToastProps({
-        message: "Payment processor is still loading. Please wait.",
+        message: "Payment processor is still loading. Please try again.",
         type: "error",
         toastKey: Date.now(),
       });
@@ -160,42 +161,80 @@ export default function PaymentDetail() {
         !email ||
         !cardHolderName ||
         !cardNumber ||
-        !cvv
+        !cvv ||
+        !month ||
+        !year
       ) {
         throw new Error("Please fill all card details.");
+      }
+
+      // Validate card number (remove spaces and check length)
+      const cleanCardNumber = cardNumber.replace(/\s/g, "");
+      if (cleanCardNumber.length < 13 || cleanCardNumber.length > 19) {
+        throw new Error("Please enter a valid card number.");
+      }
+
+      // Validate CVV
+      if (cvv.length < 3 || cvv.length > 4) {
+        throw new Error("Please enter a valid CVV.");
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        throw new Error("Please enter a valid email address.");
       }
 
       // Encrypt card details
       const encryptedCard = encryptCardDetails();
 
-      // Prepare the payment data
+      // Prepare the payment data with all required eWay fields
       const paymentData = {
         userId: providerId,
         subscriptionPlanId: id,
         Customer: {
-          FirstName: firstName,
-          LastName: lastName,
-          Email: email,
-          CardDetails: encryptedCard,
+          FirstName: firstName.trim(),
+          LastName: lastName.trim(),
+          Email: email.trim(),
+          CardDetails: {
+            Name: cardHolderName.trim(),
+            Number: encryptedCard.Number,
+            CVN: encryptedCard.CVN,
+            ExpiryMonth: month,
+            ExpiryYear: `20${year}`, // Ensure 4-digit year
+          },
         },
         Payment: {
-          TotalAmount: data?.amount * 100,
+          TotalAmount: Math.round(data?.amount * 100), // Ensure integer cents
           CurrencyCode: "AUD",
+          InvoiceNumber: `SUB-${Date.now()}`, // Add unique invoice number
+          InvoiceDescription: `${data?.planName} Subscription`, // Add description
         },
+        TransactionType: "Purchase", // Specify transaction type
       };
 
       console.log("payment data", paymentData);
 
       // Make the API call to eWay endpoint
-      const response = await axios.post(
-        "https://api.tradehunters.com.au/api/eway/pay",
+      const response = await axiosInstance.post("/eway/pay", paymentData);
 
-        paymentData
-      );
+      const result = response.data;
 
-      const result = await response.json();
+      console.log("eWay response:", result);
 
-      if (!response.ok) throw new Error(result?.message || "Payment failed");
+      // Check for eWay specific errors
+      if (result.errors && result.errors.length > 0) {
+        throw new Error(result.errors.join(", "));
+      }
+
+      if (!result.TransactionStatus || result.TransactionStatus === false) {
+        const errorMessage = result.ResponseMessage || "Payment failed";
+        throw new Error(errorMessage);
+      }
+
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(result?.message || "Payment failed");
+      }
 
       setToastProps({
         message: "Subscription purchased successfully!",
@@ -214,19 +253,30 @@ export default function PaymentDetail() {
       }, 2000);
     } catch (error) {
       console.error("Payment error:", error);
+
+      // Handle specific eWay error codes
+      let errorMessage = error.message || "Payment processing failed";
+
+      if (error.message && error.message.includes("V6011")) {
+        errorMessage = "Invalid card number. Please check your card details.";
+      } else if (error.message && error.message.includes("V6012")) {
+        errorMessage = "Invalid CVV. Please check your card security code.";
+      } else if (error.message && error.message.includes("V6013")) {
+        errorMessage = "Invalid expiry date. Please check your card expiry.";
+      } else if (error.message && error.message.includes("V6021")) {
+        errorMessage =
+          "Invalid cardholder name. Please check the name on your card.";
+      } else if (error.message && error.message.includes("V6022")) {
+        errorMessage = "Invalid card number. Please check your card details.";
+      } else if (error.message && error.message.includes("V6023")) {
+        errorMessage = "Invalid CVV. Please check your card security code.";
+      }
+
       setToastProps({
-        message: error.message || "Payment processing failed",
+        message: errorMessage,
         type: "error",
         toastKey: Date.now(),
       });
-
-      if (
-        error.message.includes("processor") ||
-        error.message.includes("secure")
-      ) {
-        // For script loading/encryption errors, suggest page refresh
-        setTimeout(() => window.location.reload(), 3000);
-      }
     } finally {
       setLoading(false);
     }
@@ -252,11 +302,6 @@ export default function PaymentDetail() {
   return (
     <>
       <LoggedHeader />
-      {!ewayLoaded && (
-        <div className="alert alert-info">
-          Loading payment processor... Please wait.
-        </div>
-      )}
       <div className="bg-second ">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
@@ -285,7 +330,7 @@ export default function PaymentDetail() {
                           <form
                             data-eway-encrypt-key="09n/nrZ2RtlG9HWIuWmDq+w/KIv5E4BJwP413gyPZ5xnRFf6HvgS8P5q478oLsYQji+b2TuJVBdxRurAl6qZWioRjbI4uG2VAzxsuX5bnK8TkmU15MSZkSWd9m4wFYjnIFMkxbCPhKHOzwrVz7fZcxckY1d1is3K2D8J7NnDv3WmTxmYKnJkHZwxdeD7XgSCThcexrTJZEYBlaYftHbxfEOVHvcj4Cu1zKPcQfn+ZWlITm/QEjqgZHov957LeavJOhpzcGJAkK8X4o6W99PcQbj277Tus+S3qQsd7miz+H5dObjUSz7w/b7EMaD4GecVgKm18zdCoOraN3Cs3ON3nQ=="
                             className="w-100 d-flex flex-column gap-4"
-                            onSubmit={handleSubmit}
+                            // onSubmit={handleSubmit}
                           >
                             <div className="d-flex flex-row gap-3">
                               <TextField
@@ -317,7 +362,7 @@ export default function PaymentDetail() {
                                 setCardHolderName(e.target.value)
                               }
                               placeholder="John Doe"
-                              type="TEXT"
+                              type="text"
                               required
                             />
                             <TextField
@@ -332,6 +377,7 @@ export default function PaymentDetail() {
                             />
                             <TextField
                               id="card_number"
+                              name="EWAY_CARDNUMBER"
                               label="Card Number"
                               variant="standard"
                               className="w-100"
@@ -355,6 +401,7 @@ export default function PaymentDetail() {
                                 <Select
                                   labelId="expiry_month-select-label"
                                   id="expiry_month"
+                                  name="EWAY_CARDEXPIRYMONTH"
                                   value={month}
                                   onChange={(e) => setMonth(e.target.value)}
                                   label="Month"
@@ -381,6 +428,7 @@ export default function PaymentDetail() {
                                 <Select
                                   labelId="expiry_year-select-label"
                                   id="expiry_year"
+                                  name="EWAY_CARDEXPIRYYEAR"
                                   value={year}
                                   onChange={(e) => setYear(e.target.value)}
                                   label="Year"
@@ -395,6 +443,7 @@ export default function PaymentDetail() {
                               </FormControl>
                               <TextField
                                 id="card_cvn"
+                                name="EWAY_CARDCVN"
                                 label="CVV"
                                 variant="standard"
                                 className="w-100"
@@ -407,12 +456,17 @@ export default function PaymentDetail() {
                             </div>
 
                             <button
-                              type="submit"
+                              // type="submit"
+                              onClick={handleSubmit}
                               className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4 btn btn-primary"
-                              disabled={loading}
+                              disabled={loading || !ewayLoaded}
                               style={{ border: "none", padding: "12px" }}
                             >
-                              {loading ? "Processing..." : "Make Payment"}
+                              {loading
+                                ? "Processing..."
+                                : !ewayLoaded
+                                ? "Loading..."
+                                : "Make Payment"}
                             </button>
                           </form>
                         </div>

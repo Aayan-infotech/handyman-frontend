@@ -82,7 +82,7 @@ export default function Contact() {
             >
               <Container fluid>
                 <Link to="/" className="py-1">
-                  <img src={logo} alt="logo" loading="lazy"/>
+                  <img src={logo} alt="logo" loading="lazy" />
                 </Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
@@ -200,11 +200,28 @@ export default function Contact() {
               <Row>
                 {/* Left Section: Logo and Description */}
                 <Col md={4} className="mb-4">
-                  <img src={logoWhite} alt="logo" loading="lazy"/>
+                  <img src={logoWhite} alt="logo" loading="lazy" />
                   <p className="fw-normal mt-3">
                     Great platfrom for connecting service Hunters to Service
                     providers in Australia
                   </p>
+                  <div className="social-icons d-flex justify-content-start gap-4 mb-3">
+                    <a href="#facebook" className="text-light bg-dark">
+                      <FaFacebook size={16} />
+                    </a>
+                    <a href="#dribble" className="text-light">
+                      <FaDribbble size={16} />
+                    </a>
+                    <a href="#instagram" className="text-light">
+                      <FaInstagram size={16} />
+                    </a>
+                    <a href="#twitter" className="text-light">
+                      <FaTwitter size={16} />
+                    </a>
+                    <a href="#linkedin" className="text-light">
+                      <FaLinkedin size={16} />
+                    </a>
+                  </div>
                 </Col>
 
                 {/* Center Section: Links */}
@@ -213,31 +230,31 @@ export default function Contact() {
                     <Col>
                       <h6 className="">About</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
+                        {/* <li>
+                           <a href="#companies" className="text-light">
+                             Companies
+                           </a>
+                         </li> */}
+                        {/* <li>
+                           <a href="#pricing" className="text-light">
+                             Pricing
+                           </a>
+                         </li> */}
                         <li>
-                          <a href="allblogs" className="text-light">
+                          <Link to="/allblogs" className="text-light">
                             Blogs
-                          </a>
+                          </Link>
                         </li>
-                        {/* <li>
-                      <a href="#companies" className="text-light">
-                        Companies
-                      </a>
-                    </li> */}
-                        {/* <li>
-                      <a href="#pricing" className="text-light">
-                        Pricing
-                      </a>
-                    </li> */}
                         <li>
-                          <a href="terms" className="text-light">
+                          <Link to="/terms" className="text-light">
                             Terms
-                          </a>
+                          </Link>
                         </li>
                         {/* <li>
-                      <a href="#advice" className="text-light">
-                        Advice
-                      </a>
-                    </li> */}
+                           <a href="#advice" className="text-light">
+                             Advice
+                           </a>
+                         </li> */}
                         <li>
                           <Link to="/privacy" className="text-light">
                             Privacy Policy
@@ -249,20 +266,21 @@ export default function Contact() {
                       <h6>Resources</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                         <li>
-                          <a href="/guide" className="text-light">
+                          <Link to="/guide" className="text-light">
                             Guide & Updates
-                          </a>
+                          </Link>
                         </li>
 
                         <li>
-                          <a href="/contact-us" className="text-light">
+                          <Link to="/contact-us" className="text-light">
                             Contact Us
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </Col>
                   </Row>
                 </Col>
+
                 <Col md={4} className="mb-4">
                   <h6>Download Our app</h6>
                   <div className="d-flex flex-column">
@@ -282,57 +300,26 @@ export default function Contact() {
                     />
                   </div>
                 </Col>
-
-                {/* Right Section: Subscription */}
-                {/* <Col md={4} className="mb-4">
-              <h6>Get job notifications</h6>
-              <p className="my-3">
-                The latest job news, articles, sent to your inbox weekly.
-              </p>
-              <Form>
-                <Form.Group className="d-flex">
-                  <Form.Control
-                    type="email"
-                    placeholder="Email Address "
-                    className="me-2 rounded-0"
-                  />
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="custom-green px-5 py-2 rounded-0 bg-green-custom"
-                  >
-                    Subscribe
-                  </Button>
-                </Form.Group>
-              </Form>
-            </Col> */}
               </Row>
 
               <hr />
               <Row className="mt-4">
                 <Col lg={6}>
                   <p className="text-start">
-                    2025 @ TradeHunter. All rights reserved.
+                    2025 @ TradeHunters. All rights reserved.
                   </p>
                 </Col>
                 <Col lg={6}>
-                  <div className="social-icons d-flex justify-content-center justify-content-lg-end gap-4 mb-3">
-                    <a href="#facebook" className="text-light bg-dark">
-                      <FaFacebook size={16} />
+                  <p className="text-end">
+                    Developed by{" "}
+                    <a
+                      href="https://aayaninfotech.com/"
+                      target="_blank"
+                      className="text-light text-decoration-none text-bold"
+                    >
+                      @Aayan Infotech
                     </a>
-                    <a href="#dribble" className="text-light">
-                      <FaDribbble size={16} />
-                    </a>
-                    <a href="#instagram" className="text-light">
-                      <FaInstagram size={16} />
-                    </a>
-                    <a href="#twitter" className="text-light">
-                      <FaTwitter size={16} />
-                    </a>
-                    <a href="#linkedin" className="text-light">
-                      <FaLinkedin size={16} />
-                    </a>
-                  </div>
+                  </p>
                 </Col>
               </Row>
             </Container>
