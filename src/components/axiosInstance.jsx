@@ -7,8 +7,6 @@ const axiosInstance = axios.create({
 let isRefreshing = false;
 let failedQueue = [];
 
-
-
 const processQueue = (error, token = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
