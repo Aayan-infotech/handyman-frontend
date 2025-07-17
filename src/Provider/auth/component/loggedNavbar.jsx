@@ -45,7 +45,7 @@ console.log(plan)
     if (!userId) return;
 
     if (!socketRef.current || socketRef.current.disconnected) {
-      const newSocket = io("https://api.tradehunters.com.au", {
+      const newSocket = io("http://98.82.228.18:7777", {
         auth: {
           token: hunterToken || providerToken,
           userId,

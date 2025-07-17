@@ -218,7 +218,7 @@ export default function SignUpProvider() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://api.tradehunters.com.au/api/auth/signup",
+        "http://98.82.228.18:7777/api/auth/signup",
         formData,
         {
           headers: {
