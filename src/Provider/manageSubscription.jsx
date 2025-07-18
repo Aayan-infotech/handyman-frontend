@@ -51,7 +51,7 @@ export default function ManageSubscription() {
     setIsCancelling(true);
     try {
       const res = await axiosInstance.post(
-        `/stripe/cancelSubscription/${selectedSubscription._id}`,
+        `/stripe/cancelSubscription/${providerId}`,
         {},
         {
           headers: {
