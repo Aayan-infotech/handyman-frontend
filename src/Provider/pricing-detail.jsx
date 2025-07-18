@@ -9,6 +9,7 @@ import { handlePayment } from "../Slices/paymentSlice";
 import Loader from "../Loader";
 import axiosInstance from "../components/axiosInstance";
 import Toaster from "../Toaster";
+import { set } from "react-hook-form";
 
 export default function PricingProvider() {
   const { id } = useParams();
@@ -75,8 +76,34 @@ export default function PricingProvider() {
     navigate("/home");
   };
 
-  const handleSubmit = () => {
-    navigate(`/provider/paymentdetail/${id}`);
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.post("/stripe/pay", {
+        Customer: {
+          Email: localStorage.getItem("ProviderEmail"),
+        },
+        Payment: {
+          TotalAmount: subscriptionAmount * 100,
+          CurrencyCode: "AUD",
+        },
+        subscriptionPlanId: subscriptionId,
+        userId: providerId,
+      });
+      console.log(response);
+      if (response?.status === 200) {
+        console.log(response?.data?.url);
+        window.location.href = response?.data?.url;
+      }
+    } catch (error) {
+      console.log(error);
+      setToastProps({
+        message: error,
+        type: "error",
+        toastKey: Date.now(),
+      });
+      setLoading(false);
+    }
   };
 
   return (

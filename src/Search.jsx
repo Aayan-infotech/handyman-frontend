@@ -26,6 +26,8 @@ import Loader from "./Loader";
 import Toaster from "./Toaster";
 import noData from "./assets/no_data_found.gif";
 import logoWhite from "./assets/logo-white.png";
+import appleIcon from "./assets/apple.png";
+import playIcon from "./assets/google.png";
 import { FaPersonCircleExclamation } from "react-icons/fa6";
 function Search() {
   const location = useLocation();

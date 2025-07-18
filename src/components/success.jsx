@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axiosInstance from "./axiosInstance";
+import { useLocation } from "react-router-dom";
 
 const PaymentSuccessPage = () => {
+  const { id } = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const sessionId = searchParams.get("sessionId");
+  const handlePaymentSuccess = async () => {
+    try {
+      const response = await axiosInstance.get(`/stripe/session/${sessionId}`);
+      if (response.status === 200) {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handlePaymentSuccess();
+  }, [sessionId]);
   return (
     <Container maxWidth="md" className="mt-5">
       <Box
