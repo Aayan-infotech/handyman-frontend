@@ -6,10 +6,10 @@ import axiosInstance from "./axiosInstance";
 import { useLocation } from "react-router-dom";
 
 const PaymentSuccessPage = () => {
-  const { id } = useLocation();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location?.search);
+  const sessionId = searchParams.get("session_id");
 
-  const searchParams = new URLSearchParams(location.search);
-  const sessionId = searchParams.get("sessionId");
   const handlePaymentSuccess = async () => {
     try {
       const response = await axiosInstance.get(`/stripe/session/${sessionId}`);

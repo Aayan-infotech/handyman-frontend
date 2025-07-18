@@ -319,14 +319,16 @@ export default function ManageSubscription() {
                                 }`}{" "}
                                 Plan
                               </h3>
-                              <Button
-                                variant="contained"
-                                color="error"
-                                className="rounded-0"
-                                onClick={() => handleClickOpen(item)}
-                              >
-                                Cancel Subscription
-                              </Button>
+                              {item.subscriptionStatus === "active" && (
+                                <Button
+                                  variant="contained"
+                                  color="error"
+                                  className="rounded-0"
+                                  onClick={() => handleClickOpen(item)}
+                                >
+                                  Cancel Subscription
+                                </Button>
+                              )}
                             </div>
                             <div className="w-100 card price-card border-0 rounded-5 position-relative px-4 pb-4 pt-4">
                               <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
@@ -530,4 +532,3 @@ export default function ManageSubscription() {
     </>
   );
 }
-
