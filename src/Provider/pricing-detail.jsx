@@ -79,17 +79,28 @@ export default function PricingProvider() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      // Calculate the amount based on validity
+      let amountToCharge;
+      if (validity === 30) {
+        // Monthly
+        amountToCharge = subscriptionAmount * 100;
+      } else {
+        // Yearly - divide by 12 to get monthly equivalent
+        amountToCharge = (subscriptionAmount / 12) * 100;
+      }
+
       const response = await axiosInstance.post("/stripe/pay", {
         Customer: {
           Email: localStorage.getItem("ProviderEmail"),
         },
         Payment: {
-          TotalAmount: subscriptionAmount * 100,
+          TotalAmount: Math.round(amountToCharge), // Ensure we send an integer
           CurrencyCode: "AUD",
         },
         subscriptionPlanId: subscriptionId,
         userId: providerId,
       });
+
       console.log(response);
       if (response?.status === 200) {
         console.log(response?.data?.url);
@@ -98,7 +109,7 @@ export default function PricingProvider() {
     } catch (error) {
       console.log(error);
       setToastProps({
-        message: error,
+        message: error.response?.data?.message || "Payment failed",
         type: "error",
         toastKey: Date.now(),
       });
