@@ -325,6 +325,10 @@ export default function ManageSubscription() {
                                   color="error"
                                   className="rounded-0"
                                   onClick={() => handleClickOpen(item)}
+                                  disabled={
+                                    item?.autopayActive === false ||
+                                    item?.autopayActive === null
+                                  }
                                 >
                                   Cancel Subscription
                                 </Button>
