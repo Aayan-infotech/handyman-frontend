@@ -38,7 +38,9 @@ export default function ResetPassword() {
 
     try {
       const response = await axiosInstance.post(
-        "/auth/reset-password-with-otp",
+        `/auth/reset-password-with-otp/${
+          ProviderParams ? "provider" : "hunter"
+        } `,
         {
           email,
           newPassword,
