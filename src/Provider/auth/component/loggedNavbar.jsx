@@ -242,6 +242,7 @@ console.log(plan)
           "ProviderEmail",
           providerResponse?.payload?.data?.email
         );
+        localStorage.setItem("Guest", providerResponse?.payload?.data?.isGuestMode);
         localStorage.setItem("ProviderId", fetchedUser?._id);
         if (
           providerResponse?.payload?.data?.subscriptionStatus === 0 &&
