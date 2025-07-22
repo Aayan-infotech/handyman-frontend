@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import LoggedHeader from "./auth/component/loggedNavbar";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../components/axiosInstance";
@@ -6,6 +6,16 @@ import Loader from "../Loader";
 import Button from "@mui/material/Button";
 import Toaster from "../Toaster";
 import Select from "react-select";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 export default function ManageSubscription() {
   const [activeSubscriptions, setActiveSubscriptions] = useState([]);
   const [expiredSubscriptions, setExpiredSubscriptions] = useState([]);
@@ -21,9 +31,89 @@ export default function ManageSubscription() {
     type: "",
     toastKey: 0,
   });
+  const [open, setOpen] = React.useState(false);
+  const [selectedSubscription, setSelectedSubscription] = React.useState(null);
+  const [isCancelling, setIsCancelling] = React.useState(false);
+
+  const handleClickOpen = (subscription) => {
+    setSelectedSubscription(subscription);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedSubscription(null);
+  };
+
+  const handleCancelSubscription = async () => {
+    if (!selectedSubscription) return;
+
+    setIsCancelling(true);
+    try {
+      const res = await axiosInstance.post(
+        `/stripe/cancelSubscription/${providerId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
+          },
+        }
+      );
+
+      if (res?.data?.status === 200) {
+        setToastProps({
+          message: "Subscription cancelled successfully",
+          type: "success",
+          toastKey: Math.random(),
+        });
+        // Refresh the subscriptions list
+        const getData = async () => {
+          try {
+            const res = await axiosInstance.get(`/eway/getSusbcriptionById`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem(
+                  "ProviderToken"
+                )}`,
+              },
+            });
+
+            if (res?.data?.status === 200) {
+              const active = [];
+              const expired = [];
+
+              res?.data?.data.forEach((item) => {
+                if (item.subscriptionStatus !== "expired") {
+                  active.push(item);
+                } else if (item.subscriptionStatus === "expired") {
+                  expired.push(item);
+                }
+              });
+
+              setActiveSubscriptions(active);
+              setExpiredSubscriptions(expired);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        await getData();
+      }
+    } catch (error) {
+      console.error("Error cancelling subscription:", error);
+      setToastProps({
+        message:
+          error.response?.data?.message || "Failed to cancel subscription",
+        type: "error",
+        toastKey: Math.random(),
+      });
+    } finally {
+      setIsCancelling(false);
+      handleClose();
+    }
+  };
 
   useEffect(() => {
-    if(hunterId){
+    if (hunterId) {
       navigate("/error");
     }
     const getData = async () => {
@@ -99,7 +189,7 @@ export default function ManageSubscription() {
       return isNaN(date.getTime())
         ? "Invalid Date"
         : date.toLocaleDateString("en-AU", {
-            timeZone: "Australia/Sydney", // or 'Australia/Adelaide', 'Australia/Perth'
+            timeZone: "Australia/Sydney",
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
@@ -132,10 +222,6 @@ export default function ManageSubscription() {
       return "Invalid Date";
     }
   };
-
-  console.log(voucher);
-  console.log("activeSubscriptions", activeSubscriptions);
-  console.log("expiredSubscriptions", expiredSubscriptions);
 
   return (
     <>
@@ -216,22 +302,38 @@ export default function ManageSubscription() {
                       </>
                     </div>
                   )}
-                  <div className="row py-3 gy-2 mt-lg-4 mb-4">
+                  <div className="row py-3 gy-5 mt-lg-4 mb-4">
                     {/* Active Subscriptions Section */}
                     {activeSubscriptions.length > 0 && (
                       <>
                         {activeSubscriptions.map((item) => (
                           <div className="col-lg-12" key={item._id}>
-                            <h3 className="text-center text-lg-start">
-                              Your{" "}
-                              {`${
-                                item.subscriptionStatus
-                                  .charAt(0)
-                                  .toUpperCase() +
-                                item.subscriptionStatus.slice(1)
-                              }`}{" "}
-                              Plan
-                            </h3>
+                            <div className="d-flex flex-row justify-content-between align-items-center mb-3">
+                              <h3 className="text-center text-lg-start  fs-lg-2 fs-4">
+                                Your{" "}
+                                {`${
+                                  item.subscriptionStatus
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                  item.subscriptionStatus.slice(1)
+                                }`}{" "}
+                                Plan
+                              </h3>
+                              {item.subscriptionStatus === "active" && (
+                                <Button
+                                  variant="contained"
+                                  color="error"
+                                  className="rounded-0"
+                                  onClick={() => handleClickOpen(item)}
+                                  disabled={
+                                    item?.autopayActive === false ||
+                                    item?.autopayActive === null
+                                  }
+                                >
+                                  Cancel Subscription
+                                </Button>
+                              )}
+                            </div>
                             <div className="w-100 card price-card border-0 rounded-5 position-relative px-4 pb-4 pt-4">
                               <div className="card-body d-flex flex-column gap-3 align-items-start pb-0">
                                 <div className="w-100 d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start ">
@@ -391,6 +493,46 @@ export default function ManageSubscription() {
         type={toastProps.type}
         toastKey={toastProps.toastKey}
       />
+
+      <Dialog
+        open={open}
+        slots={{
+          transition: Transition,
+        }}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Cancel Subscription Confirmation"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to cancel your "
+            {selectedSubscription?.subscriptionPlanId?.planName}" subscription?
+            <br />
+            <br />
+            This action cannot be undone. Your subscription will remain active
+            until the end of the current billing period.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className="d-flex justify-content-between">
+          <Button
+            onClick={handleClose}
+            color="error"
+            variant="outlined"
+            disabled={isCancelling}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCancelSubscription}
+            color="primary"
+            variant="contained"
+            disabled={isCancelling}
+          >
+            {isCancelling ? "Cancelling..." : "Confirm Cancellation"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

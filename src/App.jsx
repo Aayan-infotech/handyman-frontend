@@ -114,6 +114,48 @@ const UnProtectedRoute = ({ element }) => {
   return !useAuth() ? element : null;
 };
 
+const ProviderProtectedRoute = ({ element }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuthAndPlan = async () => {
+      const hunterToken = localStorage.getItem("hunterToken");
+
+      if (hunterToken) {
+        setLoading(false);
+        return;
+      }
+
+      const providerToken = localStorage.getItem("ProviderToken");
+
+      if (!providerToken) {
+        navigate("/welcome");
+        return;
+      }
+      try {
+        const PlanType = localStorage.getItem("PlanType");
+        if (PlanType === "null" && !location.pathname.includes("/pricing")) {
+          navigate("/error"); // Redirect to 404 if PlanType is null
+        }
+      } catch (error) {
+        console.error("Error checking provider plan:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuthAndPlan();
+  }, [navigate, location]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return element;
+};
+
 function App() {
   return (
     <BrowserRouter>
@@ -219,7 +261,7 @@ function App() {
         />
         <Route
           path="/message"
-          element={<ProtectedRoute element={<Message />} />}
+          element={<ProviderProtectedRoute element={<Message />} />}
         />
         <Route
           path="/notification"
@@ -284,7 +326,7 @@ function App() {
 
         <Route
           path="/provider/message"
-          element={<ProtectedRoute element={<Message />} />}
+          element={<ProviderProtectedRoute element={<Message />} />}
         />
         <Route
           path="/provider/reset-password"
@@ -298,7 +340,7 @@ function App() {
           path="/provider/chat/:id"
           element={<ProtectedRoute element={<Chat />} />}
         />
-         <Route
+        <Route
           path="/chat/:id"
           element={<ProtectedRoute element={<Chat />} />}
         />

@@ -9,6 +9,7 @@ import { handlePayment } from "../Slices/paymentSlice";
 import Loader from "../Loader";
 import axiosInstance from "../components/axiosInstance";
 import Toaster from "../Toaster";
+import { set } from "react-hook-form";
 
 export default function PricingProvider() {
   const { id } = useParams();
@@ -75,8 +76,45 @@ export default function PricingProvider() {
     navigate("/home");
   };
 
-  const handleSubmit = () => {
-    navigate(`/provider/paymentdetail/${id}`);
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      // Calculate the amount based on validity
+      let amountToCharge;
+      if (validity === 30) {
+        // Monthly
+        amountToCharge = subscriptionAmount * 100;
+      } else {
+        // Yearly - divide by 12 to get monthly equivalent
+        amountToCharge = (subscriptionAmount / 12) * 100;
+      }
+
+      const response = await axiosInstance.post("/stripe/pay", {
+        Customer: {
+          Email: localStorage.getItem("ProviderEmail"),
+        },
+        Payment: {
+          TotalAmount: Math.round(amountToCharge), // Ensure we send an integer
+          CurrencyCode: "AUD",
+        },
+        subscriptionPlanId: subscriptionId,
+        userId: providerId,
+      });
+
+      console.log(response);
+      if (response?.status === 200) {
+        console.log(response?.data?.url);
+        window.location.href = response?.data?.url;
+      }
+    } catch (error) {
+      console.log(error);
+      setToastProps({
+        message: error.response?.data?.message || "Payment failed",
+        type: "error",
+        toastKey: Date.now(),
+      });
+      setLoading(false);
+    }
   };
 
   return (

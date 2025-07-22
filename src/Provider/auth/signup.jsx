@@ -723,12 +723,12 @@ export default function SignUpProvider() {
                       </Button>
                     </div>
                     <span className="w-100 d-flex justify-content-center">
-                      Go back to login page?{" "}
+                      Go back to login page?{"  "}
                       <Link
                         to="/provider/login"
                         className="highlighted-text text-decoration-none"
                       >
-                        Signin
+                        login
                       </Link>
                     </span>
                   </Form>

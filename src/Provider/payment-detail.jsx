@@ -79,62 +79,6 @@ export default function PaymentDetail() {
     getData();
   }, [id]);
 
-  // UNCOMMENTED AND FIXED: Load eWay script
-  useEffect(() => {
-    // Load eWay script
-    const script = document.createElement("script");
-    script.src = "https://secure.ewaypayments.com/scripts/eCrypt.min.js";
-    script.async = true;
-    script.onload = () => {
-      console.log("eWay encryption script loaded");
-      setEwayLoaded(true);
-    };
-    script.onerror = () => {
-      console.error("Failed to load eWay encryption script");
-      setToastProps({
-        message: "Failed to load payment processor. Please refresh the page.",
-        type: "error",
-        toastKey: Date.now(),
-      });
-    };
-    document.body.appendChild(script);
-
-    return () => {
-      // Check if script exists before removing
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  }, []);
-
-  const encryptCardDetails = () => {
-    if (!window.eCrypt || !window.eCrypt.encryptValue) {
-      throw new Error("Payment processor not ready. Please try again.");
-    }
-
-    const cleanedCardNumber = cardNumber.replace(/\s/g, "");
-    const cleanedCvv = cvv.trim();
-
-    if (!cleanedCardNumber || !cleanedCvv) {
-      throw new Error("Card details are incomplete");
-    }
-
-    try {
-      return {
-        Name: cardHolderName,
-        Number: window.eCrypt.encryptValue(cleanedCardNumber),
-        CVN: window.eCrypt.encryptValue(cleanedCvv),
-        ExpiryMonth: month,
-        ExpiryYear: year,
-      };
-    } catch (error) {
-      console.error("Encryption failed:", error);
-      throw new Error(
-        "Failed to secure card details. Please check your entries."
-      );
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -216,11 +160,9 @@ export default function PaymentDetail() {
       console.log("payment data", paymentData);
 
       // Make the API call to eWay endpoint
-      const response = await axiosInstance.post("/eway/pay", paymentData);
+      const response = await axiosInstance.post("/stripe/pay", paymentData);
 
       const result = response.data;
-
-      console.log("eWay response:", result);
 
       // Check for eWay specific errors
       if (result.errors && result.errors.length > 0) {
@@ -305,7 +247,7 @@ export default function PaymentDetail() {
       <div className="bg-second ">
         <div className="container">
           <div className="top-section-main py-4 px-lg-5">
-            <div className="row gy-4 price-line gx-lg-5">
+            {/* <div className="row gy-4 price-line gx-lg-5">
               <div className="col-lg-5 order-2 order-lg-1 ">
                 <div className=" price-card px-4 py-3 d-flex flex-column rounded-4 gap-2 h-100">
                   <h3>Plan Information</h3>
@@ -459,15 +401,170 @@ export default function PaymentDetail() {
                               // type="submit"
                               onClick={handleSubmit}
                               className="custom-green bg-green-custom rounded-5 py-3 w-100 mt-4 btn btn-primary"
-                              disabled={loading || !ewayLoaded}
+                              disabled={loading}
                               style={{ border: "none", padding: "12px" }}
                             >
-                              {loading
-                                ? "Processing..."
-                                : !ewayLoaded
-                                ? "Loading..."
-                                : "Make Payment"}
+                              {loading ? "Processing..." : "Make Payment"}
                             </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> */}
+               <div className="row gy-4 price-line gx-lg-5">
+              <div className="col-lg-12 ">
+                <div className=" price-card px-4 py-3 d-flex flex-column rounded-4 gap-2 h-100">
+                  <h3>Plan Information</h3>
+                  <h4 className="fs-5">{data?.planName}</h4>
+                  <h4 className="fs-5">${data?.amount}</h4>
+                  <h4 className="fs-5">
+                    Valid for {data?.validity === 30 ? "Month" : "Year"}
+                  </h4>
+                  <h4 className="fs-5">For {data?.kmRadius}km</h4>
+                </div>
+              </div>
+
+              <div className="col-lg-7 order-1 order-lg-2">
+                <div className="d-flex justify-content-center align-items-center flex-column w-100">
+                  <div className="card rounded-5 border-0 w-100 pt-3">
+                    <div className="card-body text-center">
+                      <div className="row">
+                        <div className="col-lg-10 mx-auto">
+                          <h5 className="fw-medium mb-4 text-start">
+                            Enter card details
+                          </h5>
+                          <form
+                            data-eway-encrypt-key="09n/nrZ2RtlG9HWIuWmDq+w/KIv5E4BJwP413gyPZ5xnRFf6HvgS8P5q478oLsYQji+b2TuJVBdxRurAl6qZWioRjbI4uG2VAzxsuX5bnK8TkmU15MSZkSWd9m4wFYjnIFMkxbCPhKHOzwrVz7fZcxckY1d1is3K2D8J7NnDv3WmTxmYKnJkHZwxdeD7XgSCThcexrTJZEYBlaYftHbxfEOVHvcj4Cu1zKPcQfn+ZWlITm/QEjqgZHov957LeavJOhpzcGJAkK8X4o6W99PcQbj277Tus+S3qQsd7miz+H5dObjUSz7w/b7EMaD4GecVgKm18zdCoOraN3Cs3ON3nQ=="
+                            className="w-100 d-flex flex-column gap-4"
+                            // onSubmit={handleSubmit}
+                          >
+                            <div className="d-flex flex-row gap-3">
+                              <TextField
+                                id="card_firstname"
+                                label="First Name"
+                                variant="standard"
+                                className="w-100"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                required
+                              />
+                              <TextField
+                                id="card_lastname"
+                                label="Last Name"
+                                variant="standard"
+                                className="w-100"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                                required
+                              />
+                            </div>
+                            <TextField
+                              id="card_name"
+                              label="Card Holder Name"
+                              variant="standard"
+                              className="w-100"
+                              value={cardHolderName}
+                              onChange={(e) =>
+                                setCardHolderName(e.target.value)
+                              }
+                              placeholder="John Doe"
+                              type="text"
+                              required
+                            />
+                            <TextField
+                              id="card_email"
+                              label="Email"
+                              variant="standard"
+                              className="w-100"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              type="email"
+                              required
+                            />
+                            <TextField
+                              id="card_number"
+                              name="EWAY_CARDNUMBER"
+                              label="Card Number"
+                              variant="standard"
+                              className="w-100"
+                              value={cardNumber}
+                              onChange={(e) =>
+                                setCardNumber(formatCardNumber(e.target.value))
+                              }
+                              placeholder="4444333322221111"
+                              inputProps={{ maxLength: 19 }}
+                              required
+                            />
+                            <div className="d-flex justify-content-between gap-3 flex-row">
+                              <FormControl
+                                variant="standard"
+                                sx={{ minWidth: 120 }}
+                                md={{ minWidth: 150 }}
+                              >
+                                <InputLabel id="expiry_month-select-label">
+                                  Month
+                                </InputLabel>
+                                <Select
+                                  labelId="expiry_month-select-label"
+                                  id="expiry_month"
+                                  name="EWAY_CARDEXPIRYMONTH"
+                                  value={month}
+                                  onChange={(e) => setMonth(e.target.value)}
+                                  label="Month"
+                                  required
+                                >
+                                  {months.map((monthItem) => (
+                                    <MenuItem
+                                      key={monthItem.value}
+                                      value={monthItem.value}
+                                    >
+                                      {monthItem.name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                              <FormControl
+                                variant="standard"
+                                sx={{ minWidth: 100 }}
+                                md={{ minWidth: 150 }}
+                              >
+                                <InputLabel id="expiry_year-select-label">
+                                  Year
+                                </InputLabel>
+                                <Select
+                                  labelId="expiry_year-select-label"
+                                  id="expiry_year"
+                                  name="EWAY_CARDEXPIRYYEAR"
+                                  value={year}
+                                  onChange={(e) => setYear(e.target.value)}
+                                  label="Year"
+                                  required
+                                >
+                                  {years.map((yearItem) => (
+                                    <MenuItem key={yearItem} value={yearItem}>
+                                      {yearItem}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                              <TextField
+                                id="card_cvn"
+                                name="EWAY_CARDCVN"
+                                label="CVV"
+                                variant="standard"
+                                className="w-100"
+                                value={cvv}
+                                onChange={(e) => setCvv(e.target.value)}
+                                placeholder="123"
+                                inputProps={{ maxLength: 4 }}
+                                required
+                              />
+                            </div>
+
+                         
                           </form>
                         </div>
                       </div>
