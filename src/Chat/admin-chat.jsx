@@ -94,12 +94,12 @@ export default function AdminChat() {
   const handleSendEmail = async () => {
     try {
       const response = await axiosInstance.post(
-        "/hunter/send-job-email",
+        "/hunter/sendSupportEmail",
         {
           name:
             localStorage.getItem("ProviderBusinessName") ||
             localStorage.getItem("hunterName"),
-          receverEmail: "tradehunters2025@gmail.com",
+          receverEmail: "help.tradehunters@gmail.com",
         },
         {
           headers: {
