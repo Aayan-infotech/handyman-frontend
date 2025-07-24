@@ -60,7 +60,7 @@ export default function ManageSubscription() {
         }
       );
 
-      if (res?.data?.status === 200) {
+      if (res?.status === 200 || res?.status === 201) {
         setToastProps({
           message: "Subscription cancelled successfully",
           type: "success",
@@ -350,7 +350,7 @@ export default function ManageSubscription() {
                                   {item.subscriptionPlanId.planName}
                                 </h3>
                                 <div className="d-flex justify-content-lg-between justify-content-start align-items-center w-100 flex-wrap flex-lg-nowrap gap-4">
-                                  <h5>${item.amount}</h5>
+                                  <h5>${item.amount / 100}</h5>
                                   <h4>
                                     Radius: {item.subscriptionPlanId.kmRadius}KM
                                   </h4>
