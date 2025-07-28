@@ -29,7 +29,7 @@ export default function LoggedHeader() {
   const hunterToken = localStorage.getItem("hunterToken");
   const providerToken = localStorage.getItem("ProviderToken");
   const plan = localStorage.getItem("PlanType");
-console.log(plan)
+  console.log(plan);
   const hunterId = localStorage.getItem("hunterId");
   const providerId = localStorage.getItem("ProviderId");
   const userType = hunterId ? "hunter" : "provider";
@@ -109,6 +109,16 @@ console.log(plan)
             type: "info",
             toastKey: Date.now(),
           });
+        }
+
+        if (event === "new Job" && args[0]?.providerIds?.includes(userId)) {
+          setToastProps({
+            message:
+              "New job alert: A job matching your business type has been posted!",
+            type: "info",
+            toastKey: Date.now(),
+          });
+          return;
         }
 
         if (args[0]?.userType === "provider") {
@@ -242,7 +252,10 @@ console.log(plan)
           "ProviderEmail",
           providerResponse?.payload?.data?.email
         );
-        localStorage.setItem("Guest", providerResponse?.payload?.data?.isGuestMode);
+        localStorage.setItem(
+          "Guest",
+          providerResponse?.payload?.data?.isGuestMode
+        );
         localStorage.setItem("ProviderId", fetchedUser?._id);
         if (
           providerResponse?.payload?.data?.subscriptionStatus === 0 &&
