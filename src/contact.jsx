@@ -37,7 +37,7 @@ export default function Contact() {
   } = useForm();
 
   // Handle form submission
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const contactUsData = {
       name: data.name,
       email: data.email,
@@ -47,11 +47,11 @@ export default function Contact() {
 
     setLoading(true);
 
-    axiosInstance
+    await axiosInstance
       .post("/contact/send", contactUsData)
       .then((response) => {
         setLoading(false);
-        // Show success toast
+
         toast.success("Message sent successfully!");
 
         // Reset the form after successful submission

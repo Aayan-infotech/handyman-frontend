@@ -155,6 +155,28 @@ export default function JobDetail() {
     }
   };
 
+  const feedbackEmailCompletion = async () => {
+      
+    try {
+      const response = await axiosInstance.post(
+        "/hunter/feedbackEmail",
+        {
+          name: receiverId?.businessName,
+          email: receiverId?.email,
+          message: "Job Completed",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${ProviderToken || hunterToken}`,
+          },
+        }
+      );
+      console.log("Email sent successfully:", response.data);
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
+
   const handleJobCompletNotify = async ({ id, receiverId, title }) => {
     setLoading(true);
     try {
@@ -169,6 +191,7 @@ export default function JobDetail() {
       );
       if (apiResponse.status === 200) {
         await fetchData();
+       
         setLoading(false);
         const response = dispatch(
           messageNotification({
@@ -226,6 +249,7 @@ export default function JobDetail() {
     fetchData();
   }, [id]);
 
+
   const filterAddressPatterns = (address) => {
     if (!address) return address;
 
@@ -242,6 +266,7 @@ export default function JobDetail() {
       await handleJobStatus();
       await fetchData();
       await noficationFunctionality();
+       await feedbackEmailCompletion();
       setShow(false);
     } catch (error) {
       setLoading(false);
@@ -306,19 +331,18 @@ export default function JobDetail() {
                             : "No date provided"}
                         </h6>
 
-                         {ProviderToken && isHistoryType && (
+                        {ProviderToken && isHistoryType && (
                           <h6>
                             Date Completed:
                             {data?.createdAt
-                              ? new Date(data.completionDate).toLocaleDateString(
-                                  "en-AU",
-                                  {
-                                    timeZone: "Australia/Sydney",
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  }
-                                )
+                              ? new Date(
+                                  data.completionDate
+                                ).toLocaleDateString("en-AU", {
+                                  timeZone: "Australia/Sydney",
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
                               : "No date provided"}
                           </h6>
                         )}

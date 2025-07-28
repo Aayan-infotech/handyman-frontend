@@ -48,7 +48,41 @@ export default function Notification() {
     toastKey: 0,
   });
 
-  const handleJobCompletNotify = async ({ id, receiverId, title, body }) => {
+  const sendEmailCompleteion = async ({
+    email,
+    message,
+    title,
+    senderEmail,
+    emailName,
+  }) => {
+    try {
+      console.log("trying", senderEmail, emailName);
+      const response = await axiosInstance.post(
+        "/hunter/jobCompletion",
+        {
+          name: emailName,
+          email: senderEmail,
+          message: "Job Completed",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleJobCompletNotify = async ({
+    id,
+    receiverId,
+    title,
+    body,
+    senderEmail,
+    emailName,
+  }) => {
     setLoading(true);
     try {
       const apiResponse = await axiosInstance.put(
@@ -69,6 +103,8 @@ export default function Notification() {
             // body: `Provider have completed your job ${title}`,
           })
         );
+
+        await sendEmailCompleteion({ title, senderEmail, emailName });
         await fetchNotifications();
         if (messageNotification.fulfilled.match(response)) {
           setLoading(false);
@@ -682,6 +718,8 @@ export default function Notification() {
                                       notification?.type
                                     );
                                     handleJobCompletNotify({
+                                      emailName: notification?.userName,
+                                      senderEmail: notification?.senderEmail,
                                       id: notification?.jobDetails?._id,
                                       receiverId:
                                         notification.userId === userId
