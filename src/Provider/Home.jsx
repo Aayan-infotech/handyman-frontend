@@ -228,7 +228,7 @@ export default function HomeProvider() {
   }, [providerToken, jobStatus, hunterToken]);
 
   useEffect(() => {
-    let filtered = data;
+    var filtered = data;
 
     // Only apply filtering if jobStatus has values selected
     if (jobStatus.length > 0) {
@@ -238,7 +238,6 @@ export default function HomeProvider() {
           job.businessType.some((type) => jobStatus.includes(type))
       );
     }
-
     setFilteredData(filtered);
   }, [jobStatus, data]);
 

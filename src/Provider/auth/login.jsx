@@ -279,7 +279,7 @@ export default function LoginProvider() {
                   </div>
                 </div>
               </div>
-              <span>Or sign in with</span>
+              {/* <span>Or sign in with</span>
               <div className="d-flex flex-row gap-3 align-items-center icons-color mt-2 mb-4">
                 <div className="card shadow-lg rounded-5 border-0 d-flex align-items-center py-2 px-5 w-fit-content">
                   <Link to="/">
@@ -291,7 +291,7 @@ export default function LoginProvider() {
                     <img src={facebook} alt="facebook" loading="lazy"/>
                   </Link>
                 </div>
-              </div>
+              </div> */}
               <hr className="hr h-100" />
               <div className="hr mb-4">
                 <Link to="/provider/signup" className="w-100 ">

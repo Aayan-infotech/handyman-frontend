@@ -495,7 +495,11 @@ export default function Notification() {
                       <div
                         key={notification._id}
                         className={`card ${
-                          notification.isRead === false
+                          notification.type === "mass"
+                            ? !notification.readBy.includes(userId)
+                              ? "notification-card"
+                              : "notification-read-card"
+                            : !notification.isRead
                             ? "notification-card"
                             : "notification-read-card"
                         } border-0 rounded-4`}
