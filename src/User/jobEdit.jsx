@@ -195,7 +195,7 @@ export default function JobEdit() {
     formData.append("estimatedBudget", budget);
     formData.append("city", city);
     businessType.forEach((type) => {
-      formData.append("businessType[]", type);
+      formData.append("businessType", type);
     });
 
     formData.append("requirements", requirements);
@@ -270,10 +270,41 @@ export default function JobEdit() {
     handleClose();
   };
 
-  const handleDeleteFile = (index) => {
+  const handleDeleteFile = async (index, docId) => {
     const updatedDocuments = [...documents];
     updatedDocuments.splice(index, 1);
     setDocuments(updatedDocuments);
+    if (docId) {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.delete(
+          `jobpost/deleteDocument/${id}/${docId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Remove the deleted document from state
+          setDocuments(documents.filter((doc) => doc._id !== docId));
+          setToastProps({
+            message: "Document deleted successfully",
+            type: "success",
+            toastKey: Date.now(),
+          });
+        }
+      } catch (error) {
+        setToastProps({
+          message: "Failed to delete document",
+          type: "error",
+          toastKey: Date.now(),
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -408,42 +439,42 @@ export default function JobEdit() {
                       type="file"
                       className="input1"
                       onChange={(e) => setDocuments(Array.from(e.target.files))}
-                      disabled={documents.length > 0}
+                      disabled
                       multiple
                     />
-                    {documents.length > 0 && (
-                      <div className="d-flex flex-row gap-3 mt-3">
-                        <button
-                          className="btn btn-info btn-sm w-100"
-                          onClick={() => handleShow("view")}
-                        >
-                          See
-                        </button>
-                        <button
-                          className="btn btn-success btn-sm w-100"
-                          onClick={() => handleShow("add")}
-                        >
-                          Add
-                        </button>
-                      </div>
-                    )}
+                    {/* {documents.length > 0 && ( */}
+                    <div className="d-flex flex-row gap-3 mt-3">
+                      <button
+                        className="btn btn-info btn-sm w-100"
+                        onClick={() => handleShow("view")}
+                      >
+                        See
+                      </button>
+                      <button
+                        className="btn btn-success btn-sm w-100"
+                        onClick={() => handleShow("add")}
+                      >
+                        Add
+                      </button>
+                    </div>
+                    {/* )} */}
                   </div>
                   <div className="col-lg-4">
                     {/* <div className="card outline-card-none">
                       <div className="card-body d-flex flex-column align-items-center"> */}
-                        
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <MobileDatePicker
-                            value={time}
-                            className="standard-input w-100"
-                            shouldDisableDate={(date) =>
-                              date.isBefore(dayjs(), "day")
-                            }
-                            onChange={(newValue) => setTime(newValue)}
-                            renderInput={(params) => <TextField {...params} />}
-                          />
-                        </LocalizationProvider>
-                      {/* </div>
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <MobileDatePicker
+                        value={time}
+                        className="standard-input w-100"
+                        shouldDisableDate={(date) =>
+                          date.isBefore(dayjs(), "day")
+                        }
+                        onChange={(newValue) => setTime(newValue)}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                    {/* </div>
                     </div> */}
                   </div>
 
@@ -492,6 +523,7 @@ export default function JobEdit() {
                       // Handle both string URLs and File objects
                       const isFileObject =
                         file instanceof File || file instanceof Blob;
+                      const fileId = file?._id;
                       const fileUrl = isFileObject
                         ? URL.createObjectURL(file)
                         : file.url || file;
@@ -519,7 +551,7 @@ export default function JobEdit() {
                             <div className="card-body p-2">
                               {isImage ? (
                                 <img
-                                loading="lazy"
+                                  loading="lazy"
                                   src={fileUrl}
                                   alt={fileName}
                                   className="img-fluid"
@@ -552,7 +584,9 @@ export default function JobEdit() {
                                 </small>
                                 <button
                                   className="btn btn-danger btn-sm"
-                                  onClick={() => handleDeleteFile(index)}
+                                  onClick={() =>
+                                    handleDeleteFile(index, file?._id)
+                                  }
                                 >
                                   <FaTrash />
                                 </button>
