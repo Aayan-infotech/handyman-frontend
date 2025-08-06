@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "docker.io/kartikeytiwari/handyman-frontend"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        CONTAINER_PORT = "80"
+        CONTAINER_PORT = "2366"
         HOST_PORT = "2366"
         CONTAINER_NAME = "${JOB_BASE_NAME}-container"
     }
