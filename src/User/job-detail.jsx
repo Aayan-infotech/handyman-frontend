@@ -362,9 +362,9 @@ export default function JobDetail() {
                               className="col-lg-4 position-relative"
                               key={index}
                             >
-                              <a className="" href={doc} target="_blank">
+                              <a className="" href={doc?.url} target="_blank">
                                 <img
-                                  src={doc}
+                                  src={doc?.url}
                                   loading="lazy"
                                   alt="document"
                                   className="w-100 h-100 px-1"
