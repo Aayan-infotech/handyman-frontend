@@ -151,7 +151,7 @@ export default function BlogDetail() {
                 <a href="#dribble" className="text-light">
                   <FaDribbble size={16} />
                 </a>
-                <a href="#instagram" className="text-light">
+                <a href="https://www.instagram.com/tradehunters2025/" className="text-light" target="_blank" rel="noreferrer">
                   <FaInstagram size={16} />
                 </a>
                 <a href="#twitter" className="text-light">
