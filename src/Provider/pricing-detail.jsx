@@ -117,8 +117,6 @@ export default function PricingProvider() {
     }
   };
 
-
-  
   return (
     <>
       {loading ? (
