@@ -240,7 +240,7 @@ export default function FeaturedJobs() {
                 providers in Australia
               </p>
               <div className="social-icons d-flex justify-content-start gap-4 mb-3">
-                <a href="#facebook" className="text-light bg-dark">
+                   <a href="https://www.facebook.com/tradehunters11/" className="text-light bg-dark" target="_blank" rel="noreferrer">
                   <FaFacebook size={16} />
                 </a>
                 <a href="#dribble" className="text-light">
