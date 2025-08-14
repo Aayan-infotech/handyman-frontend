@@ -72,7 +72,7 @@ export default function Welcome() {
                       <div className="d-flex flex-column align-items-center align-items-lg-start w-100">
                         <h5>Service Hunter</h5>
                         <p>
-                          Finding a service here never been easier than before
+                         Hunting Down a Service Provider has never been easier
                         </p>
                       </div>
                     </div>

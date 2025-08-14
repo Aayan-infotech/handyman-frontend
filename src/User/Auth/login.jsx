@@ -158,7 +158,7 @@ export default function Login() {
                   <p className="text-center mt-lg-5 mb-lg-4">
                     Great You are Back
                   </p>
-                  <Form className="py-3">
+                  <Form className="pt-3">
                     <Form.Group
                       as={Row}
                       className="mb-3"
@@ -237,7 +237,7 @@ export default function Login() {
                   </Form>
                   <Link
                     to="/forgot-password"
-                    className="highlighted-text text-decoration-none text-end d-flex justify-content-end py-3"
+                    className="highlighted-text text-decoration-none text-end d-flex justify-content-end pb-3"
                   >
                     Forgot Password?
                   </Link>

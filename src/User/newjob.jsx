@@ -176,6 +176,17 @@ export default function NewJob() {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      // Clean up object URLs
+      documents.forEach((file) => {
+        if (file.type.startsWith("image/")) {
+          URL.revokeObjectURL(URL.createObjectURL(file));
+        }
+      });
+    };
+  }, [documents]);
+
   console.log(time);
   return (
     <>
@@ -358,9 +369,77 @@ export default function NewJob() {
                     <Form.Control
                       type="file"
                       className="input1"
-                      onChange={(e) => setDocuments(Array.from(e.target.files))}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          setDocuments((prevDocs) => {
+                            const newFiles = Array.from(e.target.files).filter(
+                              (newFile) =>
+                                !prevDocs.some(
+                                  (existingFile) =>
+                                    existingFile.name === newFile.name &&
+                                    existingFile.size === newFile.size &&
+                                    existingFile.lastModified ===
+                                      newFile.lastModified
+                                )
+                            );
+                            return [...prevDocs, ...newFiles];
+                          });
+                        }
+                      }}
                       multiple
+                      accept="image/*,.pdf,.doc,.docx"
                     />
+                    <div className="row mt-2">
+                      {documents.map((file, index) => (
+                        <div
+                          className="col-12 mb-2 d-flex align-items-center"
+                          key={index}
+                        >
+                          {file.type.startsWith("image/") ? (
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt="preview"
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                objectFit: "cover",
+                                marginRight: "10px",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                background: "#f0f0f0",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                marginRight: "10px",
+                              }}
+                            >
+                              <span>{file.name.split(".").pop()}</span>
+                            </div>
+                          )}
+                          <span
+                            className="text-truncate"
+                            style={{ maxWidth: "150px" }}
+                          >
+                            {file.name}
+                          </span>
+                          <button
+                            className="btn btn-sm btn-danger ms-auto"
+                            onClick={() => {
+                              const newFiles = [...documents];
+                              newFiles.splice(index, 1);
+                              setDocuments(newFiles);
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* <div className="col-lg-4">

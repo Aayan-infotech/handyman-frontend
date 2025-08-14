@@ -99,6 +99,7 @@ export default function JobEdit() {
   const [businessData, setBusinessData] = useState([]);
   const [time, setTime] = useState(dayjs());
   const token = localStorage.getItem("hunterToken");
+  const [fileNames, setFileNames] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -262,6 +263,14 @@ export default function JobEdit() {
   const handleAddFiles = (e) => {
     const files = Array.from(e.target.files);
     setNewDocuments(files);
+
+    // Update file names display
+    if (files.length > 0) {
+      const names = files.map((file) => file.name).join(", ");
+      setFileNames(`${files.length} file(s) selected: ${names}`);
+    } else {
+      setFileNames("");
+    }
   };
 
   const handleSaveNewFiles = () => {
@@ -436,12 +445,19 @@ export default function JobEdit() {
                   </div>
                   <div className={` col-lg-4`}>
                     <Form.Control
-                      type="file"
+                      type="text" // Changed from "file" to "text"
                       className="input1"
-                      onChange={(e) => setDocuments(Array.from(e.target.files))}
-                      disabled
-                      multiple
+                      value={
+                        documents.length > 0
+                          ? `${documents.length} file(s) selected`
+                          : "No files selected"
+                      }
+                      placeholder="Documents"
+                      readOnly // Make it read-only so users can't type in it
+                      style={{ cursor: "pointer" }} // Make it look clickable
+                      onClick={() => handleShow("view")} // Click to view files
                     />
+
                     {/* {documents.length > 0 && ( */}
                     <div className="d-flex flex-row gap-3 mt-3">
                       <button
