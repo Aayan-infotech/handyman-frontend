@@ -242,7 +242,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post(
-        "https://api.tradehunters.com.au/api/auth/signup",
+        "http://54.147.249.209:7777/api/auth/signup",
 
         formData
       );
