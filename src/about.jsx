@@ -24,6 +24,7 @@ import LoggedHeader from "./components/loggedNavbar";
 export default function About() {
   const { section } = useParams();
   const [businessData, setBusinessData] = useState(null);
+  const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const hunterToken = localStorage.getItem("hunterToken");
@@ -34,28 +35,28 @@ export default function About() {
     const handleResponse = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(`/StaticContent/${section}`);
+        const response = await axiosInstance.get(
+          `/StaticContent/${section === "guide" ? "Guide" : section}`
+        );
 
         if (response.status === 200 && response.data.content) {
-          setBusinessData(response.data.content);
-        } else {
-          navigate("/error"); // Redirect to error page if content not found
+          setBusinessData(response?.data?.content);
+          setVideo(response?.data?.documents);
         }
       } catch (error) {
         console.error("Error fetching content:", error);
-        navigate("/error"); // Redirect to error page on API failure
       } finally {
         setLoading(false);
       }
     };
 
     if (section) handleResponse();
-    else navigate("/error"); // Redirect if section param is missing
+    else navigate("/error");
   }, [section, navigate]);
 
   return (
     <>
-      {loading === true ? (
+      {loading ? (
         <Loader />
       ) : (
         <div className="">
@@ -75,11 +76,6 @@ export default function About() {
                   </Link>
                   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                   <Navbar.Collapse id="responsive-navbar-nav">
-                    {/* <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
-              <Link href="#">About UCCCs</Link>
-              <a href="mailto:admin@tradehunters.com.au">Contact Us</a>
-            </Nav> */}
-
                     <Nav className="me-auto d-flex flex-column flex-lg-row gap-4 gap-lg-5">
                       <Link to="/about" style={{ fontWeight: "350" }}>
                         About Us
@@ -87,9 +83,9 @@ export default function About() {
                       <Link to="/contact-us" style={{ fontWeight: "350" }}>
                         Contact Us
                       </Link>
-                       <Link to="/guide" style={{ fontWeight: "350" }}>
-                                     Contact & Updates
-                                    </Link>
+                      <Link to="/guide" style={{ fontWeight: "350" }}>
+                        Contact & Updates
+                      </Link>
                     </Nav>
 
                     <Nav>
@@ -115,13 +111,30 @@ export default function About() {
           </div>
           <div className="container category my-5">
             <div className="row gy-4 mt-3">
-              <div dangerouslySetInnerHTML={{ __html: businessData }} />
+              {section === "guide" &&
+                video &&
+                video.map((data, index) => (
+                  <div className="d-flex flex-row gap-2" key={index}>
+                    <iframe
+                      src={data?.url}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-100"
+                      height="400"
+                      loading="lazy"
+                      title={`video-${index}`}
+                    ></iframe>
+                  </div>
+                ))}
+              {businessData && (
+                <div dangerouslySetInnerHTML={{ __html: businessData }} />
+              )}
             </div>
           </div>
           <footer className="footer text-light">
             <Container>
               <Row>
-                {/* Left Section: Logo and Description */}
                 <Col md={4} className="mb-4">
                   <img src={logoWhite} alt="logo" loading="lazy" />
                   <p className="fw-normal mt-3">
@@ -129,13 +142,23 @@ export default function About() {
                     providers in Australia
                   </p>
                   <div className="social-icons d-flex justify-content-start gap-4 mb-3">
-                      <a href="https://www.facebook.com/tradehunters11/" className="text-light bg-dark" target="_blank" rel="noreferrer">
+                    <a
+                      href="https://www.facebook.com/tradehunters11/"
+                      className="text-light bg-dark"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       <FaFacebook size={16} />
                     </a>
                     <a href="#dribble" className="text-light">
                       <FaDribbble size={16} />
                     </a>
-                   <a href="https://www.instagram.com/tradehunters2025/" className="text-light" target="_blank" rel="noreferrer">
+                    <a
+                      href="https://www.instagram.com/tradehunters2025/"
+                      className="text-light"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       <FaInstagram size={16} />
                     </a>
                     <a href="#twitter" className="text-light">
@@ -147,22 +170,11 @@ export default function About() {
                   </div>
                 </Col>
 
-                {/* Center Section: Links */}
                 <Col md={4} className="mb-4">
                   <Row>
                     <Col>
                       <h6 className="">About</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
-                        {/* <li>
-                           <a href="#companies" className="text-light">
-                             Companies
-                           </a>
-                         </li> */}
-                        {/* <li>
-                           <a href="#pricing" className="text-light">
-                             Pricing
-                           </a>
-                         </li> */}
                         <li>
                           <Link to="/allblogs" className="text-light">
                             Blogs
@@ -173,11 +185,6 @@ export default function About() {
                             Terms
                           </Link>
                         </li>
-                        {/* <li>
-                           <a href="#advice" className="text-light">
-                             Advice
-                           </a>
-                         </li> */}
                         <li>
                           <Link to="/privacy" className="text-light">
                             Privacy Policy
@@ -193,7 +200,6 @@ export default function About() {
                             Guide & Updates
                           </Link>
                         </li>
-
                         <li>
                           <Link to="/contact-us" className="text-light">
                             Contact Us
@@ -239,6 +245,7 @@ export default function About() {
                       href="https://aayaninfotech.com/"
                       target="_blank"
                       className="text-light text-decoration-none text-bold"
+                      rel="noreferrer"
                     >
                       @Aayan Infotech
                     </a>
