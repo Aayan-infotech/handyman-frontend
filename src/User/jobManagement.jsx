@@ -386,7 +386,7 @@ export default function JobManagement() {
                             selected || "Select Job Status"
                           }
                         >
-                          {["Completed", "Assigned"].map((status) => (
+                          {["Completed", "Assigned" , "Deleted"].map((status) => (
                             <MenuItem key={status} value={status}>
                               <Checkbox
                                 checked={jobStatus === status}

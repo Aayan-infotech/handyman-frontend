@@ -424,6 +424,9 @@ export default function Chat({ messageData, messages, selectedChat }) {
                       selectedChat?.displayUser?.name ||
                       selectedChat?.displayUser?.businessName}
                   </h5>
+                  {selectedChat?.jobData?.title && (
+                    <p class="mb-0">{selectedChat?.jobData?.title}</p>
+                  )}
                 </div>
               </div>
             </div>

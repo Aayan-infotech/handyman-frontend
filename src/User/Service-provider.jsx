@@ -222,7 +222,7 @@ export default function ServiceProvider() {
               <div className="row gy-4">
                 <div className="col-lg-12">
                   <div className="d-flex justify-content-lg-between flex-column flex-lg-row gap-4">
-                    <div className="position-relative icon">
+                    {/* <div className="position-relative icon">
                       <Form
                         className="d-flex flex-row gap-2"
                         onSubmit={(e) => {
@@ -241,8 +241,8 @@ export default function ServiceProvider() {
                           Search
                         </button>
                       </Form>
-                    </div>
-                    <div className="d-flex w-100 justify-content-end flex-row gap-2">
+                    </div> */}
+                    <div className="d-flex w-100 justify-content-start flex-row gap-2">
                       <FormControl className="sort-input w-100">
                         <InputLabel id="radius-select-label">
                           Select Provider Radius

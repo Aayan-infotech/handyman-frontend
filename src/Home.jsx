@@ -175,6 +175,9 @@ function Home() {
                 <Link to="/contact-us" style={{ fontWeight: "350" }}>
                   Contact Us
                 </Link>
+                 <Link to="/guide" style={{ fontWeight: "350" }}>
+                               Contact & Updates
+                              </Link>
               </Nav>
 
               <Nav className="mb-4">
@@ -546,13 +549,13 @@ function Home() {
                 providers in Australia
               </p>
               <div className="social-icons d-flex justify-content-start gap-4 mb-3">
-                <a href="#facebook" className="text-light bg-dark">
+                  <a href="https://www.facebook.com/tradehunters11/" className="text-light bg-dark" target="_blank" rel="noreferrer">
                   <FaFacebook size={16} />
                 </a>
                 <a href="#dribble" className="text-light">
                   <FaDribbble size={16} />
                 </a>
-                <a href="#instagram" className="text-light">
+              <a href="https://www.instagram.com/tradehunters2025/" className="text-light" target="_blank" rel="noreferrer">
                   <FaInstagram size={16} />
                 </a>
                 <a href="#twitter" className="text-light">
