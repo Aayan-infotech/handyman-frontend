@@ -121,13 +121,13 @@ export default function LoggedHeader() {
           return;
         }
 
-        if (args[0]?.userType === "provider") {
-          setToastProps({
-            message: "You have received a new Notification from a Trade Hunter",
-            type: "info",
-            toastKey: Date.now(),
-          });
-        }
+        // if (args[0]?.userType === "provider") {
+        //   setToastProps({
+        //     message: "You have received a new Notification from a Trade Hunter",
+        //     type: "info",
+        //     toastKey: Date.now(),
+        //   });
+        // }
       });
     }
 
