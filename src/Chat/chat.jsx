@@ -114,6 +114,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [peerData, setPeerData] = useState(null); // Store peer user data
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [jobTitle , setJobTitle] = useState(null);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -181,6 +182,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       }
 
       const jobTitle = response?.data?.data?.jobPost?.title;
+      setJobTitle(jobTitle);
       console.log("Job Title:", jobTitle);
 
       // Instead of modifying selectedChat directly, we'll use this data when needed
@@ -424,8 +426,8 @@ export default function Chat({ messageData, messages, selectedChat }) {
                       selectedChat?.displayUser?.name ||
                       selectedChat?.displayUser?.businessName}
                   </h5>
-                  {selectedChat?.jobData?.title && (
-                    <p class="mb-0">{selectedChat?.jobData?.title}</p>
+                  {jobTitle && (
+                    <p class="mb-0">{jobTitle}</p>
                   )}
                 </div>
               </div>
