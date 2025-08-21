@@ -311,30 +311,31 @@ export default function ServiceProviderProfile() {
                   </button>
                 )}
               </div>
+              {data?.subscriptionStatus === 1 && (
+                <div className="d-flex justify-content-center align-items-center mt-3 flex-column flex-column gap-3">
+                  <h6>{data?.about}</h6>
+                  <div className="d-flex align-items-center gap-4 flex-row">
+                    <div className="contact">
+                      <a href={`mailto:${data.email}`}>
+                        <MdEmail />
+                      </a>
+                    </div>
+                    {/* {data?.subscriptionType === "Advertising" && ( */}
+                    <div className="contact">
+                      <Link to={`/advertiser/chat/${id}`}>
+                        <RiMessage2Fill />
+                      </Link>
+                    </div>
+                    {/* )} */}
 
-              <div className="d-flex justify-content-center align-items-center mt-3 flex-column flex-column gap-3">
-                <h6>{data?.about}</h6>
-                <div className="d-flex align-items-center gap-4 flex-row">
-                  <div className="contact">
-                    <a href={`mailto:${data.email}`}>
-                      <MdEmail />
-                    </a>
-                  </div>
-                  {/* {data?.subscriptionType === "Advertising" && ( */}
-                  <div className="contact">
-                    <Link to={`/advertiser/chat/${id}`}>
-                      <RiMessage2Fill />
-                    </Link>
-                  </div>
-                  {/* )} */}
-
-                  <div className="contact">
-                    <a href={`tel:${data.phoneNo}`}>
-                      <IoCall />
-                    </a>
+                    <div className="contact">
+                      <a href={`tel:${data.phoneNo}`}>
+                        <IoCall />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {renderGallery()}
               {renderRatings()}
