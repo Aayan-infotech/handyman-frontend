@@ -70,6 +70,12 @@ export default function BlogDetail() {
               <Link to="/contact-us" style={{ fontWeight: "350" }}>
                 Contact Us
               </Link>
+               <Link
+                                      to="/guide-and-updates"
+                                      style={{ fontWeight: "350" }}
+                                    >
+                                      Guide & Updates
+                                    </Link>
             </Nav>
 
             <Nav className="mb-4">
