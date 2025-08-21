@@ -84,6 +84,15 @@ export default function LoggedHeader() {
 
       newSocket.onAny((event, ...args) => {
         console.log(`Received socket event: ${event}`, args);
+              if (args[0]?.userType === "provider" && userType === "provider") {
+          setToastProps({
+            message: "You have received a new Notification from a Trade Hunter",
+            type: "info",
+            toastKey: Date.now(),
+          });
+        }
+
+    
         if (event === "newNotification" && args[0]?.receiverId === userId) {
           setToastProps({
             message: "You have received a new notification",
@@ -100,12 +109,23 @@ export default function LoggedHeader() {
           });
         }
 
-        if (args[0]?.userType === "hunter") {
+        if (args[0]?.userType === "hunter" && userType === "hunter") {
           setToastProps({
             message: "You have received a new Notification from a Trade Hunter",
             type: "info",
             toastKey: Date.now(),
           });
+        }
+
+        
+        if (event === "new Job" && args[0]?.providerIds?.includes(userId)) {
+          setToastProps({
+            message:
+              "New job alert: A job matching your business type has been posted!",
+            type: "info",
+            toastKey: Date.now(),
+          });
+          return;
         }
       });
     }

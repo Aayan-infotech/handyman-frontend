@@ -128,6 +128,25 @@ export default function LoggedHeader() {
             toastKey: Date.now(),
           });
         }
+
+         if (args[0]?.userType === "provider" && userType === "provider") {
+          setToastProps({
+            message: "You have received a new Notification from a Trade Hunter",
+            type: "info",
+            toastKey: Date.now(),
+          });
+        }
+
+        if (event === "new Job" && args[0]?.providerIds?.includes(userId)) {
+          setToastProps({
+            message:
+              "New job alert: A job matching your business type has been posted!",
+            type: "info",
+            toastKey: Date.now(),
+          });
+          return;
+        }
+
       });
     }
 
