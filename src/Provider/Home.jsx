@@ -495,7 +495,7 @@ export default function HomeProvider() {
                                       className="rounded-5 w-100 py-3 seconday-button px-0"
                                       onClick={() => navTest(job._id)}
                                     >
-                                      Quote Reach
+                                      Quote Limit Reached
                                     </Button>
                                   )
                                 ) : // If jobAcceptCount length is less than 4
