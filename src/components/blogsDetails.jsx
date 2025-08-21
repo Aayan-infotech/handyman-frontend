@@ -205,7 +205,7 @@ export default function BlogDetail() {
                   <h6>Resources</h6>
                   <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                     <li>
-                      <Link to="/guide" className="text-light">
+                      <Link to="/guide-and-updates" className="text-light">
                         Guide & Updates
                       </Link>
                     </li>

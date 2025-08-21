@@ -31,6 +31,85 @@ export default function About() {
   const ProviderToken = localStorage.getItem("ProviderToken");
   const navCondition = ProviderToken || hunterToken;
 
+  // Function to get file extension from URL
+  const getFileExtension = (url) => {
+    return url.split(".").pop().toLowerCase();
+  };
+
+  // Function to render content based on file type
+  const renderContent = (data, index) => {
+    const fileExtension = getFileExtension(data?.url);
+    const imageExtensions = ["jpg", "jpeg", "png", "webp", "gif"];
+    const videoExtensions = ["mp4", "webm", "ogg", "avi", "mov"];
+    const documentExtensions = ["pdf"];
+
+    if (imageExtensions.includes(fileExtension)) {
+      return (
+         <a
+          href={data?.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={index}
+        >
+          <img
+          key={index}
+          src={data?.url}
+          alt={`content-${index}`}
+          className=" object-fit-cover rounded"
+          style={{ height: "200px" }}
+          loading="lazy"
+        />
+        </a>
+        
+      );
+    } else if (
+      videoExtensions.includes(fileExtension) ||
+      documentExtensions.includes(fileExtension)
+    ) {
+      return (
+        <>
+      <div className="position-relative">
+          <iframe
+            src={data?.url}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-100 object-fit-cover"
+            height="200"
+            loading="lazy"
+            title={`content-${index}`}
+          />
+            <a
+          href={data?.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={index}
+        >
+          <button className="btn btn-primary mt-2 position-absolute top-0 end-0 me-2">
+            View {fileExtension.toUpperCase()} File
+          </button>
+        </a>
+        </div>
+        </>
+      );
+    } else {
+      // Fallback for unknown file types
+      return (
+        <div key={index} className="p-3 border rounded">
+          <p>Unsupported file type: {fileExtension}</p>
+          <a
+            href={data?.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+          >
+            View File
+          </a>
+        </div>
+      );
+    }
+  };
+
   useEffect(() => {
     const handleResponse = async () => {
       try {
@@ -116,21 +195,9 @@ export default function About() {
           </div>
           <div className="container category my-5">
             <div className="row gy-4 mt-3">
-              {section === "guide" && video && (
-                <div className="d-flex flex-row gap-2">
-                  {video.map((data, index) => (
-                    <iframe
-                      key={index}
-                      src={data?.url}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="w-100"
-                      height="400"
-                      loading="lazy"
-                      title={`video-${index}`}
-                    ></iframe>
-                  ))}
+              {section === "guide-and-updates" && video && (
+                <div className="d-flex flex-row gap-2 flex-wrap">
+                  {video.map((data, index) => renderContent(data, index))}
                 </div>
               )}
 
@@ -203,7 +270,7 @@ export default function About() {
                       <h6>Resources</h6>
                       <ul className="list-unstyled mt-4 d-flex flex-column gap-3">
                         <li>
-                          <Link to="/guide" className="text-light">
+                          <Link to="/guide-and-updates" className="text-light">
                             Guide & Updates
                           </Link>
                         </li>
