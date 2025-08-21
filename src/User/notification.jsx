@@ -252,7 +252,7 @@ export default function Notification() {
 
       await dispatch(
         assignedJobNotification({
-          body: `You have been assigned for the job ${notification?.jobDetails?.title}`,
+          body: `${hunterName} have been assigned for the job ${notification?.jobDetails?.title}`,
           receiverId: assignToId,
           jobId: notification.jobDetails._id,
         })
@@ -322,6 +322,7 @@ export default function Notification() {
           notif._id === notificationId ? { ...notif, isRead: true } : notif
         )
       );
+      fetchNotifications()
     } catch (error) {
       console.log(error);
     } finally {

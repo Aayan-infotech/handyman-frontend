@@ -399,7 +399,7 @@ export default function ManageSubscription() {
                                 <h3 className="mt-3 text-start">
                                   {item.subscriptionPlanId.planName}
                                 </h3>
-                                <h5 className="mt-3">${item.amount}</h5>
+                                <h5 className="mt-3">${item.amount / 100}</h5>
                                 <h4>
                                   Radius: {item.subscriptionPlanId.kmRadius}KM
                                 </h4>

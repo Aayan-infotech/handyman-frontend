@@ -258,6 +258,7 @@ export default function HomeProvider() {
         setBusinessType(businessType);
         setLatitude(address?.location?.coordinates?.[1] || null);
         setLongitude(address?.location?.coordinates?.[0] || null);
+        console.log("User data fetched successfully:", result.payload.data);
         {
           isGuest ? setRadius(160000) : setRadius(address?.radius || null);
         }
