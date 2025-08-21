@@ -119,7 +119,12 @@ export default function ServicesProvider() {
             <div className="row gy-4 my-4">
               {data.length === 0 ? (
                 <div className="text-center">
-                  <img src={noData} alt="No data found" className="img-fluid" loading="lazy"/>
+                  <img
+                    src={noData}
+                    alt="No data found"
+                    className="img-fluid"
+                    loading="lazy"
+                  />
                 </div>
               ) : (
                 <>
@@ -147,9 +152,11 @@ export default function ServicesProvider() {
                                 )}
                               </span>{" "}
                             </div>
-                            <span className="text-secondary">
-                              Email:{text.email}{" "}
-                            </span>
+                            {text?.subscriptionStatus === 1 && (
+                              <span className="text-secondary">
+                                Email:{text.email}{" "}
+                              </span>
+                            )}
                             <div className="d-flex gap-2 mt-3 flex-wrap">
                               {text.businessType.map((tag, index) => (
                                 <Chip

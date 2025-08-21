@@ -497,7 +497,7 @@ export default function MyProfile() {
       const userId = providerId || hunterId;
 
       // First delete the chats from Firebase
-      await deleteUserChats(userId);
+      // await deleteUserChats(userId);
 
       // Then proceed with account deletion
       // const response = await axiosInstance.delete(
