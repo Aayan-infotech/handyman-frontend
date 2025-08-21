@@ -36,7 +36,9 @@ export default function About() {
       try {
         setLoading(true);
         const response = await axiosInstance.get(
-          `/StaticContent/${section === "guide" ? "Guide" : section}`
+          `/StaticContent/${
+            section === "guide-and-updates" ? "Guide" : section
+          }`
         );
 
         if (response.status === 200 && response.data.content) {
@@ -83,8 +85,11 @@ export default function About() {
                       <Link to="/contact-us" style={{ fontWeight: "350" }}>
                         Contact Us
                       </Link>
-                      <Link to="/guide" style={{ fontWeight: "350" }}>
-                        Contact & Updates
+                      <Link
+                        to="/guide-and-updates"
+                        style={{ fontWeight: "350" }}
+                      >
+                        Guide & Updates
                       </Link>
                     </Nav>
 
@@ -111,11 +116,11 @@ export default function About() {
           </div>
           <div className="container category my-5">
             <div className="row gy-4 mt-3">
-              {section === "guide" &&
-                video &&
-                video.map((data, index) => (
-                  <div className="d-flex flex-row gap-2" key={index}>
+              {section === "guide" && video && (
+                <div className="d-flex flex-row gap-2">
+                  {video.map((data, index) => (
                     <iframe
+                      key={index}
                       src={data?.url}
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -125,8 +130,10 @@ export default function About() {
                       loading="lazy"
                       title={`video-${index}`}
                     ></iframe>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              )}
+
               {businessData && (
                 <div dangerouslySetInnerHTML={{ __html: businessData }} />
               )}
