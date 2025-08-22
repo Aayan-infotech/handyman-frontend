@@ -315,17 +315,25 @@ export default function Chat({ messageData, messages, selectedChat }) {
     const businessName =
       localStorage.getItem("ProviderBusinessName") ||
       localStorage.getItem("hunterName");
-
+    let notificationBody;
+    if (userType === "Provider" && jobTitle) {
+      // For providers with job title, don't show "regarding a job" part
+      notificationBody = `${businessName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`;
+    } else {
+      // When no job title is available
+      notificationBody = `${businessName} sent you a message. Please go to message section to respond`;
+    }
     if (businessName) {
       dispatch(
         messageNotification({
           receiverId: receiverId,
           jobId: jobId,
-          body: `${businessName} sent you a message regarding the job ${jobTitle && jobTitle}.${
-            userType === "provider"
-              ? " Please go to message section to respond."
-              : ""
-          }`,
+          body: notificationBody
+          // body: `${businessName} sent you a message regarding the job ${jobTitle && jobTitle}.${
+          //   userType === "provider"
+          //     ? " Please go to message section to respond."
+          //     : ""
+          // }`,
         })
       );
     }

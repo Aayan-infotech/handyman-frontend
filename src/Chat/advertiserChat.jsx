@@ -281,10 +281,20 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       );
 
       await handleSendEmail();
+       let notificationBody;
+    if (userType === "Provider" && jobTitle) {
+      // For providers with job title, don't show "regarding a job" part
+      notificationBody = `${currentUserName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`;
+    } else {
+      // When no job title is available
+      notificationBody = `${currentUserName} sent you a message. Please go to message section to respond`;
+    }
+   
       dispatch(
         messageNotification({
           receiverId: receiverId,
-          body: `${currentUserName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`,
+            body: notificationBody,
+          // body: `${currentUserName} sent you a message ${jobTitle && ({userType} === "Provider" ? "" : "")} regarding a ${jobTitle} job. Please go to message section to respond`,
         })
       );
     } catch (error) {
