@@ -114,7 +114,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
   const [peerData, setPeerData] = useState(null); // Store peer user data
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [jobTitle , setJobTitle] = useState(null);
+  const [jobTitle, setJobTitle] = useState(null);
   const [toastProps, setToastProps] = useState({
     message: "",
     type: "",
@@ -139,13 +139,13 @@ export default function Chat({ messageData, messages, selectedChat }) {
     messageData?.jobId ||
     selectedChat?.jobId ||
     null;
-
+  const isCurrentUserProvider = localStorage.getItem("ProviderId") !== null;
+  const peerUserType = isCurrentUserProvider ? "hunter" : "provider";
+  const userType = hunterId ? "hunter" : "provider";
   // Fetch peer user data from Firebase
   useEffect(() => {
     if (!receiverId) return;
 
-    const isCurrentUserProvider = localStorage.getItem("ProviderId") !== null;
-    const peerUserType = isCurrentUserProvider ? "hunter" : "provider";
     const peerRef = ref(realtimeDb, `users/${peerUserType}/${receiverId}`);
 
     const unsubscribe = onValue(peerRef, (snapshot) => {
@@ -321,7 +321,11 @@ export default function Chat({ messageData, messages, selectedChat }) {
         messageNotification({
           receiverId: receiverId,
           jobId: jobId,
-          body: `${businessName} sent you a message regarding the job ${jobTitle}. Please go to message section to respond.`,
+          body: `${businessName} sent you a message regarding the job ${jobTitle && jobTitle}.${
+            userType === "provider"
+              ? " Please go to message section to respond."
+              : ""
+          }`,
         })
       );
     }
@@ -426,9 +430,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
                       selectedChat?.displayUser?.name ||
                       selectedChat?.displayUser?.businessName}
                   </h5>
-                  {jobTitle && (
-                    <p class="mb-0">{jobTitle}</p>
-                  )}
+                  {jobTitle && <p class="mb-0">{jobTitle}</p>}
                 </div>
               </div>
             </div>
