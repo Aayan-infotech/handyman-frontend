@@ -284,7 +284,7 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
       dispatch(
         messageNotification({
           receiverId: receiverId,
-          body: `${currentUserName} sent you a message regarding a potential job. Please go to message section to respond`,
+          body: `${currentUserName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`,
         })
       );
     } catch (error) {
