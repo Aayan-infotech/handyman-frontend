@@ -87,7 +87,7 @@ export default function Notification() {
     try {
       const apiResponse = await axiosInstance.put(
         `/jobPost/notifyCompletion/${id}`,
-        {},
+        {hunterId: receiverId},
         {
           headers: {
             Authorization: `Bearer ${token}`,

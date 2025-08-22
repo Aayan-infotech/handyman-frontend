@@ -147,7 +147,7 @@ export default function LoggedHeader() {
           return;
         }
 
-         if (event === "JobCompleted" && args[0]?.providerId?.includes(userId)) {
+         if (event === "JobCompleted" && args[0]?.providerId?.includes(userId) || args[0]?.hunterId?.includes(userId)) {
           setToastProps({
             message:
               `${args[0]?.message}`,
