@@ -221,6 +221,10 @@ export default function Main() {
                           spaceBetween: 20,
                         },
                         768: {
+                          slidesPerView: 3,
+                          spaceBetween: 50,
+                        },
+                        1200: {
                           slidesPerView: 4,
                           spaceBetween: 50,
                         },
