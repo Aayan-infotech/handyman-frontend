@@ -115,7 +115,7 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
 
   const [chatId, setChatId] = useState(selectedChat?.chatId || null);
 
-  const userType = localStorage.getItem("ProviderId") ? "Provider" : "Hunter";
+  const userType = localStorage.getItem("ProviderId") ? "provider" : "hunter";
   const currentUser =
     localStorage.getItem("ProviderId") || localStorage.getItem("hunterId");
   const currentUserName =
@@ -282,13 +282,13 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
 
       await handleSendEmail();
       let notificationBody;
-      if (userType === "Hunter" && jobTitle) {
+      if (userType === "hunter" && jobTitle) {
         // For providers with job title, don't show "regarding a job" part
         notificationBody = `${currentUserName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`;
-      } else if (jobTitle && userType === "Provider") {
+      } else if (jobTitle && userType === "provider") {
         notificationBody = `${currentUserName} sent you a message regarding a ${jobTitle} job.`;
       }
-      else if ( userType === "Hunter") {
+      else if ( userType === "hunter") {
         notificationBody = `${currentUserName} sent you a message .Please go to message section to respond`;
       }
       // else if(userType === "Provider"){
