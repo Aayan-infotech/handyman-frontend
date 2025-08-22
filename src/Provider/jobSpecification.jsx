@@ -522,7 +522,7 @@ export default function JobSpecification() {
                           color="secondary"
                           className="rounded-5 w-100 py-3 seconday-button"
                         >
-                          This job limit has been Reached
+                          4 Quotes already submitted
                         </Button>
                       ) : null}
 

@@ -415,7 +415,7 @@ export default function ManageSubscription() {
                                     {item?.payment?.paymentSource}
                                   </h6>
                                   <h6>
-                                    Transaction Id:{" "}
+                                    Plan Id:{" "}
                                     {item?.subscriptionPlanId?._id}
                                   </h6>
                                 </div>

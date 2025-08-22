@@ -83,10 +83,11 @@ export default function PricingProvider() {
       let amountToCharge;
       if (validity === 30) {
         // Monthly
-        amountToCharge = subscriptionAmount * 100;
+          amountToCharge = (subscriptionAmount / 12) * 100;
+        
       } else {
         // Yearly - divide by 12 to get monthly equivalent
-        amountToCharge = (subscriptionAmount / 12) * 100;
+      amountToCharge = subscriptionAmount * 100;
       }
 
       const response = await axiosInstance.post("/stripe/pay", {

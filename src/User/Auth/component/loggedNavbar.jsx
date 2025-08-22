@@ -127,6 +127,16 @@ export default function LoggedHeader() {
           });
           return;
         }
+
+          if (event === "JobCompleted" && args[0]?.providerId?.includes(userId)) {
+          setToastProps({
+            message:
+              `${args[0]?.message}`,
+            type: "info",
+            toastKey: Date.now(),
+          });
+          return;
+        }
       });
     }
 
