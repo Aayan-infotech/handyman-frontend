@@ -316,12 +316,24 @@ export default function Chat({ messageData, messages, selectedChat }) {
       localStorage.getItem("ProviderBusinessName") ||
       localStorage.getItem("hunterName");
     let notificationBody;
-    if (userType === "Provider" && jobTitle) {
+    if (userType === "hunter" && jobTitle) {
       // For providers with job title, don't show "regarding a job" part
       notificationBody = `${businessName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`;
-    } else {
+    
+    }
+    else if(jobTitle && userType === "Provider"){
+       notificationBody = `${businessName} sent you a message regarding a ${jobTitle} job.`;
+    }
+     else if( userType === "hunter"){
+       notificationBody = `${businessName} sent you a message.Please go to message section to respond`;
+    }
+    //  else if(userType === "Provider"){
+      
+    // }
+     else {
       // When no job title is available
-      notificationBody = `${businessName} sent you a message. Please go to message section to respond`;
+       notificationBody = `${businessName} sent you a message.`;
+      // notificationBody = `${businessName} sent you a message`;
     }
     if (businessName) {
       dispatch(

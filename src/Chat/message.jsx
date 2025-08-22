@@ -453,7 +453,7 @@ export default function Message() {
                                 >
                                   <div className="d-flex flex-column gap-1">
                                     <h6 className="mb-0 fw-bold fs-5 text-dark">
-                                      {item?.jobTitle !== "" && (
+                                      {item?.jobTitle   && (
                                         <div>
                                           Job Title: {item?.jobData?.title}
                                         </div>
