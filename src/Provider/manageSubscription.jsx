@@ -280,7 +280,7 @@ export default function ManageSubscription() {
                                 </h6>
                                 <h4>Code: {item?.code}</h4>
                                 <h4>Radius: {item?.kmRadius} KM</h4>
-                                <h6>
+                                {/* <h6>
                                   Valid To:{" "}
                                   {new Date(item?.endDate).toLocaleString(
                                     "en-AU",
@@ -294,7 +294,7 @@ export default function ManageSubscription() {
                                       hour12: true,
                                     }
                                   )}
-                                </h6>
+                                </h6> */}
                               </div>
                             </div>
                           </div>
@@ -381,7 +381,9 @@ export default function ManageSubscription() {
                     {/* Expired Subscriptions Section */}
                     {expiredSubscriptions.length > 0 && (
                       <>
-                        <h3 className="text-center pt-3">Your Expired Plans</h3>
+                       <h3 className="text-center pt-3">Your Expired Plans</h3>
+                        <div className="row py-3 gy-2 mt-lg-4">
+                       
                         {expiredSubscriptions.map((item) => (
                           <div className="col-lg-6" key={item._id}>
                             <div className="w-100 h-100 card price-card expired border-0 rounded-5 position-relative overflow-hidden px-4 pt-5 pb-3">
@@ -429,6 +431,7 @@ export default function ManageSubscription() {
                             </div>
                           </div>
                         ))}
+                        </div>
                       </>
                     )}
                   </div>
@@ -438,6 +441,7 @@ export default function ManageSubscription() {
                       <h3 className="text-center text-lg-start mb-1 pt-4">
                         Your Expired Voucher Plan
                       </h3>
+                      <div className="row py-3 gy-2 mt-lg-4">
                       {expiredVoucher.map((item) => (
                         <div className="col-lg-6" key={item?._id}>
                           <div className="w-100 h-100 card price-card border-0 expired rounded-5 position-relative overflow-hidden px-4 py-5">
@@ -460,7 +464,7 @@ export default function ManageSubscription() {
                               </h6>
                               <h4>Code: {item?.code}</h4>
                               <h4>Radius: {item?.kmRadius} KM</h4>
-                              <h6>
+                              {/* <h6>
                                 Valid To:{" "}
                                 {new Date(item?.endDate).toLocaleString(
                                   "en-AU",
@@ -474,11 +478,12 @@ export default function ManageSubscription() {
                                     hour12: true,
                                   }
                                 )}
-                              </h6>
+                              </h6> */}
                             </div>
                           </div>
                         </div>
                       ))}
+                      </div>
                     </>
                   )}
                 </div>
