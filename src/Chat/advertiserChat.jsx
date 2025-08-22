@@ -282,13 +282,13 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
 
       await handleSendEmail();
       let notificationBody;
-      if (userType === "hunter" && jobTitle) {
+      if (userType === "Hunter" && jobTitle) {
         // For providers with job title, don't show "regarding a job" part
         notificationBody = `${currentUserName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`;
       } else if (jobTitle && userType === "Provider") {
         notificationBody = `${currentUserName} sent you a message regarding a ${jobTitle} job.`;
       }
-      else if ( userType === "hunter") {
+      else if ( userType === "Hunter") {
         notificationBody = `${currentUserName} sent you a message .Please go to message section to respond`;
       }
       // else if(userType === "Provider"){

@@ -321,7 +321,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
       notificationBody = `${businessName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`;
     
     }
-    else if(jobTitle && userType === "Provider"){
+    else if(jobTitle && userType === "provider"){
        notificationBody = `${businessName} sent you a message regarding a ${jobTitle} job.`;
     }
      else if( userType === "hunter"){
