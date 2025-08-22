@@ -81,7 +81,7 @@ export default function PricingProvider() {
     try {
       // Calculate the amount based on validity
       let amountToCharge;
-      if (validity === 30) {
+      if (validity === 365) {
         // Monthly
           amountToCharge = (subscriptionAmount / 12) * 100;
         
