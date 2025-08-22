@@ -357,8 +357,8 @@ export default function ManageSubscription() {
                                   <h5>
                                     Valid for{" "}
                                     {item.subscriptionPlanId.validity === 365
-                                      ? "Year"
-                                      : "Month"}
+                                      ? "a Year"
+                                      : "a Month"}
                                   </h5>
                                 </div>
                                 <div className=" d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-start w-100">
@@ -408,8 +408,8 @@ export default function ManageSubscription() {
                                 <h3>
                                   Valid for{" "}
                                   {item.subscriptionPlanId.validity === 365
-                                    ? "Year"
-                                    : "Month"}
+                                    ? "a Year"
+                                    : "a Month"}
                                 </h3>
                                 <div className=" d-flex flex-column  gap-3 justify-content-start align-items-start">
                                   <h6>
