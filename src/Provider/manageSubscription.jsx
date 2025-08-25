@@ -69,7 +69,7 @@ export default function ManageSubscription() {
         // Refresh the subscriptions list
         const getData = async () => {
           try {
-            const res = await axiosInstance.get(`/eway/getSusbcriptionById`, {
+            const res = await axiosInstance.get(`/stripe/getSusbcriptionById`, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem(
                   "ProviderToken"
@@ -119,7 +119,7 @@ export default function ManageSubscription() {
     const getData = async () => {
       setLoading(true);
       try {
-        const res = await axiosInstance.get(`/eway/getSusbcriptionById`, {
+        const res = await axiosInstance.get(`/stripe/getSusbcriptionById`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("ProviderToken")}`,
           },

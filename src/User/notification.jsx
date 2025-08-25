@@ -87,7 +87,7 @@ export default function Notification() {
     try {
       const apiResponse = await axiosInstance.put(
         `/jobPost/notifyCompletion/${id}`,
-        {hunterId: receiverId},
+        { hunterId: receiverId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -254,7 +254,7 @@ export default function Notification() {
         assignedJobNotification({
           body: `${hunterName} assigned you for the job ${notification?.jobDetails?.title}`,
           receiverId: assignToId,
-          jobId: notification.jobDetails._id,
+          // jobId: notification.jobDetails._id,
         })
       );
 
@@ -322,7 +322,7 @@ export default function Notification() {
           notif._id === notificationId ? { ...notif, isRead: true } : notif
         )
       );
-      fetchNotifications()
+      fetchNotifications();
     } catch (error) {
       console.log(error);
     } finally {
@@ -613,6 +613,29 @@ export default function Notification() {
                                 </div>
                               )}
 
+                            {notification?.type == "mass" &&
+                              notification?.jobId &&
+                              providerId && (
+                                <div className="col-lg-3 d-flex justify-content-end">
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={() => {
+                                      handleMarkAsRead(
+                                        notification?._id,
+                                        notification?.type
+                                      );
+                                      navigate(
+                                        `/job-detail/${notification.jobId}`
+                                      );
+                                    }}
+                                    className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
+                                  >
+                                    View Job
+                                  </Button>
+                                </div>
+                              )}
+
                             {notification?.jobDetails?.jobStatus === "Quoted" &&
                               notification?.jobDetails?.jobStatus &&
                               hunterId && (
@@ -681,7 +704,7 @@ export default function Notification() {
                                 </div>
                               )}
 
-                            {(notification?.type === "mass" ||
+                            {(notification?.type === "mass"||
                               notification?.userName === "Admin" ||
                               !notification?.jobDetails?._id) && (
                               <div className="col-lg-3 d-flex justify-content-end">

@@ -94,7 +94,7 @@ export const handlePayment = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.post(
-        `/eway/pay`,
+        `/eway/stripe`,
 
         paymentData,
 
