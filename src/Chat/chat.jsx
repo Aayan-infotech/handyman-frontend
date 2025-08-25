@@ -322,10 +322,10 @@ export default function Chat({ messageData, messages, selectedChat }) {
     
     }
     else if(jobTitle && userType === "provider"){
-       notificationBody = `${businessName} sent you a message regarding the ${jobTitle} job.`;
+       notificationBody = `${businessName} sent you a message regarding the ${jobTitle} job. Please go to message section to respond `;
     }
      else if( userType === "hunter"){
-       notificationBody = `${businessName} sent you a message.Please go to message section to respond`;
+       notificationBody = `${businessName} sent you a message . Please go to message section to respond`;
     }
     //  else if(userType === "Provider"){
       

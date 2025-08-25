@@ -286,10 +286,10 @@ export default function AdvertiserChat({ messageData, selectedChat }) {
         // For providers with job title, don't show "regarding a job" part
         notificationBody = `${currentUserName} sent you a message regarding the ${jobTitle} job.`;
       } else if (jobTitle && userType === "provider") {
-        notificationBody = `${currentUserName} sent you a message regarding the ${jobTitle} job.`;
+        notificationBody = `${currentUserName} sent you a message regarding the ${jobTitle} job. Please go to message section to respond`;
       }
       else if ( userType === "hunter") {
-        notificationBody = `${currentUserName} sent you a message .Please go to message section to respond`;
+        notificationBody = `${currentUserName} sent you a message . Please go to message section to respond`;
       }
       // else if(userType === "Provider"){
       // }
