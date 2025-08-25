@@ -92,6 +92,7 @@ export default function JobDetail() {
         reviewJobNotification({
           receiverId: receiverId?._id,
           body: `${name} has submitted Feedback for the job ${data?.title}   `,
+          jobId: id,
         })
       );
 

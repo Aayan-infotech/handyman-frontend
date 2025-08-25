@@ -318,11 +318,11 @@ export default function Chat({ messageData, messages, selectedChat }) {
     let notificationBody;
     if (userType === "hunter" && jobTitle) {
       // For providers with job title, don't show "regarding a job" part
-      notificationBody = `${businessName} sent you a message regarding a ${jobTitle} job. Please go to message section to respond`;
+      notificationBody = `${businessName} sent you a message regarding the ${jobTitle} job.`;
     
     }
     else if(jobTitle && userType === "provider"){
-       notificationBody = `${businessName} sent you a message regarding a ${jobTitle} job.`;
+       notificationBody = `${businessName} sent you a message regarding the ${jobTitle} job.`;
     }
      else if( userType === "hunter"){
        notificationBody = `${businessName} sent you a message.Please go to message section to respond`;
