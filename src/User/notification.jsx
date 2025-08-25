@@ -254,7 +254,7 @@ export default function Notification() {
         assignedJobNotification({
           body: `${hunterName} assigned you for the job ${notification?.jobDetails?.title}`,
           receiverId: assignToId,
-          jobId: notification.jobDetails._id,
+          // jobId: notification.jobDetails._id,
         })
       );
 
