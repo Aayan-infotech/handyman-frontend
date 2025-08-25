@@ -626,7 +626,7 @@ export default function Notification() {
                                         notification?.type
                                       );
                                       navigate(
-                                        `/job-detail/${notification.jobId}`
+                                        `/provider/jobspecification/${notification.jobId}`
                                       );
                                     }}
                                     className="custom-green bg-green-custom rounded-5 text-light border-light w-100"
