@@ -322,7 +322,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     
     }
     else if(jobTitle && userType === "provider"){
-       notificationBody = `${businessName} sent you a message regarding the ${jobTitle} job. Please go to message section to respond `;
+       notificationBody = `${businessName} sent you a message regarding the ${jobTitle} job`;
     }
      else if( userType === "hunter"){
        notificationBody = `${businessName} sent you a message . Please go to message section to respond`;
@@ -332,7 +332,7 @@ export default function Chat({ messageData, messages, selectedChat }) {
     // }
      else {
       // When no job title is available
-       notificationBody = `${businessName} sent you a message.`;
+       notificationBody = `${businessName} sent you a message . Please go to message section to respond`;
       // notificationBody = `${businessName} sent you a message`;
     }
     if (businessName) {
