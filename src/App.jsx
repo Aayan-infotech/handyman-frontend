@@ -61,6 +61,7 @@ import JobEdit from "./User/jobEdit";
 import AdvertiserChat from "./Chat/advertiserChat";
 import PaymentSuccessPage from "./components/success";
 import PaymentFailedPage from "./components/failed";
+import DeleteAccount from "./components/deleteAccount";
 
 // import NotificationProvider from "./Context/notificationContext";
 const useAuth = () => {
@@ -167,6 +168,10 @@ function App() {
         <Route
           path="/search"
           element={<UnProtectedRoute element={<Search />} />}
+        />
+         <Route
+          path="/delete-account"
+          element={<UnProtectedRoute element={<DeleteAccount />} />}
         />
 
         <Route
