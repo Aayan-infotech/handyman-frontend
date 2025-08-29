@@ -452,21 +452,21 @@ export default function Message() {
                                   }
                                 >
                                   <div className="d-flex flex-column gap-1">
-                                    <h6 className="mb-0 fw-bold fs-5 text-dark">
+                                    <h6 className="mb-0 fw-bold fs-6 text-dark">
                                       {item?.jobTitle   && (
                                         <div>
                                           Job Title: {item?.jobData?.title}
                                         </div>
                                       )}
                                     </h6>
-                                    <h5 className="mb-0 fw-bold fs-5 text-dark">
+                                    <h5 className="mb-0 fw-bold fs-6 text-dark">
                                       {item?.displayUser?.businessName ||
                                         item?.displayUser?.name}
                                     </h5>
-                                    <p className="mb-0 fw-medium fs-6 text-dark">
+                                    <p className="mb-0 fw-medium fs-7 text-dark">
                                       {item?.messages?.msg}
                                     </p>
-                                    <span className="text-muted">
+                                    <span className="text-muted fs-8">
                                       {new Date(
                                         item?.messages?.timeStamp
                                       ).toLocaleTimeString("en-AU", {

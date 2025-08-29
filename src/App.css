@@ -489,6 +489,12 @@ textarea:focus-visible {
 .fs-70 {
   font-size: 5.5rem !important;
 }
+.fs-7{
+  font-size: .8rem !important
+}
+.fs-8{
+  font-size: .6rem !important
+}
 
 .price-line .col-lg-3,
 .price-line .price-line-line,
