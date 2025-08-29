@@ -67,7 +67,8 @@
   color: #32de84;
 }
 
-.myprofile img , .myprofile svg {
+.myprofile img,
+.myprofile svg {
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -343,7 +344,6 @@
   overflow: hidden;
 }
 
-
 /* File: Footer.css */
 .footer {
   background-color: rgba(32, 36, 48, 1);
@@ -488,12 +488,6 @@ textarea:focus-visible {
 
 .fs-70 {
   font-size: 5.5rem !important;
-}
-.fs-7{
-  font-size: .8rem !important
-}
-.fs-8{
-  font-size: .6rem !important
 }
 
 .price-line .col-lg-3,
@@ -717,10 +711,10 @@ textarea:focus-visible {
 .job-design-nonre::before {
   display: none !important;
 }
-.unread{
+.unread {
   background-color: #32de85b8 !important;
 }
-.delete-msg-btn{
+.delete-msg-btn {
   position: absolute;
   top: 10px;
   z-index: 1;
@@ -745,6 +739,12 @@ table th {
   min-width: 300px;
 }
 @media screen and (max-width: 768px) {
+  .fs-7 {
+    font-size: 0.8rem !important;
+  }
+  .fs-8 {
+    font-size: 0.6rem !important;
+  }
   .profile-img {
     width: 130px;
     height: 130px;
@@ -761,7 +761,7 @@ table th {
   }
   .limit-design .MuiAvatar-circular {
     max-width: 80px !important;
-    max-height:80px !important
+    max-height: 80px !important;
   }
   .search {
     width: 100% !important;
@@ -780,12 +780,12 @@ table th {
     font-size: 15px !important;
     width: 80%;
   }
-.delete-msg-btn{
-  position: absolute;
-  top: 10px;
-  z-index: 1;
-  right: 15px;
-}
+  .delete-msg-btn {
+    position: absolute;
+    top: 10px;
+    z-index: 1;
+    right: 15px;
+  }
   .error-100vh {
     height: 100%;
     min-height: 100vh !important;
